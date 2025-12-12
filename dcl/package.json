@@ -1,0 +1,31 @@
+{
+	"name": "dcl-boilerplate",
+	"version": "1.0.0",
+	"description": "Decentraland SDK7 Template scene",
+	"scripts": {
+		"start": "sdk-commands start",
+		"startClient": "sdk-commands start --explorer-alpha",
+		"build:ci": "sdk-commands build",
+		"deploy:prod": "sdk-commands deploy --target linker-server.decentraland.org --skip-validations true",
+		"deploy:testing": "sdk-commands deploy --target peer-testing.decentraland.org --skip-validations true",
+		"deploy:world": "sdk-commands deploy --target-content https://worlds-content-server.decentraland.org",
+		"deploy": "sdk-commands deploy",
+		"build": "sdk-commands build",
+		"upgrade-sdk": "npm install --save-dev @dcl/sdk@latest",
+		"upgrade-sdk:next": "npm install --save-dev @dcl/sdk@next"
+	},
+	"devDependencies": {
+		"@dcl/js-runtime": "7.10.5",
+		"@dcl/sdk": "latest"
+	},
+	"engines": {
+		"node": ">=16.0.0",
+		"npm": ">=6.0.0"
+	},
+	"prettier": {
+		"semi": false,
+		"singleQuote": true,
+		"printWidth": 120,
+		"trailingComma": "none"
+	}
+}
