@@ -1,5 +1,4 @@
 import { Quaternion, Vector3 } from '@dcl/sdk/math'
-import { engine, Transform, GltfContainer } from '@dcl/sdk/ecs'
 
 
 // ███████╗███████╗████████╗████████╗██╗███╗   ██╗ ██████╗ ███████╗

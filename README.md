@@ -1,12 +1,22 @@
-## `dcl-boilerplate-scene`
+## `Vroomway-Team/dcl-slay-the-steps`
 
-# Decentraland SDK7 Template
+# Slay the Steps!
 
-A basic Decentraland SDK7 Scene, setup with a generic folder structure and various utility scripts.
+### Decentraland Festive Trail 2025 Experience
 
-This repo is a template repository. See [using the template](/docs/USING_THE_TEMPLATE.md) for info on using it for a project.
+This repo contains the "Slay The Steps" experience, including all source assets used to create it, and the deployable scene itself.
 
-**Warning**: here be dragons
+| **Scene Limits** |           |
+| ---------------- | --------- |
+| Dimensions:      | 32m x 32m |
+| Max height       | 46m       |
+| Triangles        | 40,000    |
+| Entities         | 800       |
+| Meshes           | 1,200     |
+| Materials        | 46        |
+| Textures         | 23        |
+| File count       | 800       |
+| File size limit  | 60MB      |
 
 ---
 

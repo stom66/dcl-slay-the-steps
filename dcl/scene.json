@@ -1,42 +1,61 @@
 {
-	"ecs7": true,
-	"runtimeVersion": "7",
-	"display": {
-		"title": "DCL SDK7 Template",
-		"description": "Template scene with Decentraland SDK7",
-		"navmapThumbnail": "images/scene-thumbnail.png",
-		"favicon": "favicon_asset"
-	},
-	"owner": "",
-	"contact": {
-		"name": "stom",
-		"email": ""
-	},
-	"main": "bin/index.js",
-	"tags": [],
-	"scene": {
-		"parcels": ["0,0"],
-		"base": "0,0"
-	},
-	"spawnPoints": [
-		{
-			"name": "spawn1",
-			"default": true,
-			"position": {
-				"x": [0, 3],
-				"y": [0, 0],
-				"z": [0, 3]
-			},
-			"cameraTarget": {
-				"x": 8,
-				"y": 1,
-				"z": 8
-			}
-		}
-	],
-	"requiredPermissions": [],
-	"featureToggles": {
-		"voiceChat": "enabled",
-		"portableExperiences": "enabled"
-	}
+  "ecs7": true,
+  "runtimeVersion": "7",
+  "display": {
+    "title": "Slay The Steps!",
+    "description": "An experience for Decentraland Festive Trail 2025",
+    "navmapThumbnail": "images/scene-thumbnail.png",
+    "favicon": "favicon_asset"
+  },
+  "owner": "",
+  "contact": {
+    "name": "stom",
+    "email": ""
+  },
+  "main": "bin/index.js",
+  "tags": [],
+  "scene": {
+    "parcels": [
+      "0,0",
+      "0,1",
+      "1,0",
+      "1,1"
+    ],
+    "base": "0,0"
+  },
+  "spawnPoints": [
+    {
+      "name": "spawn1",
+      "default": true,
+      "position": {
+        "x": [
+          0,
+          3
+        ],
+        "y": [
+          0,
+          0
+        ],
+        "z": [
+          0,
+          3
+        ]
+      },
+      "cameraTarget": {
+        "x": 8,
+        "y": 1,
+        "z": 8
+      }
+    }
+  ],
+  "requiredPermissions": [],
+  "featureToggles": {
+    "voiceChat": "enabled",
+    "portableExperiences": "enabled"
+  },
+  "skyboxConfig": {},
+  "source": {
+    "origin": "creator-hub",
+    "projectId": "349d8e79-d765-476f-b871-021f89b71763"
+  }
 }
