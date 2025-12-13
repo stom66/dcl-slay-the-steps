@@ -17,8 +17,64 @@ const DEBUG = process.env.NODE_ENV == "development"
 const FORCE_BASE_URL = true
 
 
+// MARK: GetUTCTimestamp
+export async function GetUTCTimestamp() {
+	try {
+		const response = await fetch('https://timeapi.io/api/Time/current/zone?timeZone=UTC')
+	
+		if (!response.ok) {
+			throw new Error("Failed to fetch UTC time: " + response.statusText)
+		}
+	
+		const data = await response.json()
+	
+		if (!data.dateTime) {
+			console.error("Failed to get dateTime from response data:", data)
+			return false
+		}
+	
+		// Convert ISO string to Unix timestamp in seconds
+		const unixTimestamp = Math.floor(new Date(data.dateTime).getTime() / 1000)
+	
+		console.log("GetUTCTimestamp: ", unixTimestamp)
+		return unixTimestamp
+  
+	} catch (error) {
+		console.error('Error fetching UTC Time from API:', error)
+		return false
+	}
+}
+
+// MARK: GetUTCTimestampMillis
+export async function GetUTCTimestampMillis() {
+	try {
+		const response = await fetch('https://timeapi.io/api/Time/current/zone?timeZone=UTC')
+	
+		if (!response.ok) {
+			throw new Error("Failed to fetch UTC time: " + response.statusText)
+		}
+	
+		const data = await response.json()
+	
+		if (!data.dateTime) {
+			console.error("Failed to get dateTime from response data:", data)
+			return false
+		}
+	
+		// Convert ISO string to Unix timestamp in seconds
+		const unixTimestampMillis = Math.floor(new Date(data.dateTime).getTime()) as number
+	
+		console.log("GetUTCTimestampMillis:", unixTimestampMillis)
+		return unixTimestampMillis
+  
+	} catch (error) {
+		console.error('Error fetching UTC Time from API:', error)
+		return false
+	}
+}
 
 
+// MARK: waitForPlayerData
 export function waitForPlayerData(
 	req?: GetPlayerDataRequest
 ): Promise<NonNullable<ReturnType<typeof getPlayer>>> {
@@ -39,6 +95,16 @@ export function waitForPlayerData(
 	
 		engine.addSystem(system)
 	})
+}
+
+// MARK: Get PlayerNameFromUserId
+export function GetPlayerNameFromUserId(userId: string): string {
+	const player = getPlayer({ userId: userId })
+	if (!player) {
+		console.log("GetPlayerNameFromUserId: Error: player not found")
+		return "Unknown"
+	}
+	return player.name
 }
 
 // MARK: GetRealmInfo

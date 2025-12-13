@@ -2,27 +2,33 @@ import { engine, InputAction, MeshCollider, MeshRenderer, pointerEventsSystem, T
 import { Quaternion, Vector3 } from "@dcl/sdk/math"
 import { MessageBus } from "@dcl/sdk/message-bus"
 import { getPlayer, onEnterScene } from "@dcl/sdk/players"
-import { waitForPlayerData } from "./utils"
+import { GetUTCTimestamp, GetUTCTimestampMillis, waitForPlayerData } from "./utils"
+import { UpdatePlayerList } from "./ui.Game"
+import { movePlayerTo } from "~system/RestrictedActions"
 
+
+const GAMESETTINGS = {
+	ROUND_START_COUNTDOWN: 10,
+	UTC_UPDATE_INTERVAL: 5
+}
 
 const sceneMessageBus = new MessageBus()
-let localPlayer: any
+export let localPlayer: any
 
-enum GameStatus {
+export enum GameStatus {
 	IDLE         = "IDLE",
 	STARTING     = "STARTING",
 	ROUND_ACTIVE = "ROUND_ACTIVE",
 	VOTING       = "VOTING",
 }
 
-type GameState = {
+export type GameState = {
 	gameState       : GameStatus,
 	gameId          : string,
 	hostPlayerId    : string,
 	players         : string[],
 	countdownEndTime: number,
-	roundStartTime  : number,
-	npcsSpawned     : number,
+	countdownTimeElapsed: number,
 }
 
 class GameManager {
@@ -34,15 +40,22 @@ class GameManager {
 		hostPlayerId    : 0,
 		players         : [],
 		countdownEndTime: 0,
-		roundStartTime  : 0
 	}
+
+	utcTimestamp            : number = 0
+	utcTimestampMillis      : number = 0
+	timeSinceLastUTCUpdate: number = 0
+	countdownValue        : number = 0
 
 	constructor() {
 		console.log("GameManager constructor")
 	}
 
+	// MARK: init
 	async init() {
 		console.log("GameManager Init")
+
+		this.FetchUTCTimestamp()
 
 		// Ensure we have player data for local player
 		localPlayer = await waitForPlayerData()
@@ -94,7 +107,8 @@ class GameManager {
 				entity: joinStartTrigger, 
 				opts: { 
 					button: InputAction.IA_PRIMARY,
-					hoverText: "Join/Start Game"
+					hoverText: "Join/Start Game",
+					maxDistance: this.state.gameState == GameStatus.IDLE ? 10 : 0
 				} 
 			},
 			() => {
@@ -105,30 +119,81 @@ class GameManager {
 
 		// Do a state request to get the current game state
 		sceneMessageBus.emit('stateRequest', {})
+
+		engine.addSystem((dt) => this.System_UpdateTimers(dt))
 	}
 
+	// MARK: System_UpdateTimers
+	System_UpdateTimers = (dt: number) => {
+		// Fetch current UTC time
+		this.timeSinceLastUTCUpdate += dt
+		this.utcTimestampMillis     += dt * 1000
+		this.utcTimestamp           =  Math.floor(this.utcTimestampMillis / 1000)
+
+		if (this.timeSinceLastUTCUpdate >= GAMESETTINGS.UTC_UPDATE_INTERVAL) {
+			this.timeSinceLastUTCUpdate = 0 // set this here to prevent multiple calls to FetchUTCTimestamp()
+			this.FetchUTCTimestamp()
+		}
+
+		if (this.state.gameState == GameStatus.STARTING) {
+			// Calculate countdown value
+			this.countdownValue = Math.floor(this.state.countdownEndTime - this.utcTimestamp)
+
+			// Check if countdown has reached 0
+			if (this.countdownValue <= 0 && this.IAmTheHost) {
+				this.OnRoundStart()
+			}
+		}
+	}
+
+	// MARK: FetchUTCTimestamp
+	FetchUTCTimestamp() {
+		GetUTCTimestampMillis().then((timestampMillis) => {
+			if (!timestampMillis) {
+				console.error("GameManager: FetchUTCTimestamp: Failed to get UTC timestamp")
+				return
+			}
+			console.log("UTC updated to:", timestampMillis)
+			this.utcTimestamp           = Math.floor(timestampMillis / 1000)
+			this.utcTimestampMillis     = timestampMillis
+			this.timeSinceLastUTCUpdate = 0
+		})
+	}
+
+	// MARK: OnJoinOrStartGame
 	// When a player presses the button to Start/Join a game
 	OnJoinOrStartGame(playerId: string) {
 		console.log("GameManager: JoinOrStartGame", playerId)
+
+		// Ignore if we're already in the list of players
+		if (this.state.players.includes(playerId)) {
+			console.log("GameManager: OnJoinOrStartGame: Player already in the list of players")
+			return
+		}
+
+		// If game is starting then request to join
+		if (this.state.gameState == GameStatus.STARTING) {
+			this.RequestToJoinExistingGame()
+		}
+
 		// If no game in progress then the player is now the Host
 		if (this.state.gameState == GameStatus.IDLE) {
 			this.OnStartNewGame()
 		}
-
-		// If we are starting the game
-		if (this.state.gameState == GameStatus.STARTING) {
-			this.RequestToJoinExistingGame()
-		}
 	}
 	
-	OnStartNewGame() {
+	// MARK: OnStartNewGame
+	async OnStartNewGame() {
 		this.IAmTheHost         = true
 		this.state.gameState    = GameStatus.STARTING
 		this.state.hostPlayerId = localPlayer!.userId
-		this.state.players      = [localPlayer!.userId]
+		this.state.players      = [localPlayer?.userId]
+		this.state.countdownEndTime = this.utcTimestamp + GAMESETTINGS.ROUND_START_COUNTDOWN
 		this.SendStateToAllClients()
+		UpdatePlayerList()
 	}
 	
+	// MARK: RequestToJoinExistingGame
 	// When a player presses the button to Join Game
 	RequestToJoinExistingGame() {
 		if (this.state.gameState != GameStatus.STARTING) {
@@ -140,6 +205,7 @@ class GameManager {
 		sceneMessageBus.emit('joinGameRequest', { userId: localPlayer!.userId })
 	}
 
+	// MARK: OnRequestToJoinExistingGame
 	OnRequestToJoinExistingGame(userId: string) {
 		if (!this.IAmTheHost) return
 		console.log("GameManager: OnRequestToJoinExistingGame:", userId)
@@ -152,16 +218,41 @@ class GameManager {
 
 		this.state.players.push(userId)
 		this.SendStateToAllClients()
+		UpdatePlayerList()
 	}
 
-	OnGameOver() {
+	// MARK: OnCountdownStart
+	OnCountdownStart() {
+		console.log("GameManager: OnCountdownStart")
+
+	}
+
+	// MARK: OnRoundStart
+	OnRoundStart() {
+		console.log("GameManager: OnRoundStart")
+		this.state.gameState = GameStatus.ROUND_ACTIVE
+		this.state.countdownEndTime = 0
+		this.state.countdownTimeElapsed = 0
+		this.countdownValue = 0
+		this.SendStateToAllClients()
+
+		this.MovePlayersToArena()
+	}
+
+	// MARK: OnRoundEnd
+	OnRoundEnd() {
+		console.log("GameManager: OnRoundEnd")
+
 		this.IAmTheHost = false
 		this.state.gameState = GameStatus.IDLE
 		this.state.hostPlayerId = ""
 		this.state.players = []
 		this.SendStateToAllClients()
+
+		this.MovePlayersToLobby()
 	}
 
+	// MARK: OnStateRequest
 	OnStateRequest() {
 		console.log("GameManager: OnStateRequest")
 		if (this.IAmTheHost) {
@@ -169,21 +260,39 @@ class GameManager {
 		}
 	}
 
+	// MARK: OnStateUpdate
 	OnStateUpdate(state: GameState) {
 		console.log("GameManager: OnStateUpdate:", state)
 
 		// Ignore updates if we are the host
+		if (this.IAmTheHost && state.hostPlayerId !== localPlayer!.userId) {
+			console.log("GameManager: OnStateUpdate: Problem, another player thinks they are the host!")
+			return
+		}
 		if (this.IAmTheHost) {
 			return
 		}
 		this.state = state
+		UpdatePlayerList()
 	}
 
 
+	// MARK: SendStateToAllClients
 	SendStateToAllClients() {
+		if (!this.IAmTheHost) return
 		console.log("GameManager: SendStateToAllClients")
 		sceneMessageBus.emit('stateUpdate', this.state)
 	}
+
+	MovePlayersToArena() {
+		movePlayerTo({newRelativePosition:Vector3.create(16, 6, 20)})
+
+	}
+
+	MovePlayersToLobby() {
+		movePlayerTo({newRelativePosition:Vector3.create(16, 0, 20)})
+	}
+
 }
 
 export const _GameManager = new GameManager()

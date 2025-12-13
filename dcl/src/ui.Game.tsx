@@ -6,7 +6,8 @@ import ReactEcs, {
 import { Color3, Color4, Vector3 } from '@dcl/sdk/math'
 
 import { MessageBus } from '@dcl/sdk/message-bus'
-import { _GameManager } from './GameManager'
+import { _GameManager, GameStatus } from './GameManager'
+import { GetPlayerNameFromUserId } from './utils'
 const sceneMessageBus = new MessageBus()
 
 // Root Element visibility
@@ -19,25 +20,25 @@ let playerList: any[] = [];
 
 
 // MARK: UpdatePlayerList
-function UpdatePlayerList() {
+export function UpdatePlayerList() {
 	playerList = BuildPlayerList()
 }
 
 function BuildPlayerList() {
 	let elements: any[] = []
-	_GameManager.state.players.forEach((playerId: number) => {
+	_GameManager.state.players.forEach((playerId: string) => {
 		elements.push(
 			<UiEntity
 				key={`player_${playerId}_root`}
 				uiTransform={{
-					width: 100,
+					width: "100%",
 					height: 100,
 				}}
 
 				uiText={{
 					fontSize: 16,
 					font: 'sans-serif',
-					value: playerId.toString(),
+					value: GetPlayerNameFromUserId(playerId),
 					textWrap: 'nowrap',
 					textAlign: 'middle-right'
 				}}
@@ -60,12 +61,8 @@ export function GameUI() {
 				height: '100%',
 				flexDirection: 'column',
 				alignItems: 'center',
-				justifyContent: 'flex-end',
+				justifyContent: 'flex-start',
 				positionType: "absolute",
-			}}
-
-			uiBackground={{
-				color: Color4.create(0.5, 0.8, 0.1, 0.6)
 			}}
 		>
 
@@ -98,11 +95,14 @@ export function GameUI() {
 				MARK: Player List
 			*/}
 			<UiEntity
-				key={`ui_RoundScores_root`}
+				key={`ui_PlayerList_root`}
 				uiTransform={{
-					width: 900,
-					height: 247,
-					flexDirection: 'row',
+					width: 300,
+					height: 260,
+					positionType: "absolute",
+					position: { top: '100px', right: '64px' },
+					flexShrink: 1,
+					flexDirection: 'column',
 					alignItems: 'flex-start',
 					justifyContent: 'flex-start',
 					margin: { bottom: '35px' },
@@ -117,11 +117,75 @@ export function GameUI() {
 
 				}}
 			>
+				<UiEntity
+					key={`ui_PlayerList_header`}
+					uiTransform={{
+						width: "100%",
+						height: 64,
+					}}
+					uiText={{
+						value: "Player List",
+						fontSize: 24,
+						textAlign: "middle-center",
+					}}
+				>
+
+				</UiEntity>
 
 				{playerList}
 			</UiEntity>
 
+			{/* 
+			MARK: Countdown timer
+			*/}
+			<UiEntity
+				key={`ui_CountdownTimer_root`}
+				uiTransform={{
+					width: 240,
+					height: 140,
+					flexShrink: 0,
+					flexDirection: 'column',
+					alignItems: 'flex-start',
+					justifyContent: 'center',
+					margin: { top: '35px' },
+					display: _GameManager.countdownValue > 0 ? 'flex' : 'none'
+				}}
+				uiBackground={{
+					texture: {
+						src: "images/round-scores.png"
+					},
+					textureMode: "stretch",
+					color: Color4.Red()
 
+				}}
+			>
+				<UiEntity
+					key={`ui_CountdownTimer_header`}
+					uiTransform={{
+						width: "100%",
+						height: 64,
+					}}
+					uiText={{
+						value: "Countdown Timer",
+						fontSize: 24,
+						textAlign: "middle-center",
+					}}
+				/>
+				<UiEntity
+					key={`ui_CountdownTimer_value`}
+					uiTransform={{
+						width: "100%",
+						height: 64,
+					}}
+					uiText={{
+						value: _GameManager.countdownValue.toString(),
+						fontSize: 64,
+						textAlign: "middle-center",
+					}}
+				/>
+
+
+			</UiEntity>
 		</UiEntity>
 	)
 }

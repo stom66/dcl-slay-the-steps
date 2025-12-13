@@ -5,8 +5,11 @@ import { engine, Transform, GltfContainer } from '@dcl/sdk/ecs'
 
 import { Settings } from "./_settings"
 import { setupUi }  from './ui'
+import { _GameManager } from './GameManager'
 
 export function main() {
 	
 	setupUi()
+
+	_GameManager.init()
 }
