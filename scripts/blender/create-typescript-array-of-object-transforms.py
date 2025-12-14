@@ -39,10 +39,10 @@ for obj in selected_objects:
 
     # Log the position and rotation in the Blender console and the log file
     LOG_TXT.write(f"    // {obj.name}\n")
-    LOG_TXT.write(f"    new Transform({{\n")
-    LOG_TXT.write(f"        position: new Vector3({x}, {z}, {y}),\n")
-    LOG_TXT.write(f"        rotation: Quaternion.Euler({rx}, {rz}, {ry})\n")
-    LOG_TXT.write(f"    }}),\n")
+    LOG_TXT.write(f"    {{\n")
+    LOG_TXT.write(f"        position: Vector3.create({x}, {z}, {y}),\n")
+    LOG_TXT.write(f"        rotation: Quaternion.fromAngles({rx}, {rz}, {ry})\n")
+    LOG_TXT.write(f"    }},\n")
 
 
     # Add a blank line after each object
