@@ -3,12 +3,14 @@ import { Quaternion, Vector3 } from "@dcl/sdk/math"
 import { MessageBus } from "@dcl/sdk/message-bus"
 import { onEnterScene } from "@dcl/sdk/players"
 import { GetPlayerProfile, GetUTCTimestampMillis, waitForPlayerData } from "./utils"
-import { HideCountdownTimer, HideVoting, HideVotingResults, ShowCountdownTimer, ShowVoting, ShowVotingResults, ShowWarning, UpdatePlayerList } from "./ui.Game"
+import { HideCountdownTimer, HideVoting, HideVotingResults, ShowCountdownTimer, ShowVoting, ShowVotingResults, ShowWarning, UpdatePlayerList, UpdateVotingResults } from "./ui.Game"
 import { movePlayerTo } from "~system/RestrictedActions"
 
 import * as utils from '@dcl-sdk/utils'
 import { GameSettings } from "./_settings"
 import { _StageController } from "./StageController"
+import { _SeatManager } from "./SeatManager"
+import { _CameraController } from "./CameraController"
 
 
 export enum GameStatus {
@@ -50,6 +52,7 @@ class GameManager {
 		hostUserId   : 0,
 		players      : [],
 		gameStartTime: 0,
+		votes        : {},
 	}
 
 
@@ -61,7 +64,8 @@ class GameManager {
 		this.state.gameState     = GameStatus.IDLE
 		this.state.hostUserId    = ""
 		this.state.players       = []
-		this.state.gameStartTime = 0
+		this.state.gameStartTime = 0	
+		this.state.votes         = {}
 		HideCountdownTimer()
 		HideVoting()
 		HideVotingResults()
@@ -231,6 +235,12 @@ class GameManager {
 			return
 		} 
 
+		// Ignore if the game is full
+		if (this.state.players.length >= GameSettings.MAX_PLAYERS) {
+			ShowWarning("Game is full, please wait for the next game!")
+			return
+		}
+
 		sceneMessageBus.emit('joinGameRequest', { userId: localPlayer!.userId })
 	}
 
@@ -248,6 +258,13 @@ class GameManager {
 		// Ignore if player is already in the list of players
 		if (this.state.players.includes(userId)) {
 			console.log("GameManager: OnRequestToJoinExistingGame: Player already in the list of players", userId)
+			return
+		}
+
+		// Ignore if the game is full
+		if (this.state.players.length >= GameSettings.MAX_PLAYERS) {
+			console.log("GameManager: OnRequestToJoinExistingGame: Max players reached, ignoring request to join")
+			this.TriggerStateUpdate() // Push latest state to all clients, as the client whor equests must be missing data
 			return
 		}
 
@@ -316,7 +333,7 @@ class GameManager {
 
 		const roundDuration = GameSettings.ROUND_DURATION_PER_PLAYER * 1000 * this.state.players.length
 		utils.timers.setTimeout(() => {
-			this.TriggerVoting()
+			this.TriggerVotingStart()
 		}, roundDuration)
 	}
 
@@ -345,7 +362,7 @@ class GameManager {
 
 	// MARK: ---
 	// MARK: TriggerVoting
-	TriggerVoting() {
+	TriggerVotingStart() {
 		if (!this.iAmTheHost) return
 		console.log("GameManager: TriggerVoting")
 
@@ -355,7 +372,7 @@ class GameManager {
 		this.OnVotingStart()
 
 		utils.timers.setTimeout(() => {
-			this.TriggerGameEnd()
+			this.TriggerVotingEnd()
 		}, GameSettings.VOTING_DURATION * 1000)
 	}
 
@@ -372,28 +389,28 @@ class GameManager {
 
 
 	// MARK: ---
-	// MARK: TriggerGameEnd
-	TriggerGameEnd() {
+	// MARK: TriggerVotingEnd
+	TriggerVotingEnd() {
 		if (!this.iAmTheHost) return
-		console.log("GameManager: TriggerGameEnd")
+		console.log("GameManager: TriggerVotingEnd")
 
 		this.state.gameState = GameStatus.GAME_ENDED
 		this.TriggerStateUpdate()
 
-		this.OnGameEnd()
+		this.OnVotingEnd()
 
 		utils.timers.setTimeout(() => {
 			this.TriggerIdle()
 		}, GameSettings.GAME_ENDED_DURATION * 1000)
 	}
 
-	// MARK: OnGameEnd
-	OnGameEnd() {
-		console.log("GameManager: OnRoundEnd")
+	// MARK: OnVotingEnd
+	OnVotingEnd() {
+		console.log("GameManager: OnVotingEnd")
+		ShowVotingResults()
 
 		this.MovePlayersToLobby()
 
-		ShowVotingResults()
 	}
 
 
@@ -421,7 +438,8 @@ class GameManager {
 	OnAbort() {
 		console.log("GameManager: OnAbort")
 		this.ResetState()
-		this.MovePlayersToArena()
+		this.MovePlayersToLobby()
+		ShowWarning("Game was aborted, please wait for the next game!")
 		_StageController.Abort()
 	}
 
@@ -480,7 +498,7 @@ class GameManager {
 					this.OnVotingStart()
 					break
 				case GameStatus.GAME_ENDED:
-					this.OnGameEnd()
+					this.OnVotingEnd()
 					break
 				case GameStatus.IDLE:
 					this.OnIdle()
@@ -498,18 +516,22 @@ class GameManager {
 
 		this.state.votes[vote.voteFrom] = vote.voteFor
 		this.TriggerStateUpdate()
+		UpdateVotingResults()
 		// TODO: implement this	
 	}
 	
 	// MARK: ---
 	// MARK: Utils
 	MovePlayersToArena() {
-		movePlayerTo({newRelativePosition:Vector3.create(16, 6, 20)})
+		const playerIndex = this.state.players.indexOf(localPlayer!.userId)
+		_SeatManager.MovePlayerToSeat(playerIndex)
 
 	}
 
 	MovePlayersToLobby() {
+		_SeatManager.UnseatPlayer()
 		movePlayerTo({newRelativePosition:Vector3.create(16, 0, 20)})
+		_CameraController.ResetCamera()
 	}
 
 }

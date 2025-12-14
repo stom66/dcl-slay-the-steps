@@ -11,6 +11,9 @@ import { Color4, Vector3 } from '@dcl/sdk/math'
 
 import { MessageBus } from '@dcl/sdk/message-bus'
 import { _GameManager, localPlayer } from './GameManager'
+import { movePlayerTo } from '~system/RestrictedActions'
+import { GameSettings } from './_settings'
+import { _SeatManager } from './SeatManager'
 const sceneMessageBus = new MessageBus()
 
 export function DebugUI() {
@@ -118,13 +121,25 @@ export function DebugUI() {
 
 
 			<Button
-				key="eventUpdate"
+				key="btnMoveToLobby"
 				uiTransform={{ width: 180, height: 40, margin: 8 }}
-				value='EmitEvent: UpdateLeaderboard'
+				value='moveTo: lobby'
 				variant='primary'
 				fontSize={14}
 				onMouseDown={() => {
-					sceneMessageBus.emit('UpdateLeaderboard', {})
+					_SeatManager.UnseatPlayer()
+				}}
+			/>
+
+
+			<Button
+				key="btnMoveToLobby"
+				uiTransform={{ width: 180, height: 40, margin: 8 }}
+				value='moveTo: arena'
+				variant='primary'
+				fontSize={14}
+				onMouseDown={() => {
+					_SeatManager.MovePlayerToSeat(Math.floor(Math.random() * 16))
 				}}
 			/>
 

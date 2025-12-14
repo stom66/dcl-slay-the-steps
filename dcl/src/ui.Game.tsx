@@ -41,7 +41,7 @@ export function HideCountdownTimer() {
 
 export function ShowVotingResults() {
 	HideVoting()
-	votingResults = BuildVotingResults()
+	UpdateVotingResults()
 	visibleVotingResults = true
 }
 export function HideVotingResults() {
@@ -306,11 +306,15 @@ function BuildVotingResults() {
 	let elements: any[] = []
 	const results: Record<string, number> = {}
 
+
 	//const votes = fakeVoteData // DEBUG DATA
 	const votes = _GameManager.state.votes
+	console.log("BuildVotingResults(), votes.length:", votes.length)
 	if (!votes) {
 		return elements
 	}
+
+	console.log("BuildVotingResults()", votes.length)
 
 
 	Object.entries(votes).forEach(([userId, votedFor]) => {

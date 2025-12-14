@@ -32,7 +32,14 @@ export class GameSettings {
 	static GAME_ENDED_DURATION       = 10
 	static UTC_UPDATE_INTERVAL       = 15
 
-	static STAGE_SPAWN_POSITION = Vector3.create(16, 0, 16)
-	static STAGE_SPAWN_ROTATION = Quaternion.fromEulerDegrees(0, 0, 0)
-	static STAGE_SPAWN_SCALE = Vector3.create(1, 1, 1)
+	static NPC_SPAWN_POSITION       = Vector3.create(16, 16.25, 30)
+	static NPC_SPAWN_ROTATION       = Quaternion.fromEulerDegrees(0, 0, 0)
+	static NPC_SPAWN_SCALE          = Vector3.create(1, 1, 1)
+
+	static LOBBY_SPAWN_POSITION       = Vector3.create(16, 0, 20)
+	static LOBBY_SPAWN_LOOK_AT_TARGET = Vector3.create(16, 13.5, 26)
+	// No ARENA spawn position, chooses a random seat
+	static ARENA_SPAWN_LOOK_AT_TARGET = Vector3.create(16, 13.5, 26)
+
+	static MAX_PLAYERS = 16
 }

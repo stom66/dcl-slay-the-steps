@@ -6,6 +6,7 @@ import { Color3, Quaternion, Vector3 } from '@dcl/sdk/math'
 import { AvatarShape, engine, Entity, Transform } from '@dcl/sdk/ecs'
 import { getPlayerData } from '~system/Players'
 import { getPlayer } from '@dcl/sdk/players'
+import { _CameraController } from './CameraController'
 
 // Handles all Stage related stuff, such as spawning NPCs to represent the player
 // Also handles player cameras
@@ -22,6 +23,10 @@ type NPCOutfit = {
 
 class StageController {
 	isRunning: boolean = false
+	currentNPC: Entity | undefined = undefined
+	currentNPCUserId: string | undefined = undefined
+
+	npcs: Record<string, Entity> = {}
 
 	constructor() {
 		console.log("StageController constructor")
@@ -34,20 +39,44 @@ class StageController {
 	RunShow(players: string[]) {
 		console.log("StageController RunShow")
 
+		const npcInterval = GameSettings.ROUND_DURATION_PER_PLAYER * 1000
+		const totalDuration = players.length * npcInterval
 		this.isRunning = true
 		// Loop through each of the playters we've been given
 
+		let index = 0
 		players.forEach((userId) => {
+
 			const playerName = GetPlayerName(userId)
 			console.log("StageController RunShow: playerName", playerName)
 
-			const npc = this.CreateNPCClone(userId)
+			
+			const npc = this.CreateNPC(userId)
 			if (!npc) {
 				console.error("StageController RunShow: Failed to create NPC clone for user", userId)
 				return
 			}
-			this.AnimateNPC(npc)
+			this.npcs[userId] = npc
+
+			utils.timers.setTimeout(() => {
+				// Handle aborted runs
+				if (!this.isRunning) return
+
+				_CameraController.TrackEntity(npc)
+
+				this.AnimateNPC(npc)
+				utils.timers.setTimeout(() => {
+					this.DestroyNPC(npc)
+				}, GameSettings.ROUND_DURATION_PER_PLAYER * 1000)
+
+				index++
+			}, index * npcInterval)
 		})
+
+		// When show has ended
+		utils.timers.setTimeout(() => {
+			_CameraController.ResetCamera()
+		}, totalDuration)
 	}
 
 	Abort() {
@@ -55,7 +84,7 @@ class StageController {
 	}
 
 
-	CreateNPCClone(userId: string): Entity | undefined {
+	CreateNPC(userId: string): Entity | undefined {
 		console.log("StageController CreateNPCClone: userId", userId)
 
 		// Fetch the userData
@@ -86,6 +115,15 @@ class StageController {
 		})
 
 		return npc
+	}
+
+	DestroyNPC(npc: Entity) {
+		console.log("StageController DestroyNPC: npc", npc)
+		engine.removeEntity(npc)
+		if (this.currentNPC === npc) {
+			this.currentNPC = undefined
+			this.currentNPCUserId = undefined
+		}
 	}
 
 	AnimateNPC(npc: Entity) {

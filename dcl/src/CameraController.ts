@@ -1,7 +1,10 @@
-import { engine, Entity, MainCamera, VirtualCamera } from "@dcl/sdk/ecs"
+import { engine, Entity, MainCamera, Transform, VirtualCamera } from "@dcl/sdk/ecs"
+import { Vector3 } from "@dcl/sdk/math"
 
 class CameraController {
 	transitionDuration: number = 0.5
+
+	cameraEntities: Entity[] = []
 
 	constructor() {
 		console.log("CameraController constructor")
@@ -14,23 +17,40 @@ class CameraController {
 	TrackEntity(
 		entity: Entity
 	) {
-		const camera = engine.CameraEntity
+		// Virtual Camera entity
+		const camera = engine.addEntity()
+		this.cameraEntities.push(camera)
 
+		// Virtual camera component
 		VirtualCamera.create(camera, {
 			lookAtEntity     : entity,
 			defaultTransition: {
 				transitionMode: VirtualCamera.Transition.Time(this.transitionDuration),
 			}
 		})
-		const target = entity
 
+		// Position the camera directly above the player
+		const playerPos = Transform.get(engine.PlayerEntity).position
+		Transform.create(camera, {
+			position: Vector3.create(0, 1.75, 0),
+			parent: engine.PlayerEntity,
+		})
+
+		// Enable the virtual camera
 		const mainCamera = MainCamera.getMutable(engine.CameraEntity)
 		mainCamera.virtualCameraEntity = camera
 	}
 
 	ResetCamera() {
+		// Stop using virtual camera
 		const mainCamera = MainCamera.getMutable(engine.CameraEntity)
 		mainCamera.virtualCameraEntity = undefined
+
+		// Cleanup old cameras
+		this.cameraEntities.forEach((camera) => {
+			engine.removeEntity(camera)
+		})
+		this.cameraEntities = []
 	}
 }
 
