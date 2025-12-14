@@ -6,6 +6,7 @@ import { engine, Transform, GltfContainer } from '@dcl/sdk/ecs'
 import { SceneSettings, GameSettings } from "./_settings"
 import { setupUi }  from './ui'
 import { _GameManager } from './GameManager'
+import { _StageController } from './StageController'
 import { _ShopManager } from './ShopManager'
 
 export function main() {

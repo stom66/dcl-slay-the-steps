@@ -7,6 +7,8 @@ import { HideCountdownTimer, ShowCountdownTimer, ShowVoting, ShowVotingResults, 
 import { movePlayerTo } from "~system/RestrictedActions"
 
 import * as utils from '@dcl-sdk/utils'
+import { GameSettings } from "./_settings"
+import { _StageController } from "./StageController"
 
 
 export enum GameStatus {
@@ -30,13 +32,6 @@ export type RequestVote = {
 	voteFor: string,
 }
 
-const GAMESETTINGS = {
-	COUNTDOWN_DURATION       : 6,
-	ROUND_DURATION_PER_PLAYER: 6,
-	VOTING_DURATION          : 10,
-	GAME_ENDED_DURATION      : 10,
-	UTC_UPDATE_INTERVAL      : 15
-}
 
 const sceneMessageBus = new MessageBus()
 export let localPlayer: any
@@ -161,7 +156,7 @@ class GameManager {
 		this.utcTimestampMillis     += dt * 1000
 		this.utcTimestamp           =  Math.floor(this.utcTimestampMillis / 1000)
 
-		if (this.timeSinceLastUTCUpdate >= GAMESETTINGS.UTC_UPDATE_INTERVAL) {
+		if (this.timeSinceLastUTCUpdate >= GameSettings.UTC_UPDATE_INTERVAL) {
 			this.timeSinceLastUTCUpdate = 0 // set this here to prevent multiple calls to FetchUTCTimestamp()
 			this.FetchUTCTimestamp()
 		}
@@ -262,7 +257,7 @@ class GameManager {
 		this.iAmInTheGame           = true
 		this.state.hostUserId       = localPlayer!.userId
 		this.state.players          = [localPlayer?.userId]
-		this.state.gameStartTime = this.utcTimestamp + GAMESETTINGS.COUNTDOWN_DURATION
+		this.state.gameStartTime = this.utcTimestamp + GameSettings.COUNTDOWN_DURATION
 
 		this.TriggerCountdownStart()
 	}
@@ -282,7 +277,7 @@ class GameManager {
 
 		utils.timers.setTimeout(() => {
 			this.TriggerRoundStart()
-		}, GAMESETTINGS.COUNTDOWN_DURATION * 1000)
+		}, GameSettings.COUNTDOWN_DURATION * 1000)
 	}
 
 	// MARK: OnCountdownStart
@@ -307,7 +302,7 @@ class GameManager {
 
 		this.OnRoundStart() // Manually trigger this here to apply it to the host
 
-		const roundDuration = GAMESETTINGS.ROUND_DURATION_PER_PLAYER * 1000 * this.state.players.length
+		const roundDuration = GameSettings.ROUND_DURATION_PER_PLAYER * 1000 * this.state.players.length
 		utils.timers.setTimeout(() => {
 			this.TriggerVoting()
 		}, roundDuration)
@@ -322,6 +317,7 @@ class GameManager {
 		HideCountdownTimer()
 		this.MovePlayersToArena()
 
+		_StageController.RunShow(this.state.players)
 
 		// Now we need to:
 		// 1. Spawn a camera
@@ -348,7 +344,7 @@ class GameManager {
 
 		utils.timers.setTimeout(() => {
 			this.TriggerGameEnd()
-		}, GAMESETTINGS.VOTING_DURATION * 1000)
+		}, GameSettings.VOTING_DURATION * 1000)
 	}
 
 	// MARK: OnVotingStart
@@ -376,7 +372,7 @@ class GameManager {
 
 		utils.timers.setTimeout(() => {
 			this.TriggerIdle()
-		}, GAMESETTINGS.GAME_ENDED_DURATION * 1000)
+		}, GameSettings.GAME_ENDED_DURATION * 1000)
 	}
 
 	// MARK: OnGameEnd
