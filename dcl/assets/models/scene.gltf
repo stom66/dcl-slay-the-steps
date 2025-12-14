@@ -131,7 +131,8 @@
 				120,
 				121,
 				122,
-				123
+				123,
+				124
 			]
 		}
 	],
@@ -1537,6 +1538,15 @@
 				0,
 				-16
 			]
+		},
+		{
+			"mesh":122,
+			"name":"stage_walkway",
+			"translation":[
+				16,
+				10.2629976272583,
+				-12.071305274963379
+			]
 		}
 	],
 	"animations":[
@@ -1567,19 +1577,19 @@
 			"name":"shelves_collider_box",
 			"samplers":[
 				{
-					"input":403,
+					"input":407,
 					"interpolation":"STEP",
-					"output":404
+					"output":408
 				},
 				{
-					"input":403,
+					"input":407,
 					"interpolation":"STEP",
-					"output":405
+					"output":409
 				},
 				{
-					"input":403,
+					"input":407,
 					"interpolation":"STEP",
-					"output":406
+					"output":410
 				}
 			]
 		},
@@ -1610,19 +1620,19 @@
 			"name":"Empty",
 			"samplers":[
 				{
-					"input":403,
+					"input":407,
 					"interpolation":"STEP",
-					"output":407
+					"output":411
 				},
 				{
-					"input":403,
+					"input":407,
 					"interpolation":"STEP",
-					"output":405
+					"output":409
 				},
 				{
-					"input":403,
+					"input":407,
 					"interpolation":"STEP",
-					"output":406
+					"output":410
 				}
 			]
 		},
@@ -1653,19 +1663,19 @@
 			"name":"stairs_sides_collider",
 			"samplers":[
 				{
-					"input":403,
+					"input":407,
 					"interpolation":"STEP",
-					"output":408
+					"output":412
 				},
 				{
-					"input":403,
+					"input":407,
 					"interpolation":"STEP",
-					"output":405
+					"output":409
 				},
 				{
-					"input":403,
+					"input":407,
 					"interpolation":"STEP",
-					"output":406
+					"output":410
 				}
 			]
 		},
@@ -1696,19 +1706,19 @@
 			"name":"floor_02_collider_box",
 			"samplers":[
 				{
-					"input":403,
+					"input":407,
+					"interpolation":"STEP",
+					"output":413
+				},
+				{
+					"input":407,
 					"interpolation":"STEP",
 					"output":409
 				},
 				{
-					"input":403,
+					"input":407,
 					"interpolation":"STEP",
-					"output":405
-				},
-				{
-					"input":403,
-					"interpolation":"STEP",
-					"output":406
+					"output":410
 				}
 			]
 		},
@@ -1739,19 +1749,19 @@
 			"name":"stage_collider_box",
 			"samplers":[
 				{
-					"input":403,
+					"input":407,
+					"interpolation":"STEP",
+					"output":414
+				},
+				{
+					"input":407,
+					"interpolation":"STEP",
+					"output":409
+				},
+				{
+					"input":407,
 					"interpolation":"STEP",
 					"output":410
-				},
-				{
-					"input":403,
-					"interpolation":"STEP",
-					"output":405
-				},
-				{
-					"input":403,
-					"interpolation":"STEP",
-					"output":406
 				}
 			]
 		},
@@ -1782,19 +1792,19 @@
 			"name":"stage_collider",
 			"samplers":[
 				{
-					"input":403,
+					"input":407,
 					"interpolation":"STEP",
-					"output":408
+					"output":412
 				},
 				{
-					"input":403,
+					"input":407,
 					"interpolation":"STEP",
-					"output":405
+					"output":409
 				},
 				{
-					"input":403,
+					"input":407,
 					"interpolation":"STEP",
-					"output":406
+					"output":410
 				}
 			]
 		},
@@ -1825,19 +1835,19 @@
 			"name":"seat_001_collider_box",
 			"samplers":[
 				{
-					"input":403,
+					"input":407,
 					"interpolation":"STEP",
-					"output":411
+					"output":415
 				},
 				{
-					"input":403,
+					"input":407,
 					"interpolation":"STEP",
-					"output":405
+					"output":409
 				},
 				{
-					"input":403,
+					"input":407,
 					"interpolation":"STEP",
-					"output":406
+					"output":410
 				}
 			]
 		},
@@ -1868,19 +1878,19 @@
 			"name":"seat_002_collider_box",
 			"samplers":[
 				{
-					"input":403,
+					"input":407,
 					"interpolation":"STEP",
-					"output":412
+					"output":416
 				},
 				{
-					"input":403,
+					"input":407,
 					"interpolation":"STEP",
-					"output":405
+					"output":409
 				},
 				{
-					"input":403,
+					"input":407,
 					"interpolation":"STEP",
-					"output":406
+					"output":410
 				}
 			]
 		},
@@ -1911,19 +1921,19 @@
 			"name":"seat_003_collider_box",
 			"samplers":[
 				{
-					"input":403,
+					"input":407,
 					"interpolation":"STEP",
-					"output":413
+					"output":417
 				},
 				{
-					"input":403,
+					"input":407,
 					"interpolation":"STEP",
-					"output":405
+					"output":409
 				},
 				{
-					"input":403,
+					"input":407,
 					"interpolation":"STEP",
-					"output":406
+					"output":410
 				}
 			]
 		},
@@ -1954,19 +1964,19 @@
 			"name":"seat_004_collider_box",
 			"samplers":[
 				{
-					"input":403,
+					"input":407,
 					"interpolation":"STEP",
-					"output":414
+					"output":418
 				},
 				{
-					"input":403,
+					"input":407,
 					"interpolation":"STEP",
-					"output":405
+					"output":409
 				},
 				{
-					"input":403,
+					"input":407,
 					"interpolation":"STEP",
-					"output":406
+					"output":410
 				}
 			]
 		},
@@ -1997,19 +2007,19 @@
 			"name":"seat_005_collider_box",
 			"samplers":[
 				{
-					"input":403,
+					"input":407,
 					"interpolation":"STEP",
-					"output":415
+					"output":419
 				},
 				{
-					"input":403,
+					"input":407,
 					"interpolation":"STEP",
-					"output":405
+					"output":409
 				},
 				{
-					"input":403,
+					"input":407,
 					"interpolation":"STEP",
-					"output":406
+					"output":410
 				}
 			]
 		},
@@ -2040,19 +2050,19 @@
 			"name":"seat_006_collider_box",
 			"samplers":[
 				{
-					"input":403,
+					"input":407,
 					"interpolation":"STEP",
-					"output":416
+					"output":420
 				},
 				{
-					"input":403,
+					"input":407,
 					"interpolation":"STEP",
-					"output":405
+					"output":409
 				},
 				{
-					"input":403,
+					"input":407,
 					"interpolation":"STEP",
-					"output":406
+					"output":410
 				}
 			]
 		},
@@ -2083,19 +2093,19 @@
 			"name":"seat_007_collider_box",
 			"samplers":[
 				{
-					"input":403,
+					"input":407,
 					"interpolation":"STEP",
-					"output":417
+					"output":421
 				},
 				{
-					"input":403,
+					"input":407,
 					"interpolation":"STEP",
-					"output":405
+					"output":409
 				},
 				{
-					"input":403,
+					"input":407,
 					"interpolation":"STEP",
-					"output":406
+					"output":410
 				}
 			]
 		},
@@ -2126,19 +2136,19 @@
 			"name":"seat_008_collider_box",
 			"samplers":[
 				{
-					"input":403,
+					"input":407,
 					"interpolation":"STEP",
-					"output":418
+					"output":422
 				},
 				{
-					"input":403,
+					"input":407,
 					"interpolation":"STEP",
-					"output":405
+					"output":409
 				},
 				{
-					"input":403,
+					"input":407,
 					"interpolation":"STEP",
-					"output":406
+					"output":410
 				}
 			]
 		},
@@ -2169,19 +2179,19 @@
 			"name":"seat_center_collider",
 			"samplers":[
 				{
-					"input":403,
+					"input":407,
 					"interpolation":"STEP",
-					"output":419
+					"output":423
 				},
 				{
-					"input":403,
+					"input":407,
 					"interpolation":"STEP",
-					"output":405
+					"output":409
 				},
 				{
-					"input":403,
+					"input":407,
 					"interpolation":"STEP",
-					"output":420
+					"output":424
 				}
 			]
 		},
@@ -2212,19 +2222,19 @@
 			"name":"seat_round_001_collider",
 			"samplers":[
 				{
-					"input":403,
+					"input":407,
 					"interpolation":"STEP",
-					"output":421
+					"output":425
 				},
 				{
-					"input":403,
+					"input":407,
 					"interpolation":"STEP",
-					"output":405
+					"output":409
 				},
 				{
-					"input":403,
+					"input":407,
 					"interpolation":"STEP",
-					"output":406
+					"output":410
 				}
 			]
 		},
@@ -2255,19 +2265,19 @@
 			"name":"seat_cube_006_collider_box",
 			"samplers":[
 				{
-					"input":403,
+					"input":407,
 					"interpolation":"STEP",
-					"output":422
+					"output":426
 				},
 				{
-					"input":403,
+					"input":407,
 					"interpolation":"STEP",
-					"output":405
+					"output":409
 				},
 				{
-					"input":403,
+					"input":407,
 					"interpolation":"STEP",
-					"output":406
+					"output":410
 				}
 			]
 		},
@@ -2298,19 +2308,19 @@
 			"name":"seat_cube_002_collider_box",
 			"samplers":[
 				{
-					"input":403,
+					"input":407,
 					"interpolation":"STEP",
-					"output":423
+					"output":427
 				},
 				{
-					"input":403,
+					"input":407,
 					"interpolation":"STEP",
-					"output":405
+					"output":409
 				},
 				{
-					"input":403,
+					"input":407,
 					"interpolation":"STEP",
-					"output":406
+					"output":410
 				}
 			]
 		},
@@ -2341,19 +2351,19 @@
 			"name":"seat_cube_013_collider_box",
 			"samplers":[
 				{
-					"input":403,
+					"input":407,
 					"interpolation":"STEP",
-					"output":424
+					"output":428
 				},
 				{
-					"input":403,
+					"input":407,
 					"interpolation":"STEP",
-					"output":405
+					"output":409
 				},
 				{
-					"input":403,
+					"input":407,
 					"interpolation":"STEP",
-					"output":406
+					"output":410
 				}
 			]
 		},
@@ -2384,19 +2394,19 @@
 			"name":"seat_cube_010_collider_box",
 			"samplers":[
 				{
-					"input":403,
+					"input":407,
 					"interpolation":"STEP",
-					"output":425
+					"output":429
 				},
 				{
-					"input":403,
+					"input":407,
 					"interpolation":"STEP",
-					"output":405
+					"output":409
 				},
 				{
-					"input":403,
+					"input":407,
 					"interpolation":"STEP",
-					"output":406
+					"output":410
 				}
 			]
 		},
@@ -2427,19 +2437,19 @@
 			"name":"seat_cube_005_collider_box",
 			"samplers":[
 				{
-					"input":403,
+					"input":407,
 					"interpolation":"STEP",
-					"output":426
+					"output":430
 				},
 				{
-					"input":403,
+					"input":407,
 					"interpolation":"STEP",
-					"output":405
+					"output":409
 				},
 				{
-					"input":403,
+					"input":407,
 					"interpolation":"STEP",
-					"output":406
+					"output":410
 				}
 			]
 		},
@@ -2470,19 +2480,19 @@
 			"name":"seat_cube_003_collider_box",
 			"samplers":[
 				{
-					"input":403,
+					"input":407,
 					"interpolation":"STEP",
-					"output":427
+					"output":431
 				},
 				{
-					"input":403,
+					"input":407,
 					"interpolation":"STEP",
-					"output":405
+					"output":409
 				},
 				{
-					"input":403,
+					"input":407,
 					"interpolation":"STEP",
-					"output":406
+					"output":410
 				}
 			]
 		},
@@ -2513,19 +2523,19 @@
 			"name":"seat_cube_014_collider_box",
 			"samplers":[
 				{
-					"input":403,
+					"input":407,
 					"interpolation":"STEP",
-					"output":428
+					"output":432
 				},
 				{
-					"input":403,
+					"input":407,
 					"interpolation":"STEP",
-					"output":405
+					"output":409
 				},
 				{
-					"input":403,
+					"input":407,
 					"interpolation":"STEP",
-					"output":406
+					"output":410
 				}
 			]
 		},
@@ -2556,19 +2566,19 @@
 			"name":"seat_cube_011_collider_box",
 			"samplers":[
 				{
-					"input":403,
+					"input":407,
 					"interpolation":"STEP",
-					"output":429
+					"output":433
 				},
 				{
-					"input":403,
+					"input":407,
 					"interpolation":"STEP",
-					"output":405
+					"output":409
 				},
 				{
-					"input":403,
+					"input":407,
 					"interpolation":"STEP",
-					"output":406
+					"output":410
 				}
 			]
 		},
@@ -2599,19 +2609,19 @@
 			"name":"seat_cube_001_collider_box",
 			"samplers":[
 				{
-					"input":403,
+					"input":407,
 					"interpolation":"STEP",
-					"output":430
+					"output":434
 				},
 				{
-					"input":403,
+					"input":407,
 					"interpolation":"STEP",
-					"output":405
+					"output":409
 				},
 				{
-					"input":403,
+					"input":407,
 					"interpolation":"STEP",
-					"output":406
+					"output":410
 				}
 			]
 		},
@@ -2642,19 +2652,19 @@
 			"name":"seat_cube_016_collider_box",
 			"samplers":[
 				{
-					"input":403,
+					"input":407,
 					"interpolation":"STEP",
-					"output":431
+					"output":435
 				},
 				{
-					"input":403,
+					"input":407,
 					"interpolation":"STEP",
-					"output":405
+					"output":409
 				},
 				{
-					"input":403,
+					"input":407,
 					"interpolation":"STEP",
-					"output":406
+					"output":410
 				}
 			]
 		},
@@ -2685,19 +2695,19 @@
 			"name":"seat_cube_004_collider_box",
 			"samplers":[
 				{
-					"input":403,
+					"input":407,
 					"interpolation":"STEP",
-					"output":432
+					"output":436
 				},
 				{
-					"input":403,
+					"input":407,
 					"interpolation":"STEP",
-					"output":405
+					"output":409
 				},
 				{
-					"input":403,
+					"input":407,
 					"interpolation":"STEP",
-					"output":406
+					"output":410
 				}
 			]
 		},
@@ -2728,19 +2738,19 @@
 			"name":"seat_cube_015_collider_box",
 			"samplers":[
 				{
-					"input":403,
+					"input":407,
 					"interpolation":"STEP",
-					"output":433
+					"output":437
 				},
 				{
-					"input":403,
+					"input":407,
 					"interpolation":"STEP",
-					"output":405
+					"output":409
 				},
 				{
-					"input":403,
+					"input":407,
 					"interpolation":"STEP",
-					"output":406
+					"output":410
 				}
 			]
 		},
@@ -2771,19 +2781,19 @@
 			"name":"seat_cube_007_collider_box",
 			"samplers":[
 				{
-					"input":403,
+					"input":407,
 					"interpolation":"STEP",
-					"output":434
+					"output":438
 				},
 				{
-					"input":403,
+					"input":407,
 					"interpolation":"STEP",
-					"output":405
+					"output":409
 				},
 				{
-					"input":403,
+					"input":407,
 					"interpolation":"STEP",
-					"output":406
+					"output":410
 				}
 			]
 		},
@@ -2814,19 +2824,19 @@
 			"name":"seat_cube_009_collider_box",
 			"samplers":[
 				{
-					"input":403,
+					"input":407,
 					"interpolation":"STEP",
-					"output":435
+					"output":439
 				},
 				{
-					"input":403,
+					"input":407,
 					"interpolation":"STEP",
-					"output":405
+					"output":409
 				},
 				{
-					"input":403,
+					"input":407,
 					"interpolation":"STEP",
-					"output":406
+					"output":410
 				}
 			]
 		},
@@ -2857,19 +2867,19 @@
 			"name":"seat_cube_008_collider_box",
 			"samplers":[
 				{
-					"input":403,
+					"input":407,
 					"interpolation":"STEP",
-					"output":436
+					"output":440
 				},
 				{
-					"input":403,
+					"input":407,
 					"interpolation":"STEP",
-					"output":405
+					"output":409
 				},
 				{
-					"input":403,
+					"input":407,
 					"interpolation":"STEP",
-					"output":406
+					"output":410
 				}
 			]
 		},
@@ -2900,19 +2910,19 @@
 			"name":"seat_cube_012_collider_box",
 			"samplers":[
 				{
-					"input":403,
+					"input":407,
 					"interpolation":"STEP",
-					"output":437
+					"output":441
 				},
 				{
-					"input":403,
+					"input":407,
 					"interpolation":"STEP",
-					"output":405
+					"output":409
 				},
 				{
-					"input":403,
+					"input":407,
 					"interpolation":"STEP",
-					"output":406
+					"output":410
 				}
 			]
 		},
@@ -2943,19 +2953,19 @@
 			"name":"seat_round_002_collider",
 			"samplers":[
 				{
-					"input":403,
+					"input":407,
 					"interpolation":"STEP",
-					"output":438
+					"output":442
 				},
 				{
-					"input":403,
+					"input":407,
 					"interpolation":"STEP",
-					"output":405
+					"output":409
 				},
 				{
-					"input":403,
+					"input":407,
 					"interpolation":"STEP",
-					"output":406
+					"output":410
 				}
 			]
 		},
@@ -2986,19 +2996,19 @@
 			"name":"seat_round_003_collider",
 			"samplers":[
 				{
-					"input":403,
+					"input":407,
 					"interpolation":"STEP",
-					"output":439
+					"output":443
 				},
 				{
-					"input":403,
+					"input":407,
 					"interpolation":"STEP",
-					"output":405
+					"output":409
 				},
 				{
-					"input":403,
+					"input":407,
 					"interpolation":"STEP",
-					"output":406
+					"output":410
 				}
 			]
 		},
@@ -3029,19 +3039,19 @@
 			"name":"seat_round_004_collider",
 			"samplers":[
 				{
-					"input":403,
+					"input":407,
 					"interpolation":"STEP",
-					"output":440
+					"output":444
 				},
 				{
-					"input":403,
+					"input":407,
 					"interpolation":"STEP",
-					"output":405
+					"output":409
 				},
 				{
-					"input":403,
+					"input":407,
 					"interpolation":"STEP",
-					"output":406
+					"output":410
 				}
 			]
 		},
@@ -3072,19 +3082,19 @@
 			"name":"seat_round_005_collider",
 			"samplers":[
 				{
-					"input":403,
+					"input":407,
 					"interpolation":"STEP",
-					"output":441
+					"output":445
 				},
 				{
-					"input":403,
+					"input":407,
 					"interpolation":"STEP",
-					"output":405
+					"output":409
 				},
 				{
-					"input":403,
+					"input":407,
 					"interpolation":"STEP",
-					"output":406
+					"output":410
 				}
 			]
 		},
@@ -3115,19 +3125,19 @@
 			"name":"seat_round_006_collider",
 			"samplers":[
 				{
-					"input":403,
+					"input":407,
 					"interpolation":"STEP",
-					"output":442
+					"output":446
 				},
 				{
-					"input":403,
+					"input":407,
 					"interpolation":"STEP",
-					"output":405
+					"output":409
 				},
 				{
-					"input":403,
+					"input":407,
 					"interpolation":"STEP",
-					"output":406
+					"output":410
 				}
 			]
 		},
@@ -3158,19 +3168,19 @@
 			"name":"seat_round_007_collider",
 			"samplers":[
 				{
-					"input":403,
+					"input":407,
 					"interpolation":"STEP",
-					"output":443
+					"output":447
 				},
 				{
-					"input":403,
+					"input":407,
 					"interpolation":"STEP",
-					"output":405
+					"output":409
 				},
 				{
-					"input":403,
+					"input":407,
 					"interpolation":"STEP",
-					"output":406
+					"output":410
 				}
 			]
 		},
@@ -3201,19 +3211,19 @@
 			"name":"seat_round_008_collider",
 			"samplers":[
 				{
-					"input":403,
+					"input":407,
 					"interpolation":"STEP",
-					"output":444
+					"output":448
 				},
 				{
-					"input":403,
+					"input":407,
 					"interpolation":"STEP",
-					"output":405
+					"output":409
 				},
 				{
-					"input":403,
+					"input":407,
 					"interpolation":"STEP",
-					"output":406
+					"output":410
 				}
 			]
 		},
@@ -3244,19 +3254,19 @@
 			"name":"seat_round_009_collider",
 			"samplers":[
 				{
-					"input":403,
+					"input":407,
 					"interpolation":"STEP",
-					"output":445
+					"output":449
 				},
 				{
-					"input":403,
+					"input":407,
 					"interpolation":"STEP",
-					"output":405
+					"output":409
 				},
 				{
-					"input":403,
+					"input":407,
 					"interpolation":"STEP",
-					"output":406
+					"output":410
 				}
 			]
 		},
@@ -3287,19 +3297,19 @@
 			"name":"seat_round_010_collider",
 			"samplers":[
 				{
-					"input":403,
+					"input":407,
 					"interpolation":"STEP",
-					"output":446
+					"output":450
 				},
 				{
-					"input":403,
+					"input":407,
 					"interpolation":"STEP",
-					"output":405
+					"output":409
 				},
 				{
-					"input":403,
+					"input":407,
 					"interpolation":"STEP",
-					"output":406
+					"output":410
 				}
 			]
 		},
@@ -3330,19 +3340,19 @@
 			"name":"seat_round_011_collider",
 			"samplers":[
 				{
-					"input":403,
+					"input":407,
 					"interpolation":"STEP",
-					"output":447
+					"output":451
 				},
 				{
-					"input":403,
+					"input":407,
 					"interpolation":"STEP",
-					"output":405
+					"output":409
 				},
 				{
-					"input":403,
+					"input":407,
 					"interpolation":"STEP",
-					"output":406
+					"output":410
 				}
 			]
 		},
@@ -3373,19 +3383,19 @@
 			"name":"seat_round_012_collider",
 			"samplers":[
 				{
-					"input":403,
+					"input":407,
 					"interpolation":"STEP",
-					"output":448
+					"output":452
 				},
 				{
-					"input":403,
+					"input":407,
 					"interpolation":"STEP",
-					"output":405
+					"output":409
 				},
 				{
-					"input":403,
+					"input":407,
 					"interpolation":"STEP",
-					"output":406
+					"output":410
 				}
 			]
 		},
@@ -3416,19 +3426,19 @@
 			"name":"seat_round_013_collider",
 			"samplers":[
 				{
-					"input":403,
+					"input":407,
 					"interpolation":"STEP",
-					"output":449
+					"output":453
 				},
 				{
-					"input":403,
+					"input":407,
 					"interpolation":"STEP",
-					"output":405
+					"output":409
 				},
 				{
-					"input":403,
+					"input":407,
 					"interpolation":"STEP",
-					"output":406
+					"output":410
 				}
 			]
 		},
@@ -3459,19 +3469,19 @@
 			"name":"seat_round_014_collider",
 			"samplers":[
 				{
-					"input":403,
+					"input":407,
 					"interpolation":"STEP",
-					"output":450
+					"output":454
 				},
 				{
-					"input":403,
+					"input":407,
 					"interpolation":"STEP",
-					"output":405
+					"output":409
 				},
 				{
-					"input":403,
+					"input":407,
 					"interpolation":"STEP",
-					"output":406
+					"output":410
 				}
 			]
 		},
@@ -3502,19 +3512,19 @@
 			"name":"seat_round_015_collider",
 			"samplers":[
 				{
-					"input":403,
+					"input":407,
 					"interpolation":"STEP",
-					"output":451
+					"output":455
 				},
 				{
-					"input":403,
+					"input":407,
 					"interpolation":"STEP",
-					"output":405
+					"output":409
 				},
 				{
-					"input":403,
+					"input":407,
 					"interpolation":"STEP",
-					"output":406
+					"output":410
 				}
 			]
 		},
@@ -3545,19 +3555,19 @@
 			"name":"seat_round_016_collider",
 			"samplers":[
 				{
-					"input":403,
+					"input":407,
 					"interpolation":"STEP",
-					"output":452
+					"output":456
 				},
 				{
-					"input":403,
+					"input":407,
 					"interpolation":"STEP",
-					"output":405
+					"output":409
 				},
 				{
-					"input":403,
+					"input":407,
 					"interpolation":"STEP",
-					"output":406
+					"output":410
 				}
 			]
 		},
@@ -3588,19 +3598,19 @@
 			"name":"wall_001_collider_box",
 			"samplers":[
 				{
-					"input":403,
+					"input":407,
 					"interpolation":"STEP",
-					"output":453
+					"output":457
 				},
 				{
-					"input":403,
+					"input":407,
 					"interpolation":"STEP",
-					"output":405
+					"output":409
 				},
 				{
-					"input":403,
+					"input":407,
 					"interpolation":"STEP",
-					"output":406
+					"output":410
 				}
 			]
 		},
@@ -3631,19 +3641,19 @@
 			"name":"wall_002_collider_box",
 			"samplers":[
 				{
-					"input":403,
+					"input":407,
 					"interpolation":"STEP",
-					"output":454
+					"output":458
 				},
 				{
-					"input":403,
+					"input":407,
 					"interpolation":"STEP",
-					"output":455
+					"output":459
 				},
 				{
-					"input":403,
+					"input":407,
 					"interpolation":"STEP",
-					"output":406
+					"output":410
 				}
 			]
 		},
@@ -3674,19 +3684,19 @@
 			"name":"wall_corner_001_collider",
 			"samplers":[
 				{
-					"input":403,
+					"input":407,
 					"interpolation":"STEP",
-					"output":456
+					"output":460
 				},
 				{
-					"input":403,
+					"input":407,
 					"interpolation":"STEP",
-					"output":405
+					"output":409
 				},
 				{
-					"input":403,
+					"input":407,
 					"interpolation":"STEP",
-					"output":406
+					"output":410
 				}
 			]
 		},
@@ -3717,19 +3727,19 @@
 			"name":"wall_curved_018_collider_box",
 			"samplers":[
 				{
-					"input":403,
+					"input":407,
 					"interpolation":"STEP",
-					"output":457
+					"output":461
 				},
 				{
-					"input":403,
+					"input":407,
 					"interpolation":"STEP",
-					"output":458
+					"output":462
 				},
 				{
-					"input":403,
+					"input":407,
 					"interpolation":"STEP",
-					"output":406
+					"output":410
 				}
 			]
 		},
@@ -3760,19 +3770,19 @@
 			"name":"wall_curved_019_collider_box",
 			"samplers":[
 				{
-					"input":403,
+					"input":407,
 					"interpolation":"STEP",
-					"output":459
+					"output":463
 				},
 				{
-					"input":403,
+					"input":407,
 					"interpolation":"STEP",
-					"output":460
+					"output":464
 				},
 				{
-					"input":403,
+					"input":407,
 					"interpolation":"STEP",
-					"output":406
+					"output":410
 				}
 			]
 		},
@@ -3803,19 +3813,19 @@
 			"name":"wall_curved_003_collider_box",
 			"samplers":[
 				{
-					"input":403,
+					"input":407,
 					"interpolation":"STEP",
-					"output":461
+					"output":465
 				},
 				{
-					"input":403,
+					"input":407,
 					"interpolation":"STEP",
-					"output":462
+					"output":466
 				},
 				{
-					"input":403,
+					"input":407,
 					"interpolation":"STEP",
-					"output":463
+					"output":467
 				}
 			]
 		},
@@ -3846,19 +3856,19 @@
 			"name":"wall_curved_020_collider_box",
 			"samplers":[
 				{
-					"input":403,
+					"input":407,
 					"interpolation":"STEP",
-					"output":464
+					"output":468
 				},
 				{
-					"input":403,
+					"input":407,
 					"interpolation":"STEP",
-					"output":465
+					"output":469
 				},
 				{
-					"input":403,
+					"input":407,
 					"interpolation":"STEP",
-					"output":406
+					"output":410
 				}
 			]
 		},
@@ -3889,19 +3899,19 @@
 			"name":"wall_curved_004_collider_box",
 			"samplers":[
 				{
-					"input":403,
+					"input":407,
 					"interpolation":"STEP",
-					"output":466
+					"output":470
 				},
 				{
-					"input":403,
+					"input":407,
 					"interpolation":"STEP",
-					"output":467
+					"output":471
 				},
 				{
-					"input":403,
+					"input":407,
 					"interpolation":"STEP",
-					"output":406
+					"output":410
 				}
 			]
 		},
@@ -3932,19 +3942,19 @@
 			"name":"wall_curved_021_collider_box",
 			"samplers":[
 				{
-					"input":403,
+					"input":407,
 					"interpolation":"STEP",
-					"output":468
+					"output":472
 				},
 				{
-					"input":403,
+					"input":407,
 					"interpolation":"STEP",
-					"output":469
+					"output":473
 				},
 				{
-					"input":403,
+					"input":407,
 					"interpolation":"STEP",
-					"output":406
+					"output":410
 				}
 			]
 		},
@@ -3975,19 +3985,19 @@
 			"name":"wall_curved_005_collider_box",
 			"samplers":[
 				{
-					"input":403,
+					"input":407,
 					"interpolation":"STEP",
-					"output":470
+					"output":474
 				},
 				{
-					"input":403,
+					"input":407,
 					"interpolation":"STEP",
-					"output":471
+					"output":475
 				},
 				{
-					"input":403,
+					"input":407,
 					"interpolation":"STEP",
-					"output":406
+					"output":410
 				}
 			]
 		},
@@ -4018,19 +4028,19 @@
 			"name":"wall_curved_022_collider_box",
 			"samplers":[
 				{
-					"input":403,
+					"input":407,
 					"interpolation":"STEP",
-					"output":472
+					"output":476
 				},
 				{
-					"input":403,
+					"input":407,
 					"interpolation":"STEP",
-					"output":473
+					"output":477
 				},
 				{
-					"input":403,
+					"input":407,
 					"interpolation":"STEP",
-					"output":406
+					"output":410
 				}
 			]
 		},
@@ -4061,19 +4071,19 @@
 			"name":"wall_curved_006_collider_box",
 			"samplers":[
 				{
-					"input":403,
+					"input":407,
 					"interpolation":"STEP",
-					"output":474
+					"output":478
 				},
 				{
-					"input":403,
+					"input":407,
 					"interpolation":"STEP",
-					"output":475
+					"output":479
 				},
 				{
-					"input":403,
+					"input":407,
 					"interpolation":"STEP",
-					"output":406
+					"output":410
 				}
 			]
 		},
@@ -4104,19 +4114,19 @@
 			"name":"wall_curved_001_collider_box",
 			"samplers":[
 				{
-					"input":403,
+					"input":407,
 					"interpolation":"STEP",
-					"output":476
+					"output":480
 				},
 				{
-					"input":403,
+					"input":407,
 					"interpolation":"STEP",
-					"output":477
+					"output":481
 				},
 				{
-					"input":403,
+					"input":407,
 					"interpolation":"STEP",
-					"output":406
+					"output":410
 				}
 			]
 		},
@@ -4147,19 +4157,19 @@
 			"name":"wall_curved_007_collider_box",
 			"samplers":[
 				{
-					"input":403,
+					"input":407,
 					"interpolation":"STEP",
-					"output":478
+					"output":482
 				},
 				{
-					"input":403,
+					"input":407,
 					"interpolation":"STEP",
-					"output":479
+					"output":483
 				},
 				{
-					"input":403,
+					"input":407,
 					"interpolation":"STEP",
-					"output":406
+					"output":410
 				}
 			]
 		},
@@ -4190,19 +4200,19 @@
 			"name":"wall_curved_023_collider_box",
 			"samplers":[
 				{
-					"input":403,
+					"input":407,
 					"interpolation":"STEP",
-					"output":480
+					"output":484
 				},
 				{
-					"input":403,
+					"input":407,
 					"interpolation":"STEP",
-					"output":481
+					"output":485
 				},
 				{
-					"input":403,
+					"input":407,
 					"interpolation":"STEP",
-					"output":406
+					"output":410
 				}
 			]
 		},
@@ -4233,19 +4243,19 @@
 			"name":"wall_curved_008_collider_box",
 			"samplers":[
 				{
-					"input":403,
+					"input":407,
 					"interpolation":"STEP",
-					"output":482
+					"output":486
 				},
 				{
-					"input":403,
+					"input":407,
 					"interpolation":"STEP",
-					"output":483
+					"output":487
 				},
 				{
-					"input":403,
+					"input":407,
 					"interpolation":"STEP",
-					"output":406
+					"output":410
 				}
 			]
 		},
@@ -4276,19 +4286,19 @@
 			"name":"wall_curved_024_collider_box",
 			"samplers":[
 				{
-					"input":403,
+					"input":407,
 					"interpolation":"STEP",
-					"output":484
+					"output":488
 				},
 				{
-					"input":403,
+					"input":407,
 					"interpolation":"STEP",
-					"output":485
+					"output":489
 				},
 				{
-					"input":403,
+					"input":407,
 					"interpolation":"STEP",
-					"output":406
+					"output":410
 				}
 			]
 		},
@@ -4319,19 +4329,19 @@
 			"name":"wall_curved_009_collider_box",
 			"samplers":[
 				{
-					"input":403,
+					"input":407,
 					"interpolation":"STEP",
-					"output":486
+					"output":490
 				},
 				{
-					"input":403,
+					"input":407,
 					"interpolation":"STEP",
-					"output":487
+					"output":491
 				},
 				{
-					"input":403,
+					"input":407,
 					"interpolation":"STEP",
-					"output":406
+					"output":410
 				}
 			]
 		},
@@ -4362,19 +4372,19 @@
 			"name":"wall_curved_025_collider_box",
 			"samplers":[
 				{
-					"input":403,
+					"input":407,
 					"interpolation":"STEP",
-					"output":488
+					"output":492
 				},
 				{
-					"input":403,
+					"input":407,
 					"interpolation":"STEP",
-					"output":489
+					"output":493
 				},
 				{
-					"input":403,
+					"input":407,
 					"interpolation":"STEP",
-					"output":406
+					"output":410
 				}
 			]
 		},
@@ -4405,19 +4415,19 @@
 			"name":"wall_curved_010_collider_box",
 			"samplers":[
 				{
-					"input":403,
+					"input":407,
 					"interpolation":"STEP",
-					"output":490
+					"output":494
 				},
 				{
-					"input":403,
+					"input":407,
 					"interpolation":"STEP",
-					"output":491
+					"output":495
 				},
 				{
-					"input":403,
+					"input":407,
 					"interpolation":"STEP",
-					"output":406
+					"output":410
 				}
 			]
 		},
@@ -4448,19 +4458,19 @@
 			"name":"wall_curved_026_collider_box",
 			"samplers":[
 				{
-					"input":403,
+					"input":407,
 					"interpolation":"STEP",
-					"output":492
+					"output":496
 				},
 				{
-					"input":403,
+					"input":407,
 					"interpolation":"STEP",
-					"output":493
+					"output":497
 				},
 				{
-					"input":403,
+					"input":407,
 					"interpolation":"STEP",
-					"output":406
+					"output":410
 				}
 			]
 		},
@@ -4491,19 +4501,19 @@
 			"name":"wall_curved_027_collider_box",
 			"samplers":[
 				{
-					"input":403,
+					"input":407,
 					"interpolation":"STEP",
-					"output":494
+					"output":498
 				},
 				{
-					"input":403,
+					"input":407,
 					"interpolation":"STEP",
-					"output":495
+					"output":499
 				},
 				{
-					"input":403,
+					"input":407,
 					"interpolation":"STEP",
-					"output":406
+					"output":410
 				}
 			]
 		},
@@ -4534,19 +4544,19 @@
 			"name":"wall_curved_011_collider_box",
 			"samplers":[
 				{
-					"input":403,
+					"input":407,
 					"interpolation":"STEP",
-					"output":496
+					"output":500
 				},
 				{
-					"input":403,
+					"input":407,
 					"interpolation":"STEP",
-					"output":497
+					"output":501
 				},
 				{
-					"input":403,
+					"input":407,
 					"interpolation":"STEP",
-					"output":406
+					"output":410
 				}
 			]
 		},
@@ -4577,19 +4587,19 @@
 			"name":"wall_curved_028_collider_box",
 			"samplers":[
 				{
-					"input":403,
+					"input":407,
 					"interpolation":"STEP",
-					"output":498
+					"output":502
 				},
 				{
-					"input":403,
+					"input":407,
 					"interpolation":"STEP",
-					"output":499
+					"output":503
 				},
 				{
-					"input":403,
+					"input":407,
 					"interpolation":"STEP",
-					"output":406
+					"output":410
 				}
 			]
 		},
@@ -4620,19 +4630,19 @@
 			"name":"wall_curved_012_collider_box",
 			"samplers":[
 				{
-					"input":403,
+					"input":407,
 					"interpolation":"STEP",
-					"output":500
+					"output":504
 				},
 				{
-					"input":403,
+					"input":407,
 					"interpolation":"STEP",
-					"output":501
+					"output":505
 				},
 				{
-					"input":403,
+					"input":407,
 					"interpolation":"STEP",
-					"output":406
+					"output":410
 				}
 			]
 		},
@@ -4663,19 +4673,19 @@
 			"name":"wall_curved_029_collider_box",
 			"samplers":[
 				{
-					"input":403,
+					"input":407,
 					"interpolation":"STEP",
-					"output":502
+					"output":506
 				},
 				{
-					"input":403,
+					"input":407,
 					"interpolation":"STEP",
-					"output":503
+					"output":507
 				},
 				{
-					"input":403,
+					"input":407,
 					"interpolation":"STEP",
-					"output":406
+					"output":410
 				}
 			]
 		},
@@ -4706,19 +4716,19 @@
 			"name":"wall_curved_013_collider_box",
 			"samplers":[
 				{
-					"input":403,
+					"input":407,
 					"interpolation":"STEP",
-					"output":504
+					"output":508
 				},
 				{
-					"input":403,
+					"input":407,
 					"interpolation":"STEP",
-					"output":505
+					"output":509
 				},
 				{
-					"input":403,
+					"input":407,
 					"interpolation":"STEP",
-					"output":406
+					"output":410
 				}
 			]
 		},
@@ -4749,19 +4759,19 @@
 			"name":"wall_curved_030_collider_box",
 			"samplers":[
 				{
-					"input":403,
+					"input":407,
 					"interpolation":"STEP",
-					"output":506
+					"output":510
 				},
 				{
-					"input":403,
+					"input":407,
 					"interpolation":"STEP",
-					"output":507
+					"output":511
 				},
 				{
-					"input":403,
+					"input":407,
 					"interpolation":"STEP",
-					"output":406
+					"output":410
 				}
 			]
 		},
@@ -4792,19 +4802,19 @@
 			"name":"wall_curved_031_collider_box",
 			"samplers":[
 				{
-					"input":403,
+					"input":407,
 					"interpolation":"STEP",
-					"output":508
+					"output":512
 				},
 				{
-					"input":403,
+					"input":407,
 					"interpolation":"STEP",
-					"output":509
+					"output":513
 				},
 				{
-					"input":403,
+					"input":407,
 					"interpolation":"STEP",
-					"output":406
+					"output":410
 				}
 			]
 		},
@@ -4835,19 +4845,19 @@
 			"name":"wall_curved_032_collider_box",
 			"samplers":[
 				{
-					"input":403,
+					"input":407,
 					"interpolation":"STEP",
-					"output":510
+					"output":514
 				},
 				{
-					"input":403,
+					"input":407,
 					"interpolation":"STEP",
-					"output":511
+					"output":515
 				},
 				{
-					"input":403,
+					"input":407,
 					"interpolation":"STEP",
-					"output":406
+					"output":410
 				}
 			]
 		},
@@ -4878,19 +4888,19 @@
 			"name":"wall_curved_033_collider_box",
 			"samplers":[
 				{
-					"input":403,
+					"input":407,
 					"interpolation":"STEP",
-					"output":512
+					"output":516
 				},
 				{
-					"input":403,
+					"input":407,
 					"interpolation":"STEP",
-					"output":513
+					"output":517
 				},
 				{
-					"input":403,
+					"input":407,
 					"interpolation":"STEP",
-					"output":406
+					"output":410
 				}
 			]
 		},
@@ -4921,19 +4931,19 @@
 			"name":"wall_curved_034_collider_box",
 			"samplers":[
 				{
-					"input":403,
+					"input":407,
 					"interpolation":"STEP",
-					"output":514
+					"output":518
 				},
 				{
-					"input":403,
+					"input":407,
 					"interpolation":"STEP",
-					"output":515
+					"output":519
 				},
 				{
-					"input":403,
+					"input":407,
 					"interpolation":"STEP",
-					"output":406
+					"output":410
 				}
 			]
 		},
@@ -4964,19 +4974,19 @@
 			"name":"wall_curved_035_collider_box",
 			"samplers":[
 				{
-					"input":403,
+					"input":407,
 					"interpolation":"STEP",
-					"output":516
+					"output":520
 				},
 				{
-					"input":403,
+					"input":407,
 					"interpolation":"STEP",
-					"output":517
+					"output":521
 				},
 				{
-					"input":403,
+					"input":407,
 					"interpolation":"STEP",
-					"output":406
+					"output":410
 				}
 			]
 		},
@@ -5007,19 +5017,19 @@
 			"name":"wall_curved_036_collider_box",
 			"samplers":[
 				{
-					"input":403,
+					"input":407,
 					"interpolation":"STEP",
-					"output":518
+					"output":522
 				},
 				{
-					"input":403,
+					"input":407,
 					"interpolation":"STEP",
-					"output":519
+					"output":523
 				},
 				{
-					"input":403,
+					"input":407,
 					"interpolation":"STEP",
-					"output":406
+					"output":410
 				}
 			]
 		},
@@ -5050,19 +5060,19 @@
 			"name":"wall_curved_037_collider_box",
 			"samplers":[
 				{
-					"input":403,
+					"input":407,
 					"interpolation":"STEP",
-					"output":520
+					"output":524
 				},
 				{
-					"input":403,
+					"input":407,
 					"interpolation":"STEP",
-					"output":521
+					"output":525
 				},
 				{
-					"input":403,
+					"input":407,
 					"interpolation":"STEP",
-					"output":406
+					"output":410
 				}
 			]
 		},
@@ -5093,19 +5103,19 @@
 			"name":"walls_upstairs_collider",
 			"samplers":[
 				{
-					"input":403,
+					"input":407,
 					"interpolation":"STEP",
-					"output":408
+					"output":412
 				},
 				{
-					"input":403,
+					"input":407,
 					"interpolation":"STEP",
-					"output":405
+					"output":409
 				},
 				{
-					"input":403,
+					"input":407,
 					"interpolation":"STEP",
-					"output":406
+					"output":410
 				}
 			]
 		},
@@ -5136,19 +5146,19 @@
 			"name":"salon_walls_collider",
 			"samplers":[
 				{
-					"input":403,
+					"input":407,
 					"interpolation":"STEP",
-					"output":522
+					"output":526
 				},
 				{
-					"input":403,
+					"input":407,
 					"interpolation":"STEP",
-					"output":405
+					"output":409
 				},
 				{
-					"input":403,
+					"input":407,
 					"interpolation":"STEP",
-					"output":406
+					"output":410
 				}
 			]
 		},
@@ -5179,19 +5189,19 @@
 			"name":"wall_curved_038_collider_box",
 			"samplers":[
 				{
-					"input":403,
+					"input":407,
 					"interpolation":"STEP",
-					"output":523
+					"output":527
 				},
 				{
-					"input":403,
+					"input":407,
 					"interpolation":"STEP",
-					"output":405
+					"output":409
 				},
 				{
-					"input":403,
+					"input":407,
 					"interpolation":"STEP",
-					"output":406
+					"output":410
 				}
 			]
 		},
@@ -5222,19 +5232,19 @@
 			"name":"wall_curved_014_collider_box",
 			"samplers":[
 				{
-					"input":403,
+					"input":407,
 					"interpolation":"STEP",
-					"output":524
+					"output":528
 				},
 				{
-					"input":403,
+					"input":407,
 					"interpolation":"STEP",
-					"output":525
+					"output":529
 				},
 				{
-					"input":403,
+					"input":407,
 					"interpolation":"STEP",
-					"output":406
+					"output":410
 				}
 			]
 		},
@@ -5265,19 +5275,19 @@
 			"name":"wall_curved_039_collider_box",
 			"samplers":[
 				{
-					"input":403,
+					"input":407,
 					"interpolation":"STEP",
-					"output":526
+					"output":530
 				},
 				{
-					"input":403,
+					"input":407,
 					"interpolation":"STEP",
-					"output":527
+					"output":531
 				},
 				{
-					"input":403,
+					"input":407,
 					"interpolation":"STEP",
-					"output":406
+					"output":410
 				}
 			]
 		},
@@ -5308,19 +5318,19 @@
 			"name":"wall_curved_015_collider_box",
 			"samplers":[
 				{
-					"input":403,
+					"input":407,
 					"interpolation":"STEP",
-					"output":528
+					"output":532
 				},
 				{
-					"input":403,
+					"input":407,
 					"interpolation":"STEP",
-					"output":529
+					"output":533
 				},
 				{
-					"input":403,
+					"input":407,
 					"interpolation":"STEP",
-					"output":463
+					"output":467
 				}
 			]
 		},
@@ -5351,19 +5361,19 @@
 			"name":"wall_curved_040_collider_box",
 			"samplers":[
 				{
-					"input":403,
+					"input":407,
 					"interpolation":"STEP",
-					"output":530
+					"output":534
 				},
 				{
-					"input":403,
+					"input":407,
 					"interpolation":"STEP",
-					"output":531
+					"output":535
 				},
 				{
-					"input":403,
+					"input":407,
 					"interpolation":"STEP",
-					"output":406
+					"output":410
 				}
 			]
 		},
@@ -5394,19 +5404,19 @@
 			"name":"wall_curved_016_collider_box",
 			"samplers":[
 				{
-					"input":403,
+					"input":407,
 					"interpolation":"STEP",
-					"output":532
+					"output":536
 				},
 				{
-					"input":403,
+					"input":407,
 					"interpolation":"STEP",
-					"output":527
+					"output":531
 				},
 				{
-					"input":403,
+					"input":407,
 					"interpolation":"STEP",
-					"output":406
+					"output":410
 				}
 			]
 		},
@@ -5437,19 +5447,19 @@
 			"name":"wall_curved_041_collider_box",
 			"samplers":[
 				{
-					"input":403,
+					"input":407,
 					"interpolation":"STEP",
-					"output":533
+					"output":537
 				},
 				{
-					"input":403,
+					"input":407,
 					"interpolation":"STEP",
-					"output":534
+					"output":538
 				},
 				{
-					"input":403,
+					"input":407,
 					"interpolation":"STEP",
-					"output":406
+					"output":410
 				}
 			]
 		},
@@ -5480,19 +5490,19 @@
 			"name":"wall_curved_017_collider_box",
 			"samplers":[
 				{
-					"input":403,
+					"input":407,
 					"interpolation":"STEP",
-					"output":535
+					"output":539
 				},
 				{
-					"input":403,
+					"input":407,
 					"interpolation":"STEP",
-					"output":536
+					"output":540
 				},
 				{
-					"input":403,
+					"input":407,
 					"interpolation":"STEP",
-					"output":406
+					"output":410
 				}
 			]
 		},
@@ -5523,19 +5533,19 @@
 			"name":"wall_curved_002_collider_box",
 			"samplers":[
 				{
-					"input":403,
+					"input":407,
 					"interpolation":"STEP",
-					"output":537
+					"output":541
 				},
 				{
-					"input":403,
+					"input":407,
 					"interpolation":"STEP",
-					"output":405
+					"output":409
 				},
 				{
-					"input":403,
+					"input":407,
 					"interpolation":"STEP",
-					"output":406
+					"output":410
 				}
 			]
 		},
@@ -5566,19 +5576,19 @@
 			"name":"wall_main_001_collider_box",
 			"samplers":[
 				{
-					"input":403,
+					"input":407,
 					"interpolation":"STEP",
-					"output":538
+					"output":542
 				},
 				{
-					"input":403,
+					"input":407,
 					"interpolation":"STEP",
-					"output":405
+					"output":409
 				},
 				{
-					"input":403,
+					"input":407,
 					"interpolation":"STEP",
-					"output":406
+					"output":410
 				}
 			]
 		},
@@ -5609,19 +5619,19 @@
 			"name":"wall_main_002_collider_box",
 			"samplers":[
 				{
-					"input":403,
+					"input":407,
 					"interpolation":"STEP",
-					"output":539
+					"output":543
 				},
 				{
-					"input":403,
+					"input":407,
 					"interpolation":"STEP",
-					"output":405
+					"output":409
 				},
 				{
-					"input":403,
+					"input":407,
 					"interpolation":"STEP",
-					"output":406
+					"output":410
 				}
 			]
 		},
@@ -5652,19 +5662,19 @@
 			"name":"wall_main_003_collider_box",
 			"samplers":[
 				{
-					"input":403,
+					"input":407,
 					"interpolation":"STEP",
-					"output":540
+					"output":544
 				},
 				{
-					"input":403,
+					"input":407,
 					"interpolation":"STEP",
-					"output":405
+					"output":409
 				},
 				{
-					"input":403,
+					"input":407,
 					"interpolation":"STEP",
-					"output":406
+					"output":410
 				}
 			]
 		},
@@ -5695,19 +5705,19 @@
 			"name":"wall_main_003_collider_box.001",
 			"samplers":[
 				{
-					"input":403,
+					"input":407,
 					"interpolation":"STEP",
-					"output":541
+					"output":545
 				},
 				{
-					"input":403,
+					"input":407,
 					"interpolation":"STEP",
-					"output":405
+					"output":409
 				},
 				{
-					"input":403,
+					"input":407,
 					"interpolation":"STEP",
-					"output":406
+					"output":410
 				}
 			]
 		},
@@ -5738,19 +5748,19 @@
 			"name":"wall_main_003_collider_box.002",
 			"samplers":[
 				{
-					"input":403,
+					"input":407,
 					"interpolation":"STEP",
-					"output":542
+					"output":546
 				},
 				{
-					"input":403,
+					"input":407,
 					"interpolation":"STEP",
-					"output":405
+					"output":409
 				},
 				{
-					"input":403,
+					"input":407,
 					"interpolation":"STEP",
-					"output":406
+					"output":410
 				}
 			]
 		},
@@ -5781,19 +5791,19 @@
 			"name":"wall_main_003_collider_box.003",
 			"samplers":[
 				{
-					"input":403,
+					"input":407,
 					"interpolation":"STEP",
-					"output":543
+					"output":547
 				},
 				{
-					"input":403,
+					"input":407,
 					"interpolation":"STEP",
-					"output":405
+					"output":409
 				},
 				{
-					"input":403,
+					"input":407,
 					"interpolation":"STEP",
-					"output":406
+					"output":410
 				}
 			]
 		},
@@ -5824,19 +5834,19 @@
 			"name":"wall_main_003_collider_box.004",
 			"samplers":[
 				{
-					"input":403,
+					"input":407,
 					"interpolation":"STEP",
-					"output":544
+					"output":548
 				},
 				{
-					"input":403,
+					"input":407,
 					"interpolation":"STEP",
-					"output":405
+					"output":409
 				},
 				{
-					"input":403,
+					"input":407,
 					"interpolation":"STEP",
-					"output":406
+					"output":410
 				}
 			]
 		},
@@ -5867,19 +5877,19 @@
 			"name":"wall_main_003_collider_box.005",
 			"samplers":[
 				{
-					"input":403,
+					"input":407,
 					"interpolation":"STEP",
-					"output":545
+					"output":549
 				},
 				{
-					"input":403,
+					"input":407,
 					"interpolation":"STEP",
-					"output":405
+					"output":409
 				},
 				{
-					"input":403,
+					"input":407,
 					"interpolation":"STEP",
-					"output":406
+					"output":410
 				}
 			]
 		},
@@ -5910,19 +5920,19 @@
 			"name":"wall_main_003_collider_box.006",
 			"samplers":[
 				{
-					"input":403,
+					"input":407,
 					"interpolation":"STEP",
-					"output":546
+					"output":550
 				},
 				{
-					"input":403,
+					"input":407,
 					"interpolation":"STEP",
-					"output":405
+					"output":409
 				},
 				{
-					"input":403,
+					"input":407,
 					"interpolation":"STEP",
-					"output":406
+					"output":410
 				}
 			]
 		},
@@ -5953,19 +5963,19 @@
 			"name":"Changing Rooms.001",
 			"samplers":[
 				{
-					"input":403,
+					"input":407,
 					"interpolation":"STEP",
-					"output":408
+					"output":412
 				},
 				{
-					"input":403,
+					"input":407,
 					"interpolation":"STEP",
-					"output":405
+					"output":409
 				},
 				{
-					"input":403,
+					"input":407,
 					"interpolation":"STEP",
-					"output":406
+					"output":410
 				}
 			]
 		},
@@ -5996,19 +6006,19 @@
 			"name":"Cube.004",
 			"samplers":[
 				{
-					"input":403,
+					"input":407,
 					"interpolation":"STEP",
-					"output":408
+					"output":412
 				},
 				{
-					"input":403,
+					"input":407,
 					"interpolation":"STEP",
-					"output":405
+					"output":409
 				},
 				{
-					"input":403,
+					"input":407,
 					"interpolation":"STEP",
-					"output":406
+					"output":410
 				}
 			]
 		},
@@ -6039,19 +6049,19 @@
 			"name":"Cube.005",
 			"samplers":[
 				{
-					"input":403,
+					"input":407,
 					"interpolation":"STEP",
-					"output":547
+					"output":551
 				},
 				{
-					"input":403,
+					"input":407,
 					"interpolation":"STEP",
-					"output":405
+					"output":409
 				},
 				{
-					"input":403,
+					"input":407,
 					"interpolation":"STEP",
-					"output":548
+					"output":552
 				}
 			]
 		},
@@ -6082,19 +6092,19 @@
 			"name":"Cylinder.003",
 			"samplers":[
 				{
-					"input":403,
+					"input":407,
 					"interpolation":"STEP",
-					"output":408
+					"output":412
 				},
 				{
-					"input":403,
+					"input":407,
 					"interpolation":"STEP",
-					"output":405
+					"output":409
 				},
 				{
-					"input":403,
+					"input":407,
 					"interpolation":"STEP",
-					"output":406
+					"output":410
 				}
 			]
 		},
@@ -6125,19 +6135,19 @@
 			"name":"Cylinder.004",
 			"samplers":[
 				{
-					"input":403,
+					"input":407,
 					"interpolation":"STEP",
-					"output":408
+					"output":412
 				},
 				{
-					"input":403,
+					"input":407,
 					"interpolation":"STEP",
-					"output":405
+					"output":409
 				},
 				{
-					"input":403,
+					"input":407,
 					"interpolation":"STEP",
-					"output":406
+					"output":410
 				}
 			]
 		},
@@ -6168,19 +6178,19 @@
 			"name":"Cylinder.005",
 			"samplers":[
 				{
-					"input":403,
+					"input":407,
 					"interpolation":"STEP",
-					"output":408
+					"output":412
 				},
 				{
-					"input":403,
+					"input":407,
 					"interpolation":"STEP",
-					"output":405
+					"output":409
 				},
 				{
-					"input":403,
+					"input":407,
 					"interpolation":"STEP",
-					"output":406
+					"output":410
 				}
 			]
 		},
@@ -6211,19 +6221,19 @@
 			"name":"firstFloorWalls.001",
 			"samplers":[
 				{
-					"input":403,
+					"input":407,
 					"interpolation":"STEP",
-					"output":408
+					"output":412
 				},
 				{
-					"input":403,
+					"input":407,
 					"interpolation":"STEP",
-					"output":405
+					"output":409
 				},
 				{
-					"input":403,
+					"input":407,
 					"interpolation":"STEP",
-					"output":406
+					"output":410
 				}
 			]
 		},
@@ -6254,19 +6264,19 @@
 			"name":"firstGround.001",
 			"samplers":[
 				{
-					"input":403,
+					"input":407,
 					"interpolation":"STEP",
-					"output":408
+					"output":412
 				},
 				{
-					"input":403,
+					"input":407,
 					"interpolation":"STEP",
-					"output":405
+					"output":409
 				},
 				{
-					"input":403,
+					"input":407,
 					"interpolation":"STEP",
-					"output":549
+					"output":553
 				}
 			]
 		},
@@ -6297,19 +6307,19 @@
 			"name":"Hair Salon.002",
 			"samplers":[
 				{
-					"input":403,
+					"input":407,
 					"interpolation":"STEP",
-					"output":550
+					"output":554
 				},
 				{
-					"input":403,
+					"input":407,
 					"interpolation":"STEP",
-					"output":405
+					"output":409
 				},
 				{
-					"input":403,
+					"input":407,
 					"interpolation":"STEP",
-					"output":406
+					"output":410
 				}
 			]
 		},
@@ -6340,19 +6350,19 @@
 			"name":"Hair Salon.003",
 			"samplers":[
 				{
-					"input":403,
+					"input":407,
 					"interpolation":"STEP",
-					"output":408
+					"output":412
 				},
 				{
-					"input":403,
+					"input":407,
 					"interpolation":"STEP",
-					"output":405
+					"output":409
 				},
 				{
-					"input":403,
+					"input":407,
 					"interpolation":"STEP",
-					"output":406
+					"output":410
 				}
 			]
 		},
@@ -6383,19 +6393,19 @@
 			"name":"Hair Station.001",
 			"samplers":[
 				{
-					"input":403,
+					"input":407,
 					"interpolation":"STEP",
-					"output":408
+					"output":412
 				},
 				{
-					"input":403,
+					"input":407,
 					"interpolation":"STEP",
-					"output":405
+					"output":409
 				},
 				{
-					"input":403,
+					"input":407,
 					"interpolation":"STEP",
-					"output":406
+					"output":410
 				}
 			]
 		},
@@ -6426,19 +6436,19 @@
 			"name":"Lower-Body Shelves.003",
 			"samplers":[
 				{
-					"input":403,
+					"input":407,
 					"interpolation":"STEP",
-					"output":408
+					"output":412
 				},
 				{
-					"input":403,
+					"input":407,
 					"interpolation":"STEP",
-					"output":551
+					"output":555
 				},
 				{
-					"input":403,
+					"input":407,
 					"interpolation":"STEP",
-					"output":406
+					"output":410
 				}
 			]
 		},
@@ -6469,19 +6479,19 @@
 			"name":"SeatinA.001",
 			"samplers":[
 				{
-					"input":403,
+					"input":407,
 					"interpolation":"STEP",
-					"output":547
+					"output":551
 				},
 				{
-					"input":403,
+					"input":407,
 					"interpolation":"STEP",
-					"output":405
+					"output":409
 				},
 				{
-					"input":403,
+					"input":407,
 					"interpolation":"STEP",
-					"output":552
+					"output":556
 				}
 			]
 		},
@@ -6512,19 +6522,19 @@
 			"name":"SeatinB.001",
 			"samplers":[
 				{
-					"input":403,
+					"input":407,
 					"interpolation":"STEP",
-					"output":408
+					"output":412
 				},
 				{
-					"input":403,
+					"input":407,
 					"interpolation":"STEP",
-					"output":405
+					"output":409
 				},
 				{
-					"input":403,
+					"input":407,
 					"interpolation":"STEP",
-					"output":553
+					"output":557
 				}
 			]
 		},
@@ -6555,19 +6565,19 @@
 			"name":"secondGround.002",
 			"samplers":[
 				{
-					"input":403,
+					"input":407,
 					"interpolation":"STEP",
-					"output":408
+					"output":412
 				},
 				{
-					"input":403,
+					"input":407,
 					"interpolation":"STEP",
-					"output":405
+					"output":409
 				},
 				{
-					"input":403,
+					"input":407,
 					"interpolation":"STEP",
-					"output":549
+					"output":553
 				}
 			]
 		},
@@ -6598,19 +6608,19 @@
 			"name":"secondGround.003",
 			"samplers":[
 				{
-					"input":403,
+					"input":407,
 					"interpolation":"STEP",
-					"output":408
+					"output":412
 				},
 				{
-					"input":403,
+					"input":407,
 					"interpolation":"STEP",
-					"output":405
+					"output":409
 				},
 				{
-					"input":403,
+					"input":407,
 					"interpolation":"STEP",
-					"output":406
+					"output":410
 				}
 			]
 		},
@@ -6641,19 +6651,19 @@
 			"name":"Shelf A.001",
 			"samplers":[
 				{
-					"input":403,
+					"input":407,
 					"interpolation":"STEP",
-					"output":408
+					"output":412
 				},
 				{
-					"input":403,
+					"input":407,
 					"interpolation":"STEP",
-					"output":455
+					"output":459
 				},
 				{
-					"input":403,
+					"input":407,
 					"interpolation":"STEP",
-					"output":406
+					"output":410
 				}
 			]
 		},
@@ -6684,19 +6694,19 @@
 			"name":"Shelf B.001",
 			"samplers":[
 				{
-					"input":403,
+					"input":407,
 					"interpolation":"STEP",
-					"output":408
+					"output":412
 				},
 				{
-					"input":403,
+					"input":407,
 					"interpolation":"STEP",
-					"output":554
+					"output":558
 				},
 				{
-					"input":403,
+					"input":407,
 					"interpolation":"STEP",
-					"output":406
+					"output":410
 				}
 			]
 		},
@@ -6727,19 +6737,19 @@
 			"name":"Shoe Shelves.001",
 			"samplers":[
 				{
-					"input":403,
+					"input":407,
 					"interpolation":"STEP",
-					"output":408
+					"output":412
 				},
 				{
-					"input":403,
+					"input":407,
 					"interpolation":"STEP",
-					"output":405
+					"output":409
 				},
 				{
-					"input":403,
+					"input":407,
 					"interpolation":"STEP",
-					"output":406
+					"output":410
 				}
 			]
 		},
@@ -6770,19 +6780,19 @@
 			"name":"Tanning Bed.001",
 			"samplers":[
 				{
-					"input":403,
+					"input":407,
 					"interpolation":"STEP",
-					"output":408
+					"output":412
 				},
 				{
-					"input":403,
+					"input":407,
 					"interpolation":"STEP",
-					"output":405
+					"output":409
 				},
 				{
-					"input":403,
+					"input":407,
 					"interpolation":"STEP",
-					"output":406
+					"output":410
 				}
 			]
 		},
@@ -6813,19 +6823,19 @@
 			"name":"Wardrobe1.001",
 			"samplers":[
 				{
-					"input":403,
+					"input":407,
 					"interpolation":"STEP",
-					"output":408
+					"output":412
 				},
 				{
-					"input":403,
+					"input":407,
 					"interpolation":"STEP",
-					"output":405
+					"output":409
 				},
 				{
-					"input":403,
+					"input":407,
 					"interpolation":"STEP",
-					"output":406
+					"output":410
 				}
 			]
 		},
@@ -6856,19 +6866,62 @@
 			"name":"stage",
 			"samplers":[
 				{
-					"input":403,
+					"input":407,
 					"interpolation":"STEP",
-					"output":408
+					"output":412
 				},
 				{
-					"input":403,
+					"input":407,
 					"interpolation":"STEP",
-					"output":405
+					"output":409
 				},
 				{
-					"input":403,
+					"input":407,
 					"interpolation":"STEP",
-					"output":406
+					"output":410
+				}
+			]
+		},
+		{
+			"channels":[
+				{
+					"sampler":0,
+					"target":{
+						"node":124,
+						"path":"translation"
+					}
+				},
+				{
+					"sampler":1,
+					"target":{
+						"node":124,
+						"path":"rotation"
+					}
+				},
+				{
+					"sampler":2,
+					"target":{
+						"node":124,
+						"path":"scale"
+					}
+				}
+			],
+			"name":"stage_walkway",
+			"samplers":[
+				{
+					"input":407,
+					"interpolation":"STEP",
+					"output":414
+				},
+				{
+					"input":407,
+					"interpolation":"STEP",
+					"output":409
+				},
+				{
+					"input":407,
+					"interpolation":"STEP",
+					"output":410
 				}
 			]
 		}
@@ -8457,6 +8510,19 @@
 						"TEXCOORD_0":401
 					},
 					"indices":402
+				}
+			]
+		},
+		{
+			"name":"Cube.040",
+			"primitives":[
+				{
+					"attributes":{
+						"POSITION":403,
+						"NORMAL":404,
+						"TEXCOORD_0":405
+					},
+					"indices":406
 				}
 			]
 		}
@@ -12103,6 +12169,40 @@
 		{
 			"bufferView":403,
 			"componentType":5126,
+			"count":24,
+			"max":[
+				14.611294746398926,
+				0.26474475860595703,
+				1.076645851135254
+			],
+			"min":[
+				-14.611294746398926,
+				-0.26474666595458984,
+				-1.076645851135254
+			],
+			"type":"VEC3"
+		},
+		{
+			"bufferView":404,
+			"componentType":5126,
+			"count":24,
+			"type":"VEC3"
+		},
+		{
+			"bufferView":405,
+			"componentType":5126,
+			"count":24,
+			"type":"VEC2"
+		},
+		{
+			"bufferView":406,
+			"componentType":5123,
+			"count":36,
+			"type":"SCALAR"
+		},
+		{
+			"bufferView":407,
+			"componentType":5126,
 			"count":2,
 			"max":[
 				10.416666666666666
@@ -12111,30 +12211,6 @@
 				0.041666666666666664
 			],
 			"type":"SCALAR"
-		},
-		{
-			"bufferView":404,
-			"componentType":5126,
-			"count":2,
-			"type":"VEC3"
-		},
-		{
-			"bufferView":405,
-			"componentType":5126,
-			"count":2,
-			"type":"VEC4"
-		},
-		{
-			"bufferView":406,
-			"componentType":5126,
-			"count":2,
-			"type":"VEC3"
-		},
-		{
-			"bufferView":407,
-			"componentType":5126,
-			"count":2,
-			"type":"VEC3"
 		},
 		{
 			"bufferView":408,
@@ -12146,7 +12222,7 @@
 			"bufferView":409,
 			"componentType":5126,
 			"count":2,
-			"type":"VEC3"
+			"type":"VEC4"
 		},
 		{
 			"bufferView":410,
@@ -12422,7 +12498,7 @@
 			"bufferView":455,
 			"componentType":5126,
 			"count":2,
-			"type":"VEC4"
+			"type":"VEC3"
 		},
 		{
 			"bufferView":456,
@@ -12440,19 +12516,19 @@
 			"bufferView":458,
 			"componentType":5126,
 			"count":2,
-			"type":"VEC4"
+			"type":"VEC3"
 		},
 		{
 			"bufferView":459,
 			"componentType":5126,
 			"count":2,
-			"type":"VEC3"
+			"type":"VEC4"
 		},
 		{
 			"bufferView":460,
 			"componentType":5126,
 			"count":2,
-			"type":"VEC4"
+			"type":"VEC3"
 		},
 		{
 			"bufferView":461,
@@ -12476,25 +12552,25 @@
 			"bufferView":464,
 			"componentType":5126,
 			"count":2,
-			"type":"VEC3"
+			"type":"VEC4"
 		},
 		{
 			"bufferView":465,
 			"componentType":5126,
 			"count":2,
-			"type":"VEC4"
+			"type":"VEC3"
 		},
 		{
 			"bufferView":466,
 			"componentType":5126,
 			"count":2,
-			"type":"VEC3"
+			"type":"VEC4"
 		},
 		{
 			"bufferView":467,
 			"componentType":5126,
 			"count":2,
-			"type":"VEC4"
+			"type":"VEC3"
 		},
 		{
 			"bufferView":468,
@@ -12830,7 +12906,7 @@
 			"bufferView":523,
 			"componentType":5126,
 			"count":2,
-			"type":"VEC3"
+			"type":"VEC4"
 		},
 		{
 			"bufferView":524,
@@ -12854,7 +12930,7 @@
 			"bufferView":527,
 			"componentType":5126,
 			"count":2,
-			"type":"VEC4"
+			"type":"VEC3"
 		},
 		{
 			"bufferView":528,
@@ -12890,25 +12966,25 @@
 			"bufferView":533,
 			"componentType":5126,
 			"count":2,
-			"type":"VEC3"
+			"type":"VEC4"
 		},
 		{
 			"bufferView":534,
 			"componentType":5126,
 			"count":2,
-			"type":"VEC4"
+			"type":"VEC3"
 		},
 		{
 			"bufferView":535,
 			"componentType":5126,
 			"count":2,
-			"type":"VEC3"
+			"type":"VEC4"
 		},
 		{
 			"bufferView":536,
 			"componentType":5126,
 			"count":2,
-			"type":"VEC4"
+			"type":"VEC3"
 		},
 		{
 			"bufferView":537,
@@ -12920,7 +12996,7 @@
 			"bufferView":538,
 			"componentType":5126,
 			"count":2,
-			"type":"VEC3"
+			"type":"VEC4"
 		},
 		{
 			"bufferView":539,
@@ -12932,7 +13008,7 @@
 			"bufferView":540,
 			"componentType":5126,
 			"count":2,
-			"type":"VEC3"
+			"type":"VEC4"
 		},
 		{
 			"bufferView":541,
@@ -12998,7 +13074,7 @@
 			"bufferView":551,
 			"componentType":5126,
 			"count":2,
-			"type":"VEC4"
+			"type":"VEC3"
 		},
 		{
 			"bufferView":552,
@@ -13014,6 +13090,30 @@
 		},
 		{
 			"bufferView":554,
+			"componentType":5126,
+			"count":2,
+			"type":"VEC3"
+		},
+		{
+			"bufferView":555,
+			"componentType":5126,
+			"count":2,
+			"type":"VEC4"
+		},
+		{
+			"bufferView":556,
+			"componentType":5126,
+			"count":2,
+			"type":"VEC3"
+		},
+		{
+			"bufferView":557,
+			"componentType":5126,
+			"count":2,
+			"type":"VEC3"
+		},
+		{
+			"bufferView":558,
 			"componentType":5126,
 			"count":2,
 			"type":"VEC4"
@@ -15440,193 +15540,42 @@
 		},
 		{
 			"buffer":0,
+			"byteLength":288,
+			"byteOffset":1288320,
+			"target":34962
+		},
+		{
+			"buffer":0,
+			"byteLength":288,
+			"byteOffset":1288608,
+			"target":34962
+		},
+		{
+			"buffer":0,
+			"byteLength":192,
+			"byteOffset":1288896,
+			"target":34962
+		},
+		{
+			"buffer":0,
+			"byteLength":72,
+			"byteOffset":1289088,
+			"target":34963
+		},
+		{
+			"buffer":0,
 			"byteLength":8,
-			"byteOffset":1288320
+			"byteOffset":1289160
 		},
 		{
 			"buffer":0,
 			"byteLength":24,
-			"byteOffset":1288328
+			"byteOffset":1289168
 		},
 		{
 			"buffer":0,
 			"byteLength":32,
-			"byteOffset":1288352
-		},
-		{
-			"buffer":0,
-			"byteLength":24,
-			"byteOffset":1288384
-		},
-		{
-			"buffer":0,
-			"byteLength":24,
-			"byteOffset":1288408
-		},
-		{
-			"buffer":0,
-			"byteLength":24,
-			"byteOffset":1288432
-		},
-		{
-			"buffer":0,
-			"byteLength":24,
-			"byteOffset":1288456
-		},
-		{
-			"buffer":0,
-			"byteLength":24,
-			"byteOffset":1288480
-		},
-		{
-			"buffer":0,
-			"byteLength":24,
-			"byteOffset":1288504
-		},
-		{
-			"buffer":0,
-			"byteLength":24,
-			"byteOffset":1288528
-		},
-		{
-			"buffer":0,
-			"byteLength":24,
-			"byteOffset":1288552
-		},
-		{
-			"buffer":0,
-			"byteLength":24,
-			"byteOffset":1288576
-		},
-		{
-			"buffer":0,
-			"byteLength":24,
-			"byteOffset":1288600
-		},
-		{
-			"buffer":0,
-			"byteLength":24,
-			"byteOffset":1288624
-		},
-		{
-			"buffer":0,
-			"byteLength":24,
-			"byteOffset":1288648
-		},
-		{
-			"buffer":0,
-			"byteLength":24,
-			"byteOffset":1288672
-		},
-		{
-			"buffer":0,
-			"byteLength":24,
-			"byteOffset":1288696
-		},
-		{
-			"buffer":0,
-			"byteLength":24,
-			"byteOffset":1288720
-		},
-		{
-			"buffer":0,
-			"byteLength":24,
-			"byteOffset":1288744
-		},
-		{
-			"buffer":0,
-			"byteLength":24,
-			"byteOffset":1288768
-		},
-		{
-			"buffer":0,
-			"byteLength":24,
-			"byteOffset":1288792
-		},
-		{
-			"buffer":0,
-			"byteLength":24,
-			"byteOffset":1288816
-		},
-		{
-			"buffer":0,
-			"byteLength":24,
-			"byteOffset":1288840
-		},
-		{
-			"buffer":0,
-			"byteLength":24,
-			"byteOffset":1288864
-		},
-		{
-			"buffer":0,
-			"byteLength":24,
-			"byteOffset":1288888
-		},
-		{
-			"buffer":0,
-			"byteLength":24,
-			"byteOffset":1288912
-		},
-		{
-			"buffer":0,
-			"byteLength":24,
-			"byteOffset":1288936
-		},
-		{
-			"buffer":0,
-			"byteLength":24,
-			"byteOffset":1288960
-		},
-		{
-			"buffer":0,
-			"byteLength":24,
-			"byteOffset":1288984
-		},
-		{
-			"buffer":0,
-			"byteLength":24,
-			"byteOffset":1289008
-		},
-		{
-			"buffer":0,
-			"byteLength":24,
-			"byteOffset":1289032
-		},
-		{
-			"buffer":0,
-			"byteLength":24,
-			"byteOffset":1289056
-		},
-		{
-			"buffer":0,
-			"byteLength":24,
-			"byteOffset":1289080
-		},
-		{
-			"buffer":0,
-			"byteLength":24,
-			"byteOffset":1289104
-		},
-		{
-			"buffer":0,
-			"byteLength":24,
-			"byteOffset":1289128
-		},
-		{
-			"buffer":0,
-			"byteLength":24,
-			"byteOffset":1289152
-		},
-		{
-			"buffer":0,
-			"byteLength":24,
-			"byteOffset":1289176
-		},
-		{
-			"buffer":0,
-			"byteLength":24,
-			"byteOffset":1289200
+			"byteOffset":1289192
 		},
 		{
 			"buffer":0,
@@ -15700,33 +15649,38 @@
 		},
 		{
 			"buffer":0,
-			"byteLength":32,
+			"byteLength":24,
 			"byteOffset":1289560
 		},
 		{
 			"buffer":0,
 			"byteLength":24,
-			"byteOffset":1289592
+			"byteOffset":1289584
 		},
 		{
 			"buffer":0,
 			"byteLength":24,
-			"byteOffset":1289616
-		},
-		{
-			"buffer":0,
-			"byteLength":32,
-			"byteOffset":1289640
+			"byteOffset":1289608
 		},
 		{
 			"buffer":0,
 			"byteLength":24,
-			"byteOffset":1289672
+			"byteOffset":1289632
 		},
 		{
 			"buffer":0,
-			"byteLength":32,
-			"byteOffset":1289696
+			"byteLength":24,
+			"byteOffset":1289656
+		},
+		{
+			"buffer":0,
+			"byteLength":24,
+			"byteOffset":1289680
+		},
+		{
+			"buffer":0,
+			"byteLength":24,
+			"byteOffset":1289704
 		},
 		{
 			"buffer":0,
@@ -15735,33 +15689,38 @@
 		},
 		{
 			"buffer":0,
-			"byteLength":32,
+			"byteLength":24,
 			"byteOffset":1289752
 		},
 		{
 			"buffer":0,
 			"byteLength":24,
-			"byteOffset":1289784
+			"byteOffset":1289776
 		},
 		{
 			"buffer":0,
 			"byteLength":24,
-			"byteOffset":1289808
-		},
-		{
-			"buffer":0,
-			"byteLength":32,
-			"byteOffset":1289832
+			"byteOffset":1289800
 		},
 		{
 			"buffer":0,
 			"byteLength":24,
-			"byteOffset":1289864
+			"byteOffset":1289824
 		},
 		{
 			"buffer":0,
-			"byteLength":32,
-			"byteOffset":1289888
+			"byteLength":24,
+			"byteOffset":1289848
+		},
+		{
+			"buffer":0,
+			"byteLength":24,
+			"byteOffset":1289872
+		},
+		{
+			"buffer":0,
+			"byteLength":24,
+			"byteOffset":1289896
 		},
 		{
 			"buffer":0,
@@ -15770,28 +15729,33 @@
 		},
 		{
 			"buffer":0,
-			"byteLength":32,
+			"byteLength":24,
 			"byteOffset":1289944
 		},
 		{
 			"buffer":0,
 			"byteLength":24,
-			"byteOffset":1289976
-		},
-		{
-			"buffer":0,
-			"byteLength":32,
-			"byteOffset":1290000
+			"byteOffset":1289968
 		},
 		{
 			"buffer":0,
 			"byteLength":24,
-			"byteOffset":1290032
+			"byteOffset":1289992
 		},
 		{
 			"buffer":0,
-			"byteLength":32,
-			"byteOffset":1290056
+			"byteLength":24,
+			"byteOffset":1290016
+		},
+		{
+			"buffer":0,
+			"byteLength":24,
+			"byteOffset":1290040
+		},
+		{
+			"buffer":0,
+			"byteLength":24,
+			"byteOffset":1290064
 		},
 		{
 			"buffer":0,
@@ -15800,28 +15764,33 @@
 		},
 		{
 			"buffer":0,
-			"byteLength":32,
+			"byteLength":24,
 			"byteOffset":1290112
 		},
 		{
 			"buffer":0,
 			"byteLength":24,
-			"byteOffset":1290144
-		},
-		{
-			"buffer":0,
-			"byteLength":32,
-			"byteOffset":1290168
+			"byteOffset":1290136
 		},
 		{
 			"buffer":0,
 			"byteLength":24,
-			"byteOffset":1290200
+			"byteOffset":1290160
 		},
 		{
 			"buffer":0,
-			"byteLength":32,
-			"byteOffset":1290224
+			"byteLength":24,
+			"byteOffset":1290184
+		},
+		{
+			"buffer":0,
+			"byteLength":24,
+			"byteOffset":1290208
+		},
+		{
+			"buffer":0,
+			"byteLength":24,
+			"byteOffset":1290232
 		},
 		{
 			"buffer":0,
@@ -15830,68 +15799,73 @@
 		},
 		{
 			"buffer":0,
-			"byteLength":32,
+			"byteLength":24,
 			"byteOffset":1290280
 		},
 		{
 			"buffer":0,
 			"byteLength":24,
-			"byteOffset":1290312
-		},
-		{
-			"buffer":0,
-			"byteLength":32,
-			"byteOffset":1290336
+			"byteOffset":1290304
 		},
 		{
 			"buffer":0,
 			"byteLength":24,
-			"byteOffset":1290368
-		},
-		{
-			"buffer":0,
-			"byteLength":32,
-			"byteOffset":1290392
+			"byteOffset":1290328
 		},
 		{
 			"buffer":0,
 			"byteLength":24,
-			"byteOffset":1290424
-		},
-		{
-			"buffer":0,
-			"byteLength":32,
-			"byteOffset":1290448
+			"byteOffset":1290352
 		},
 		{
 			"buffer":0,
 			"byteLength":24,
+			"byteOffset":1290376
+		},
+		{
+			"buffer":0,
+			"byteLength":32,
+			"byteOffset":1290400
+		},
+		{
+			"buffer":0,
+			"byteLength":24,
+			"byteOffset":1290432
+		},
+		{
+			"buffer":0,
+			"byteLength":24,
+			"byteOffset":1290456
+		},
+		{
+			"buffer":0,
+			"byteLength":32,
 			"byteOffset":1290480
 		},
 		{
 			"buffer":0,
-			"byteLength":32,
-			"byteOffset":1290504
+			"byteLength":24,
+			"byteOffset":1290512
 		},
 		{
 			"buffer":0,
-			"byteLength":24,
+			"byteLength":32,
 			"byteOffset":1290536
 		},
 		{
 			"buffer":0,
-			"byteLength":32,
-			"byteOffset":1290560
+			"byteLength":24,
+			"byteOffset":1290568
 		},
 		{
 			"buffer":0,
-			"byteLength":24,
+			"byteLength":32,
 			"byteOffset":1290592
 		},
 		{
 			"buffer":0,
-			"byteLength":32,
-			"byteOffset":1290616
+			"byteLength":24,
+			"byteOffset":1290624
 		},
 		{
 			"buffer":0,
@@ -16040,93 +16014,88 @@
 		},
 		{
 			"buffer":0,
-			"byteLength":24,
+			"byteLength":32,
 			"byteOffset":1291456
 		},
 		{
 			"buffer":0,
 			"byteLength":24,
-			"byteOffset":1291480
+			"byteOffset":1291488
 		},
 		{
 			"buffer":0,
 			"byteLength":32,
-			"byteOffset":1291504
+			"byteOffset":1291512
 		},
 		{
 			"buffer":0,
 			"byteLength":24,
-			"byteOffset":1291536
+			"byteOffset":1291544
 		},
 		{
 			"buffer":0,
 			"byteLength":32,
-			"byteOffset":1291560
+			"byteOffset":1291568
 		},
 		{
 			"buffer":0,
 			"byteLength":24,
-			"byteOffset":1291592
+			"byteOffset":1291600
 		},
 		{
 			"buffer":0,
 			"byteLength":32,
-			"byteOffset":1291616
+			"byteOffset":1291624
 		},
 		{
 			"buffer":0,
 			"byteLength":24,
-			"byteOffset":1291648
+			"byteOffset":1291656
 		},
 		{
 			"buffer":0,
 			"byteLength":32,
-			"byteOffset":1291672
+			"byteOffset":1291680
 		},
 		{
 			"buffer":0,
 			"byteLength":24,
-			"byteOffset":1291704
-		},
-		{
-			"buffer":0,
-			"byteLength":24,
-			"byteOffset":1291728
+			"byteOffset":1291712
 		},
 		{
 			"buffer":0,
 			"byteLength":32,
-			"byteOffset":1291752
+			"byteOffset":1291736
 		},
 		{
 			"buffer":0,
 			"byteLength":24,
-			"byteOffset":1291784
+			"byteOffset":1291768
 		},
 		{
 			"buffer":0,
 			"byteLength":32,
-			"byteOffset":1291808
+			"byteOffset":1291792
 		},
 		{
 			"buffer":0,
 			"byteLength":24,
-			"byteOffset":1291840
+			"byteOffset":1291824
+		},
+		{
+			"buffer":0,
+			"byteLength":32,
+			"byteOffset":1291848
 		},
 		{
 			"buffer":0,
 			"byteLength":24,
-			"byteOffset":1291864
+			"byteOffset":1291880
 		},
 		{
 			"buffer":0,
-			"byteLength":24,
-			"byteOffset":1291888
-		},
-		{
-			"buffer":0,
-			"byteLength":24,
-			"byteOffset":1291912
+			"byteLength":32,
+			"byteOffset":1291904
 		},
 		{
 			"buffer":0,
@@ -16135,33 +16104,28 @@
 		},
 		{
 			"buffer":0,
-			"byteLength":24,
+			"byteLength":32,
 			"byteOffset":1291960
 		},
 		{
 			"buffer":0,
 			"byteLength":24,
-			"byteOffset":1291984
+			"byteOffset":1291992
+		},
+		{
+			"buffer":0,
+			"byteLength":32,
+			"byteOffset":1292016
 		},
 		{
 			"buffer":0,
 			"byteLength":24,
-			"byteOffset":1292008
+			"byteOffset":1292048
 		},
 		{
 			"buffer":0,
-			"byteLength":24,
-			"byteOffset":1292032
-		},
-		{
-			"buffer":0,
-			"byteLength":24,
-			"byteOffset":1292056
-		},
-		{
-			"buffer":0,
-			"byteLength":24,
-			"byteOffset":1292080
+			"byteLength":32,
+			"byteOffset":1292072
 		},
 		{
 			"buffer":0,
@@ -16170,38 +16134,198 @@
 		},
 		{
 			"buffer":0,
-			"byteLength":24,
+			"byteLength":32,
 			"byteOffset":1292128
 		},
 		{
 			"buffer":0,
 			"byteLength":24,
-			"byteOffset":1292152
+			"byteOffset":1292160
 		},
 		{
 			"buffer":0,
 			"byteLength":32,
-			"byteOffset":1292176
+			"byteOffset":1292184
 		},
 		{
 			"buffer":0,
 			"byteLength":24,
-			"byteOffset":1292208
-		},
-		{
-			"buffer":0,
-			"byteLength":24,
-			"byteOffset":1292232
+			"byteOffset":1292216
 		},
 		{
 			"buffer":0,
 			"byteLength":32,
-			"byteOffset":1292256
+			"byteOffset":1292240
+		},
+		{
+			"buffer":0,
+			"byteLength":24,
+			"byteOffset":1292272
+		},
+		{
+			"buffer":0,
+			"byteLength":24,
+			"byteOffset":1292296
+		},
+		{
+			"buffer":0,
+			"byteLength":24,
+			"byteOffset":1292320
+		},
+		{
+			"buffer":0,
+			"byteLength":32,
+			"byteOffset":1292344
+		},
+		{
+			"buffer":0,
+			"byteLength":24,
+			"byteOffset":1292376
+		},
+		{
+			"buffer":0,
+			"byteLength":32,
+			"byteOffset":1292400
+		},
+		{
+			"buffer":0,
+			"byteLength":24,
+			"byteOffset":1292432
+		},
+		{
+			"buffer":0,
+			"byteLength":32,
+			"byteOffset":1292456
+		},
+		{
+			"buffer":0,
+			"byteLength":24,
+			"byteOffset":1292488
+		},
+		{
+			"buffer":0,
+			"byteLength":32,
+			"byteOffset":1292512
+		},
+		{
+			"buffer":0,
+			"byteLength":24,
+			"byteOffset":1292544
+		},
+		{
+			"buffer":0,
+			"byteLength":24,
+			"byteOffset":1292568
+		},
+		{
+			"buffer":0,
+			"byteLength":32,
+			"byteOffset":1292592
+		},
+		{
+			"buffer":0,
+			"byteLength":24,
+			"byteOffset":1292624
+		},
+		{
+			"buffer":0,
+			"byteLength":32,
+			"byteOffset":1292648
+		},
+		{
+			"buffer":0,
+			"byteLength":24,
+			"byteOffset":1292680
+		},
+		{
+			"buffer":0,
+			"byteLength":24,
+			"byteOffset":1292704
+		},
+		{
+			"buffer":0,
+			"byteLength":24,
+			"byteOffset":1292728
+		},
+		{
+			"buffer":0,
+			"byteLength":24,
+			"byteOffset":1292752
+		},
+		{
+			"buffer":0,
+			"byteLength":24,
+			"byteOffset":1292776
+		},
+		{
+			"buffer":0,
+			"byteLength":24,
+			"byteOffset":1292800
+		},
+		{
+			"buffer":0,
+			"byteLength":24,
+			"byteOffset":1292824
+		},
+		{
+			"buffer":0,
+			"byteLength":24,
+			"byteOffset":1292848
+		},
+		{
+			"buffer":0,
+			"byteLength":24,
+			"byteOffset":1292872
+		},
+		{
+			"buffer":0,
+			"byteLength":24,
+			"byteOffset":1292896
+		},
+		{
+			"buffer":0,
+			"byteLength":24,
+			"byteOffset":1292920
+		},
+		{
+			"buffer":0,
+			"byteLength":24,
+			"byteOffset":1292944
+		},
+		{
+			"buffer":0,
+			"byteLength":24,
+			"byteOffset":1292968
+		},
+		{
+			"buffer":0,
+			"byteLength":24,
+			"byteOffset":1292992
+		},
+		{
+			"buffer":0,
+			"byteLength":32,
+			"byteOffset":1293016
+		},
+		{
+			"buffer":0,
+			"byteLength":24,
+			"byteOffset":1293048
+		},
+		{
+			"buffer":0,
+			"byteLength":24,
+			"byteOffset":1293072
+		},
+		{
+			"buffer":0,
+			"byteLength":32,
+			"byteOffset":1293096
 		}
 	],
 	"buffers":[
 		{
-			"byteLength":1292288,
+			"byteLength":1293128,
 			"uri":"scene.bin"
 		}
 	]
