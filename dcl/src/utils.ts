@@ -3,6 +3,7 @@ import { getRealm } from "~system/Runtime"
 import { ignoreWearableCategories, rarityValues } from "./data"
 import { engine } from "@dcl/sdk/ecs"
 import { GetPlayerDataRequest } from "~system/Players"
+import { GameSettings } from "./_settings"
 
 // Workaround for env vars
 declare var process : {
@@ -19,7 +20,7 @@ const FORCE_BASE_URL = true
 const playerProfiles: Map<string, any> = new Map()
 
 // MARK: GetUTCTimestamp
-export async function GetUTCTimestamp() {
+/* export async function GetUTCTimestamp() {
 	try {
 		const response = await fetch('https://timeapi.io/api/Time/current/zone?timeZone=UTC')
 	
@@ -44,12 +45,14 @@ export async function GetUTCTimestamp() {
 		console.error('Error fetching UTC Time from API:', error)
 		return false
 	}
-}
+} */
 
 // MARK: GetUTCTimestampMillis
 export async function GetUTCTimestampMillis() {
 	try {
-		const response = await fetch('https://timeapi.io/api/Time/current/zone?timeZone=UTC')
+		const response = await fetch(GameSettings.TIME_API_URL, {
+			timeout: 1000
+		})
 	
 		if (!response.ok) {
 			throw new Error("Failed to fetch UTC time: " + response.statusText)
@@ -59,7 +62,7 @@ export async function GetUTCTimestampMillis() {
 	
 		if (!data.dateTime) {
 			console.error("Failed to get dateTime from response data:", data)
-			return false
+			return Date.UTC(Date.now()) * 1000 as number
 		}
 	
 		// Convert ISO string to Unix timestamp in seconds
@@ -70,7 +73,7 @@ export async function GetUTCTimestampMillis() {
   
 	} catch (error) {
 		console.error('Error fetching UTC Time from API:', error)
-		return false
+		return Date.UTC(Date.now()) * 1000 as number
 	}
 }
 

@@ -24,6 +24,8 @@ export class SceneSettings {
 }
 
 export class GameSettings {
+	static TIME_API_URL = 'https://timeapi.io/api/Time/current/zone?timeZone=UTC'
+
 	static COUNTDOWN_DURATION        = 6
 	static ROUND_DURATION_PER_PLAYER = 6
 	static VOTING_DURATION           = 10

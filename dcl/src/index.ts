@@ -8,6 +8,7 @@ import { setupUi }  from './ui'
 import { _GameManager } from './GameManager'
 import { _StageController } from './StageController'
 import { _ShopManager } from './ShopManager'
+import { ShowWarning } from './ui.Game'
 
 export function main() {
 	

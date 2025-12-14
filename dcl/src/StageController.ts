@@ -21,6 +21,8 @@ type NPCOutfit = {
 }
 
 class StageController {
+	isRunning: boolean = false
+
 	constructor() {
 		console.log("StageController constructor")
 	}
@@ -32,6 +34,7 @@ class StageController {
 	RunShow(players: string[]) {
 		console.log("StageController RunShow")
 
+		this.isRunning = true
 		// Loop through each of the playters we've been given
 
 		players.forEach((userId) => {
@@ -45,6 +48,10 @@ class StageController {
 			}
 			this.AnimateNPC(npc)
 		})
+	}
+
+	Abort() {
+		this.isRunning = false
 	}
 
 

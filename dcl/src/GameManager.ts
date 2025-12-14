@@ -3,7 +3,7 @@ import { Quaternion, Vector3 } from "@dcl/sdk/math"
 import { MessageBus } from "@dcl/sdk/message-bus"
 import { onEnterScene } from "@dcl/sdk/players"
 import { GetPlayerProfile, GetUTCTimestampMillis, waitForPlayerData } from "./utils"
-import { HideCountdownTimer, ShowCountdownTimer, ShowVoting, ShowVotingResults, UpdatePlayerList } from "./ui.Game"
+import { HideCountdownTimer, HideVoting, HideVotingResults, ShowCountdownTimer, ShowVoting, ShowVotingResults, ShowWarning, UpdatePlayerList } from "./ui.Game"
 import { movePlayerTo } from "~system/RestrictedActions"
 
 import * as utils from '@dcl-sdk/utils'
@@ -57,11 +57,23 @@ class GameManager {
 		console.log("GameManager constructor")
 	}
 
+	ResetState() {
+		this.state.gameState     = GameStatus.IDLE
+		this.state.hostUserId    = ""
+		this.state.players       = []
+		this.state.gameStartTime = 0
+		HideCountdownTimer()
+		HideVoting()
+		HideVotingResults()
+		UpdatePlayerList()
+	}
+
 	// MARK: init
 	async init() {
 		console.log("GameManager Init")
 
-		this.FetchUTCTimestamp()
+		this.UpdateUTCTimestamp()
+		this.ResetState()
 
 		// Ensure we have player data for local player
 		localPlayer = await waitForPlayerData()
@@ -136,14 +148,6 @@ class GameManager {
 		sceneMessageBus.emit('stateRequest', {})
 
 		engine.addSystem((dt) => this.System_UpdateTimers(dt))
-
-
-		// DEBUG STUFF
-		//ShowVoting()
-		ShowCountdownTimer()
-		utils.timers.setTimeout(() => {
-			//ShowVotingResults()
-		}, 500)
 	}
 
 
@@ -157,8 +161,8 @@ class GameManager {
 		this.utcTimestamp           =  Math.floor(this.utcTimestampMillis / 1000)
 
 		if (this.timeSinceLastUTCUpdate >= GameSettings.UTC_UPDATE_INTERVAL) {
-			this.timeSinceLastUTCUpdate = 0 // set this here to prevent multiple calls to FetchUTCTimestamp()
-			this.FetchUTCTimestamp()
+			this.timeSinceLastUTCUpdate = 0 // set this here to prevent multiple calls to UpdateUTCTimestamp()
+			this.UpdateUTCTimestamp()
 		}
 
 		if (this.state.gameState == GameStatus.STARTING) {
@@ -167,11 +171,11 @@ class GameManager {
 		}
 	}
 
-	// MARK: FetchUTCTimestamp
-	FetchUTCTimestamp() {
+	// MARK: UpdateUTCTimestamp
+	UpdateUTCTimestamp() {
 		GetUTCTimestampMillis().then((timestampMillis) => {
 			if (!timestampMillis) {
-				console.error("GameManager: FetchUTCTimestamp: Failed to get UTC timestamp")
+				console.error("GameManager: UpdateUTCTimestamp: Failed to get UTC timestamp")
 				return
 			}
 			console.log("UTC updated to:", timestampMillis)
@@ -188,6 +192,14 @@ class GameManager {
 	// When a player presses the button to Start/Join a game
 	JoinOrStartGame(userId: string) {
 		console.log("GameManager: JoinOrStartGame", userId)
+
+		// Ensure we have a proper UTC time
+		if (this.utcTimestamp < 10000) {
+			console.log("GameManager: JoinOrStartGame: UTC time not set, waiting for it to be set")
+			ShowWarning("Game not ready yet, please wait while we sync the time")
+			this.UpdateUTCTimestamp()
+			return
+		}
 
 		// Ignore if we're already in the list of players
 		if (this.state.players.includes(userId)) {
@@ -392,10 +404,7 @@ class GameManager {
 		if (!this.iAmTheHost) return
 		console.log("GameManager: TriggerIdle")
 
-		this.state.gameState = GameStatus.IDLE
-		this.state.hostUserId = ""
-		this.state.players = []
-		this.state.gameStartTime = 0
+		this.ResetState()
 		this.TriggerStateUpdate()
 
 		this.OnIdle()
@@ -404,10 +413,16 @@ class GameManager {
 	// MARK: OnIdle
 	OnIdle() {
 		console.log("GameManager: OnIdle")
+		this.ResetState()
+	}
 
-		this.iAmTheHost = false
-		this.iAmInTheGame = false
-		this.TriggerStateUpdate()
+
+	// MARK: OnAbort
+	OnAbort() {
+		console.log("GameManager: OnAbort")
+		this.ResetState()
+		this.MovePlayersToArena()
+		_StageController.Abort()
 	}
 
 
