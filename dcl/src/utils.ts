@@ -16,6 +16,7 @@ const DEBUG = process.env.NODE_ENV == "development"
 
 const FORCE_BASE_URL = true
 
+const playerProfiles: Map<string, any> = new Map()
 
 // MARK: GetUTCTimestamp
 export async function GetUTCTimestamp() {
@@ -88,23 +89,13 @@ export function waitForPlayerData(
 		const system = (dt: number) => {
 			const p = getPlayer(req)
 			if (p) {
-			engine.removeSystem(system)
-			resolve(p as any)
+				engine.removeSystem(system)
+				resolve(p as any)
 			}
 		}
 	
 		engine.addSystem(system)
 	})
-}
-
-// MARK: Get PlayerNameFromUserId
-export function GetPlayerNameFromUserId(userId: string): string {
-	const player = getPlayer({ userId: userId })
-	if (!player) {
-		console.log("GetPlayerNameFromUserId: Error: player not found")
-		return "Unknown"
-	}
-	return player.name
 }
 
 // MARK: GetRealmInfo
@@ -118,6 +109,93 @@ async function GetRealmInfo() {
 		return realmInfo			
 	}
 }
+
+
+// MARK: Profile Listener
+type PlayerProfileListener = (userId: string) => void
+
+const profileListeners = new Set<PlayerProfileListener>()
+
+export function onPlayerProfileLoaded(listener: PlayerProfileListener) {
+  profileListeners.add(listener)
+  return () => profileListeners.delete(listener)
+}
+
+
+// MARK: GetPlayerProfile
+export async function GetPlayerProfile(userId: string): Promise<any> {
+	if (playerProfiles.has(userId)) {
+		return playerProfiles.get(userId)
+	}
+
+	const response = await fetch(`https://peer.decentraland.org/lambdas/profiles/${userId}`)
+    if (!response.ok) {
+        throw new Error(`GetPlayerAvatarImage: Failed to fetch profile: ${response.statusText}`)
+    }
+
+	// Store the profile data
+    const data = await response.json()
+	playerProfiles.set(userId, data)
+
+	
+	// Notify subscribers
+	for (const listener of profileListeners) {
+		listener(userId)
+	}
+
+	return data
+}
+
+
+// MARK: GetPlayerName
+export function GetPlayerName(userId: string): string {
+	// If profile is cached, extract name from it
+	if (playerProfiles.has(userId)) {
+		const data = playerProfiles.get(userId)
+		return data.avatars[0]?.name || userId.substring(0, 6) + "..."
+	}
+	
+	// Start fetching in background if not cached (GetPlayerProfile already caches to playerProfiles)
+	GetPlayerProfile(userId).catch((error) => {
+		console.error(`GetPlayerName: Failed to fetch profile for ${userId}:`, error)
+	})
+	
+	// Return placeholder while fetching
+	return userId.substring(0, 6) + "..."
+}
+
+export async function GetPlayerNameAsync(userId: string): Promise<string> {
+	const data = await GetPlayerProfile(userId)
+	return data.avatars[0]?.name || userId.substring(0, 6) + ".."
+}
+
+
+
+// MARK: GetPlayerAvatarImage
+export function GetPlayerAvatarImage(userId: string): string {
+	// If profile is cached, extract name from it
+	if (playerProfiles.has(userId)) {
+		const data = playerProfiles.get(userId)
+		return data.avatars[0].avatar.snapshots.face256 || ""
+	}
+	
+	// Start fetching in background if not cached (GetPlayerProfile already caches to playerProfiles)
+	GetPlayerProfile(userId).catch((error) => {
+		console.error(`GetPlayerName: Failed to fetch profile for ${userId}:`, error)
+	})
+	
+	// Return placeholder while fetching
+	return ""
+}
+
+export async function GetPlayerAvatarImageAsync(userId: string): Promise<string> {
+	const data = await GetPlayerProfile(userId)
+	return data.avatars[0].avatar.snapshots.face256
+}
+
+
+
+
 
 
 // MARK: GetBaseURL
@@ -176,9 +254,6 @@ export async function GetCurrentOutfit() {
 			continue
 		} 
 		
-		// Check if we should ignore the item
-		if (ShouldIgnoreCategory(data.metadata.data.category)) continue;
-		
 		// Add item data to the results
 		results.push(data)
 	}
@@ -227,58 +302,3 @@ export async function GetWearableData(urn: string, baseUrl?: string) {
 	}
 }
 
-
-// MARK: GetOutfitScore
-export function GetOutfitScore(wearables: any, wearableHistory: any) {
-	// Input is an array of wearables, and an array of arrays of wearables
-	// Start building the score
-	let score = 0
-
-	// Loop through each item in the outfit
-	for (const item of wearables) {
-		const itemData = item.metadata
-		
-		// Get score value for item
-		let itemScore = GetRarityValue(itemData.rarity)
-		
-		if (ItemHasBeenWornBefore(item, wearableHistory)) {
-			//if (DEBUG) console.log("Item already worn, reduced points", itemData.name)				
-			itemScore = Math.max(Math.floor(itemScore / 2), 1) // floor it, and clamp to min 1
-		}
-		
-		// Add item score
-		score += itemScore
-	}
-
-	if (DEBUG) console.log("Wearables Score:", score)
-	return score
-}
-
-
-//MARK: ItemHasBeenWornBefore
-export function ItemHasBeenWornBefore(item: any, history: any): boolean {
-	// Iterate through previous outfits
-	for (const previousOutfit of history) {
-		// Iterate through outfit wearables
-		for (const prevItem of previousOutfit) {
-			
-			// Check if it matches the item
-			if (prevItem.metadata.id === item.metadata.id) {
-				return true
-			}
-		}
-	}
-	return false
-}
-
-
-// MARK: ShouldIgnoreCategory
-export function ShouldIgnoreCategory(category: string): boolean {
-    return ignoreWearableCategories[category] === true;
-}
-
-
-// MARK: GetRarityValue
-export function GetRarityValue(rarityName: string) {
-	return rarityValues[rarityName] || 1
-}

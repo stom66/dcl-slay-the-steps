@@ -81,7 +81,7 @@ export function DebugUI() {
 					alignItems: 'flex-start',
 					justifyContent: 'space-between'
 				}}
-				value={`IAmTheHost: ${_GameManager.IAmTheHost ? "TRUE" : "FALSE"}`}
+				value={`IAmTheHost: ${_GameManager.iAmTheHost ? "TRUE" : "FALSE"}`}
 				color={Color4.White()}
 				fontSize={14}
 				textAlign="middle-left"
@@ -95,7 +95,7 @@ export function DebugUI() {
 					alignItems: 'flex-start',
 					justifyContent: 'space-between'
 				}}
-				value={`InTheGame: ${_GameManager.state.players.includes(localPlayer?.userId) ? "TRUE" : "FALSE"}`}
+				value={`IAmInTheGame: ${_GameManager.state.players.includes(localPlayer?.userId) ? "TRUE" : "FALSE"}`}
 				color={Color4.White()}
 				fontSize={14}
 				textAlign="middle-left"

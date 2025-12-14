@@ -1,8 +1,8 @@
 import { engine, InputAction, MeshCollider, MeshRenderer, pointerEventsSystem, Transform } from "@dcl/sdk/ecs"
 import { Quaternion, Vector3 } from "@dcl/sdk/math"
 import { MessageBus } from "@dcl/sdk/message-bus"
-import { getPlayer, onEnterScene } from "@dcl/sdk/players"
-import { GetUTCTimestamp, GetUTCTimestampMillis, waitForPlayerData } from "./utils"
+import { onEnterScene } from "@dcl/sdk/players"
+import { GetPlayerProfile, GetUTCTimestampMillis, waitForPlayerData } from "./utils"
 import { HideCountdownTimer, ShowCountdownTimer, ShowVoting, ShowVotingResults, UpdatePlayerList } from "./ui.Game"
 import { movePlayerTo } from "~system/RestrictedActions"
 
@@ -22,11 +22,17 @@ export type GameState = {
 	hostUserId   : string,
 	players      : string[],
 	gameStartTime: number,
+	votes        : { [key: string]: string },
+}
+
+export type RequestVote = {
+	voteFrom: string,
+	voteFor: string,
 }
 
 const GAMESETTINGS = {
-	COUNTDOWN_DURATION       : 10,
-	ROUND_DURATION_PER_PLAYER: 3,
+	COUNTDOWN_DURATION       : 6,
+	ROUND_DURATION_PER_PLAYER: 6,
 	VOTING_DURATION          : 10,
 	GAME_ENDED_DURATION      : 10,
 	UTC_UPDATE_INTERVAL      : 15
@@ -81,9 +87,18 @@ class GameManager {
 			this.OnStateUpdate(state)
 		})
 
+		sceneMessageBus.on('requestVote', (vote: RequestVote) => {
+			console.log("GameManager: sceneMessageBus: requestVote:", vote)
+			this.OnRequestVote(vote)
+		})
+
 		// Handle players entering the scene
 		onEnterScene((player) => {
 			if (!player) return
+
+			// Cache the players data
+			GetPlayerProfile(player.userId)
+
 			if (player != localPlayer) {
 				if (this.iAmTheHost) {
 					console.log("GameManager: Player joined:", player.userId)
@@ -126,6 +141,14 @@ class GameManager {
 		sceneMessageBus.emit('stateRequest', {})
 
 		engine.addSystem((dt) => this.System_UpdateTimers(dt))
+
+
+		// DEBUG STUFF
+		//ShowVoting()
+		ShowCountdownTimer()
+		utils.timers.setTimeout(() => {
+			//ShowVotingResults()
+		}, 500)
 	}
 
 
@@ -286,7 +309,7 @@ class GameManager {
 
 		const roundDuration = GAMESETTINGS.ROUND_DURATION_PER_PLAYER * 1000 * this.state.players.length
 		utils.timers.setTimeout(() => {
-			this.TriggerVotingStart()
+			this.TriggerVoting()
 		}, roundDuration)
 	}
 
@@ -313,13 +336,15 @@ class GameManager {
 
 
 	// MARK: ---
-	// MARK: TriggerVotingStart
-	TriggerVotingStart() {
+	// MARK: TriggerVoting
+	TriggerVoting() {
 		if (!this.iAmTheHost) return
-		console.log("GameManager: TriggerVotingStart")
+		console.log("GameManager: TriggerVoting")
 
 		this.state.gameState = GameStatus.VOTING
 		this.TriggerStateUpdate()
+
+		this.OnVotingStart()
 
 		utils.timers.setTimeout(() => {
 			this.TriggerGameEnd()
@@ -407,14 +432,19 @@ class GameManager {
 	}
 
 	// MARK: OnStateUpdate
-	OnStateUpdate(state: GameState) {
-		console.log("GameManager: OnStateUpdate:", state)
+	OnStateUpdate(newState: GameState) {
+		console.log("GameManager: OnStateUpdate:", newState)
 
 		// Ignore if we don't have localPlayer data - eg after a player joins the scene while we're still loading
 		if (!localPlayer || !localPlayer.userId) return
 
+		// Ensure data for all players in the game is cached
+		for (const player of newState.players) {
+			GetPlayerProfile(player)
+		}
+
 		// Ignore updates if we are the host
-		if (this.iAmTheHost && state.hostUserId !== localPlayer!.userId) {
+		if (this.iAmTheHost && newState.hostUserId !== localPlayer!.userId) {
 			console.log("GameManager: OnStateUpdate: Problem, another player thinks they are the host!")
 			return
 		}
@@ -422,7 +452,7 @@ class GameManager {
 
 		// Store the state, then update it
 		const lastState = this.state
-		this.state = state
+		this.state = newState
 
 		// Check if we are in the game
 		this.iAmInTheGame = this.state.players.includes(localPlayer!.userId)
@@ -449,7 +479,16 @@ class GameManager {
 		UpdatePlayerList()
 	}
 
+	// MARK: ---
+	// MARK: OnRequestVote
+	OnRequestVote(vote: RequestVote) {
+		if (!this.iAmInTheGame) return
+		console.log("GameManager: OnRequestVote:", vote)
 
+		this.state.votes[vote.voteFrom] = vote.voteFor
+		this.TriggerStateUpdate()
+		// TODO: implement this	
+	}
 	
 	// MARK: ---
 	// MARK: Utils
