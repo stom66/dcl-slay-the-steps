@@ -8,7 +8,7 @@ class CameraController {
 	currentCamera: Entity | undefined = undefined
 	currentTarget: Entity | undefined = undefined
 
-	maxCameraDistance: number = 5
+	maxCameraDistance: number = 6
 	cameraOffset: Vector3 = Vector3.create(0, 1.75, 0)
 
 	constructor() {
@@ -33,9 +33,18 @@ class CameraController {
 		const target = Transform.get(this.currentTarget)
 
 		if (!camera || !player || !target) return
+
+		// If the target is parented, use its world position by adding the parent's position.
+		let targetWorldPosition = target.position
+		if (target.parent && Transform.has(target.parent)) {
+			const parentTransform = Transform.get(target.parent)
+			if (parentTransform) {
+				targetWorldPosition = Vector3.add(parentTransform.position, target.position)
+			}
+		}
 	
 		// Compute the vector from player to target in world space
-		const toTarget = Vector3.subtract(target.position, player.position)
+		const toTarget = Vector3.subtract(targetWorldPosition, player.position)
 		const distance = Vector3.length(toTarget)
 	
 		if (distance > this.maxCameraDistance) {

@@ -72,7 +72,7 @@ class StageController {
 			// Create the camera target
 			const npcCameraTarget = engine.addEntity()
 			Transform.create(npcCameraTarget, {
-				//position: Vector3.create(0, 1, 0),
+				position: Vector3.create(0, 1, 0),
 				parent: npc
 			})
 			cameraTargets.set(npc, npcCameraTarget)
@@ -92,7 +92,7 @@ class StageController {
 			const { userId, npc } = npcs[currentIndex]
 
 			// Track the current NPC for the camera
-			const cameraTarget = npc
+			const cameraTarget = cameraTargets.get(npc)
 			if (cameraTarget) {
 				_CameraController.TrackEntity(cameraTarget)
 			}
