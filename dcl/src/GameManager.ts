@@ -331,7 +331,7 @@ class GameManager {
 
 		this.OnRoundStart() // Manually trigger this here to apply it to the host
 
-		const roundDuration = GameSettings.ROUND_DURATION_PER_PLAYER * 1000 * this.state.players.length
+		const roundDuration = (GameSettings.ROUND_DURATION_PER_PLAYER * this.state.players.length + GameSettings.ROUND_START_DELAY) * 1000
 		utils.timers.setTimeout(() => {
 			this.TriggerVotingStart()
 		}, roundDuration)

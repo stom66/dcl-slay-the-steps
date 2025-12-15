@@ -30,7 +30,7 @@ class CameraController {
 		})
 
 		// Position the camera directly above the player
-		const playerPos = Transform.get(engine.PlayerEntity).position
+		//const playerPos = Transform.get(engine.PlayerEntity).position
 		Transform.create(camera, {
 			position: Vector3.create(0, 1.75, 0),
 			parent: engine.PlayerEntity,
@@ -42,6 +42,8 @@ class CameraController {
 	}
 
 	ResetCamera() {
+		console.log("CameraController ResetCamera")
+
 		// Stop using virtual camera
 		const mainCamera = MainCamera.getMutable(engine.CameraEntity)
 		mainCamera.virtualCameraEntity = undefined
