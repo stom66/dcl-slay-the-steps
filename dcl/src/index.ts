@@ -9,6 +9,7 @@ import { _GameManager } from './GameManager'
 import { _StageController } from './StageController'
 import { _ShopManager } from './ShopManager'
 import { ShowWarning } from './ui.Game'
+import { _CameraController } from './CameraController'
 
 export function main() {
 	
@@ -17,6 +18,7 @@ export function main() {
 	_GameManager.init()
 	//_StageController.init()
 	_ShopManager.init()
+	_CameraController.init()
 
 	// Spawn some lights
 	const light = engine.addEntity()

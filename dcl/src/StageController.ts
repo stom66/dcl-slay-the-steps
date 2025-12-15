@@ -3,7 +3,7 @@ import { GameSettings } from "./_settings"
 import { _GameManager } from './GameManager'
 import { GetPlayerName, GetPlayerProfile } from './utils'
 import { Color3, Quaternion, Vector3 } from '@dcl/sdk/math'
-import { AvatarShape, engine, Entity, Transform } from '@dcl/sdk/ecs'
+import { AvatarShape, EasingFunction, engine, Entity, Transform, Tween, TweenLoop, TweenSequence, tweenSystem, TweenSystem } from '@dcl/sdk/ecs'
 import { getPlayerData } from '~system/Players'
 import { getPlayer } from '@dcl/sdk/players'
 import { _CameraController } from './CameraController'
@@ -23,34 +23,22 @@ type NPCOutfit = {
 }
 
 class StageController {
-	isRunning       : boolean            = false
-	currentNPC      : Entity | undefined = undefined
-	currentNPCUserId: string | undefined = undefined
+	isRunning       : boolean = false
 
-	pathToStairsTop = [
-		GameSettings.NPC_SPAWN_POSITION,
-		GameSettings.NPC_PATH_STAIRS_TOP,
-	]
-	pathToCatwalkJunction = [
-		GameSettings.NPC_PATH_STAIRS_TOP, 
-		GameSettings.NPC_PATH_STAIRS_BOTTOM,
-		GameSettings.NPC_PATH_CATWALK_JUNCTION,
-	]
-	pathToExitRight = [
-		GameSettings.NPC_PATH_CATWALK_JUNCTION,
-		Vector3.create(30, 10.53, 12.07),
-	]
-	pathToExitLeft = [
-		GameSettings.NPC_PATH_CATWALK_JUNCTION,
-		Vector3.create(2, 10.53, 12.07),
-	]
+	durationToStairsTop     = 1 // How long to spend walking from the spawn point to the top of the stairs
+	durationPauseAtTop      = 1.5 // How long should the avatar wait at the top of the stairs
+	durationPauseAtCatwalk  = 1.5 // How long to pause at the Catwalk Junction
+	durationRemaining       = (GameSettings.ROUND_DURATION_PER_PLAYER - this.durationToStairsTop - this.durationPauseAtTop - this.durationPauseAtCatwalk)
 
-	durationToStairsTop    = 1 // How long to spend walking from the spawn point to the top of the stairs
-	durationPauseAtTop     = 1 // How long should the avatar wait at the top of the stairs
-	durationPauseAtCatwalk = 1 // How long to pause at the Catwalk Junction
-	durationRemaining      = (GameSettings.ROUND_DURATION_PER_PLAYER - this.durationToStairsTop - this.durationPauseAtTop - this.durationPauseAtCatwalk) // How long to spend walking from the top of the stairs to the exit
-	durationToCatwalk      = this.durationRemaining * 0.6
-	durationToExit         = this.durationRemaining * 0.4
+	dFromStairsTopToBottom  = Vector3.distance(GameSettings.NPC_PATH_STAIRS_TOP, GameSettings.NPC_PATH_STAIRS_BOTTOM)
+	dFromStairsBtmToCatwalk = Vector3.distance(GameSettings.NPC_PATH_STAIRS_BOTTOM, GameSettings.NPC_PATH_CATWALK_JUNCTION)
+	dFromCatwalkToExit      = Vector3.distance(GameSettings.NPC_PATH_CATWALK_JUNCTION, GameSettings.NPC_PATH_EXIT_LEFT)
+
+	totalDistance           = this.dFromStairsTopToBottom + this.dFromStairsBtmToCatwalk + this.dFromCatwalkToExit
+	
+	durationToStairsBottom  = this.durationRemaining * this.dFromStairsTopToBottom / this.totalDistance
+	durationToCatwalk       = this.durationRemaining * this.dFromStairsBtmToCatwalk / this.totalDistance
+	durationToExit          = this.durationRemaining * this.dFromCatwalkToExit / this.totalDistance
 
 	constructor() {
 		console.log("StageController constructor")
@@ -67,16 +55,27 @@ class StageController {
 
 		// Create all NPCs first and track them by userId
 		const npcs: { userId: string, npc: Entity }[] = []
+		const cameraTargets: Map<Entity, Entity> = new Map()
+
 		players.forEach((userId) => {
 			const playerName = GetPlayerName(userId)
 			console.log("StageController RunShow: playerName", playerName)
 
+			// Create the NPC
 			const npc = this.CreateNPC(userId)
 			if (!npc) {
 				console.error("StageController RunShow: Failed to create NPC clone for user", userId)
 				return
 			}
 			npcs.push({ userId, npc })
+
+			// Create the camera target
+			const npcCameraTarget = engine.addEntity()
+			Transform.create(npcCameraTarget, {
+				//position: Vector3.create(0, 1, 0),
+				parent: npc
+			})
+			cameraTargets.set(npc, npcCameraTarget)
 		})
 
 		const npcCount = npcs.length
@@ -93,7 +92,10 @@ class StageController {
 			const { userId, npc } = npcs[currentIndex]
 
 			// Track the current NPC for the camera
-			_CameraController.TrackEntity(npc)
+			const cameraTarget = npc
+			if (cameraTarget) {
+				_CameraController.TrackEntity(cameraTarget)
+			}
 
 			// Animate the NPC (alternate left/right)
 			const goLeft = currentIndex % 2 === 0
@@ -160,11 +162,15 @@ class StageController {
 
 	DestroyNPC(npc: Entity) {
 		console.log("StageController DestroyNPC: npc", npc)
-		engine.removeEntity(npc)
-		if (this.currentNPC === npc) {
-			this.currentNPC = undefined
-			this.currentNPCUserId = undefined
+		
+		const tween = Tween.getMutable(npc)
+		if (tween) {
+			tween.playing = false
+			Tween.deleteFrom(npc)
 		}
+
+		engine.removeEntity(npc)
+
 	}
 
 	AnimateNPC(
@@ -173,23 +179,65 @@ class StageController {
 	) {
 		console.log("StageController AnimateNPC: npc", npc)
 
+		Tween.setMove(npc, 
+			GameSettings.NPC_SPAWN_POSITION, 
+			GameSettings.NPC_PATH_STAIRS_TOP, 
+			this.durationToStairsTop * 1000
+		)
 
-		// Walk from the spawn point to the top of the stairs
-		utils.paths.startStraightPath(npc, this.pathToStairsTop, this.durationToStairsTop, true, () => {
-			// OnComplete, wait at the top of the stairs
-			utils.timers.setTimeout(() => {
-				// Walk down the stairs to the junction
-				utils.paths.startStraightPath(npc, this.pathToCatwalkJunction, this.durationToCatwalk, true, () => {
-					// OnComplete, wait at the junction
-					utils.timers.setTimeout(() => {
-						// Walk to the exit (either left or right)
-						const path = goLeft ? this.pathToExitLeft : this.pathToExitRight
-						utils.paths.startStraightPath(npc, path, this.durationToExit, true, () => {
-							console.log("StageController AnimateNPC: path complete")
-						})
-					}, this.durationPauseAtCatwalk * 1000)
-				})
-			}, this.durationPauseAtTop * 1000)
+		TweenSequence.create(npc, {
+			sequence: [
+				{ // Pause at the top of the stairs
+					duration: this.durationPauseAtTop * 1000,
+					easingFunction: EasingFunction.EF_LINEAR,
+					mode: Tween.Mode.Move({
+						start: GameSettings.NPC_PATH_STAIRS_TOP,
+						end: GameSettings.NPC_PATH_STAIRS_TOP,
+					}),
+				},
+				{ // Walk down the stairs to the bottom
+					duration: this.durationToStairsBottom * 1000,
+					easingFunction: EasingFunction.EF_LINEAR,
+					mode: Tween.Mode.Move({
+						start: GameSettings.NPC_PATH_STAIRS_TOP,
+						end: GameSettings.NPC_PATH_STAIRS_BOTTOM,
+					}),
+				},
+				{ // Walk to the catwalk junction
+					duration: this.durationToCatwalk * 1000,
+					easingFunction: EasingFunction.EF_LINEAR,
+					mode: Tween.Mode.Move({
+						start: GameSettings.NPC_PATH_STAIRS_BOTTOM,
+						end: GameSettings.NPC_PATH_CATWALK_JUNCTION,
+					}),
+				},
+				{ // Pause at the catwalk junction
+					duration: this.durationPauseAtCatwalk * 1000,
+					easingFunction: EasingFunction.EF_LINEAR,
+					mode: Tween.Mode.Move({
+						start: GameSettings.NPC_PATH_CATWALK_JUNCTION,
+						end: GameSettings.NPC_PATH_CATWALK_JUNCTION,
+					}),
+				},
+				{ // Walk to the exit (either left or right)
+					duration: this.durationToExit * 1000,
+					easingFunction: EasingFunction.EF_LINEAR,
+					mode: Tween.Mode.Move({
+						start: GameSettings.NPC_PATH_CATWALK_JUNCTION,
+						end: goLeft ? GameSettings.NPC_PATH_EXIT_LEFT : GameSettings.NPC_PATH_EXIT_RIGHT,
+					}),
+				},
+			]
+		})
+
+		engine.addSystem(() => {
+			const tweenCompleted = tweenSystem.tweenCompleted(npc)
+			if (tweenCompleted) {
+				console.log("StageController AnimateNPC: tween completed for npc", npc)
+				const tween = Tween.getMutable(npc)
+				tween.playing = false
+				Tween.deleteFrom(npc)
+			}
 		})
 	}
 
