@@ -6,3 +6,5 @@
 - [ ] Add music
 - [ ] Implement TryOn feature
 - [ ] Dress the GameHost NPC
+- [?] Lock players to seats when they're in the game
+- [x] moveToLobby should spawn players somewhere in the center circle
