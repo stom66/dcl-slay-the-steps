@@ -2,7 +2,7 @@ import { AvatarShape, engine, GltfContainer, InputAction, MeshCollider, MeshRend
 import { Color3, Quaternion, Vector3 } from "@dcl/sdk/math"
 import { MessageBus } from "@dcl/sdk/message-bus"
 import { onEnterScene, onLeaveScene } from "@dcl/sdk/players"
-import { GetPlayerProfile, GetUTCTimestampMillis, NPCOutfit, waitForPlayerData } from "./utils"
+import { GetPlayerProfile, GetRandomPointInCircle, GetUTCTimestampMillis, NPCOutfit, waitForPlayerData } from "./utils"
 import { HideCountdownTimer, HideVoting, HideVotingResults, ShowCountdownTimer, ShowVoting, ShowVotingResults, ShowWarning, UpdatePlayerList, UpdateVotingResults } from "./ui.Game"
 import { movePlayerTo } from "~system/RestrictedActions"
 
@@ -47,9 +47,11 @@ class GameManager {
 	iAmInTheGame          : boolean = false
 	countdownValue        : number  = 0
 
-	state: any = {
+	currentTimeout: utils.TimerId | undefined = undefined
+
+	state: GameState = {
 		gameState    : GameStatus.IDLE,
-		hostUserId   : 0,
+		hostUserId   : "",
 		players      : [],
 		gameStartTime: 0,
 		votes        : {},
@@ -359,7 +361,10 @@ class GameManager {
 
 		this.OnCountdownStart() // Manually trigger this here to apply it to the host
 
-		utils.timers.setTimeout(() => {
+		if (this.currentTimeout) {
+			utils.timers.clearTimeout(this.currentTimeout)
+		}
+		this.currentTimeout = utils.timers.setTimeout(() => {
 			if (this.state.gameState == GameStatus.IDLE) return
 			this.TriggerRoundStart()
 		}, GameSettings.COUNTDOWN_DURATION * 1000)
@@ -387,8 +392,11 @@ class GameManager {
 
 		this.OnRoundStart() // Manually trigger this here to apply it to the host
 
+		if (this.currentTimeout) {
+			utils.timers.clearTimeout(this.currentTimeout)
+		}
 		const roundDuration = (GameSettings.ROUND_DURATION_PER_PLAYER * this.state.players.length + GameSettings.ROUND_START_DELAY) * 1000
-		utils.timers.setTimeout(() => {
+		this.currentTimeout = utils.timers.setTimeout(() => {
 			if (this.state.gameState == GameStatus.IDLE) return
 			this.TriggerVotingStart()
 		}, roundDuration)
@@ -418,8 +426,11 @@ class GameManager {
 		this.TriggerStateUpdate()
 
 		this.OnVotingStart()
-
-		utils.timers.setTimeout(() => {
+		
+		if (this.currentTimeout) {
+			utils.timers.clearTimeout(this.currentTimeout)
+		}
+		this.currentTimeout = utils.timers.setTimeout(() => {
 			if (this.state.gameState == GameStatus.IDLE) return
 			this.TriggerVotingEnd()
 		}, GameSettings.VOTING_DURATION * 1000)
@@ -448,7 +459,10 @@ class GameManager {
 
 		this.OnVotingEnd()
 
-		utils.timers.setTimeout(() => {
+		if (this.currentTimeout) {
+			utils.timers.clearTimeout(this.currentTimeout)
+		}
+		this.currentTimeout = utils.timers.setTimeout(() => {
 			if (this.state.gameState == GameStatus.IDLE) return
 			this.TriggerIdle()
 		}, GameSettings.GAME_ENDED_DURATION * 1000)
@@ -459,7 +473,7 @@ class GameManager {
 		console.log("GameManager: OnVotingEnd")
 		ShowVotingResults()
 
-		this.MovePlayersToLobby()
+		_SeatManager.MovePlayerToLobby()
 
 	}
 
@@ -487,8 +501,19 @@ class GameManager {
 	// MARK: OnAbort
 	OnAbort() {
 		console.log("GameManager: OnAbort")
+
+		// Clear any existing timers
+		if (this.currentTimeout) {
+			utils.timers.clearTimeout(this.currentTimeout)
+		}
+
+		// Reset our gamestate
 		this.ResetState()
-		this.MovePlayersToLobby()
+
+		// Move everyone back to the lobby
+		_SeatManager.MovePlayerToLobby()
+
+		// Let the stage controller know that the game has ended
 		_StageController.Abort()
 	}
 
@@ -577,11 +602,6 @@ class GameManager {
 
 	}
 
-	MovePlayersToLobby() {
-		_SeatManager.UnseatPlayer()
-		movePlayerTo({newRelativePosition:Vector3.create(16, 0, 20)})
-		_CameraController.ResetCamera()
-	}
 
 }
 

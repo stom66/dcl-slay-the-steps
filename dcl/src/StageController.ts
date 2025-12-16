@@ -15,10 +15,11 @@ import { _CameraController } from './CameraController'
 
 
 class StageController {
-	isRunning       : boolean = false
+	isRunning     : boolean                   = false
+	currentTimeout: utils.TimerId | undefined = undefined
 
-	playerToNPC: Map<Entity, Entity> = new Map()
-	NPCToPlayer: Map<Entity, Entity> = new Map()
+	playerToNPC   : Map<Entity, Entity>       = new Map()
+	NPCToPlayer   : Map<Entity, Entity> = new Map()
 
 	durationPauseAtTop             = 1.5 // How long should the avatar wait at the top of the stairs
 	durationPauseAtCatwalkJunction = 1.5 // How long to pause at the Catwalk Junction
@@ -142,27 +143,33 @@ class StageController {
 			// Prepare to animate the next NPC when this one is done
 			currentIndex++
 
-			if (currentIndex < npcCount) {
-				utils.timers.setTimeout(() => {
-					animateNextNPC()
-				}, npcInterval * 1000)
+			if (this.currentTimeout) {
+				utils.timers.clearTimeout(this.currentTimeout)
 			}
+			this.currentTimeout = utils.timers.setTimeout(() => {
+				// If we're not at the last NPC, animate the next one
+				if (currentIndex < npcCount) animateNextNPC()
+					
+				// When show has ended (after all NPCs have had a turn)
+				else _CameraController.ResetCamera()
+			}, npcInterval * 1000)
 		}
 
 		// Start the sequence after the round delay
-		utils.timers.setTimeout(() => {
+		if (this.currentTimeout) {
+			utils.timers.clearTimeout(this.currentTimeout)
+		}
+		this.currentTimeout = utils.timers.setTimeout(() => {
 			animateNextNPC()
 		}, GameSettings.ROUND_START_DELAY * 1000)
-
-		// When show has ended (after all NPCs have had a turn)
-		utils.timers.setTimeout(() => {
-			_CameraController.ResetCamera()
-		}, totalDuration * 1000)
 	}
 
 	// MARK: Abort
 	Abort() {
 		this.isRunning = false
+		if (this.currentTimeout) {
+			utils.timers.clearTimeout(this.currentTimeout)
+		}
 	}
 
 	// MARK: CreateNPC
