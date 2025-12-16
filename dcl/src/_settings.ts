@@ -1,5 +1,14 @@
 import { Quaternion, Vector3 } from '@dcl/sdk/math'
 
+declare var process: {
+	env: {
+		NODE_ENV: string
+	}
+}
+const env = process.env.NODE_ENV
+const IS_DEBUG = env == "development"
+
+
 
 // ███████╗███████╗████████╗████████╗██╗███╗   ██╗ ██████╗ ███████╗
 // ██╔════╝██╔════╝╚══██╔══╝╚══██╔══╝██║████╗  ██║██╔════╝ ██╔════╝
@@ -26,12 +35,12 @@ export class SceneSettings {
 export class GameSettings {
 	static TIME_API_URL = 'https://timeapi.io/api/Time/current/zone?timeZone=UTC'
 
-	static COUNTDOWN_DURATION         = 6
+	static COUNTDOWN_DURATION         = IS_DEBUG ? 6 : 60
 	static ROUND_DURATION_PER_PLAYER  = 16
-	static ROUND_START_DELAY          = 3 // Delay before the round starts
+	static ROUND_START_DELAY          = IS_DEBUG ? 3 : 4 // Delay before the round starts
 	static VOTING_DURATION            = 10
 	static GAME_ENDED_DURATION        = 10
-	static UTC_UPDATE_INTERVAL        = 15
+	static UTC_UPDATE_INTERVAL        = IS_DEBUG ? 10 : 30
 
 	static NPC_SPAWN_SCALE            = Vector3.create(1, 1, 1)
 	static NPC_SPAWN_ROTATION         = Quaternion.fromEulerDegrees(0, 180, 0)
