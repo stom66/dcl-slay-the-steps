@@ -5,3 +5,4 @@
 - [ ] Populate shelves with wearables
 - [ ] Add music
 - [ ] Implement TryOn feature
+- [ ] Dress the GameHost NPC
