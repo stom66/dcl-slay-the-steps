@@ -3,9 +3,9 @@ import { GameSettings } from "./_settings"
 import { _GameManager } from './GameManager'
 import { GetPlayerName, GetPlayerProfile, NPCOutfit } from './utils'
 import { Color3, Quaternion, Vector3 } from '@dcl/sdk/math'
-import { AvatarShape, EasingFunction, engine, Entity, Transform, Tween, TweenLoop, TweenSequence, tweenSystem, TweenSystem } from '@dcl/sdk/ecs'
+import { AvatarEmoteCommand, AvatarShape, EasingFunction, engine, Entity, PBAvatarEmoteCommand, PlayerIdentityData, Transform, Tween, TweenLoop, TweenSequence, tweenSystem, TweenSystem } from '@dcl/sdk/ecs'
 import { getPlayerData } from '~system/Players'
-import { getPlayer } from '@dcl/sdk/players'
+import { getPlayer, onEnterScene } from '@dcl/sdk/players'
 import { _CameraController } from './CameraController'
 
 
@@ -16,6 +16,9 @@ import { _CameraController } from './CameraController'
 
 class StageController {
 	isRunning       : boolean = false
+
+	playerToNPC: Map<Entity, Entity> = new Map()
+	NPCToPlayer: Map<Entity, Entity> = new Map()
 
 	durationPauseAtTop             = 1.5 // How long should the avatar wait at the top of the stairs
 	durationPauseAtCatwalkJunction = 1.5 // How long to pause at the Catwalk Junction
@@ -45,6 +48,31 @@ class StageController {
 	// MARK: init
 	init() {
 		console.log("StageController init")
+
+		// Handle emotes from local player, players already in scene, and players who join
+		AvatarEmoteCommand.onChange(engine.PlayerEntity, (emote) => {
+			this.HandleEmotes(engine.PlayerEntity, emote)
+		})
+
+		// All players cuirrently in scene
+		for (const [entity, data, transform] of engine.getEntitiesWith(
+			PlayerIdentityData,
+			Transform
+		)) {
+			console.log('PLAYER: ', { entity, data, transform })
+			AvatarEmoteCommand.onChange(entity, (emote) => {
+				this.HandleEmotes(entity, emote)
+			})
+		}
+
+		// Players who enter the scene
+		onEnterScene((player) => {
+			if (!player) return
+			AvatarEmoteCommand.onChange(player.entity, (emote) => {
+				this.HandleEmotes(player.entity, emote)
+			})
+		})
+
 	}
 
 	// MARK: RunShow
@@ -61,6 +89,12 @@ class StageController {
 			const playerName = GetPlayerName(userId)
 			console.log("StageController RunShow: playerName", playerName)
 
+			const playerData = getPlayer({ userId: userId })
+			if (!playerData) {
+				console.error("StageController RunShow: Failed to get player data for user", userId)
+				return
+			}
+
 			// Create the NPC
 			const npc = this.CreateNPC(userId)
 			if (!npc) {
@@ -68,6 +102,10 @@ class StageController {
 				return
 			}
 			npcs.push({ userId, npc })
+
+			// Store the NPC in the maps
+			this.playerToNPC.set(playerData.entity, npc)
+			this.NPCToPlayer.set(npc, playerData.entity)
 
 			// Create the camera target
 			const npcCameraTarget = engine.addEntity()
@@ -173,6 +211,26 @@ class StageController {
 
 		engine.removeEntity(npc)
 
+		// remove the npc from the this.npcs map
+		const playerEntity = this.NPCToPlayer.get(npc)
+		if (playerEntity) {
+			this.playerToNPC.delete(playerEntity)
+			this.NPCToPlayer.delete(npc)
+		}
+
+	}
+
+	// MARK: Handle emotes
+	HandleEmotes(player: Entity, emote: PBAvatarEmoteCommand | undefined) {
+		console.log("StageController HandleEmotes: player", player, "emote", emote)
+		const npc = this.playerToNPC.get(player)
+		if (npc) {
+			const avatarShape = AvatarShape.getMutable(npc)
+			if (avatarShape) {
+				avatarShape.expressionTriggerId = emote?.emoteUrn
+				avatarShape.expressionTriggerTimestamp = avatarShape.expressionTriggerTimestamp || 0 + 1
+			}
+		}
 	}
 
 	// MARK: AnimateNPC
