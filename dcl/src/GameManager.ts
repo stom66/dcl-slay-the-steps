@@ -1,8 +1,8 @@
-import { engine, InputAction, MeshCollider, MeshRenderer, pointerEventsSystem, Transform } from "@dcl/sdk/ecs"
-import { Quaternion, Vector3 } from "@dcl/sdk/math"
+import { AvatarShape, engine, GltfContainer, InputAction, MeshCollider, MeshRenderer, pointerEventsSystem, Transform } from "@dcl/sdk/ecs"
+import { Color3, Quaternion, Vector3 } from "@dcl/sdk/math"
 import { MessageBus } from "@dcl/sdk/message-bus"
-import { onEnterScene } from "@dcl/sdk/players"
-import { GetPlayerProfile, GetUTCTimestampMillis, waitForPlayerData } from "./utils"
+import { onEnterScene, onLeaveScene } from "@dcl/sdk/players"
+import { GetPlayerProfile, GetUTCTimestampMillis, NPCOutfit, waitForPlayerData } from "./utils"
 import { HideCountdownTimer, HideVoting, HideVotingResults, ShowCountdownTimer, ShowVoting, ShowVotingResults, ShowWarning, UpdatePlayerList, UpdateVotingResults } from "./ui.Game"
 import { movePlayerTo } from "~system/RestrictedActions"
 
@@ -76,8 +76,11 @@ class GameManager {
 	async init() {
 		console.log("GameManager Init")
 
-		this.UpdateUTCTimestamp()
 		this.ResetState()
+		this.SpawnJoinStartTrigger()
+
+		this.UpdateUTCTimestamp()
+		engine.addSystem((dt) => this.System_UpdateTimers(dt))
 
 		// Ensure we have player data for local player
 		localPlayer = await waitForPlayerData()
@@ -87,17 +90,25 @@ class GameManager {
 			console.log("GameManager constructor: localPlayer not found")
 		}
 
+		// MessageBus handling
+		// Handle players requesting to join the current game
+		sceneMessageBus.on('joinGameRequest', (request: { userId: string }) => {
+			this.OnRequestToJoinGame(request.userId)
+		})
+
 		// Handle state requests
 		sceneMessageBus.on('stateRequest', () => {
 			console.log("GameManager: sceneMessageBug: stateRequest")
 			this.OnStateRequest()
 		})
 
+		// Handle state updates
 		sceneMessageBus.on('stateUpdate', (state: GameState) => {
 			console.log("GameManager: sceneMessageBus: stateUpdate:", state)
 			this.OnStateUpdate(state)
 		})
 
+		// Handle players requesting to vote
 		sceneMessageBus.on('requestVote', (vote: RequestVote) => {
 			console.log("GameManager: sceneMessageBus: requestVote:", vote)
 			this.OnRequestVote(vote)
@@ -119,23 +130,43 @@ class GameManager {
 				
 		})
 
-		// Handle players requesting to join the current game
-		sceneMessageBus.on('joinGameRequest', (request: { userId: string }) => {
-			this.OnRequestToJoinGame(request.userId)
+		onLeaveScene((userId) => {
+			if (!userId) return
+			console.log("GameManager: Player left:", userId)
+
+			if (userId == this.state.hostUserId) {
+				this.OnAbort()
+				if (userId == localPlayer?.userId) {
+					ShowWarning("You left the game! Game was cancelled")
+				} else {
+					ShowWarning("The game host has left the game!")	
+				}
+			}
+
 		})
 
-		// Spawn the "Join/start" trigger
-		const joinStartTrigger = engine.addEntity()
-		Transform.create(joinStartTrigger, {
-			position: Vector3.create(16, 1, 22),
+		// Do a state request to get the current game state
+		sceneMessageBus.emit('stateRequest', {})
+	}
+
+	// MARK: ---
+	// MARK: SpawnJoinStartTrigger
+	SpawnJoinStartTrigger() {
+		const position = Vector3.create(17, 0.25, 28)
+
+		// Create the podium
+		const podium = engine.addEntity()
+		Transform.create(podium, {
+			position: position,
 			rotation: Quaternion.fromEulerDegrees(0, 0, 0),
 			scale: Vector3.create(1, 1, 1)
 		})
-		MeshRenderer.setBox(joinStartTrigger)
-		MeshCollider.setBox(joinStartTrigger)
+		GltfContainer.create(podium, {
+			src: "assets/models/podium.gltf",
+		})
 		pointerEventsSystem.onPointerDown(
 			{ 
-				entity: joinStartTrigger, 
+				entity: podium, 
 				opts: { 
 					button: InputAction.IA_PRIMARY,
 					hoverText: "Join/Start Game",
@@ -148,14 +179,38 @@ class GameManager {
 			}
 		)
 
-		// Do a state request to get the current game state
-		sceneMessageBus.emit('stateRequest', {})
 
-		engine.addSystem((dt) => this.System_UpdateTimers(dt))
+		// Create the NPC
+		const npcHost = engine.addEntity()
+		Transform.create(npcHost, {
+			position: position,
+			rotation: Quaternion.fromEulerDegrees(0, 210, 0),
+			scale: Vector3.create(1, 1, 1)
+		})
+
+		// Build the outfit data for the NPC
+		const outfit: NPCOutfit = {
+			name     : "Start a game 👇",
+			bodyShape: "urn:decentraland:off-chain:base-avatars:BaseMale",
+			wearables: [
+				"urn:decentraland:off-chain:base-avatars:dcl_watch",
+				"urn:decentraland:off-chain:base-avatars:bear_slippers",
+				"urn:decentraland:off-chain:base-avatars:f_skull_earring",
+				"urn:decentraland:off-chain:base-avatars:red_bandana",
+				"urn:decentraland:off-chain:base-avatars:slicked_hair",
+				"urn:decentraland:off-chain:base-avatars:eyebrows_01",
+				"urn:decentraland:off-chain:base-avatars:eyes_09",
+				"urn:decentraland:off-chain:base-avatars:mouth_07",
+				"urn:decentraland:off-chain:base-avatars:full_beard"],
+			eyeColor : Color3.create(0.5, 0.5, 0.5),
+			skinColor: Color3.create(0.5, 0.5, 0.5),
+			hairColor: Color3.create(0.5, 0.5, 0.5),
+			emotes: []
+		}
+
+		// Spawn the Avatar
+		AvatarShape.create(npcHost, {...outfit, id: "GH    "})
 	}
-
-
-
 
 	// MARK: System_UpdateTimers
 	System_UpdateTimers = (dt: number) => {
@@ -305,6 +360,7 @@ class GameManager {
 		this.OnCountdownStart() // Manually trigger this here to apply it to the host
 
 		utils.timers.setTimeout(() => {
+			if (this.state.gameState == GameStatus.IDLE) return
 			this.TriggerRoundStart()
 		}, GameSettings.COUNTDOWN_DURATION * 1000)
 	}
@@ -333,6 +389,7 @@ class GameManager {
 
 		const roundDuration = (GameSettings.ROUND_DURATION_PER_PLAYER * this.state.players.length + GameSettings.ROUND_START_DELAY) * 1000
 		utils.timers.setTimeout(() => {
+			if (this.state.gameState == GameStatus.IDLE) return
 			this.TriggerVotingStart()
 		}, roundDuration)
 	}
@@ -347,15 +404,6 @@ class GameManager {
 		this.MovePlayersToArena()
 
 		_StageController.RunShow(this.state.players)
-
-		// Now we need to:
-		// 1. Spawn a camera
-		// 2. Loop through each of the players
-			// 1. Spawn an NPC representing the player
-			// 2. Walk that NPC down the catwalk
-			// 3. Have that NPC react to emotes performed by the player it represents
-		// 3. Once all the NPCs have walked down the catwalk, the voting UI will show
-
 	}
 
 
@@ -372,6 +420,7 @@ class GameManager {
 		this.OnVotingStart()
 
 		utils.timers.setTimeout(() => {
+			if (this.state.gameState == GameStatus.IDLE) return
 			this.TriggerVotingEnd()
 		}, GameSettings.VOTING_DURATION * 1000)
 	}
@@ -400,6 +449,7 @@ class GameManager {
 		this.OnVotingEnd()
 
 		utils.timers.setTimeout(() => {
+			if (this.state.gameState == GameStatus.IDLE) return
 			this.TriggerIdle()
 		}, GameSettings.GAME_ENDED_DURATION * 1000)
 	}
@@ -439,7 +489,6 @@ class GameManager {
 		console.log("GameManager: OnAbort")
 		this.ResetState()
 		this.MovePlayersToLobby()
-		ShowWarning("Game was aborted, please wait for the next game!")
 		_StageController.Abort()
 	}
 
