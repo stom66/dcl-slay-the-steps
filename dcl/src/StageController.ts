@@ -1,7 +1,7 @@
 import * as utils from '@dcl-sdk/utils'
 import { GameSettings } from "./_settings"
 import { _GameManager } from './GameManager'
-import { GetPlayerName, GetPlayerProfile } from './utils'
+import { GetPlayerName, GetPlayerProfile, NPCOutfit } from './utils'
 import { Color3, Quaternion, Vector3 } from '@dcl/sdk/math'
 import { AvatarShape, EasingFunction, engine, Entity, Transform, Tween, TweenLoop, TweenSequence, tweenSystem, TweenSystem } from '@dcl/sdk/ecs'
 import { getPlayerData } from '~system/Players'
@@ -12,15 +12,7 @@ import { _CameraController } from './CameraController'
 // Handles all Stage related stuff, such as spawning NPCs to represent the player
 // Also handles player cameras
 
-type NPCOutfit = {
-	name     : string
-	bodyShape: string
-	wearables: string[]
-	emotes   : string[]
-	eyeColor : Color3
-	skinColor: Color3
-	hairColor: Color3
-}
+
 
 class StageController {
 	isRunning       : boolean = false
@@ -50,10 +42,12 @@ class StageController {
 		console.log("StageController constructor")
 	}
 
+	// MARK: init
 	init() {
 		console.log("StageController init")
 	}
 
+	// MARK: RunShow
 	RunShow(players: string[]) {
 		console.log("StageController RunShow")
 
@@ -128,11 +122,12 @@ class StageController {
 		}, totalDuration * 1000)
 	}
 
+	// MARK: Abort
 	Abort() {
 		this.isRunning = false
 	}
 
-
+	// MARK: CreateNPC
 	CreateNPC(userId: string): Entity | undefined {
 		console.log("StageController CreateNPCClone: userId", userId)
 
@@ -154,7 +149,7 @@ class StageController {
 
 		// Spawn the Avatar
 		const npc = engine.addEntity()
-		AvatarShape.create(npc, {...outfit, id: "npc_" + userId})
+		AvatarShape.create(npc, {...outfit, id: "npc_" + userId + "    "})
 
 		// Position the Avatar
 		Transform.create(npc, {
@@ -166,6 +161,7 @@ class StageController {
 		return npc
 	}
 
+	// MARK: DestroyNPC
 	DestroyNPC(npc: Entity) {
 		console.log("StageController DestroyNPC: npc", npc)
 		
@@ -179,6 +175,7 @@ class StageController {
 
 	}
 
+	// MARK: AnimateNPC
 	AnimateNPC(
 		npc: Entity, 
 		goLeft: boolean = false

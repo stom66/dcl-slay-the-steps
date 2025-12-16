@@ -4,6 +4,7 @@ import { ignoreWearableCategories, rarityValues } from "./data"
 import { engine } from "@dcl/sdk/ecs"
 import { GetPlayerDataRequest } from "~system/Players"
 import { GameSettings } from "./_settings"
+import { Color3 } from "@dcl/sdk/math"
 
 // Workaround for env vars
 declare var process : {
@@ -305,3 +306,12 @@ export async function GetWearableData(urn: string, baseUrl?: string) {
 	}
 }
 
+export type NPCOutfit = {
+	name     : string
+	bodyShape: string
+	wearables: string[]
+	emotes   : string[]
+	eyeColor : Color3
+	skinColor: Color3
+	hairColor: Color3
+}
