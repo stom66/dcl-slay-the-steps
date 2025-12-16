@@ -106,14 +106,14 @@ export function DebugUI() {
 
 
 			<Label
-				key="hostPlayerId"
+				key="hostUserId"
 				uiTransform={{
 					width: 180, height: 40, margin: 8,
 					flexDirection: 'column',
 					alignItems: 'flex-start',
 					justifyContent: 'space-between'
 				}}
-				value={`hostPlayerId: ${_GameManager.state.hostPlayerId}`}
+				value={`hostUserId: ${_GameManager.state.hostUserId}`}
 				color={Color4.White()}
 				fontSize={14}
 				textAlign="middle-left"
