@@ -25,20 +25,26 @@ type NPCOutfit = {
 class StageController {
 	isRunning       : boolean = false
 
-	durationToStairsTop     = 1 // How long to spend walking from the spawn point to the top of the stairs
-	durationPauseAtTop      = 1.5 // How long should the avatar wait at the top of the stairs
-	durationPauseAtCatwalk  = 1.5 // How long to pause at the Catwalk Junction
-	durationRemaining       = (GameSettings.ROUND_DURATION_PER_PLAYER - this.durationToStairsTop - this.durationPauseAtTop - this.durationPauseAtCatwalk)
+	durationPauseAtTop             = 1.5 // How long should the avatar wait at the top of the stairs
+	durationPauseAtCatwalkJunction = 1.5 // How long to pause at the Catwalk Junction
+	durationPauseAtCatwalkMidpoint = 1.5 // How long to pause at the Catwalk Midpoint
+	durationRemaining              = (GameSettings.ROUND_DURATION_PER_PLAYER - this.durationPauseAtTop - this.durationPauseAtCatwalkJunction - this.durationPauseAtCatwalkMidpoint)
 
-	dFromStairsTopToBottom  = Vector3.distance(GameSettings.NPC_PATH_STAIRS_TOP, GameSettings.NPC_PATH_STAIRS_BOTTOM)
-	dFromStairsBtmToCatwalk = Vector3.distance(GameSettings.NPC_PATH_STAIRS_BOTTOM, GameSettings.NPC_PATH_CATWALK_JUNCTION)
-	dFromCatwalkToExit      = Vector3.distance(GameSettings.NPC_PATH_CATWALK_JUNCTION, GameSettings.NPC_PATH_EXIT_LEFT)
+	dSpawnToStairsWait             = Vector3.distance(GameSettings.NPC_SPAWN_POSITION, GameSettings.NPC_PATH_STAIRS_WAIT)
+	dStairsWaitToTop               = Vector3.distance(GameSettings.NPC_PATH_STAIRS_WAIT, GameSettings.NPC_PATH_STAIRS_TOP)
+	dStairsTopToBottom             = Vector3.distance(GameSettings.NPC_PATH_STAIRS_TOP, GameSettings.NPC_PATH_STAIRS_BOTTOM)
+	dStairsBottomToCatwalkMidpoint = Vector3.distance(GameSettings.NPC_PATH_STAIRS_BOTTOM, GameSettings.NPC_PATH_CATWALK_MIDPOINT)
+	dCatwalkMidpointToJunction     = Vector3.distance(GameSettings.NPC_PATH_CATWALK_MIDPOINT, GameSettings.NPC_PATH_CATWALK_JUNCTION)
+	dCatwalkJunctionToExit         = Vector3.distance(GameSettings.NPC_PATH_CATWALK_JUNCTION, GameSettings.NPC_PATH_EXIT_LEFT)
 
-	totalDistance           = this.dFromStairsTopToBottom + this.dFromStairsBtmToCatwalk + this.dFromCatwalkToExit
+	totalDistance                  = this.dSpawnToStairsWait + this.dStairsWaitToTop + this.dStairsTopToBottom + this.dStairsBottomToCatwalkMidpoint + this.dCatwalkMidpointToJunction + this.dCatwalkJunctionToExit
 	
-	durationToStairsBottom  = this.durationRemaining * this.dFromStairsTopToBottom / this.totalDistance
-	durationToCatwalk       = this.durationRemaining * this.dFromStairsBtmToCatwalk / this.totalDistance
-	durationToExit          = this.durationRemaining * this.dFromCatwalkToExit / this.totalDistance
+	durationToStairsWait           = this.durationRemaining * this.dSpawnToStairsWait / this.totalDistance
+	durationToStairsTop            = this.durationRemaining * this.dStairsWaitToTop / this.totalDistance
+	durationToStairsBottom         = this.durationRemaining * this.dStairsTopToBottom / this.totalDistance
+	durationToCatwalkMidpoint      = this.durationRemaining * this.dStairsBottomToCatwalkMidpoint / this.totalDistance
+	durationToCatwalkJunction      = this.durationRemaining * this.dCatwalkMidpointToJunction / this.totalDistance
+	durationToCatwalkExit          = this.durationRemaining * this.dCatwalkJunctionToExit / this.totalDistance
 
 	constructor() {
 		console.log("StageController constructor")
@@ -181,8 +187,8 @@ class StageController {
 
 		Tween.setMove(npc, 
 			GameSettings.NPC_SPAWN_POSITION, 
-			GameSettings.NPC_PATH_STAIRS_TOP, 
-			this.durationToStairsTop * 1000
+			GameSettings.NPC_PATH_STAIRS_WAIT, 
+			this.durationToStairsWait * 1000
 		)
 
 		TweenSequence.create(npc, {
@@ -191,7 +197,15 @@ class StageController {
 					duration: this.durationPauseAtTop * 1000,
 					easingFunction: EasingFunction.EF_LINEAR,
 					mode: Tween.Mode.Move({
-						start: GameSettings.NPC_PATH_STAIRS_TOP,
+						start: GameSettings.NPC_PATH_STAIRS_WAIT,
+						end: GameSettings.NPC_PATH_STAIRS_WAIT,
+					}),
+				},
+				{ // Walk to the top of the stairs
+					duration: this.durationToStairsTop * 1000,
+					easingFunction: EasingFunction.EF_LINEAR,
+					mode: Tween.Mode.Move({
+						start: GameSettings.NPC_PATH_STAIRS_WAIT,
 						end: GameSettings.NPC_PATH_STAIRS_TOP,
 					}),
 				},
@@ -203,16 +217,40 @@ class StageController {
 						end: GameSettings.NPC_PATH_STAIRS_BOTTOM,
 					}),
 				},
-				{ // Walk to the catwalk junction
-					duration: this.durationToCatwalk * 1000,
+				{ // Walk to the catwalk midpoint junction
+					duration: this.durationToCatwalkMidpoint * 1000,
 					easingFunction: EasingFunction.EF_LINEAR,
 					mode: Tween.Mode.Move({
 						start: GameSettings.NPC_PATH_STAIRS_BOTTOM,
+						end: GameSettings.NPC_PATH_CATWALK_MIDPOINT,
+					}),
+				},
+				{ // Pause at the catwalk midpoint
+					duration: this.durationPauseAtCatwalkMidpoint * 1000,
+					easingFunction: EasingFunction.EF_LINEAR,
+					mode: Tween.Mode.Move({
+						start: GameSettings.NPC_PATH_CATWALK_MIDPOINT,
+						end: GameSettings.NPC_PATH_CATWALK_MIDPOINT,
+					}),
+				},
+				{ // Walk to the catwalk junction
+					duration: this.durationToCatwalkMidpoint * 1000,
+					easingFunction: EasingFunction.EF_LINEAR,
+					mode: Tween.Mode.Move({
+						start: GameSettings.NPC_PATH_CATWALK_MIDPOINT,
 						end: GameSettings.NPC_PATH_CATWALK_JUNCTION,
 					}),
 				},
+				{ // Turn at the catwalk junction
+					duration: this.durationPauseAtCatwalkJunction / 2 * 1000,
+					easingFunction: EasingFunction.EF_LINEAR,
+					mode: Tween.Mode.Rotate({
+						start: Quaternion.fromEulerDegrees(0, 180, 0),
+						end: Quaternion.fromEulerDegrees(0, goLeft ? 90 : -90, 0),
+					}),
+				},
 				{ // Pause at the catwalk junction
-					duration: this.durationPauseAtCatwalk * 1000,
+					duration: this.durationPauseAtCatwalkJunction / 2 * 1000,
 					easingFunction: EasingFunction.EF_LINEAR,
 					mode: Tween.Mode.Move({
 						start: GameSettings.NPC_PATH_CATWALK_JUNCTION,
@@ -220,7 +258,7 @@ class StageController {
 					}),
 				},
 				{ // Walk to the exit (either left or right)
-					duration: this.durationToExit * 1000,
+					duration: this.durationToCatwalkExit * 1000,
 					easingFunction: EasingFunction.EF_LINEAR,
 					mode: Tween.Mode.Move({
 						start: GameSettings.NPC_PATH_CATWALK_JUNCTION,
