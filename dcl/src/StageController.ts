@@ -7,6 +7,7 @@ import { AvatarEmoteCommand, AvatarShape, EasingFunction, engine, Entity, PBAvat
 import { getPlayerData } from '~system/Players'
 import { getPlayer, onEnterScene } from '@dcl/sdk/players'
 import { _CameraController } from './CameraController'
+import { _SoundManager } from './SOundManager'
 
 
 // Handles all Stage related stuff, such as spawning NPCs to represent the player
@@ -149,9 +150,9 @@ class StageController {
 			this.currentTimeout = utils.timers.setTimeout(() => {
 				// If we're not at the last NPC, animate the next one
 				if (currentIndex < npcCount) animateNextNPC()
-					
+
 				// When show has ended (after all NPCs have had a turn)
-				else _CameraController.ResetCamera()
+				else this.OnShowEnd()
 			}, npcInterval * 1000)
 		}
 
@@ -162,6 +163,19 @@ class StageController {
 		this.currentTimeout = utils.timers.setTimeout(() => {
 			animateNextNPC()
 		}, GameSettings.ROUND_START_DELAY * 1000)
+
+		this.OnShowStart()
+	}
+
+	OnShowStart() {
+		console.log("StageController OnShowStart")
+		_SoundManager.StartBGM()
+	}
+
+	OnShowEnd() {
+		console.log("StageController OnShowEnd")
+		_CameraController.ResetCamera()
+		_SoundManager.StopBGM()
 	}
 
 	// MARK: Abort
@@ -235,7 +249,7 @@ class StageController {
 			const avatarShape = AvatarShape.getMutable(npc)
 			if (avatarShape) {
 				avatarShape.expressionTriggerId = emote?.emoteUrn
-				avatarShape.expressionTriggerTimestamp = avatarShape.expressionTriggerTimestamp || 0 + 1
+				avatarShape.expressionTriggerTimestamp = (avatarShape.expressionTriggerTimestamp ?? 0) + 1
 			}
 		}
 	}
