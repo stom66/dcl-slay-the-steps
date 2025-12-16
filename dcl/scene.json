@@ -16,12 +16,12 @@
   "tags": [],
   "scene": {
     "parcels": [
-      "0,0",
-      "0,1",
-      "1,0",
-      "1,1"
+	  "-144,-147",
+	  "-143,-147",
+	  "-144,-146",
+	  "-143,-146"
     ],
-    "base": "0,0"
+    "base": "-144,-147"
   },
   "spawnPoints": [
     {
@@ -48,7 +48,10 @@
       }
     }
   ],
-  "requiredPermissions": [],
+  "requiredPermissions": [
+    "ALLOW_TO_TRIGGER_AVATAR_EMOTE",
+    "ALLOW_TO_MOVE_PLAYER_INSIDE_SCENE"
+  ],
   "featureToggles": {
     "voiceChat": "enabled",
     "portableExperiences": "enabled"
