@@ -7,6 +7,7 @@ import { AvatarEmoteCommand, AvatarShape, EasingFunction, engine, Entity, PBAvat
 import { getPlayerData } from '~system/Players'
 import { getPlayer, onEnterScene } from '@dcl/sdk/players'
 import { _CameraController } from './CameraController'
+import { _SoundManager } from './SOundManager'
 
 
 // Handles all Stage related stuff, such as spawning NPCs to represent the player
@@ -15,10 +16,11 @@ import { _CameraController } from './CameraController'
 
 
 class StageController {
-	isRunning       : boolean = false
+	isRunning     : boolean                   = false
+	currentTimeout: utils.TimerId | undefined = undefined
 
-	playerToNPC: Map<Entity, Entity> = new Map()
-	NPCToPlayer: Map<Entity, Entity> = new Map()
+	playerToNPC   : Map<Entity, Entity>       = new Map()
+	NPCToPlayer   : Map<Entity, Entity> = new Map()
 
 	durationPauseAtTop             = 1.5 // How long should the avatar wait at the top of the stairs
 	durationPauseAtCatwalkJunction = 1.5 // How long to pause at the Catwalk Junction
@@ -142,27 +144,46 @@ class StageController {
 			// Prepare to animate the next NPC when this one is done
 			currentIndex++
 
-			if (currentIndex < npcCount) {
-				utils.timers.setTimeout(() => {
-					animateNextNPC()
-				}, npcInterval * 1000)
+			if (this.currentTimeout) {
+				utils.timers.clearTimeout(this.currentTimeout)
 			}
+			this.currentTimeout = utils.timers.setTimeout(() => {
+				// If we're not at the last NPC, animate the next one
+				if (currentIndex < npcCount) animateNextNPC()
+
+				// When show has ended (after all NPCs have had a turn)
+				else this.OnShowEnd()
+			}, npcInterval * 1000)
 		}
 
 		// Start the sequence after the round delay
-		utils.timers.setTimeout(() => {
+		if (this.currentTimeout) {
+			utils.timers.clearTimeout(this.currentTimeout)
+		}
+		this.currentTimeout = utils.timers.setTimeout(() => {
 			animateNextNPC()
 		}, GameSettings.ROUND_START_DELAY * 1000)
 
-		// When show has ended (after all NPCs have had a turn)
-		utils.timers.setTimeout(() => {
-			_CameraController.ResetCamera()
-		}, totalDuration * 1000)
+		this.OnShowStart()
+	}
+
+	OnShowStart() {
+		console.log("StageController OnShowStart")
+		_SoundManager.StartBGM()
+	}
+
+	OnShowEnd() {
+		console.log("StageController OnShowEnd")
+		_CameraController.ResetCamera()
+		_SoundManager.StopBGM()
 	}
 
 	// MARK: Abort
 	Abort() {
 		this.isRunning = false
+		if (this.currentTimeout) {
+			utils.timers.clearTimeout(this.currentTimeout)
+		}
 	}
 
 	// MARK: CreateNPC
@@ -228,7 +249,7 @@ class StageController {
 			const avatarShape = AvatarShape.getMutable(npc)
 			if (avatarShape) {
 				avatarShape.expressionTriggerId = emote?.emoteUrn
-				avatarShape.expressionTriggerTimestamp = avatarShape.expressionTriggerTimestamp || 0 + 1
+				avatarShape.expressionTriggerTimestamp = (avatarShape.expressionTriggerTimestamp ?? 0) + 1
 			}
 		}
 	}

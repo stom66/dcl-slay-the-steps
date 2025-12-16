@@ -1,6 +1,8 @@
 import { Vector3 } from "@dcl/sdk/math"
 import { movePlayerTo } from "~system/RestrictedActions"
 import { GameSettings } from "./_settings"
+import { _CameraController } from "./CameraController"
+import { GetRandomPointInCircle } from "./utils"
 
 const LOOK_AT_TARGET = Vector3.create(16, 13.5, 26)
 
@@ -44,8 +46,18 @@ class SeatManager {
 	}
 
 	UnseatPlayer() {
+		this.MovePlayerToLobby()
+	}
+
+	
+	MovePlayerToLobby() {
+		_CameraController.ResetCamera()
+
+		const randomPoint = GetRandomPointInCircle(Vector3.create(16, 0, 16), 6)
+		console.log("SeatManager: MovePlayerToLobby: randomPoint", randomPoint.x, randomPoint.y, randomPoint.z)
+
 		movePlayerTo({
-			newRelativePosition: Vector3.create(16, 0, 20),
+			newRelativePosition:randomPoint,
 			cameraTarget: GameSettings.LOBBY_SPAWN_LOOK_AT_TARGET
 		})
 	}

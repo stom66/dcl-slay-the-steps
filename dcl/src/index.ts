@@ -10,6 +10,9 @@ import { _StageController } from './StageController'
 import { _ShopManager } from './ShopManager'
 import { ShowWarning } from './ui.Game'
 import { _CameraController } from './CameraController'
+import { _SoundManager } from './SOundManager'
+
+import * as utils from '@dcl-sdk/utils'
 
 export function main() {
 	
@@ -19,6 +22,9 @@ export function main() {
 	_StageController.init()
 	_ShopManager.init()
 	_CameraController.init()
+	_SoundManager.init()
+
+	
 
 	// Spawn some lights
 	const lightDownstairs = engine.addEntity()
@@ -50,7 +56,7 @@ export function main() {
 		active   : true
 	})
 
-
+	// Spotlight at top of stairs
 	const lightStairsTop = engine.addEntity()
 	Transform.create(lightStairsTop, {
 		position: Vector3.create(16, 21.1, 29.25),
@@ -58,6 +64,21 @@ export function main() {
 		scale: Vector3.create(1, 1, 1)
 	})
 	LightSource.create(lightStairsTop, {
+		type     : LightSource.Type.Spot({ innerAngle: 25, outerAngle: 45 }),
+		intensity: 999999 / 6,
+		shadow   : false,
+		color    : Color3.White(),
+		active   : true
+	})
+
+	// Spotlight above GameHost
+	const spotlightGameHost = engine.addEntity()
+	Transform.create(spotlightGameHost, {
+		position: Vector3.create(17, 6, 28),
+		rotation: Quaternion.fromEulerDegrees(90, 0, 0),
+		scale: Vector3.create(1, 1, 1)
+	})
+	LightSource.create(spotlightGameHost, {
 		type     : LightSource.Type.Spot({ innerAngle: 25, outerAngle: 45 }),
 		intensity: 999999 / 6,
 		shadow   : false,
