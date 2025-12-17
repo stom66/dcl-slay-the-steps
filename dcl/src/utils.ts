@@ -1,6 +1,5 @@
 import { getPlayer } from "@dcl/sdk/src/players"
 import { getRealm } from "~system/Runtime"
-import { ignoreWearableCategories, rarityValues } from "./data"
 import { engine } from "@dcl/sdk/ecs"
 import { GetPlayerDataRequest } from "~system/Players"
 import { GameSettings } from "./_settings"
