@@ -7,7 +7,7 @@ import { AvatarEmoteCommand, AvatarShape, EasingFunction, engine, Entity, PBAvat
 import { getPlayerData } from '~system/Players'
 import { getPlayer, onEnterScene } from '@dcl/sdk/players'
 import { _CameraController } from './CameraController'
-import { _SoundManager } from './SOundManager'
+import { _SoundManager } from './SoundManager'
 
 
 // Handles all Stage related stuff, such as spawning NPCs to represent the player
