@@ -223,6 +223,11 @@ function BuildPlayerList() {
 	}
 
 	_GameManager.state.players.forEach((userId: string) => {
+		const currentIndex = elements.length;
+		const isEven = currentIndex % 2 === 0;
+		const backgroundTexture = isEven
+			? "assets/images/ui/bg-purple-dark.png"
+			: "assets/images/ui/bg-purple-light.png";
 		elements.push(
 			<UiEntity
 				key={`player_${userId}_root`}
@@ -238,7 +243,7 @@ function BuildPlayerList() {
 				}}
 				uiBackground={{
 					texture: {
-						src: "assets/images/ui/bg-purple-light.png"
+						src: backgroundTexture
 					},
 					textureMode: "nine-slices",
 					textureSlices: {
