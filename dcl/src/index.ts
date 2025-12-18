@@ -10,7 +10,7 @@ import { _StageController } from './StageController'
 import { _ShopManager } from './ShopManager'
 import { ShowWarning } from './ui.Game'
 import { _CameraController } from './CameraController'
-import { _SoundManager } from './SOundManager'
+import { _SoundManager } from './SoundManager'
 
 import * as utils from '@dcl-sdk/utils'
 
