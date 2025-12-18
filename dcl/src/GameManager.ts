@@ -68,6 +68,12 @@ class GameManager {
 		this.state.players       = []
 		this.state.gameStartTime = 0	
 		this.state.votes         = {}
+
+		if (this.currentTimeout) {
+			utils.timers.clearTimeout(this.currentTimeout)
+			this.currentTimeout = undefined
+		}
+
 		HideCountdownTimer()
 		HideVoting()
 		HideVotingResults()
@@ -177,7 +183,8 @@ class GameManager {
 			},
 			() => {
 				console.log("GameManager: OnPointerDown: Join/Start Game")
-				this.JoinOrStartGame(localPlayer!.userId)
+				if (!localPlayer || !localPlayer.userId) return
+				this.JoinOrStartGame(localPlayer.userId)
 			}
 		)
 
@@ -271,12 +278,14 @@ class GameManager {
 		// If game is starting then request to join
 		if (this.state.gameState == GameStatus.STARTING) {
 			this.RequestToJoinGame()
-		}
-
+			return
+		} 
+		
 		// If no game in progress then the player is now the Host
 		if (this.state.gameState == GameStatus.IDLE) {
 			// TODO: more checks here to ensure there's not currently a game running? perhaps check how many other players are currently in the scene?
 			this.StartHostingNewGame()
+			return
 		}
 	}
 	
@@ -298,7 +307,8 @@ class GameManager {
 			return
 		}
 
-		sceneMessageBus.emit('joinGameRequest', { userId: localPlayer!.userId })
+		if (!localPlayer || !localPlayer.userId) return
+		sceneMessageBus.emit('joinGameRequest', { userId: localPlayer.userId })
 	}
 
 	// MARK: OnRequestToJoinGame
@@ -341,8 +351,8 @@ class GameManager {
 		}
 		this.iAmTheHost             = true
 		this.iAmInTheGame           = true
-		this.state.hostUserId       = localPlayer!.userId
-		this.state.players          = [localPlayer?.userId]
+		this.state.hostUserId       = localPlayer.userId
+		this.state.players          = [localPlayer.userId]
 		this.state.gameStartTime = this.utcTimestamp + GameSettings.COUNTDOWN_DURATION
 
 		this.TriggerCountdownStart()
@@ -597,9 +607,9 @@ class GameManager {
 	// MARK: ---
 	// MARK: Utils
 	MovePlayersToArena() {
-		const playerIndex = this.state.players.indexOf(localPlayer!.userId)
+		if (!localPlayer || !localPlayer.userId) return
+		const playerIndex = this.state.players.indexOf(localPlayer.userId)
 		_SeatManager.MovePlayerToSeat(playerIndex)
-
 	}
 
 
