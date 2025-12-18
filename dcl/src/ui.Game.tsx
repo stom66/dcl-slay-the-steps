@@ -744,7 +744,7 @@ export function GameUI() {
 				}}
 				uiBackground={{
 					texture: {
-						src: "assets/images/ui/Button_Round_Purple.png"
+						src: "assets/images/ui/bg-purple-border.png"
 					},
 					textureMode: "nine-slices",
 					textureSlices: {
@@ -768,7 +768,7 @@ export function GameUI() {
 					}}
 					uiBackground={{
 						texture: {
-							src: "assets/images/ui/Rounded-Purple.png"
+							src: "assets/images/ui/bg-purple-border.png"
 						},
 						textureMode: "stretch",
 					}}
