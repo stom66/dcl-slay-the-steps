@@ -106,7 +106,7 @@ class GameManager {
 
 		// Handle state requests
 		sceneMessageBus.on('stateRequest', () => {
-			console.log("GameManager: sceneMessageBug: stateRequest")
+			console.log("GameManager: sceneMessageBus: stateRequest")
 			this.OnStateRequest()
 		})
 
@@ -457,6 +457,37 @@ class GameManager {
 	}
 
 
+	// MARK: ---
+	// MARK: OnRequestVote
+	OnRequestVote(vote: RequestVote) {
+		// Ignore if we are not the host
+		if (!this.iAmTheHost) return
+
+		// Ignore if we're not in the voting stage
+		if (this.state.gameState != GameStatus.VOTING) {
+			console.log("GameManager: OnRequestVote: Not in the voting stage")
+			return
+		}
+
+		console.log("GameManager: OnRequestVote:", vote)
+
+		// Ignore if the player is not in the list of players
+		if (!this.state.players.includes(vote.voteFrom)) {
+			console.log("GameManager: OnRequestVote: Player not in the list of players", vote.voteFrom)
+			return
+		}
+		// Ignore if the player is not in the list of players
+		if (!this.state.players.includes(vote.voteFor)) {
+			console.log("GameManager: OnRequestVote: Player not in the list of players", vote.voteFor)
+			return
+		}
+
+		this.state.votes[vote.voteFrom] = vote.voteFor
+		this.TriggerStateUpdate()
+		UpdateVotingResults()
+	}
+
+
 
 	// MARK: ---
 	// MARK: TriggerVotingEnd
@@ -590,18 +621,6 @@ class GameManager {
 			}
 		}
 		UpdatePlayerList()
-	}
-
-	// MARK: ---
-	// MARK: OnRequestVote
-	OnRequestVote(vote: RequestVote) {
-		if (!this.iAmInTheGame) return
-		console.log("GameManager: OnRequestVote:", vote)
-
-		this.state.votes[vote.voteFrom] = vote.voteFor
-		this.TriggerStateUpdate()
-		UpdateVotingResults()
-		// TODO: implement this	
 	}
 	
 	// MARK: ---
