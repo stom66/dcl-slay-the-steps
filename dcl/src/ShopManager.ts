@@ -27,7 +27,7 @@ class ShopManager {
 
 		const entity   = engine.addEntity()
 		const position = item.position || Vector3.Zero()
-		const rotation = item.rotation || Quaternion.Zero()
+		const rotation = item.rotation || Quaternion.Identity()
 		const scale    = item.scale || Vector3.One()
 
 		Transform.create(entity, {
