@@ -41,7 +41,7 @@ class ShopManager {
 			emotes: [],
 			bodyShape: item.isMale ? 'urn:decentraland:off-chain:base-avatars:BaseMale' : 'urn:decentraland:off-chain:base-avatars:BaseFemale',
 			wearables: [ item.urn ],
-			showOnlyWearables: true
+			showOnlyWearables: item.showAvatar ? false : true
 		})
 
 		this.spawnedItems[key] = entity

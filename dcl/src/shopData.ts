@@ -1,11 +1,12 @@
 import { Quaternion, Vector3 } from "@dcl/sdk/math";
 
 export type ShopItem = {
-	position : Vector3
-	rotation?: Quaternion,
-	scale?   : Vector3,
-	isMale?  : boolean,
-	urn      : string
+	position   : Vector3
+	rotation?  : Quaternion,
+	scale?     : Vector3,
+	isMale?    : boolean,
+	showAvatar?: boolean,
+	urn        : string
 }
 
 // Big list of the items to be shown in the shop
@@ -21,6 +22,7 @@ export const shopData: Record<string, ShopItem> = {
 		rotation: Quaternion.fromEulerDegrees(0, 0, 0),
 		scale   : Vector3.create(1.5, 1.5, 1.5),
 		isMale  : true,
+		showAvatar: true,
 		urn     : "urn:decentraland:matic:collections-v2:0xed0c8eaf9d0a04a24701a90da2580da9cf46fb45:6:631873750011343120187508166102022593913370572403294667525865865222"
 	},
 	//Shoes
