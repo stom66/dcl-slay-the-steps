@@ -22,8 +22,8 @@ class StageController {
 	playerToNPC   : Map<Entity, Entity>       = new Map()
 	NPCToPlayer   : Map<Entity, Entity> = new Map()
 
-	durationPauseAtTop             = 1.5 // How long should the avatar wait at the top of the stairs
-	durationPauseAtCatwalkJunction = 1.5 // How long to pause at the Catwalk Junction
+	durationPauseAtTop             = 2 // How long should the avatar wait at the top of the stairs
+	durationPauseAtCatwalkJunction = 2 // How long to pause at the Catwalk Junction
 	durationPauseAtCatwalkMidpoint = 1.5 // How long to pause at the Catwalk Midpoint
 	durationRemaining              = (GameSettings.ROUND_DURATION_PER_PLAYER - this.durationPauseAtTop - this.durationPauseAtCatwalkJunction - this.durationPauseAtCatwalkMidpoint)
 

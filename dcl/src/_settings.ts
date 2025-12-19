@@ -36,7 +36,7 @@ export class GameSettings {
 	static TIME_API_URL = 'https://timeapi.io/api/Time/current/zone?timeZone=UTC'
 
 	static COUNTDOWN_DURATION         = IS_DEBUG ? 6 : 60
-	static ROUND_DURATION_PER_PLAYER  = 16
+	static ROUND_DURATION_PER_PLAYER  = IS_DEBUG ? 4 : 18
 	static ROUND_START_DELAY          = IS_DEBUG ? 3 : 4 // Delay before the round starts
 	static VOTING_DURATION            = 10
 	static GAME_ENDED_DURATION        = 10
