@@ -1,5 +1,5 @@
 import { AvatarShape, engine, Entity, Transform } from "@dcl/sdk/ecs"
-import { shopData, ShopItem } from "./shopData"
+import { shopData, ShopSlot } from "./shopData"
 import { Quaternion, Vector3 } from "@dcl/sdk/math"
 
 class ShopManager {
@@ -11,40 +11,40 @@ class ShopManager {
 
 	init() {
 		console.log("ShopManager init")
-		this.SpawnAllItems()
+		this.SpawnAllDefaultItems()
 	}
 
-	SpawnAllItems() {
+	SpawnAllDefaultItems() {
 		console.log("ShopManager SpawnAllItems")
 
-		Object.entries(shopData).forEach(([key, item]: [string, ShopItem]) => {
-			this.SpawnItem(key, item)
+		Object.entries(shopData).forEach(([key, item]: [string, ShopSlot]) => {
+			this.spawnedItems[key] = this.SpawnItem(item)
 		})
 	}
 
-	SpawnItem(key: string,item: ShopItem) {
-		console.log("ShopManager SpawnItem: key", key, "item", item)
+	SpawnItem(
+		item: ShopSlot, 
+		urn?: string
+	) {
+		console.log("ShopManager SpawnItem: item", item)
 
 		const entity   = engine.addEntity()
-		const position = item.position || Vector3.Zero()
-		const rotation = item.rotation || Quaternion.Identity()
-		const scale    = item.scale || Vector3.One()
 
 		Transform.create(entity, {
-			position: position,
-			rotation: rotation,
-			scale: scale
+			position: item.position || Vector3.Zero(),
+			rotation: item.rotation || Quaternion.Identity(),
+			scale   : item.scale || Vector3.One()
 		})
 
 		AvatarShape.create(entity, {
-			id: '',
-			emotes: [],
-			bodyShape: item.isMale ? 'urn:decentraland:off-chain:base-avatars:BaseMale' : 'urn:decentraland:off-chain:base-avatars:BaseFemale',
-			wearables: [ item.urn ],
+			id               : '',
+			emotes           : [],
+			bodyShape        : item.isMale ? 'urn:decentraland:off-chain:base-avatars:BaseMale' : 'urn:decentraland:off-chain:base-avatars:BaseFemale',
+			wearables        : [ urn ?? item.defaultUrn ?? '' ],
 			showOnlyWearables: item.showAvatar ? false : true
 		})
 
-		this.spawnedItems[key] = entity
+		return entity
 	}
 }
 
