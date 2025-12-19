@@ -118,9 +118,7 @@ function BuildVotingOptions() {
 		const playerAvatarImage = GetPlayerAvatarImage(userId)
 		const currentIndex = elements.length;
 		const isEven = currentIndex % 2 === 0;
-		const backgroundTexture = isEven
-			? "assets/images/ui/bg-purple-dark.png"
-			: "assets/images/ui/bg-purple-light.png";
+		const backgroundTexture = GetBackgroundTexture(isEven)
 
 		elements.push(
 			<UiEntity
@@ -225,9 +223,7 @@ function BuildPlayerList() {
 	_GameManager.state.players.forEach((userId: string) => {
 		const currentIndex = elements.length;
 		const isEven = currentIndex % 2 === 0;
-		const backgroundTexture = isEven
-			? "assets/images/ui/bg-purple-dark.png"
-			: "assets/images/ui/bg-purple-light.png";
+		const backgroundTexture = GetBackgroundTexture(isEven)
 		elements.push(
 			<UiEntity
 				key={`player_${userId}_root`}
@@ -277,6 +273,7 @@ function BuildPlayerList() {
 					value={GetPlayerName(userId)}
 					textWrap='nowrap'
 					textAlign="middle-right"
+					color={Color4.Black()}
 				/>
 			</UiEntity>
 		)
@@ -337,9 +334,7 @@ function BuildVotingResults() {
 		const playerName = GetPlayerName(userId)
 		const playerAvatarImage = GetPlayerAvatarImage(userId)
 		const isEven = elements.length % 2 === 0;
-		const backgroundTexture = isEven
-			? "assets/images/ui/bg-purple-dark.png"
-			: "assets/images/ui/bg-purple-light.png";
+		const backgroundTexture = GetBackgroundTexture(isEven)
 
 		elements.push(
 			<UiEntity
@@ -485,7 +480,7 @@ export function GameUI() {
 				}}
 				uiBackground={{
 					texture: {
-						src: "assets/images/ui/bg-purple-border.png"
+						src: "assets/images/ui/bg-square-border.png"
 					},
 					textureMode: "nine-slices",
 					textureSlices: {
@@ -510,7 +505,7 @@ export function GameUI() {
 					}}
 					uiBackground={{
 						texture: {
-							src: "assets/images/ui/btn-circle.png"
+							src: "assets/images/ui/icon-circle.png"
 						},
 						textureMode: "stretch"
 					}}
@@ -526,7 +521,7 @@ export function GameUI() {
 								src: "assets/images/ui/icon-close.png"
 							},
 							textureMode: "center",
-							color: Color4.Purple()
+							color: Color4.fromHexString("#D89130")
 						}}
 						value=""
 						onMouseUp={() => HideVoting()}
@@ -535,12 +530,16 @@ export function GameUI() {
 				<UiEntity
 					key={`ui_Voting_header`}
 					uiTransform={{
-						width: "100%",
-						height: 64,
+						width: 240,
+						height: 48,
+						alignSelf: "center",
+						margin: { bottom: 16 },
 					}}
-					uiText={{
-						value: "Vote for the Winner",
-						fontSize: 24,
+					uiBackground={{
+						texture: {
+							src: "assets/images/ui/text-voting.png"
+						},
+						textureMode: "stretch"
 					}}
 				/>
 
@@ -566,7 +565,7 @@ export function GameUI() {
 				}}
 				uiBackground={{
 					texture: {
-						src: "assets/images/ui/bg-purple-border.png"
+						src: "assets/images/ui/bg-square-border.png"
 					},
 					textureMode: "nine-slices",
 					textureSlices: {
@@ -591,7 +590,7 @@ export function GameUI() {
 					}}
 					uiBackground={{
 						texture: {
-							src: "assets/images/ui/btn-circle.png"
+							src: "assets/images/ui/icon-circle.png"
 						},
 						textureMode: "stretch"
 					}}
@@ -607,7 +606,7 @@ export function GameUI() {
 								src: "assets/images/ui/icon-close.png"
 							},
 							textureMode: "center",
-							color: Color4.Purple()
+							color: Color4.fromHexString("#D89130")
 						}}
 						value=""
 						onMouseUp={() => HideVotingResults()}
@@ -616,12 +615,16 @@ export function GameUI() {
 				<UiEntity
 					key={`ui_VotingResults_header`}
 					uiTransform={{
-						width: "100%",
-						height: 64,
+						width: 240,
+						height: 48,
+						alignSelf: "center",
+						margin: { bottom: 16 },
 					}}
-					uiText={{
-						value: "Vote Results",
-						fontSize: 24,
+					uiBackground={{
+						texture: {
+							src: "assets/images/ui/text-voting.png"
+						},
+						textureMode: "stretch"
 					}}
 				/>
 
@@ -643,13 +646,13 @@ export function GameUI() {
 					flexShrink: 1,
 					margin: { bottom: '35px' },
 					display: visibleWarning ? 'flex' : 'none',
-					padding: { top: 16, bottom: 16, left: 16, right: 16 },
+					padding: { top: 32, bottom: 32, left: 16, right: 16 },
 					positionType: "absolute",
 					position: { top: '45%' },
 				}}
 				uiBackground={{
 					texture: {
-						src: "assets/images/ui/bg-purple-border.png"
+						src: "assets/images/ui/bg-square-border.png"
 					},
 					textureMode: "nine-slices",
 					textureSlices: {
@@ -674,7 +677,7 @@ export function GameUI() {
 					}}
 					uiBackground={{
 						texture: {
-							src: "assets/images/ui/btn-circle.png"
+							src: "assets/images/ui/icon-circle.png"
 						},
 						textureMode: "stretch"
 					}}
@@ -690,17 +693,36 @@ export function GameUI() {
 								src: "assets/images/ui/icon-close.png"
 							},
 							textureMode: "stretch",
-							color: Color4.Purple()
+							color: Color4.fromHexString("#D89130")
 						}}
 						value=""
 						onMouseUp={() => HideWarning()}
 					/>
 				</UiEntity>
+
+				<UiEntity
+					key={`ui_Warning_header`}
+					uiTransform={{
+						width: 280,
+						height: 48,
+						margin: { bottom: 26 },
+						alignSelf: "center",
+					}}
+					uiBackground={{
+						texture: {
+							src: "assets/images/ui/text-warning.png"
+						},
+						textureMode: "stretch",
+					}}
+				>
+				</UiEntity>
 				<Label
 					key={`ui_Warning_text`}
 					uiTransform={{
 						width: "100%",
-						height: 48,
+						height: "auto",
+						margin: { bottom: 16 },
+						flexGrow: 1,
 					}}
 					value={warningText}
 					fontSize={20}
@@ -744,7 +766,7 @@ export function GameUI() {
 				}}
 				uiBackground={{
 					texture: {
-						src: "assets/images/ui/bg-purple-border.png"
+						src: "assets/images/ui/bg-square-border.png"
 					},
 					textureMode: "nine-slices",
 					textureSlices: {
@@ -768,9 +790,15 @@ export function GameUI() {
 					}}
 					uiBackground={{
 						texture: {
-							src: "assets/images/ui/bg-purple-border.png"
+							src: "assets/images/ui/bg-square.png"
 						},
-						textureMode: "stretch",
+						textureMode: "nine-slices",
+						textureSlices: {
+							top: 0.4,
+							bottom: 0.6,
+							left: 0.5,
+							right: 0.5
+						}
 					}}
 				>
 
@@ -869,4 +897,10 @@ export function ShowPlayerList() {
 export function HidePlayerList() {
 	console.log("HidePlayerList()")
 	visiblePlayerList = false
+}
+
+function GetBackgroundTexture(isEven: boolean) {
+	return isEven
+		? "assets/images/ui/bg-lighter.png"
+		: "assets/images/ui/bg-default.png";
 }
