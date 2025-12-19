@@ -17864,7 +17864,10 @@
 				"baseColorTexture":{
 					"index":2
 				},
-				"roughnessFactor":0.6885964870452881
+				"metallicFactor":0,
+				"metallicRoughnessTexture":{
+					"index":3
+				}
 			}
 		},
 		{
@@ -17885,7 +17888,7 @@
 			"name":"MarblePure",
 			"pbrMetallicRoughness":{
 				"baseColorTexture":{
-					"index":3
+					"index":4
 				},
 				"metallicFactor":0,
 				"roughnessFactor":0.6000000238418579
@@ -17896,7 +17899,7 @@
 			"name":"Arches.Columns.001",
 			"pbrMetallicRoughness":{
 				"baseColorTexture":{
-					"index":4
+					"index":5
 				},
 				"roughnessFactor":0.6885964870452881
 			}
@@ -17906,7 +17909,7 @@
 			"name":"MarbleGilded",
 			"pbrMetallicRoughness":{
 				"baseColorTexture":{
-					"index":5
+					"index":6
 				},
 				"metallicFactor":0,
 				"roughnessFactor":0.20000000298023224
@@ -17917,7 +17920,7 @@
 			"name":"Catwalk.001",
 			"pbrMetallicRoughness":{
 				"baseColorTexture":{
-					"index":6
+					"index":7
 				},
 				"roughnessFactor":0.6885964870452881
 			}
@@ -17927,7 +17930,7 @@
 			"name":"Ceiling.001",
 			"pbrMetallicRoughness":{
 				"baseColorTexture":{
-					"index":7
+					"index":8
 				},
 				"roughnessFactor":0.6885964870452881
 			}
@@ -17937,7 +17940,7 @@
 			"name":"East.Wall.001",
 			"pbrMetallicRoughness":{
 				"baseColorTexture":{
-					"index":8
+					"index":9
 				},
 				"roughnessFactor":0.6885964870452881
 			}
@@ -17947,7 +17950,7 @@
 			"name":"East.Wall.002",
 			"pbrMetallicRoughness":{
 				"baseColorTexture":{
-					"index":9
+					"index":10
 				},
 				"roughnessFactor":0.6885964870452881
 			}
@@ -17957,7 +17960,7 @@
 			"name":"Outfits.001",
 			"pbrMetallicRoughness":{
 				"baseColorTexture":{
-					"index":10
+					"index":11
 				},
 				"roughnessFactor":0.6885964870452881
 			}
@@ -17967,7 +17970,7 @@
 			"name":"Outfits.002",
 			"pbrMetallicRoughness":{
 				"baseColorTexture":{
-					"index":11
+					"index":12
 				},
 				"roughnessFactor":0.6885964870452881
 			}
@@ -17977,7 +17980,7 @@
 			"name":"Seats.Ballustrades.001",
 			"pbrMetallicRoughness":{
 				"baseColorTexture":{
-					"index":12
+					"index":13
 				},
 				"roughnessFactor":0.6885964870452881
 			}
@@ -17987,7 +17990,7 @@
 			"name":"ShoeCubby.001",
 			"pbrMetallicRoughness":{
 				"baseColorTexture":{
-					"index":13
+					"index":14
 				},
 				"roughnessFactor":0.6885964870452881
 			}
@@ -17997,7 +18000,7 @@
 			"name":"Salon.001",
 			"pbrMetallicRoughness":{
 				"baseColorTexture":{
-					"index":14
+					"index":15
 				},
 				"roughnessFactor":0.6885964870452881
 			}
@@ -18007,7 +18010,7 @@
 			"name":"Salon.002",
 			"pbrMetallicRoughness":{
 				"baseColorTexture":{
-					"index":15
+					"index":16
 				},
 				"roughnessFactor":0.6885964870452881
 			}
@@ -18017,7 +18020,7 @@
 			"name":"Stairs.001",
 			"pbrMetallicRoughness":{
 				"baseColorTexture":{
-					"index":16
+					"index":17
 				},
 				"roughnessFactor":0.6885964870452881
 			}
@@ -18027,7 +18030,7 @@
 			"name":"Upstairs.Balcony.001",
 			"pbrMetallicRoughness":{
 				"baseColorTexture":{
-					"index":17
+					"index":18
 				},
 				"roughnessFactor":0.6885964870452881
 			}
@@ -18037,7 +18040,7 @@
 			"name":"Upstairs.Balcony.002",
 			"pbrMetallicRoughness":{
 				"baseColorTexture":{
-					"index":18
+					"index":19
 				},
 				"roughnessFactor":0.6885964870452881
 			}
@@ -18047,7 +18050,7 @@
 			"name":"Walls.001",
 			"pbrMetallicRoughness":{
 				"baseColorTexture":{
-					"index":19
+					"index":20
 				},
 				"roughnessFactor":0.6885964870452881
 			}
@@ -18060,12 +18063,12 @@
 				0.15000000596046448
 			],
 			"emissiveTexture":{
-				"index":20
+				"index":21
 			},
 			"name":"welcome-sign",
 			"pbrMetallicRoughness":{
 				"baseColorTexture":{
-					"index":21
+					"index":22
 				},
 				"metallicFactor":0,
 				"roughnessFactor":0.5
@@ -22846,7 +22849,11 @@
 		},
 		{
 			"sampler":0,
-			"source":20
+			"source":21
+		},
+		{
+			"sampler":0,
+			"source":21
 		}
 	],
 	"images":[
@@ -22864,6 +22871,11 @@
 			"mimeType":"image/png",
 			"name":"flat-plane_MarbleFloor_BaseColor",
 			"uri":"tex/flat-plane_MarbleFloor_BaseColor.png"
+		},
+		{
+			"mimeType":"image/png",
+			"name":"flat-plane_MarbleFloor_Rough",
+			"uri":"tex/flat-plane_MarbleFloor_Rough.png"
 		},
 		{
 			"mimeType":"image/png",
