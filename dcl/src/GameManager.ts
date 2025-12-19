@@ -235,7 +235,10 @@ class GameManager {
 
 		if (this.state.gameState == GameStatus.STARTING) {
 			// Calculate countdown value
-			this.countdownValue = Math.floor(this.state.gameStartTime - this.utcTimestamp)
+			let remainingTime   = (this.state.gameStartTime - this.utcTimestamp) % GameSettings.COUNTDOWN_DURATION
+			remainingTime       = Math.max(0, remainingTime)
+			remainingTime       = Math.floor(remainingTime)
+			this.countdownValue = remainingTime
 		}
 	}
 
