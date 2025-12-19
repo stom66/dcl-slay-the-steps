@@ -1532,9 +1532,12 @@
             "thumbnail": "images/scene-thumbnail.png",
             "categories": [],
             "author": "stom",
-            "email": "",
             "tags": [],
             "layout": {
+              "base": {
+                "x": -144,
+                "y": -147
+              },
               "parcels": [
                 {
                   "x": -144,
@@ -1552,15 +1555,11 @@
                   "x": -143,
                   "y": -146
                 }
-              ],
-              "base": {
-                "x": -144,
-                "y": -147
-              }
+              ]
             },
-            "silenceVoiceChat": false,
-            "disablePortableExperiences": false,
-            "skyboxConfig": {},
+            "skyboxConfig": {
+              "fixedTime": 46800
+            },
             "spawnPoints": [
               {
                 "name": "spawn1",
