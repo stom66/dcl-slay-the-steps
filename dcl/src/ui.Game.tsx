@@ -109,6 +109,11 @@ function VoteForWinner(userId: string) {
 function BuildVotingOptions() {
 	let elements: any[] = []
 
+	// Defensive check: ensure _GameManager is initialized
+	if (!_GameManager || !_GameManager.state) {
+		return elements
+	}
+
 	//const playerList = fakePlayers
 	const playerList = _GameManager.state.players
 
@@ -203,6 +208,11 @@ function BuildVotingOptions() {
 // MARK: BuildPlayerList
 function BuildPlayerList() {
 	let elements: any[] = []
+
+	// Defensive check: ensure _GameManager is initialized
+	if (!_GameManager || !_GameManager.state) {
+		return elements
+	}
 
 	let gameStateImage = "assets/images/ui/text-idle.png"
 	switch (_GameManager.state.gameState) {
@@ -308,6 +318,10 @@ function BuildVotingResults() {
 	let elements: any[] = []
 	const results: Record<string, number> = {}
 
+	// Defensive check: ensure _GameManager is initialized
+	if (!_GameManager || !_GameManager.state) {
+		return elements
+	}
 
 	//const votes = fakeVoteData // DEBUG DATA
 	const votes = _GameManager.state.votes
@@ -867,7 +881,7 @@ export function GameUI() {
 						margin: { right: 42 },
 					}}
 					uiText={{
-						value: _GameManager.countdownValue.toString(),
+						value: (_GameManager?.countdownValue ?? 0).toString(),
 						fontSize: 64,
 						textAlign: "middle-center",
 						color: Color4.White()
