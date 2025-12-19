@@ -1,3 +1,6 @@
+import { setupUi }  from './ui'
+import { ShowWarning } from './ui.Game'
+
 import { _CameraController } from './CameraController'
 import { _GameManager } from './GameManager'
 import { _ShopManager } from './ShopManager'
@@ -6,16 +9,12 @@ import { _StageController } from './StageController'
 
 import { SetupLights } from './Lights'
 
-import { setupUi }  from './ui'
-import { ShowWarning } from './ui.Game'
-
 export function main() {
-	
-	_GameManager.init()
-	_StageController.init()
-	_ShopManager.init()
 	_CameraController.init()
+	_GameManager.init()
+	_ShopManager.init()
 	_SoundManager.init()
+	_StageController.init()
 
 	SetupLights()
 	setupUi()
