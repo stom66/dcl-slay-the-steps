@@ -306,7 +306,7 @@ class GameManager {
 
 		// Ignore if the game is full
 		if (this.state.players.length >= GameSettings.MAX_PLAYERS) {
-			ShowWarning("Game is full, please wait for the next game!")
+			ShowWarning("The current game is full, please wait for the next game!")
 			return
 		}
 
@@ -514,6 +514,9 @@ class GameManager {
 
 	// MARK: OnVotingEnd
 	OnVotingEnd() {
+		// Ignore if we are not in the game
+		if (!this.iAmInTheGame) return
+		
 		console.log("GameManager: OnVotingEnd")
 		ShowVotingResults()
 
@@ -598,13 +601,13 @@ class GameManager {
 		if (this.iAmTheHost) return
 
 		// Store the state, then update it
-		const lastState = this.state
+		const lastGameState = this.state.gameState
 		this.state = newState
 
 		// Check if we are in the game
 		this.iAmInTheGame = this.state.players.includes(localPlayer!.userId)
 
-		if (this.state.gameState != lastState.gameState) {
+		if (this.state.gameState != lastGameState) {
 			switch (this.state.gameState) {
 				case GameStatus.STARTING:
 					this.OnCountdownStart()
