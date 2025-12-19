@@ -85,7 +85,7 @@ class GameManager {
 		console.log("GameManager Init")
 
 		this.ResetState()
-		this.SpawnJoinStartTrigger()
+		this.SpawnGameHostNPC()
 
 		this.UpdateUTCTimestamp()
 		engine.addSystem((dt) => this.System_UpdateTimers(dt))
@@ -158,9 +158,9 @@ class GameManager {
 	}
 
 	// MARK: ---
-	// MARK: SpawnJoinStartTrigger
-	SpawnJoinStartTrigger() {
-		const position = Vector3.create(17, 0.25, 28)
+	// MARK: SpawnGameHostNPC
+	SpawnGameHostNPC() {
+		const position = Vector3.create(15.0718, 0.4, 28.95)
 
 		// Create the podium
 		const podium = engine.addEntity()
@@ -193,7 +193,7 @@ class GameManager {
 		const npcHost = engine.addEntity()
 		Transform.create(npcHost, {
 			position: position,
-			rotation: Quaternion.fromEulerDegrees(0, 210, 0),
+			rotation: Quaternion.fromEulerDegrees(0, 180, 0),
 			scale: Vector3.create(1, 1, 1)
 		})
 
