@@ -622,7 +622,7 @@ export function GameUI() {
 					}}
 					uiBackground={{
 						texture: {
-							src: "assets/images/ui/text-voting.png"
+							src: "assets/images/ui/text-vote-results.png"
 						},
 						textureMode: "stretch"
 					}}
