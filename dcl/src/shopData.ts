@@ -167,9 +167,9 @@ export const shopData: Record<string, ShopSlot> = {
 		scale     : Vector3.create(1.5, 1.5, 1.5)
 	},
 	"upperBody_1": {
-		position  : Vector3.create(26, -0.75, 27.75),
+		position  : Vector3.create(24.25, -0.65, 27.75),
 		rotation  : Quaternion.fromEulerDegrees(0, 215, 0),
-		defaultUrn: "urn:decentraland:matic:collections-v2:0x8305e6782cc4285a2fab24cc9aa11eb240a29c5a:5",
+		defaultUrn: "urn:decentraland:matic:collections-v2:0xf61d27b7899d2641b02c56f4617f2d01f63f7ee5:1",
 		scale     : Vector3.create(1.5, 1.5, 1.5),
 	},
 	"upperBody_2": {
@@ -255,46 +255,119 @@ export const shopData: Record<string, ShopSlot> = {
 
 
 	//MARK: Heads
-	// Layout: 0-4, left to right
+	// Layout:
+	// | 0 | 1 | 2 | 3 | 4 |
+	// | 5 | 6 | 7 | 8 | 9 |
 
 	"head_0": {
-		position: Vector3.create(29.078, -1.3, 9.986),
-		rotation  : Quaternion.fromEulerDegrees(0, 300, 0),
+		position: Vector3.create(29.1, -2, 9.9),
+		rotation  : Quaternion.fromEulerDegrees(0, 290, 0),
 		defaultUrn: "urn:decentraland:matic:collections-v2:0xc16f10cce8ee32c2aa91b5b6ceeb099fc8a78aff:0",
-		scale     : Vector3.create(1.5, 1.5, 1.5),
+		scale     : Vector3.create(2,2,2),
 		showAvatar: true,
+		skinColor: Color3.fromHexString("#FFE4C6"),
 	},
 	"head_1": {
-		position: Vector3.create(27.741, -1.3, 7.852),
-		rotation  : Quaternion.fromEulerDegrees(0, 310, 0),
-		defaultUrn: "urn:decentraland:matic:collections-v2:0xc16f10cce8ee32c2aa91b5b6ceeb099fc8a78aff:0",
-		scale     : Vector3.create(1.5, 1.5, 1.5),
+		position: Vector3.create(27.8, -2, 7.8),
+		rotation  : Quaternion.fromEulerDegrees(0, 300, 0),
+		defaultUrn: "urn:decentraland:matic:collections-v2:0xc7dddcd8e3818c224d9cd548481a250061e38e02:0",
+		scale     : Vector3.create(2,2,2),
 		showAvatar: true,
+		skinColor: Color3.fromHexString("#F2C2A5"),
 	},
 	"head_2": {
-	   position: Vector3.create(26.096, -1.3, 5.949),
-	   rotation  : Quaternion.fromEulerDegrees(0, 320, 0),
-	   defaultUrn: "urn:decentraland:matic:collections-v2:0xc16f10cce8ee32c2aa91b5b6ceeb099fc8a78aff:0",
-	   scale     : Vector3.create(1.5, 1.5, 1.5),
+	   position: Vector3.create(26.1, -2, 5.84),
+	   rotation  : Quaternion.fromEulerDegrees(0, 310, 0),
+	   defaultUrn: "urn:decentraland:matic:collections-v2:0x736e227684be1e65e15f8a2de2709fcc284a8b13:0",
+	   scale     : Vector3.create(2,2,2),
 	   showAvatar: true,
-	   skinColor : Color3.fromHexString("#00ff00"),
+	   isMale: true,
+	   skinColor : Color3.fromHexString("#CC9B77"),
    	},
 	"head_3": {
-		position: Vector3.create(24.192, -1.3, 4.304),
-		rotation  : Quaternion.fromEulerDegrees(0, 330, 0),
-		defaultUrn: "urn:decentraland:matic:collections-v2:0xc16f10cce8ee32c2aa91b5b6ceeb099fc8a78aff:0",
-		scale     : Vector3.create(1.5, 1.5, 1.5),
+		position: Vector3.create(24.25, -2, 4.24),
+		rotation  : Quaternion.fromEulerDegrees(0, 320, 0),
+		defaultUrn: "urn:decentraland:matic:collections-v2:0x11cfe2f76627f8d22fd7eca8fec7e58820bcacc8:0",
+		scale     : Vector3.create(2,2,2),
 		showAvatar: true,
+		skinColor: Color3.fromHexString("#7D5D47"),
 	},
 	"head_4": {
-		position:  Vector3.create(22.059, -1.3, 2.967),
-		rotation  : Quaternion.fromEulerDegrees(0, 340, 0),
-		defaultUrn: "urn:decentraland:matic:collections-v2:0xc16f10cce8ee32c2aa91b5b6ceeb099fc8a78aff:0",
-		scale     : Vector3.create(1.5, 1.5, 1.5),
+		position:  Vector3.create(22.15, -2, 2.9),
+		rotation  : Quaternion.fromEulerDegrees(0, 330, 0),
+		defaultUrn: "urn:decentraland:matic:collections-v2:0x90f3d8780f8e32c0f1f937edfc0ad930b2e7347f:0",
+		scale     : Vector3.create(2,2,2),
 		showAvatar: true,
+		skinColor: Color3.fromHexString("#522C1C"),
 	},
-
-	
+	//jewelry
+	"head_5": {
+		position: Vector3.create(29.1, -3.75, 9.9),
+		rotation  : Quaternion.fromEulerDegrees(0, 290, 0),
+		defaultUrn: "urn:decentraland:matic:collections-v2:0xea5fa934cb38cf3abb28190fad15c9dd4a0c90e8:0",
+		scale     : Vector3.create(4,4,4),
+	},
+	"head_6": {
+		position: Vector3.create(27.8, -3.75, 7.8),
+		rotation  : Quaternion.fromEulerDegrees(0, 300, 0),
+		defaultUrn: "urn:decentraland:matic:collections-v2:0xd9b512b6e2023ed6217daad3dff66c99b5929439:1",
+		scale     : Vector3.create(4,4,4),
+	},
+	"head_7": {
+	   position: Vector3.create(26.1, -3.75, 5.84),
+	   rotation  : Quaternion.fromEulerDegrees(0, 310, 0),
+	   defaultUrn: "urn:decentraland:matic:collections-v2:0x81a1e00cc33b5ae2405c54cc906e894de8174683:1",
+	   scale     : Vector3.create(4,4,4),
+   	},
+	"head_8": {
+		position: Vector3.create(24.25, -3.75, 4.24),
+		rotation  : Quaternion.fromEulerDegrees(0, 320, 0),
+		defaultUrn: "urn:decentraland:matic:collections-v2:0x956b8d57066fc3d2562de22efd63624a1ba56e35:19",
+		scale     : Vector3.create(4,4,4),
+	},
+	"head_9": {
+		position:  Vector3.create(22.15, -3.75, 2.9),
+		rotation  : Quaternion.fromEulerDegrees(0, 330, 0),
+		defaultUrn: "urn:decentraland:matic:collections-v2:0xc73b75640bac8bced8829d07aa57e694b446b3f9:4",
+		scale     : Vector3.create(4,4,4),
+	},
+	//MARK: Hairs
+	// Layout:
+	// | 0 | 1 | 2 | 3 |
+	"hair_0": {
+		position:  Vector3.create(6.114, 0, 3.202),
+		rotation  : Quaternion.fromEulerDegrees(0, 45, 0),
+		defaultUrn: "urn:decentraland:matic:collections-v2:0x451c3eee518bee14baf0df6bd06639959d5815a8:0",
+		scale     : Vector3.create(1,1,1),
+		hairColor : Color3.fromHexString("#e6cd7a"),
+		showAvatar : true,
+	},
+	"hair_1": {
+		position:  Vector3.create(5.119, 0, 4.197),
+		rotation  : Quaternion.fromEulerDegrees(0, 45, 0),
+		defaultUrn: "urn:decentraland:matic:collections-v2:0x8103ed8b1140189a2703760fda37063d5f8259f3:0",
+		scale     : Vector3.create(1,1,1),
+		hairColor : Color3.fromHexString("#000000"),
+		showAvatar : true,
+		isMale : true,
+	},
+	"hair_2": {
+		position:  Vector3.create(4.124, 0, 5.192),
+		rotation  : Quaternion.fromEulerDegrees(0, 45, 0),
+		defaultUrn: "urn:decentraland:matic:collections-v2:0x0c36f67f9d0601c040b0429790688ac231ae9ef0:1",
+		scale     : Vector3.create(1,1,1),
+		hairColor : Color3.fromHexString("#49dedb"),
+		showAvatar : true,
+		isMale : true,
+	},
+	"hair_3": {
+		position:  Vector3.create(3.129, 0, 6.187),
+		rotation  : Quaternion.fromEulerDegrees(0, 45, 0),
+		defaultUrn: "urn:decentraland:matic:collections-v2:0xd70a2c52cfb19403bcbf6e59a26364b30a853477:1",
+		scale     : Vector3.create(1,1,1),
+		hairColor : Color3.fromHexString("#e93838"),
+		showAvatar : true,
+	},
 
 }
 
