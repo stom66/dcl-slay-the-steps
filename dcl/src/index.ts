@@ -12,20 +12,16 @@ import { ShowWarning } from './ui.Game'
 import { _CameraController } from './CameraController'
 import { _SoundManager } from './SoundManager'
 
-import { CreateHowToUI } from './ui2d.HowTo'
 import { SetupLights } from './Lights'
 
 export function main() {
 	
-	setupUi()
-
 	_GameManager.init()
 	_StageController.init()
 	_ShopManager.init()
 	_CameraController.init()
 	_SoundManager.init()
 
-	CreateHowToUI()
-
 	SetupLights()
+	setupUi()
 }
