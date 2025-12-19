@@ -1531,13 +1531,10 @@
             "description": "An experience for Decentraland Festive Trail 2025",
             "thumbnail": "images/scene-thumbnail.png",
             "categories": [],
-            "author": "stom",
+            "author": "NikkiFuego + stom",
+            "email": "",
             "tags": [],
             "layout": {
-              "base": {
-                "x": -144,
-                "y": -147
-              },
               "parcels": [
                 {
                   "x": -144,
@@ -1555,8 +1552,14 @@
                   "x": -143,
                   "y": -146
                 }
-              ]
+              ],
+              "base": {
+                "x": -144,
+                "y": -147
+              }
             },
+            "silenceVoiceChat": false,
+            "disablePortableExperiences": false,
             "skyboxConfig": {
               "fixedTime": 46800
             },
