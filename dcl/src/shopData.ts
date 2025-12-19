@@ -20,10 +20,10 @@ export const shopData: Record<string, ShopSlot> = {
 
 	// MARK: Shoes
 	// Layout:
-	// | 12 | 13 | 14 | 15
-	// | 8  | 9  | 10 | 11
-	// | 4  | 5  | 6  | 7
-	// | 0  | 1  | 2  | 3
+	// | 12 | 13 | 14 | 15 |
+	// | 8  | 9  | 10 | 11 |
+	// | 4  | 5  | 6  | 7  |
+	// | 0  | 1  | 2  | 3  |                                  
 
 	"shoes_0": {
 		position  : Vector3.create(2.5, 0.75, 13.32),
