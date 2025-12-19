@@ -202,19 +202,19 @@ class GameManager {
 			name     : "Start a game 👇",
 			bodyShape: "urn:decentraland:off-chain:base-avatars:BaseMale",
 			wearables: [
-				"urn:decentraland:off-chain:base-avatars:dcl_watch",
-				"urn:decentraland:off-chain:base-avatars:bear_slippers",
-				"urn:decentraland:off-chain:base-avatars:f_skull_earring",
-				"urn:decentraland:off-chain:base-avatars:red_bandana",
 				"urn:decentraland:off-chain:base-avatars:slicked_hair",
 				"urn:decentraland:off-chain:base-avatars:eyebrows_01",
 				"urn:decentraland:off-chain:base-avatars:eyes_09",
 				"urn:decentraland:off-chain:base-avatars:mouth_07",
-				"urn:decentraland:off-chain:base-avatars:full_beard"],
+				"urn:decentraland:off-chain:base-avatars:full_beard",
+				"urn:decentraland:matic:collections-v2:0x957f821cc9074a65caf17023f5a46a15727039c8:2", // Tophat
+				"urn:decentraland:matic:collections-v2:0x1264078e7ac68491bda3f2d6da1a918198132211:0", // suit
+				"urn:decentraland:matic:collections-v2:0x75d20f9e05844ad1ecf9b2e239b460e7e2c0fa8a:0", // shoes
+			],
 			eyeColor : Color3.create(0.5, 0.5, 0.5),
 			skinColor: Color3.create(0.5, 0.5, 0.5),
 			hairColor: Color3.create(0.5, 0.5, 0.5),
-			emotes: []
+			emotes: ["wave"]
 		}
 
 		// Spawn the Avatar
