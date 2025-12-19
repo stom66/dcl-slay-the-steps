@@ -211,10 +211,10 @@ class GameManager {
 				"urn:decentraland:matic:collections-v2:0x1264078e7ac68491bda3f2d6da1a918198132211:0", // suit
 				"urn:decentraland:matic:collections-v2:0x75d20f9e05844ad1ecf9b2e239b460e7e2c0fa8a:0", // shoes
 			],
-			eyeColor : Color3.create(0.5, 0.5, 0.5),
-			skinColor: Color3.create(0.5, 0.5, 0.5),
-			hairColor: Color3.create(0.5, 0.5, 0.5),
-			emotes: ["wave"]
+			eyeColor : Color3.fromHexString("#D89130"),
+			skinColor: Color3.fromHexString("#D89130"),
+			hairColor: Color3.fromHexString("#D89130"),
+			emotes: []
 		}
 
 		// Spawn the Avatar
