@@ -34,6 +34,7 @@ class ShopManager {
 			position: item.position || Vector3.Zero(),
 			rotation: item.rotation || Quaternion.Identity(),
 			scale   : item.scale || Vector3.One()
+
 		})
 
 		AvatarShape.create(entity, {
@@ -41,7 +42,10 @@ class ShopManager {
 			emotes           : [],
 			bodyShape        : item.isMale ? 'urn:decentraland:off-chain:base-avatars:BaseMale' : 'urn:decentraland:off-chain:base-avatars:BaseFemale',
 			wearables        : [ urn ?? item.defaultUrn ?? '' ],
-			showOnlyWearables: item.showAvatar ? false : true
+			showOnlyWearables: item.showAvatar ? false : true,
+			eyeColor         : item.eyeColor || undefined,
+			skinColor        : item.skinColor || undefined,
+			hairColor        : item.hairColor || undefined
 		})
 
 		return entity

@@ -1,12 +1,15 @@
-import { Quaternion, Vector3 } from "@dcl/sdk/math";
+import { Color3, Quaternion, Vector3 } from "@dcl/sdk/math";
 
 export type ShopSlot = {
 	position   : Vector3
+	defaultUrn : string,
 	rotation?  : Quaternion,
 	scale?     : Vector3,
 	isMale?    : boolean,
 	showAvatar?: boolean,
-	defaultUrn : string
+	eyeColor?  : Color3,
+	skinColor? : Color3,
+	hairColor? : Color3
 }
 
 // Big list of the items to be shown in the shop
@@ -216,7 +219,7 @@ export const shopData: Record<string, ShopSlot> = {
 		position  : Vector3.create(28.9, 0.75, 22),
 		rotation  : Quaternion.fromEulerDegrees(0, 245, 0),
 		defaultUrn: "urn:decentraland:matic:collections-v2:0x705652b66a12dcf782b0b3d5673fbf0c1797eba2:6",
-		scale     : Vector3.create(1.5, 1.5, 1.5)
+		scale     : Vector3.create(1.5, 1.5, 1.5),
 	},
 
 
@@ -274,6 +277,7 @@ export const shopData: Record<string, ShopSlot> = {
 	   defaultUrn: "urn:decentraland:matic:collections-v2:0xc16f10cce8ee32c2aa91b5b6ceeb099fc8a78aff:0",
 	   scale     : Vector3.create(1.5, 1.5, 1.5),
 	   showAvatar: true,
+	   skinColor : Color3.fromHexString("#00ff00"),
    	},
 	"head_3": {
 		position: Vector3.create(24.192, -1.3, 4.304),
