@@ -300,7 +300,9 @@ export const shopData: Record<string, ShopSlot> = {
 		showAvatar: true,
 		skinColor: Color3.fromHexString("#522C1C"),
 	},
-	//jewelry
+
+
+	//MARK: Jewellery
 	"head_5": {
 		position: Vector3.create(29.1, -3.75, 9.9),
 		rotation  : Quaternion.fromEulerDegrees(0, 290, 0),
@@ -331,42 +333,44 @@ export const shopData: Record<string, ShopSlot> = {
 		defaultUrn: "urn:decentraland:matic:collections-v2:0xc73b75640bac8bced8829d07aa57e694b446b3f9:4",
 		scale     : Vector3.create(4,4,4),
 	},
+
+	
 	//MARK: Hairs
 	// Layout:
 	// | 0 | 1 | 2 | 3 |
 	"hair_0": {
-		position:  Vector3.create(6.114, 0, 3.202),
+		position  : Vector3.create(6.114, 0, 3.202),
 		rotation  : Quaternion.fromEulerDegrees(0, 45, 0),
 		defaultUrn: "urn:decentraland:matic:collections-v2:0x451c3eee518bee14baf0df6bd06639959d5815a8:0",
 		scale     : Vector3.create(1,1,1),
 		hairColor : Color3.fromHexString("#e6cd7a"),
-		showAvatar : true,
+		showAvatar: true,
 	},
 	"hair_1": {
-		position:  Vector3.create(5.119, 0, 4.197),
+		position  : Vector3.create(5.119, 0, 4.197),
 		rotation  : Quaternion.fromEulerDegrees(0, 45, 0),
 		defaultUrn: "urn:decentraland:matic:collections-v2:0x8103ed8b1140189a2703760fda37063d5f8259f3:0",
 		scale     : Vector3.create(1,1,1),
 		hairColor : Color3.fromHexString("#000000"),
-		showAvatar : true,
-		isMale : true,
+		showAvatar: true,
+		isMale    : true,
 	},
 	"hair_2": {
-		position:  Vector3.create(4.124, 0, 5.192),
+		position  : Vector3.create(4.124, 0, 5.192),
 		rotation  : Quaternion.fromEulerDegrees(0, 45, 0),
 		defaultUrn: "urn:decentraland:matic:collections-v2:0x0c36f67f9d0601c040b0429790688ac231ae9ef0:1",
 		scale     : Vector3.create(1,1,1),
 		hairColor : Color3.fromHexString("#49dedb"),
-		showAvatar : true,
-		isMale : true,
+		showAvatar: true,
+		isMale    : true,
 	},
 	"hair_3": {
-		position:  Vector3.create(3.129, 0, 6.187),
+		position  : Vector3.create(3.129, 0, 6.187),
 		rotation  : Quaternion.fromEulerDegrees(0, 45, 0),
 		defaultUrn: "urn:decentraland:matic:collections-v2:0xd70a2c52cfb19403bcbf6e59a26364b30a853477:1",
 		scale     : Vector3.create(1,1,1),
 		hairColor : Color3.fromHexString("#e93838"),
-		showAvatar : true,
+		showAvatar: true,
 	},
 
 }
