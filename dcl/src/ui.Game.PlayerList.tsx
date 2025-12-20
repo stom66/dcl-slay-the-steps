@@ -8,7 +8,7 @@ import { _GameManager } from './GameManager'
 
 // Placeholders for dynamic content
 let playerList   : any[]  = [];
-var visiblePlayerList : boolean = false
+var visiblePlayerList : boolean = true
 
 export function ShowPlayerList() {
 	console.log("ShowPlayerList()")
@@ -155,7 +155,7 @@ export function PlayerListUI() {
 				flexDirection : 'column',
 				alignItems    : 'flex-start',
 				justifyContent: 'flex-start',
-				display       : 'flex',
+				display       : visiblePlayerList ? 'flex': 'none',
 				padding       : { left: 18, bottom: 22, right: 18, top: 0 }
 			}}
 			uiBackground={{
