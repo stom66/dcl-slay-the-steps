@@ -128,7 +128,7 @@ export function DebugUI() {
 				variant     = 'primary'
 				fontSize    = {14}
 				onMouseDown = {() => {
-					_SeatManager.UnseatPlayer()
+					_SeatManager.MovePlayerToLobby()
 				}}
 			/>
 

@@ -4,6 +4,7 @@ import { movePlayerTo } from "~system/RestrictedActions"
 import { GameSettings } from "./_settings"
 import { GetRandomPointInCircle } from "./utils"
 import { _CameraController } from "./CameraController"
+import { engine, Transform } from "@dcl/sdk/ecs"
 
 const LOOK_AT_TARGET = Vector3.create(16, 13.5, 26)
 
@@ -46,10 +47,6 @@ class SeatManager {
 		})
 	}
 
-	UnseatPlayer() {
-		this.MovePlayerToLobby()
-	}
-
 	
 	MovePlayerToLobby() {
 		_CameraController.ResetCamera()
@@ -57,7 +54,9 @@ class SeatManager {
 		const randomPoint = GetRandomPointInCircle(Vector3.create(16, 0, 16), 6)
 		console.log("SeatManager: MovePlayerToLobby: randomPoint", randomPoint.x, randomPoint.y, randomPoint.z)
 
-		movePlayerTo({
+		// const playerTransform = Transform.getMutable(engine.PlayerEntity) // despite what the docs say, this doesn't work. classic.
+		// playerTransform.position = randomPoint
+ 		movePlayerTo({
 			newRelativePosition:randomPoint,
 			cameraTarget: GameSettings.LOBBY_SPAWN_LOOK_AT_TARGET
 		})
