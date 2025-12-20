@@ -6,9 +6,9 @@
 - [ ] Add UI hint to encourage contestants to emote during their turn
 - [ ] Add UI "GameStatus" panel
 - [ ] Revise the How To Play ui
-- [ ] add collider to center circle podium thing
+- [x] add collider to center circle podium thing
 - [ ] Timer doesn't hide for players who didn't enter the game
-- [ ] Timer showing wrong values for players in different time zones
+- [x] Timer showing wrong values for players in different time zones
 - [ ] user profile pictures completely wrong - change user data to not use API
 - [ ] user doesn't get teleported back to lobby after round ends
 - [x] Ensure max player count works
