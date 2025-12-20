@@ -206,21 +206,22 @@ class GameManager {
 		AvatarShape.create(npcHost, {
 			id       : "GH    ",
 			name     : "Start a game 👇",
-			bodyShape: "urn:decentraland:off-chain:base-avatars:BaseMale",
+			bodyShape: "urn:decentraland:off-chain:base-avatars:BaseFemale",
 			wearables: [
-				"urn:decentraland:off-chain:base-avatars:slicked_hair",
-				"urn:decentraland:off-chain:base-avatars:eyebrows_01",
-				"urn:decentraland:off-chain:base-avatars:eyes_09",
-				"urn:decentraland:off-chain:base-avatars:mouth_07",
-				"urn:decentraland:off-chain:base-avatars:full_beard",
-				"urn:decentraland:matic:collections-v2:0x957f821cc9074a65caf17023f5a46a15727039c8:2", // Tophat
-				"urn:decentraland:matic:collections-v2:0x1264078e7ac68491bda3f2d6da1a918198132211:0", // suit
-				"urn:decentraland:matic:collections-v2:0x75d20f9e05844ad1ecf9b2e239b460e7e2c0fa8a:0", // shoes
+				"urn:decentraland:matic:collections-v2:0x257fe095f35877587dcd29431e3008b3a8fe7c1c:0", // head
+				"urn:decentraland:matic:collections-v2:0xcce34685b5bb894c5bb2246728e8f85b0dbb6a43:0", // hair
+				"urn:decentraland:matic:collections-v2:0x11c59ac0a8a4c3f92b40433a540615191588b6e9:0", // necklace
+				"urn:decentraland:matic:collections-v2:0x9ef30e8babfd367e2f31f3374ffe35ff4862e914:0", // dress
+				"urn:decentraland:matic:collections-v2:0x5a22a1d25d6f7c2d46903156db56d479f5b9d1e4:0", // shoes
+				"urn:decentraland:matic:collections-v2:0xd70a2c52cfb19403bcbf6e59a26364b30a853477:0", // aura
+				"urn:decentraland:matic:collections-v2:0x9d25f6b3080ce522e807ab6038a7f7b9c5e83110:0", // hands
+				"urn:decentraland:matic:collections-v2:0xb249ea4a94198ccfd27cfef97b1d797d03a84910:0", // earrings
 			],
-			eyeColor : Color3.fromHexString("#D89130"),
-			skinColor: Color3.fromHexString("#D89130"),
-			hairColor: Color3.fromHexString("#D89130"),
+			eyeColor : Color3.fromHexString("#d83030"),
+			skinColor: Color3.fromHexString("#CC9B77"),
+			hairColor: Color3.fromHexString("#ebebeb"),
 			emotes: []
+			
 		})
 	}
 
