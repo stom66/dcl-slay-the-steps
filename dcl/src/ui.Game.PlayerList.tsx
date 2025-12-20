@@ -1,10 +1,9 @@
-import ReactEcs, { Button, Label, ReactEcsRenderer, TextureMode, UiEntity } from '@dcl/sdk/react-ecs'
+import ReactEcs, { Label, UiEntity } from '@dcl/sdk/react-ecs'
+import { getPlayer } from '@dcl/sdk/players'
+import { Color4 } from '@dcl/sdk/math'
 
-import { Color3, Color4, Vector3 } from '@dcl/sdk/math'
-
-import { MessageBus } from '@dcl/sdk/message-bus'
-import { _GameManager, GameStatus, localPlayer } from './GameManager'
-import { GetBackgroundTexture, GetPlayerName } from './utils'
+import { GetBackgroundTexture } from './utils'
+import { _GameManager } from './GameManager'
 
 
 // Placeholders for dynamic content
@@ -29,7 +28,7 @@ function BuildPlayerList() {
 		return elements
 	}
 
-	let gameStateImage = "assets/images/ui/text-idle.png"
+/* 	let gameStateImage = "assets/images/ui/text-idle.png"
 	switch (_GameManager.state.gameState) {
 		case GameStatus.STARTING:
 			gameStateImage = "assets/images/ui/text-game-starting.png"
@@ -43,12 +42,18 @@ function BuildPlayerList() {
 		case GameStatus.GAME_ENDED:
 			gameStateImage = "assets/images/ui/text-voting-finished.png"
 			break
-	}
+	} */
 
 	_GameManager.state.players.forEach((userId: string) => {
 		const currentIndex = elements.length;
 		const isEven = currentIndex % 2 === 0;
 		const backgroundTexture = GetBackgroundTexture(isEven)
+
+		const playerData = getPlayer({ userId: userId })
+		if (!playerData) {
+			console.error("BuildPlayerList: Failed to get player data for user", userId)
+			return
+		}
 
 		elements.push(
 			<UiEntity
@@ -62,7 +67,6 @@ function BuildPlayerList() {
 					alignItems    : 'center',
 					justifyContent: 'flex-start',
 					margin        : { bottom: 4 },
-					display       : visiblePlayerList ? 'flex': 'none',
 				}}
 				uiBackground={{
 					texture: {
@@ -97,7 +101,7 @@ function BuildPlayerList() {
 					}}
 					fontSize  = {16}
 					font      = 'sans-serif'
-					value     = {GetPlayerName(userId)}
+					value     = {playerData.name}
 					textWrap  = 'nowrap'
 					textAlign = "middle-right"
 					color     = {Color4.Black()}

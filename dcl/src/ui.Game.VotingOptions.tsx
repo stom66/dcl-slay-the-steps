@@ -1,11 +1,10 @@
-import ReactEcs, { Button, Label, ReactEcsRenderer, TextureMode, UiEntity } from '@dcl/sdk/react-ecs'
-
-import { Color3, Color4, Vector3 } from '@dcl/sdk/math'
-
+import ReactEcs, { Button, Label, UiEntity } from '@dcl/sdk/react-ecs'
+import { Color4 } from '@dcl/sdk/math'
 import { MessageBus } from '@dcl/sdk/message-bus'
+import { getPlayer } from '@dcl/sdk/players'
+
+import { GetBackgroundTexture } from './utils'
 import { _GameManager, localPlayer } from './GameManager'
-import { GetBackgroundTexture, GetPlayerAvatarImage, GetPlayerName } from './utils'
-//import { _GameManager, GameStatus, localPlayer } from './GameManager'
 
 const sceneMessageBus = new MessageBus()
 
@@ -22,7 +21,7 @@ export function ShowVotingOptions() {
 }
 export function HideVotingOptions() {
 	visibleVoting = false
-	votedFor = ""
+	votedFor      = ""
 }
 
 export function UpdateVotingOptions() {
@@ -59,8 +58,11 @@ function BuildVotingOptions() {
 
 	//_GameManager.state.players.forEach((votingOption: string) => {
 	playerList.forEach((userId: string) => {
-		const playerName        = GetPlayerName(userId)
-		const playerAvatarImage = GetPlayerAvatarImage(userId)
+		const playerData = getPlayer({ userId: userId })
+		if (!playerData) {
+			console.error("BuildVotingOptions: Failed to get player data for user", userId)
+			return
+		}
 
 		const isEven            = elements.length % 2 === 0
 		const backgroundTexture = GetBackgroundTexture(isEven)
@@ -99,10 +101,8 @@ function BuildVotingOptions() {
 						margin: { right: 10 },
 					}}
 					uiBackground={{
-						texture: {
-							src: playerAvatarImage
-						},
-						textureMode: "stretch"
+						avatarTexture: { userId: userId },
+						textureMode  : "stretch"
 					}}
 				/>
 				<Label
@@ -114,7 +114,7 @@ function BuildVotingOptions() {
 					fontSize  = {16}
 					font      = 'sans-serif'
 					color     = {Color4.White()}
-					value     = {playerName}
+					value     = {playerData.name}
 					textWrap  = 'nowrap'
 					textAlign = "middle-left"
 				/>

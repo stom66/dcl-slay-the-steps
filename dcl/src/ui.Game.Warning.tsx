@@ -1,9 +1,5 @@
-import ReactEcs, { Button, Label, ReactEcsRenderer, TextureMode, UiEntity } from '@dcl/sdk/react-ecs'
-
-import { Color3, Color4, Vector3 } from '@dcl/sdk/math'
-
-import { MessageBus } from '@dcl/sdk/message-bus'
-//import { _GameManager, GameStatus, localPlayer } from './GameManager'
+import { Color4 } from '@dcl/sdk/math'
+import ReactEcs, { Button, Label, UiEntity } from '@dcl/sdk/react-ecs'
 
 
 // Placeholders for dynamic content

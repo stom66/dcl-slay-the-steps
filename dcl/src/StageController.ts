@@ -4,7 +4,6 @@ import { Color3, Quaternion, Vector3 } from '@dcl/sdk/math'
 import { getPlayer, onEnterScene } from '@dcl/sdk/players'
 
 import { GameSettings } from "./_settings"
-import { GetPlayerName } from './utils'
 import { _CameraController } from './CameraController'
 import { _SoundManager } from './SoundManager'
 
@@ -87,14 +86,12 @@ class StageController {
 		const cameraTargets: Map<Entity, Entity> = new Map()
 
 		players.forEach((userId) => {
-			const playerName = GetPlayerName(userId)
-			console.log("StageController RunShow: playerName", playerName)
-
 			const playerData = getPlayer({ userId: userId })
 			if (!playerData) {
 				console.error("StageController RunShow: Failed to get player data for user", userId)
 				return
 			}
+			console.log("StageController RunShow: playerName", playerData.name)
 
 			// Create the NPC
 			const npc = this.CreateNPC(userId)

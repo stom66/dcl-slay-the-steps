@@ -1,9 +1,9 @@
 import { AvatarShape, engine, GltfContainer, InputAction, pointerEventsSystem, Transform } from "@dcl/sdk/ecs"
-import { onEnterScene, onLeaveScene } from "@dcl/sdk/players"
+import { getPlayer, onEnterScene, onLeaveScene } from "@dcl/sdk/players"
 import { Color3, Quaternion, Vector3 } from "@dcl/sdk/math"
 import { MessageBus } from "@dcl/sdk/message-bus"
 
-import { GetPlayerProfile, GetUTCTimestampMillis, waitForPlayerData } from "./utils"
+import { GetUTCTimestampMillis } from "./utils"
 
 import { GameSettings } from "./_settings"
 import { _StageController } from "./StageController"
@@ -97,10 +97,12 @@ class GameManager {
 		engine.addSystem((dt) => this.System_UpdateTimers(dt))
 
 		// Ensure we have player data for local player
-		localPlayer = await waitForPlayerData()
+		localPlayer = getPlayer()
+
 		if (localPlayer) {
 			console.log("GameManager constructor: localPlayer" + localPlayer.userId)
 		} else {
+			localPlayer = getPlayer()
 			console.log("GameManager constructor: localPlayer not found")
 		}
 
@@ -131,9 +133,6 @@ class GameManager {
 		// Handle players entering the scene
 		onEnterScene((player) => {
 			if (!player) return
-
-			// Cache the players data
-			GetPlayerProfile(player.userId)
 
 			if (player != localPlayer) {
 				if (this.iAmTheHost) {
@@ -189,8 +188,7 @@ class GameManager {
 			},
 			() => {
 				console.log("GameManager: OnPointerDown: Join/Start Game")
-				if (!localPlayer || !localPlayer.userId) return
-				this.JoinOrStartGame(localPlayer.userId)
+				this.JoinOrStartGame()
 			}
 		)
 
@@ -265,8 +263,13 @@ class GameManager {
 	// MARK: ---
 	// MARK: JoinOrStartGame
 	// When a player presses the button to Start/Join a game
-	JoinOrStartGame(userId: string) {
-		console.log("GameManager: JoinOrStartGame", userId)
+	JoinOrStartGame() {
+		if (!localPlayer || !localPlayer.userId) {
+			localPlayer = getPlayer()
+			console.error("GameManager: JoinOrStartGame: localPlayer not found")
+			return
+		}
+		console.log("GameManager: JoinOrStartGame", localPlayer.userId)
 
 		// Ensure we have a proper UTC time
 		if (this.utcTimestamp < 10000) {
@@ -277,7 +280,7 @@ class GameManager {
 		}
 
 		// Ignore if we're already in the list of players
-		if (this.state.players.includes(userId)) {
+		if (this.state.players.includes(localPlayer.userId)) {
 			console.log("GameManager: OnJoinOrStartGame: Player already in the list of players")
 			return
 		}
@@ -352,7 +355,9 @@ class GameManager {
 	// MARK: ---
 	// MARK: StartHostingNewGame
 	StartHostingNewGame() {
+		console.log("GameManager: StartHostingNewGame")
 		if (!localPlayer || !localPlayer.userId) {
+			localPlayer = getPlayer()
 			console.error("GameManager: StartHostingNewGame: localPlayer not found, or no userID, couldn't become host")
 			return
 		}
@@ -523,6 +528,7 @@ class GameManager {
 		ShowVotingResults()
 
 		_SeatManager.MovePlayerToLobby()
+		UpdatePlayerList()
 
 	}
 
@@ -581,6 +587,7 @@ class GameManager {
 		if (!this.iAmTheHost) return
 		console.log("GameManager: SendStateToAllClients")
 		sceneMessageBus.emit('stateUpdate', this.state)
+		UpdatePlayerList()
 	}
 
 	// MARK: OnStateUpdate
@@ -589,11 +596,6 @@ class GameManager {
 
 		// Ignore if we don't have localPlayer data - eg after a player joins the scene while we're still loading
 		if (!localPlayer || !localPlayer.userId) return
-
-		// Ensure data for all players in the game is cached
-		for (const player of newState.players) {
-			GetPlayerProfile(player)
-		}
 
 		// Ignore updates if we are the host
 		if (this.iAmTheHost && newState.hostUserId !== localPlayer!.userId) {

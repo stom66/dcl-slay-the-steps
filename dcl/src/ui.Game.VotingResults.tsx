@@ -1,12 +1,11 @@
-import ReactEcs, { Button, Label, ReactEcsRenderer, TextureMode, UiEntity } from '@dcl/sdk/react-ecs'
-
-import { Color3, Color4, Vector3 } from '@dcl/sdk/math'
-
+import ReactEcs, { Button, Label, UiEntity } from '@dcl/sdk/react-ecs'
 import { MessageBus } from '@dcl/sdk/message-bus'
+import { getPlayer } from '@dcl/sdk/players';
+import { Color4 } from '@dcl/sdk/math'
+
+import { GetBackgroundTexture } from './utils';
 import { _GameManager } from './GameManager';
 import { HideVotingOptions } from './ui.Game.VotingOptions';
-import { GetBackgroundTexture, GetPlayerAvatarImage, GetPlayerName } from './utils';
-//import { _GameManager, GameStatus, localPlayer } from './GameManager'
 
 
 // Placeholders for dynamic content
@@ -103,8 +102,12 @@ function BuildVotingResults() {
 	}
 
 	sortedResults.forEach(([userId, score]: [string, number]) => {
-		const playerName        = GetPlayerName(userId)
-		const playerAvatarImage = GetPlayerAvatarImage(userId)
+		const playerData = getPlayer({ userId: userId })
+		if (!playerData) {
+			console.error("BuildVotingResults: Failed to get player data for user", userId)
+			return
+		}
+
 		const isEven            = elements.length % 2 === 0;
 		const backgroundTexture = GetBackgroundTexture(isEven)
 
@@ -142,10 +145,8 @@ function BuildVotingResults() {
 						margin: { right: 10 },
 					}}
 					uiBackground={{
-						texture: {
-							src: playerAvatarImage
-						},
-						textureMode: "stretch"
+						avatarTexture: { userId: userId },
+						textureMode  : "stretch"
 					}}
 				/>
 				<Label
@@ -157,7 +158,7 @@ function BuildVotingResults() {
 					fontSize  = {16}
 					font      = 'sans-serif'
 					color     = {Color4.White()}
-					value     = {playerName}
+					value     = {playerData.name}
 					textWrap  = 'nowrap'
 					textAlign = "middle-left"
 				/>

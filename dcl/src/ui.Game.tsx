@@ -1,23 +1,11 @@
-import ReactEcs, { Button, Label, ReactEcsRenderer, TextureMode, UiEntity } from '@dcl/sdk/react-ecs'
+import ReactEcs, { UiEntity } from '@dcl/sdk/react-ecs'
 
-import { Color3, Color4, Vector3 } from '@dcl/sdk/math'
-
-import { MessageBus } from '@dcl/sdk/message-bus'
-import { GetBackgroundTexture, GetPlayerAvatarImage, GetPlayerName, onPlayerProfileLoaded } from './utils'
-import { PlayerListUI, UpdatePlayerList } from './ui.Game.PlayerList'
-import { WarningUI } from './ui.Game.Warning'
-import { CountdownTimerUI, visibleCountdownTimer } from './ui.Game.CountdownTimer'
-import { HideVotingOptions, UpdateVotingOptions, VotingOptionsUI } from './ui.Game.VotingOptions'
 import { _GameManager } from './GameManager'
-import { UpdateVotingResults, VotingResultsUI } from './ui.Game.VotingResults'
-
-
-// Add listeners for player profile loaded
-onPlayerProfileLoaded((userId: string) => {
-	UpdatePlayerList()
-	UpdateVotingOptions()
-	UpdateVotingResults()
-})
+import { CountdownTimerUI, visibleCountdownTimer } from './ui.Game.CountdownTimer'
+import { PlayerListUI } from './ui.Game.PlayerList'
+import { VotingOptionsUI } from './ui.Game.VotingOptions'
+import { VotingResultsUI } from './ui.Game.VotingResults'
+import { WarningUI } from './ui.Game.Warning'
 
 
 // MARK: Main GameUI
