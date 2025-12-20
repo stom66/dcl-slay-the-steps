@@ -1,6 +1,7 @@
 import { AvatarShape, engine, Entity, Transform } from "@dcl/sdk/ecs"
-import { shopData, ShopSlot } from "./shopData"
 import { Quaternion, Vector3 } from "@dcl/sdk/math"
+
+import { shopData, ShopSlot } from "./shopData"
 
 class ShopManager {
 
@@ -26,7 +27,7 @@ class ShopManager {
 		item: ShopSlot, 
 		urn?: string
 	) {
-		console.log("ShopManager SpawnItem: item", item)
+		//console.log("ShopManager SpawnItem: item", item)
 
 		const entity   = engine.addEntity()
 

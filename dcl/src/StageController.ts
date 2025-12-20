@@ -1,11 +1,10 @@
 import * as utils from '@dcl-sdk/utils'
-import { GameSettings } from "./_settings"
-import { _GameManager } from './GameManager'
-import { GetPlayerName, GetPlayerProfile, NPCOutfit } from './utils'
+import { AvatarEmoteCommand, AvatarShape, EasingFunction, engine, Entity, PBAvatarEmoteCommand, PlayerIdentityData, Transform, Tween, TweenSequence, tweenSystem } from '@dcl/sdk/ecs'
 import { Color3, Quaternion, Vector3 } from '@dcl/sdk/math'
-import { AvatarEmoteCommand, AvatarShape, EasingFunction, engine, Entity, PBAvatarEmoteCommand, PlayerIdentityData, Transform, Tween, TweenLoop, TweenSequence, tweenSystem, TweenSystem } from '@dcl/sdk/ecs'
-import { getPlayerData } from '~system/Players'
 import { getPlayer, onEnterScene } from '@dcl/sdk/players'
+
+import { GameSettings } from "./_settings"
+import { GetPlayerName } from './utils'
 import { _CameraController } from './CameraController'
 import { _SoundManager } from './SoundManager'
 
@@ -16,16 +15,16 @@ import { _SoundManager } from './SoundManager'
 
 
 class StageController {
-	isRunning     : boolean                   = false
-	currentTimeout: utils.TimerId | undefined = undefined
+	isRunning                      : boolean                   = false
+	currentTimeout                 : utils.TimerId | undefined = undefined
 
-	playerToNPC   : Map<Entity, Entity>       = new Map()
-	NPCToPlayer   : Map<Entity, Entity> = new Map()
+	playerToNPC                    : Map<Entity, Entity>       = new Map()
+	NPCToPlayer                    : Map<Entity, Entity> = new Map()
 
-	durationPauseAtTop             = 2 // How long should the avatar wait at the top of the stairs
+	durationPauseAtTopOfStairs     = 2 // How long should the avatar wait at the top of the stairs
 	durationPauseAtCatwalkJunction = 2 // How long to pause at the Catwalk Junction
 	durationPauseAtCatwalkMidpoint = 1.5 // How long to pause at the Catwalk Midpoint
-	durationRemaining              = (GameSettings.ROUND_DURATION_PER_PLAYER - this.durationPauseAtTop - this.durationPauseAtCatwalkJunction - this.durationPauseAtCatwalkMidpoint)
+	durationRemaining              = (GameSettings.ROUND_DURATION_PER_PLAYER - this.durationPauseAtTopOfStairs - this.durationPauseAtCatwalkJunction - this.durationPauseAtCatwalkMidpoint)
 
 	dSpawnToStairsWait             = Vector3.distance(GameSettings.NPC_SPAWN_POSITION, GameSettings.NPC_PATH_STAIRS_WAIT)
 	dStairsWaitToTop               = Vector3.distance(GameSettings.NPC_PATH_STAIRS_WAIT, GameSettings.NPC_PATH_STAIRS_TOP)
@@ -195,8 +194,10 @@ class StageController {
 		console.log(userData)	  
 		if (!userData || !userData.wearables) return
 
-		// Build the outfit data for the NPC
-		const outfit: NPCOutfit = {
+		// Spawn the Avatar
+		const npc = engine.addEntity()
+		AvatarShape.create(npc, {
+			id       : "npc_" + userId + "    ",
 			name     : userData.name,
 			bodyShape: userData.avatar!.bodyShapeUrn || "",
 			wearables: userData.wearables,
@@ -204,11 +205,7 @@ class StageController {
 			eyeColor : userData.avatar!.eyesColor || Color3.create(0.5, 0.5, 0.5),
 			skinColor: userData.avatar!.skinColor || Color3.create(0.5, 0.5, 0.5),
 			hairColor: userData.avatar!.hairColor || Color3.create(0.5, 0.5, 0.5)
-		}
-
-		// Spawn the Avatar
-		const npc = engine.addEntity()
-		AvatarShape.create(npc, {...outfit, id: "npc_" + userId + "    "})
+		})
 
 		// Position the Avatar
 		Transform.create(npc, {
@@ -270,7 +267,7 @@ class StageController {
 		TweenSequence.create(npc, {
 			sequence: [
 				{ // Pause at the top of the stairs
-					duration: this.durationPauseAtTop * 1000,
+					duration: this.durationPauseAtTopOfStairs * 1000,
 					easingFunction: EasingFunction.EF_LINEAR,
 					mode: Tween.Mode.Move({
 						start: GameSettings.NPC_PATH_STAIRS_WAIT,

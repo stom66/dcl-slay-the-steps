@@ -1,16 +1,22 @@
-import { AvatarShape, engine, GltfContainer, InputAction, MeshCollider, MeshRenderer, pointerEventsSystem, Transform } from "@dcl/sdk/ecs"
+import { AvatarShape, engine, GltfContainer, InputAction, pointerEventsSystem, Transform } from "@dcl/sdk/ecs"
+import { onEnterScene, onLeaveScene } from "@dcl/sdk/players"
 import { Color3, Quaternion, Vector3 } from "@dcl/sdk/math"
 import { MessageBus } from "@dcl/sdk/message-bus"
-import { onEnterScene, onLeaveScene } from "@dcl/sdk/players"
-import { GetPlayerProfile, GetRandomPointInCircle, GetUTCTimestampMillis, NPCOutfit, waitForPlayerData } from "./utils"
-import { HideCountdownTimer, HideVoting, HideVotingResults, ShowCountdownTimer, ShowVoting, ShowVotingResults, ShowWarning, UpdatePlayerList, UpdateVotingResults } from "./ui.Game"
-import { movePlayerTo } from "~system/RestrictedActions"
 
-import * as utils from '@dcl-sdk/utils'
+import { GetPlayerProfile, GetUTCTimestampMillis, waitForPlayerData } from "./utils"
+
 import { GameSettings } from "./_settings"
 import { _StageController } from "./StageController"
 import { _SeatManager } from "./SeatManager"
 import { _CameraController } from "./CameraController"
+
+import { UpdatePlayerList } from "./ui.Game.PlayerList"
+import { ShowWarning } from "./ui.Game.Warning"
+import { HideCountdownTimer, ShowCountdownTimer } from "./ui.Game.CountdownTimer"
+import { HideVotingOptions, ShowVotingOptions } from "./ui.Game.VotingOptions"
+import { HideVotingResults, ShowVotingResults } from "./ui.Game.VotingResults"
+
+import * as utils from '@dcl-sdk/utils'
 
 
 export enum GameStatus {
@@ -75,7 +81,7 @@ class GameManager {
 		}
 
 		HideCountdownTimer()
-		HideVoting()
+		HideVotingOptions()
 		HideVotingResults()
 		UpdatePlayerList()
 	}
@@ -197,8 +203,9 @@ class GameManager {
 			scale: Vector3.create(1, 1, 1)
 		})
 
-		// Build the outfit data for the NPC
-		const outfit: NPCOutfit = {
+		// Spawn the Avatar
+		AvatarShape.create(npcHost, {
+			id       : "GH    ",
 			name     : "Start a game 👇",
 			bodyShape: "urn:decentraland:off-chain:base-avatars:BaseMale",
 			wearables: [
@@ -215,10 +222,7 @@ class GameManager {
 			skinColor: Color3.fromHexString("#D89130"),
 			hairColor: Color3.fromHexString("#D89130"),
 			emotes: []
-		}
-
-		// Spawn the Avatar
-		AvatarShape.create(npcHost, {...outfit, id: "GH    "})
+		})
 	}
 
 	// MARK: System_UpdateTimers
@@ -455,11 +459,10 @@ class GameManager {
 		if (!this.iAmInTheGame) return
 		console.log("GameManager: OnVotingStart")
 
-		// The voting UI will show here
-		ShowVoting()
+		ShowVotingOptions()
 	}
 
-
+	
 	// MARK: ---
 	// MARK: OnRequestVote
 	OnRequestVote(vote: RequestVote) {
@@ -487,7 +490,6 @@ class GameManager {
 
 		this.state.votes[vote.voteFrom] = vote.voteFor
 		this.TriggerStateUpdate()
-		UpdateVotingResults()
 	}
 
 

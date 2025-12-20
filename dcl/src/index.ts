@@ -1,5 +1,5 @@
 import { setupUi }  from './ui'
-import { ShowWarning } from './ui.Game'
+import { ShowWarning } from './ui.Game.Warning'
 
 import { _CameraController } from './CameraController'
 import { _GameManager } from './GameManager'

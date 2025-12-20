@@ -1,8 +1,9 @@
 import { Vector3 } from "@dcl/sdk/math"
 import { movePlayerTo } from "~system/RestrictedActions"
+
 import { GameSettings } from "./_settings"
-import { _CameraController } from "./CameraController"
 import { GetRandomPointInCircle } from "./utils"
+import { _CameraController } from "./CameraController"
 
 const LOOK_AT_TARGET = Vector3.create(16, 13.5, 26)
 

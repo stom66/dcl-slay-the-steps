@@ -2,8 +2,9 @@ import { getPlayer } from "@dcl/sdk/src/players"
 import { getRealm } from "~system/Runtime"
 import { engine } from "@dcl/sdk/ecs"
 import { GetPlayerDataRequest } from "~system/Players"
-import { GameSettings } from "./_settings"
 import { Color3, Vector3 } from "@dcl/sdk/math"
+
+import { GameSettings } from "./_settings"
 
 // Workaround for env vars
 declare var process : {
@@ -116,7 +117,6 @@ async function GetRealmInfo() {
 
 // MARK: Profile Listener
 type PlayerProfileListener = (userId: string) => void
-
 const profileListeners = new Set<PlayerProfileListener>()
 
 export function onPlayerProfileLoaded(listener: PlayerProfileListener) {
@@ -325,4 +325,13 @@ export type NPCOutfit = {
 	eyeColor : Color3
 	skinColor: Color3
 	hairColor: Color3
+}
+
+
+
+
+export function GetBackgroundTexture(isEven: boolean) {
+	return isEven
+		? "assets/images/ui/bg-lighter.png"
+		: "assets/images/ui/bg-default.png";
 }

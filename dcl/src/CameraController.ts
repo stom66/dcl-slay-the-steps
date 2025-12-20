@@ -1,5 +1,5 @@
 import { engine, Entity, MainCamera, Transform, VirtualCamera } from "@dcl/sdk/ecs"
-import { Quaternion, Vector3 } from "@dcl/sdk/math"
+import { Vector3 } from "@dcl/sdk/math"
 
 class CameraController {
 	transitionDuration: number = 0.5
