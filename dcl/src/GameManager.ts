@@ -97,14 +97,15 @@ class GameManager {
 		engine.addSystem((dt) => this.System_UpdateTimers(dt))
 
 		// Ensure we have player data for local player
-		localPlayer = getPlayer()
-
-		if (localPlayer) {
-			console.log("GameManager constructor: localPlayer" + localPlayer.userId)
-		} else {
+		utils.timers.setTimeout(() => {
 			localPlayer = getPlayer()
-			console.log("GameManager constructor: localPlayer not found")
-		}
+			if (localPlayer) {
+				console.log("GameManager constructor: localPlayer" + localPlayer.userId)
+			} else {
+				console.log("GameManager constructor: localPlayer not found")
+			}
+		}, 2000)
+
 
 		// MessageBus handling
 		// Handle players requesting to join the current game
