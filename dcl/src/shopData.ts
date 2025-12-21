@@ -3,6 +3,7 @@ import { Color3, Quaternion, Vector3 } from "@dcl/sdk/math";
 export type ShopSlot = {
 	position   : Vector3
 	defaultUrn : string,
+	currentUrn?: string,
 	rotation?  : Quaternion,
 	scale?     : Vector3,
 	isMale?    : boolean,
@@ -10,6 +11,17 @@ export type ShopSlot = {
 	eyeColor?  : Color3,
 	skinColor? : Color3,
 	hairColor? : Color3
+}
+
+export type ShopZone = {
+	key        : string
+	title      : string
+	position   : Vector3
+	scale?     : Vector3,
+	uiOffset   : Vector3,
+	uiRotation : Quaternion,
+	slots      : ShopSlot[],
+	wearableCategory?: string | string[]
 }
 
 // Big list of the items to be shown in the shop
@@ -276,13 +288,13 @@ export const shopData: Record<string, ShopSlot> = {
 		skinColor: Color3.fromHexString("#F2C2A5"),
 	},
 	"head_2": {
-	   position: Vector3.create(26.1, -2, 5.84),
-	   rotation  : Quaternion.fromEulerDegrees(0, 310, 0),
-	   defaultUrn: "urn:decentraland:matic:collections-v2:0x736e227684be1e65e15f8a2de2709fcc284a8b13:0",
-	   scale     : Vector3.create(2,2,2),
-	   showAvatar: true,
-	   isMale: true,
-	   skinColor : Color3.fromHexString("#CC9B77"),
+		position  : Vector3.create(26.1, -2, 5.84),
+		rotation  : Quaternion.fromEulerDegrees(0, 310, 0),
+		defaultUrn: "urn:decentraland:matic:collections-v2:0x736e227684be1e65e15f8a2de2709fcc284a8b13:0",
+		scale     : Vector3.create(2,2,2),
+		showAvatar: true,
+		isMale    : true,
+		skinColor : Color3.fromHexString("#CC9B77"),
    	},
 	"head_3": {
 		position: Vector3.create(24.25, -2, 4.24),
@@ -316,10 +328,10 @@ export const shopData: Record<string, ShopSlot> = {
 		scale     : Vector3.create(4,4,4),
 	},
 	"head_7": {
-	   position: Vector3.create(26.1, -3.75, 5.84),
-	   rotation  : Quaternion.fromEulerDegrees(0, 310, 0),
-	   defaultUrn: "urn:decentraland:matic:collections-v2:0x81a1e00cc33b5ae2405c54cc906e894de8174683:1",
-	   scale     : Vector3.create(4,4,4),
+		position: Vector3.create(26.1, -3.75, 5.84),
+		rotation  : Quaternion.fromEulerDegrees(0, 310, 0),
+		defaultUrn: "urn:decentraland:matic:collections-v2:0x81a1e00cc33b5ae2405c54cc906e894de8174683:1",
+		scale     : Vector3.create(4,4,4),
    	},
 	"head_8": {
 		position: Vector3.create(24.25, -3.75, 4.24),
@@ -376,4 +388,125 @@ export const shopData: Record<string, ShopSlot> = {
 }
 
 
+// MARK: ShopZones
 
+export const shopZones: ShopZone[] = [
+	{ // Shoes
+		key       : "shoes",
+		title     : "Shoes",
+		wearableCategory: "feet",
+		position  : Vector3.create(2.946, 0.086, 16.0),
+		scale     : Vector3.create(7.43, 7.43, 7.43),
+		uiOffset  : Vector3.create(3.017, 1.788, 16.001),
+		uiRotation: Quaternion.fromEulerDegrees(0, 90.0, 0),
+		slots     : [
+			shopData["shoes_0"],
+			shopData["shoes_1"],
+			shopData["shoes_2"],
+			shopData["shoes_3"],
+			shopData["shoes_4"],
+			shopData["shoes_5"],
+			shopData["shoes_6"],
+			shopData["shoes_7"],
+			shopData["shoes_8"],
+			shopData["shoes_9"],
+			shopData["shoes_10"],
+			shopData["shoes_11"],
+			//shopData["shoes_12"],
+			//shopData["shoes_13"],
+			//shopData["shoes_14"],
+			//shopData["shoes_15"],
+		]
+	},
+	
+	{ // Outfits
+		key       : "outfits",
+		title     : "Outfits",
+		wearableCategory: "upper_body",
+		position  : Vector3.create(4.404, 0.1, 27.539),
+		scale     : Vector3.create(14.408, 14.408, 14.408),
+		uiOffset  : Vector3.create(4.366, 4.078, 27.578),
+		uiRotation: Quaternion.fromEulerDegrees(0, 135.0, 0),
+		slots     : [
+			shopData["outfit_0"],
+			shopData["outfit_1"],
+			shopData["outfit_2"],
+			shopData["outfit_3"],
+		]
+	},
+	
+	{ // Upper body
+		key       : "upperBody",
+		title     : "Upper Body",
+		wearableCategory: "upper_body",
+		position  : Vector3.create(27.35, 0.1, 27.5),
+		scale     : Vector3.create(14.62, 14.62, 14.62),
+		uiOffset  : Vector3.create(25.854, 4.239, 25.809),
+		uiRotation: Quaternion.fromEulerDegrees(0, 225, 0),
+		slots     : [
+			shopData["upperBody_0"],
+			shopData["upperBody_1"],
+			shopData["upperBody_2"],
+			shopData["upperBody_3"],
+			shopData["upperBody_4"],
+			shopData["upperBody_5"],
+			shopData["upperBody_6"],
+			shopData["upperBody_7"],
+			shopData["upperBody_8"],
+			shopData["upperBody_9"],
+		]
+	},
+	
+	{ // Lower body
+		key       : "lowerBody",
+		title     : "Lower Body",
+		wearableCategory: "lower_body",
+		position  : Vector3.create(27.26, 0.1, 16.0),
+		scale     : Vector3.create(8.201, 8.201, 8.201),
+		uiOffset  : Vector3.create(27.26, 2.488, 16.0),
+		uiRotation: Quaternion.fromEulerDegrees(0, 270, 0),
+		slots     : [
+			shopData["lowerBody_0"],
+			shopData["lowerBody_1"],
+			shopData["lowerBody_2"],
+			shopData["lowerBody_3"],
+		]
+	},
+	
+	{ // Head
+		key       : "head",
+		title     : "Head",
+		wearableCategory: ["head", "eyes", "earring", "helmet", "mask", "top_head", "tiara"],
+		position  : Vector3.create(27.35, 0.1, 4.5),
+		scale     : Vector3.create(14.62, 14.62, 14.62),
+		uiOffset  : Vector3.create(25.854, 4.239, 6.191),
+		uiRotation: Quaternion.fromEulerDegrees(0, 315, 0),
+		slots     : [
+			shopData["head_0"],
+			shopData["head_1"],
+			shopData["head_2"],
+			shopData["head_3"],
+			shopData["head_4"],
+			shopData["head_5"],
+			shopData["head_6"],
+			shopData["head_7"],
+			shopData["head_8"],
+			shopData["head_9"],
+		]
+	},
+	
+	{ // Hair
+		key       : "hair",
+		title     : "Hair",
+		position  : Vector3.create(5.548, 0.0, 5.636),
+		scale     : Vector3.create(7.906, 7.906, 7.906),
+		uiOffset  : Vector3.create(3.614, 3.25, 3.702),
+		uiRotation: Quaternion.fromEulerDegrees(0, 45, 0),
+		slots     : [
+			shopData["hair_0"],
+			shopData["hair_1"],
+			shopData["hair_2"],
+			shopData["hair_3"],
+		]
+	}	
+]
