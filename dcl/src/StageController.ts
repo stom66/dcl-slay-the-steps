@@ -140,9 +140,8 @@ class StageController {
 			// Prepare to animate the next NPC when this one is done
 			currentIndex++
 
-			if (this.currentTimeout) {
-				utils.timers.clearTimeout(this.currentTimeout)
-			}
+			// Start a timeout, to complete when the NPC hits the end of the runway
+			if (this.currentTimeout) utils.timers.clearTimeout(this.currentTimeout)
 			this.currentTimeout = utils.timers.setTimeout(() => {
 				// If we're not at the last NPC, animate the next one
 				if (currentIndex < npcCount) animateNextNPC()
@@ -153,9 +152,7 @@ class StageController {
 		}
 
 		// Start the sequence after the round delay
-		if (this.currentTimeout) {
-			utils.timers.clearTimeout(this.currentTimeout)
-		}
+		if (this.currentTimeout) utils.timers.clearTimeout(this.currentTimeout)
 		this.currentTimeout = utils.timers.setTimeout(() => {
 			animateNextNPC()
 		}, GameSettings.ROUND_START_DELAY * 1000)
@@ -163,23 +160,26 @@ class StageController {
 		this.OnShowStart()
 	}
 
+
+	// MARK: OnShowStart
 	OnShowStart() {
 		console.log("StageController OnShowStart")
 		_SoundManager.StartBGM()
 	}
 
+	// MARK: OnShowEnd
 	OnShowEnd() {
 		console.log("StageController OnShowEnd")
 		_CameraController.ResetCamera()
 		_SoundManager.StopBGM()
 	}
 
+
 	// MARK: Abort
 	Abort() {
+		this.OnShowEnd()
 		this.isRunning = false
-		if (this.currentTimeout) {
-			utils.timers.clearTimeout(this.currentTimeout)
-		}
+		if (this.currentTimeout) utils.timers.clearTimeout(this.currentTimeout)
 	}
 
 	// MARK: CreateNPC
