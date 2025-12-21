@@ -33,6 +33,7 @@ export type GameState = {
 	players      : string[],
 	gameStartTime: number,
 	votes        : { [key: string]: string },
+	timestamp    : number,
 }
 
 export type RequestVote = {
@@ -61,6 +62,7 @@ class GameManager {
 		players      : [],
 		gameStartTime: 0,
 		votes        : {},
+		timestamp    : 0,
 	}
 
 
@@ -74,7 +76,7 @@ class GameManager {
 		this.state.players       = []
 		this.state.gameStartTime = 0	
 		this.state.votes         = {}
-
+		this.state.timestamp     = 0
 		if (this.currentTimeout) {
 			utils.timers.clearTimeout(this.currentTimeout)
 			this.currentTimeout = undefined
@@ -588,6 +590,11 @@ class GameManager {
 	TriggerStateUpdate() {
 		if (!this.iAmTheHost) return
 		console.log("GameManager: SendStateToAllClients")
+		
+		// Update the timestamp
+		this.state.timestamp = this.utcTimestamp
+
+		// Send the state to all clients
 		sceneMessageBus.emit('stateUpdate', this.state)
 		UpdatePlayerList()
 	}
@@ -605,6 +612,19 @@ class GameManager {
 			return
 		}
 		if (this.iAmTheHost) return
+
+
+		// If there's a game in progress and the update didn't come from the current host, ignore it
+		if (this.state.gameState != GameStatus.IDLE && newState.hostUserId !== this.state.hostUserId) {
+			console.log("GameManager: OnStateUpdate: Recieved an update from someone other than host")
+			return
+		}
+
+		// Ignore updates if the timestamp is older than the current timestamp
+		if (newState.timestamp < this.state.timestamp) {
+			console.log("GameManager: OnStateUpdate: Recieved an update with an older timestamp")
+			return
+		}
 
 		// Store the state, then update it
 		const lastGameState = this.state.gameState
@@ -632,6 +652,7 @@ class GameManager {
 					break
 			}
 		}
+
 		UpdatePlayerList()
 	}
 	
