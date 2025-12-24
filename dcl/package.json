@@ -12,11 +12,16 @@
     "deploy": "sdk-commands deploy",
     "build": "sdk-commands build",
     "upgrade-sdk": "npm install --save-dev @dcl/sdk@latest",
-    "upgrade-sdk:next": "npm install --save-dev @dcl/sdk@next"
+    "upgrade-sdk:next": "npm install --save-dev @dcl/sdk@next",
+    "fetch-wearables": "tsx scripts/fetch-wearable-data.ts",
+    "update-shop-data": "tsx scripts/update-shop-data.ts"
   },
   "devDependencies": {
     "@dcl/js-runtime": "7.15.2",
-    "@dcl/sdk": "7.15.2"
+    "@dcl/sdk": "7.15.2",
+    "tsx": "^4.7.0",
+    "node-fetch": "^2.7.0",
+    "@types/node-fetch": "^2.6.11"
   },
   "engines": {
     "node": ">=16.0.0",
