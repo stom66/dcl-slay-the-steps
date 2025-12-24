@@ -1,9 +1,11 @@
-import { AvatarShape, EasingFunction, engine, Entity, GltfContainer, InputAction, MeshCollider, pointerEventsSystem, Transform, TriggerArea, triggerAreaEventsSystem } from "@dcl/sdk/ecs"
+import { AvatarShape, ColliderLayer, EasingFunction, engine, Entity, GltfContainer, InputAction, MeshCollider, pointerEventsSystem, Transform, TriggerArea, triggerAreaEventsSystem } from "@dcl/sdk/ecs"
 import { Quaternion, Vector3 } from "@dcl/sdk/math"
 
 import * as utils from '@dcl-sdk/utils'
 
-import { ShopSlot, shopZones } from "./shopData"
+import { ShopSlot, Wearable } from "./shopSlotData"
+import { _OutfitManager } from "./OutfitManager"
+import { ShopZone, shopZones } from "./shopZoneData"
 
 /**
  * Manages shop zones, their items, and UI interactions.
@@ -67,12 +69,14 @@ class ShopManager {
 				if (result.trigger?.entity !== engine.PlayerEntity) return
 				console.log(`ShopManager: Player entered zone "${zone.key}"`)
 				//this.showUI(zone.key)
+				_OutfitManager.ShowNPCMannequin()
 			})
 			
 			triggerAreaEventsSystem.onTriggerExit(triggerEntity, (result) => {
 				if (result.trigger?.entity !== engine.PlayerEntity) return
 				console.log(`ShopManager: Player exited zone "${zone.key}"`)
 				//this.hideUI(zone.key)
+				_OutfitManager.HideNPCMannequin()
 			})
 		})
 	}
@@ -242,14 +246,21 @@ class ShopManager {
 			// Spawn new items
 			if (data.data && Array.isArray(data.data)) {
 				for (const [index, apiItem] of data.data.entries()) {
-					const slot = zone.slots[index]
-					if (!slot) {
+					if (!zone.slots[index]) {
 						console.log(`ShopManager: No slot found at index ${index} for zone "${zoneKey}"`)
 						continue
 					}
 
-					const isMale = apiItem.data?.wearable?.bodyShapes?.[0] == 'BaseMale'
-					const itemEntity = this.spawnItem(slot, apiItem.urn, isMale)
+					zone.slots[index].currentWearable = {
+						bodyShapes     : apiItem.data?.wearable?.bodyShapes,
+						category       : apiItem.data?.wearable?.category,
+						contractAddress: apiItem.contractAddress,
+						name           : apiItem.name,
+						rarity         : apiItem.rarity,
+						urn            : apiItem.urn,
+					}
+
+					const itemEntity = this.spawnItem(zone.slots[index])
 					this.zoneItems[zoneKey].push(itemEntity)
 				}
 			}
@@ -278,24 +289,26 @@ class ShopManager {
 	private spawnDefaultItems() {
 		console.log("ShopManager: Spawning default items for all zones")
 		
-		shopZones.forEach((zone) => {
-			zone.slots.forEach((slot) => {
-				const itemEntity = this.spawnItem(slot, slot.defaultUrn)
-				this.zoneItems[zone.key].push(itemEntity)
-			})
-			console.log(`ShopManager: Spawned ${zone.slots.length} default items for zone "${zone.key}"`)
+		shopZones.forEach((zone: ShopZone) => {
+			this.spawnZoneDefaultItems(zone)
 		})
+	}
+
+	private spawnZoneDefaultItems(zone: ShopZone) {
+		this.removeZoneItems(zone.key)
+		zone.slots.forEach((slot) => {
+			slot.currentWearable = undefined
+			const itemEntity = this.spawnItem(slot)
+			this.zoneItems[zone.key].push(itemEntity)
+		})
+		console.log(`ShopManager: Spawned ${zone.slots.length} default items for zone "${zone.key}"`)
 	}
 
 	//MARK: spawnItem
 	/**
 	 * Spawn a single item entity at a slot location
 	 */
-	private spawnItem(
-		slot   : ShopSlot, 
-		urn?   : string, 
-		isMale?: boolean
-	): Entity {
+	private spawnItem(slot: ShopSlot): Entity {
 		const entity = engine.addEntity()
 
 		Transform.create(entity, {
@@ -304,13 +317,19 @@ class ShopManager {
 			scale   : Vector3.Zero()
 		})
 
+		const wearable = slot.currentWearable ?? slot.defaultWearable
+
+		// Add a custom collidet eo ensure pointer works
+		GltfContainer.create(entity, {
+			src: `assets/models/avatarCollider.${wearable.category}.gltf`,
+			invisibleMeshesCollisionMask: ColliderLayer.CL_POINTER
+		})
+
 		AvatarShape.create(entity, {
-			id               : '',
+			id               : '    ',
 			emotes           : [],
-			bodyShape        : (typeof isMale === 'boolean' ? isMale : slot.isMale)
-				? 'urn:decentraland:off-chain:base-avatars:BaseMale' 
-				: 'urn:decentraland:off-chain:base-avatars:BaseFemale',
-			wearables        : [urn ?? slot.currentUrn ?? slot.defaultUrn ?? ''],
+			bodyShape        : wearable.bodyShapes?.[0] || "BaseMale",
+			wearables        : [wearable.urn],
 			showOnlyWearables: slot.showAvatar ? false : true,
 			eyeColor         : slot.eyeColor || undefined,
 			skinColor        : slot.skinColor || undefined,
@@ -321,19 +340,18 @@ class ShopManager {
 			utils.tweens.startScaling(entity, Vector3.Zero(),  slot.scale || Vector3.One(), 0.5, utils.InterpolationType.EASEOUTEXPO)
 		}, 500)
 
-		MeshCollider.setBox(entity)
-
 		pointerEventsSystem.onPointerDown(
 			{ 
 				entity: entity, 
 				opts: { 
-					button: InputAction.IA_PRIMARY,
-					hoverText: "Equip Item: " + urn,
-					maxDistance: 20
+					button     : InputAction.IA_PRIMARY,
+					hoverText  : "Equip " + wearable.name || "Base Item",
+					maxDistance: 10
 				} 
 			},
 			() => {
-				console.log("ShopManager: Equip item" + urn)
+				console.log("ShopManager: Equip urn: " + wearable.urn)
+				_OutfitManager.EquipWearable(wearable)
 			}
 		)
 
@@ -356,7 +374,7 @@ class ShopManager {
 		const pageSize = zone.slots.length || 1
 		const skip = (this.zonePages[zoneKey] || 0) * pageSize
 		
-		// Build URL parameters manually (URLSearchParams may not be available)
+		// Build URL parameters
 		const params: string[] = []
 		params.push(`skip=${skip}`)
 		params.push(`first=${pageSize}`) // API uses 'first' instead of 'limit'

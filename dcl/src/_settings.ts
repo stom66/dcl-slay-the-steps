@@ -33,7 +33,8 @@ export class SceneSettings {
 }
 
 export class GameSettings {
-	static TIME_API_URL = 'https://timeapi.io/api/Time/current/zone?timeZone=UTC'
+	static URL_TIME_API               = 'https://timeapi.io/api/Time/current/zone?timeZone=UTC'
+	static URL_WEARABLE_DATA_API      = "https://marketplace-api.decentraland.org/v1/items"
 
 	static COUNTDOWN_DURATION         = IS_DEBUG ? 8 : 60
 	static ROUND_DURATION_PER_PLAYER  = IS_DEBUG ? 18 : 18
