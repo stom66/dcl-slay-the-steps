@@ -3,6 +3,7 @@ import { ShowWarning } from './ui.Game.Warning'
 
 import { _CameraController } from './CameraController'
 import { _GameManager } from './GameManager'
+import { _OutfitManager } from './OutfitManager'
 import { _ShopManager } from './ShopManager'
 import { _SoundManager } from './SoundManager'
 import { _StageController } from './StageController'
@@ -15,6 +16,7 @@ export function main() {
 	_ShopManager.init()
 	_SoundManager.init()
 	_StageController.init()
+	_OutfitManager.init()
 
 	SetupLights()
 	setupUi()

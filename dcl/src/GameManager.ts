@@ -9,6 +9,7 @@ import { GameSettings } from "./_settings"
 import { _StageController } from "./StageController"
 import { _SeatManager } from "./SeatManager"
 import { _CameraController } from "./CameraController"
+import { _OutfitManager, Outfit } from "./OutfitManager"
 
 import { UpdatePlayerList } from "./ui.Game.PlayerList"
 import { ShowWarning } from "./ui.Game.Warning"
@@ -34,6 +35,7 @@ export type GameState = {
 	gameStartTime: number,
 	votes        : { [key: string]: string },
 	timestamp    : number,
+	outfits      : Outfit[],
 }
 
 export type RequestVote = {
@@ -63,6 +65,7 @@ class GameManager {
 		gameStartTime: 0,
 		votes        : {},
 		timestamp    : 0,
+		outfits      : [],
 	}
 
 
@@ -77,6 +80,7 @@ class GameManager {
 		this.state.gameStartTime = 0	
 		this.state.votes         = {}
 		this.state.timestamp     = 0
+		this.state.outfits       = []
 		if (this.currentTimeout) {
 			utils.timers.clearTimeout(this.currentTimeout)
 			this.currentTimeout = undefined
@@ -111,8 +115,8 @@ class GameManager {
 
 		// MessageBus handling
 		// Handle players requesting to join the current game
-		sceneMessageBus.on('joinGameRequest', (request: { userId: string }) => {
-			this.OnRequestToJoinGame(request.userId)
+		sceneMessageBus.on('joinGameRequest', (request: { userId: string, outfit: string[] }) => {
+			this.OnRequestToJoinGame(request.userId, request.outfit)
 		})
 
 		// Handle state requests
@@ -125,6 +129,12 @@ class GameManager {
 		sceneMessageBus.on('stateUpdate', (state: GameState) => {
 			console.log("GameManager: sceneMessageBus: stateUpdate:", state)
 			this.OnStateUpdate(state)
+		})
+
+		// Handle outfit updates
+		sceneMessageBus.on('outfitUpdate', (outfit: { userId: string, outfit: string[] }) => {
+			console.log("GameManager: sceneMessageBus: outfitUpdate:", outfit)
+			this.OnNotifyUpdateOutfit(outfit.userId, outfit.outfit)
 		})
 
 		// Handle players requesting to vote
@@ -241,7 +251,7 @@ class GameManager {
 
 		if (this.state.gameState == GameStatus.STARTING) {
 			// Calculate countdown value
-			let remainingTime   = (this.state.gameStartTime - this.utcTimestamp) % GameSettings.COUNTDOWN_DURATION
+			let remainingTime   = (this.state.gameStartTime - this.utcTimestamp) % (GameSettings.COUNTDOWN_DURATION + 1)
 			remainingTime       = Math.max(0, remainingTime)
 			remainingTime       = Math.floor(remainingTime)
 			this.countdownValue = remainingTime
@@ -286,6 +296,7 @@ class GameManager {
 		// Ignore if we're already in the list of players
 		if (this.state.players.includes(localPlayer.userId)) {
 			console.log("GameManager: OnJoinOrStartGame: Player already in the list of players")
+			ShowWarning("You are already in the game, please wait for it to start")
 			return
 		}
 
@@ -299,6 +310,18 @@ class GameManager {
 		if (this.state.gameState == GameStatus.IDLE) {
 			// TODO: more checks here to ensure there's not currently a game running? perhaps check how many other players are currently in the scene?
 			this.StartHostingNewGame()
+			return
+		}
+
+		if (this.state.gameState == GameStatus.ROUND_ACTIVE || this.state.gameState == GameStatus.VOTING || this.state.gameState == GameStatus.GAME_ENDED) {
+			console.log("GameManager: OnJoinOrStartGame: Game is in progress, please wait for the next game")
+			ShowWarning("A Game is currently in progress, please wait for the next game!")
+			return
+		}
+
+		if (this.state.players.length >= GameSettings.MAX_PLAYERS) {
+			console.log("GameManager: OnJoinOrStartGame: Max players reached, please wait for the next game")
+			ShowWarning("The current game is full, please wait for the next game!")
 			return
 		}
 	}
@@ -322,11 +345,14 @@ class GameManager {
 		}
 
 		if (!localPlayer || !localPlayer.userId) return
-		sceneMessageBus.emit('joinGameRequest', { userId: localPlayer.userId })
+		sceneMessageBus.emit('joinGameRequest', { 
+			userId: localPlayer.userId, 
+			outfit: _OutfitManager.GetCurrentOutfit() 
+		})
 	}
 
 	// MARK: OnRequestToJoinGame
-	OnRequestToJoinGame(userId: string) {
+	OnRequestToJoinGame(userId: string, outfit: string[]) {
 		if (!this.iAmTheHost) return
 		console.log("GameManager: OnRequestToJoinExistingGame:", userId)
 
@@ -350,10 +376,27 @@ class GameManager {
 		}
 
 		this.state.players.push(userId)
+		this.state.outfits.push({ userId: userId, outfit: outfit })
+
 		this.TriggerStateUpdate()
 		UpdatePlayerList()
 	}
 
+	OnNotifyUpdateOutfit(userId: string, outfit: string[]) {
+	
+		if (!this.iAmTheHost) return
+		console.log("GameManager: NotifyUpdateOutfit:", userId, outfit)
+
+		// get the current outfit for the user, if it exists, update it
+		let currentOutfit = this.state.outfits.find((o) => o.userId === userId)
+		if (currentOutfit) {
+			currentOutfit.outfit = outfit
+		} else {
+			this.state.outfits.push({ userId: userId, outfit: outfit })
+		}
+
+		this.TriggerStateUpdate()
+	}
 
 
 	// MARK: ---
@@ -369,6 +412,7 @@ class GameManager {
 		this.iAmInTheGame           = true
 		this.state.hostUserId       = localPlayer.userId
 		this.state.players          = [localPlayer.userId]
+		this.state.outfits          = [{ userId: localPlayer.userId, outfit: _OutfitManager.GetCurrentOutfit() }]
 		this.state.gameStartTime = this.utcTimestamp + GameSettings.COUNTDOWN_DURATION
 
 		this.TriggerCountdownStart()
@@ -431,13 +475,14 @@ class GameManager {
 
 	// MARK: OnRoundStart
 	OnRoundStart() {
+		HideCountdownTimer()
+
 		if (!this.iAmInTheGame) return
 		console.log("GameManager: OnRoundStart")
 
-		HideCountdownTimer()
 		this.MovePlayersToArena()
 
-		_StageController.RunShow(this.state.players)
+		_StageController.RunShow(this.state.players, this.state.outfits)
 	}
 
 

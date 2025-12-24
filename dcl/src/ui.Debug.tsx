@@ -25,6 +25,28 @@ export function DebugUI() {
 			uiBackground={{ color: Color4.fromHexString("#4C958133") }}
 		>
 
+			<Button
+				key         = "btnMoveToLobby"
+				uiTransform = {{ width: 180, height: 40, margin: 8 }}
+				value       = 'moveTo: lobby'
+				variant     = 'primary'
+				fontSize    = {14}
+				onMouseDown = {() => {
+					_SeatManager.MovePlayerToLobby()
+				}}
+			/>
+
+
+			<Button
+				key         = "btnMoveToLobby"
+				uiTransform = {{ width: 180, height: 40, margin: 8 }}
+				value       = 'moveTo: arena'
+				variant     = 'primary'
+				fontSize    = {14}
+				onMouseDown = {() => {
+					_SeatManager.MovePlayerToSeat(Math.floor(Math.random() * 16))
+				}}
+			/>
 			<Label
 				key            = "title"
 				uiTransform    = {{
@@ -118,30 +140,6 @@ export function DebugUI() {
 				color          = {Color4.White()}
 				fontSize       = {14}
 				textAlign      = "middle-left"
-			/>
-
-
-			<Button
-				key         = "btnMoveToLobby"
-				uiTransform = {{ width: 180, height: 40, margin: 8 }}
-				value       = 'moveTo: lobby'
-				variant     = 'primary'
-				fontSize    = {14}
-				onMouseDown = {() => {
-					_SeatManager.MovePlayerToLobby()
-				}}
-			/>
-
-
-			<Button
-				key         = "btnMoveToLobby"
-				uiTransform = {{ width: 180, height: 40, margin: 8 }}
-				value       = 'moveTo: arena'
-				variant     = 'primary'
-				fontSize    = {14}
-				onMouseDown = {() => {
-					_SeatManager.MovePlayerToSeat(Math.floor(Math.random() * 16))
-				}}
 			/>
 
 

@@ -21,8 +21,8 @@ class StageController {
 	NPCToPlayer                    : Map<Entity, Entity> = new Map()
 
 	durationPauseAtTopOfStairs     = 2 // How long should the avatar wait at the top of the stairs
-	durationPauseAtCatwalkJunction = 2 // How long to pause at the Catwalk Junction
-	durationPauseAtCatwalkMidpoint = 1.5 // How long to pause at the Catwalk Midpoint
+	durationPauseAtCatwalkJunction = 3 // How long to pause at the Catwalk Junction
+	durationPauseAtCatwalkMidpoint = 2.5 // How long to pause at the Catwalk Midpoint
 	durationRemaining              = (GameSettings.ROUND_DURATION_PER_PLAYER - this.durationPauseAtTopOfStairs - this.durationPauseAtCatwalkJunction - this.durationPauseAtCatwalkMidpoint)
 
 	dSpawnToStairsWait             = Vector3.distance(GameSettings.NPC_SPAWN_POSITION, GameSettings.NPC_PATH_STAIRS_WAIT)
@@ -76,7 +76,10 @@ class StageController {
 	}
 
 	// MARK: RunShow
-	RunShow(players: string[]) {
+	RunShow(
+		players: string[], 
+		outfits: { userId: string, outfit: string[] }[]
+	) {
 		console.log("StageController RunShow")
 
 		this.isRunning = true
@@ -93,8 +96,15 @@ class StageController {
 			}
 			console.log("StageController RunShow: playerName", playerData.name)
 
+			// Get their outfit
+			const outfit = outfits.find((o) => o.userId === userId)
+			if (!outfit) {
+				console.error("StageController RunShow: Failed to find outfit for user", userId)
+				return
+			}
+			
 			// Create the NPC
-			const npc = this.CreateNPC(userId)
+			const npc = this.CreateNPC(userId, outfit.outfit)
 			if (!npc) {
 				console.error("StageController RunShow: Failed to create NPC clone for user", userId)
 				return
@@ -183,7 +193,10 @@ class StageController {
 	}
 
 	// MARK: CreateNPC
-	CreateNPC(userId: string): Entity | undefined {
+	CreateNPC(
+		userId: string, 
+		outfit: string[]
+	): Entity | undefined {
 		console.log("StageController CreateNPCClone: userId", userId)
 
 		// Fetch the userData
@@ -191,13 +204,17 @@ class StageController {
 		console.log(userData)	  
 		if (!userData || !userData.wearables) return
 
+		// Once outfitmanager is working, we'll spawn the outfit instead
+		
 		// Spawn the Avatar
 		const npc = engine.addEntity()
+
+		// the avatars wearables are in the outfit array, so we need to get the wearables from the outfit
 		AvatarShape.create(npc, {
 			id       : "npc_" + userId + "    ",
 			name     : userData.name,
 			bodyShape: userData.avatar!.bodyShapeUrn || "",
-			wearables: userData.wearables,
+			wearables: outfit,
 			emotes   : userData.emotes,
 			eyeColor : userData.avatar!.eyesColor || Color3.create(0.5, 0.5, 0.5),
 			skinColor: userData.avatar!.skinColor || Color3.create(0.5, 0.5, 0.5),
@@ -312,7 +329,7 @@ class StageController {
 					}),
 				},
 				{ // Turn at the catwalk junction
-					duration: this.durationPauseAtCatwalkJunction / 2 * 1000,
+					duration: this.durationPauseAtCatwalkJunction * 0.3 * 1000,
 					easingFunction: EasingFunction.EF_LINEAR,
 					mode: Tween.Mode.Rotate({
 						start: Quaternion.fromEulerDegrees(0, 180, 0),
@@ -320,7 +337,7 @@ class StageController {
 					}),
 				},
 				{ // Pause at the catwalk junction
-					duration: this.durationPauseAtCatwalkJunction / 2 * 1000,
+					duration: this.durationPauseAtCatwalkJunction * 0.7 * 1000,
 					easingFunction: EasingFunction.EF_LINEAR,
 					mode: Tween.Mode.Move({
 						start: GameSettings.NPC_PATH_CATWALK_JUNCTION,
