@@ -69,7 +69,7 @@ function BuildVotingOptions() {
 
 		elements.push(
 			<UiEntity
-				key={`voting_option_${userId}`}
+				key={`voting_option_${playerData.userId}`}
 				uiTransform={{
 					width        : "100%",
 					height       : 48,
@@ -94,19 +94,19 @@ function BuildVotingOptions() {
 				}}
 			>
 				<UiEntity
-					key={`voting_option_avatar_${userId}`}
+					key={`voting_option_avatar_${playerData.userId}`}
 					uiTransform={{
 						width : 36,
 						height: 36,
 						margin: { right: 10 },
 					}}
 					uiBackground={{
-						avatarTexture: { userId: userId },
+						avatarTexture: { userId: playerData.userId },
 						textureMode  : "stretch"
 					}}
 				/>
 				<Label
-					key={`voting_option_label_${userId}`}
+					key={`voting_option_label_${playerData.userId}`}
 					uiTransform={{
 						height  : "100%",
 						flexGrow: 1,
@@ -119,11 +119,11 @@ function BuildVotingOptions() {
 					textAlign = "middle-left"
 				/>
 				<Button
-					key={`voting_option_button_${userId}`}
+					key={`voting_option_button_${playerData.userId}`}
 					uiTransform={{
 						width  : 92,
 						height : 36,
-						display: userId !== localPlayer.userId ? 'flex' : 'none',
+						display: playerData.userId !== localPlayer.userId ? 'flex' : 'none',
 					}}
 					value    = ""
 					fontSize = {16}
