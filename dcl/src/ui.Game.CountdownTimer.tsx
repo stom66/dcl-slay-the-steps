@@ -45,7 +45,7 @@ export function CountdownTimerUI() {
 				margin: { right: 42 },
 			}}
 			uiText={{
-				value    : (_GameManager?.countdownValue ?? 0).toString(),
+				value    : (_GameManager?.countdownValue ?? 0).toString() == "0" ? "GO!" : (_GameManager?.countdownValue ?? 0).toString(),
 				fontSize : 64,
 				textAlign: "middle-center",
 				color    : Color4.White()
