@@ -27,6 +27,7 @@
 ### Stretch
 
 - [ ] add a portrait of the player above the catwalk
+- [x] Allow gender-swapping avatar
 - [ ] Add a light which follows the player, offset above, clamped to the bounds of the circle in the lobby
 
 ### Bug list:
@@ -34,5 +35,6 @@
 - [ ] NPCs not getting cleaned up after a round
 - [ ] Vote For, and Vote Results avatar icons are showing the same icon for every player
 - [ ] Teleport at round end not working?
+- [x] Spawning an avatar with bodyShape: "BaseFemale" causes the wearables to not show up
 - [x] Timer goes to -1
 - [x] Results show vote for winner title
