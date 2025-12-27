@@ -6,6 +6,7 @@ import * as utils from '@dcl-sdk/utils'
 import { ShopSlot, Wearable } from "./shopSlotData"
 import { _OutfitManager } from "./OutfitManager"
 import { ShopZone, shopZones } from "./shopZoneData"
+import { blockedCreatorAddresses, blockedItemURNs } from "./shopBlockedItems"
 
 /**
  * Manages shop zones, their items, and UI interactions.
@@ -255,10 +256,11 @@ class ShopManager {
 						bodyShapes     : apiItem.data?.wearable?.bodyShapes,
 						category       : apiItem.data?.wearable?.category,
 						contractAddress: apiItem.contractAddress,
+						creator        : apiItem.creator,
 						name           : apiItem.name,
 						rarity         : apiItem.rarity,
 						urn            : apiItem.urn,
-					}
+					} as Wearable
 
 					const itemEntity = this.spawnItem(zone.slots[index])
 					this.zoneItems[zoneKey].push(itemEntity)
@@ -311,6 +313,8 @@ class ShopManager {
 	private spawnItem(slot: ShopSlot): Entity {
 		const entity = engine.addEntity()
 
+		const blockedItem = isBlockedItem(slot.currentWearable ?? slot.defaultWearable)
+
 		Transform.create(entity, {
 			position: slot.position || Vector3.Zero(),
 			rotation: slot.rotation || Quaternion.Identity(),
@@ -319,37 +323,58 @@ class ShopManager {
 
 		const wearable = slot.currentWearable ?? slot.defaultWearable
 
-		// Add a custom collidet eo ensure pointer works
-		GltfContainer.create(entity, {
-			src: `assets/models/avatarCollider.${wearable.category}.gltf`,
-			invisibleMeshesCollisionMask: ColliderLayer.CL_POINTER
-		})
 
-		AvatarShape.create(entity, {
-			id               : '    ',
-			emotes           : [],
-			bodyShape        : wearable.bodyShapes?.[0] || "BaseMale",
-			wearables        : [wearable.urn],
-			showOnlyWearables: slot.showAvatar ? false : true,
-			eyeColor         : slot.eyeColor || undefined,
-			skinColor        : slot.skinColor || undefined,
-			hairColor        : slot.hairColor || undefined
-		})
+		if (blockedItem) {
+			
+			// Add a gltf model showing an error 
+			GltfContainer.create(entity, {
+				src: `assets/models/error.${wearable.category}.gltf`,
+				invisibleMeshesCollisionMask: ColliderLayer.CL_POINTER
+			})
+		} 
+		else {
+			
+			// Add a custom collider to ensure pointer works
+			GltfContainer.create(entity, {
+				src: `assets/models/avatarCollider.${wearable.category}.gltf`,
+				invisibleMeshesCollisionMask: ColliderLayer.CL_POINTER
+			})
+
+			const bodyShape = "urn:decentraland:off-chain:base-avatars:" + (wearable.bodyShapes?.[0] || "BaseMale")
+
+			AvatarShape.create(entity, {
+				id               : '    ',
+				emotes           : [],
+				bodyShape        : bodyShape,
+				wearables        : [wearable.urn],
+				showOnlyWearables: slot.showAvatar ? false : true,
+				eyeColor         : slot.eyeColor || undefined,
+				skinColor        : slot.skinColor || undefined,
+				hairColor        : slot.hairColor || undefined
+			})
+		}
 		
 		utils.timers.setTimeout(() => {
 			utils.tweens.startScaling(entity, Vector3.Zero(),  slot.scale || Vector3.One(), 0.5, utils.InterpolationType.EASEOUTEXPO)
 		}, 500)
+
+		let hoverText = "Equip " + wearable.name
+		if (wearable.bodyShapes?.length && wearable.bodyShapes.length < 2) {
+			hoverText += wearable.bodyShapes[0] == "BaseMale" ? "\n(Male only)" : "\n(Female only)"
+		}
+		hoverText = blockedItem ? "Couldn't load item" : hoverText
 
 		pointerEventsSystem.onPointerDown(
 			{ 
 				entity: entity, 
 				opts: { 
 					button     : InputAction.IA_PRIMARY,
-					hoverText  : "Equip " + wearable.name || "Base Item",
+					hoverText  : hoverText,
 					maxDistance: 10
 				} 
 			},
 			() => {
+				if (blockedItem) return
 				console.log("ShopManager: Equip urn: " + wearable.urn)
 				_OutfitManager.EquipWearable(wearable)
 			}
@@ -398,3 +423,20 @@ class ShopManager {
 }
 
 export const _ShopManager = new ShopManager()
+
+
+
+function isBlockedItem(item: Wearable) {
+	// if the urn is in the blockedItemURNs array, return true
+	if (blockedItemURNs.includes(item.urn)) {
+		return true
+	}
+
+	if (item.creator) {	
+		if (blockedCreatorAddresses.includes(item.creator)) {
+			return true
+		}
+	}
+
+	return false
+}
