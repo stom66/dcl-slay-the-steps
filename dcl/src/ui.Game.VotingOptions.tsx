@@ -159,7 +159,7 @@ export function VotingOptionsUI() {
 				justifyContent: 'space-evenly',
 				alignSelf     : 'center',
 				flexShrink    : 1,
-				margin        : { bottom              : '35px' },
+				margin        : { bottom              : '35px', top: '-64px' },
 				display       : visibleVoting ? 'flex': 'none',
 				padding       : { top: 32, bottom: 32, left: 16, right: 16 },
 			}}
