@@ -7,6 +7,7 @@ import { ShopSlot, Wearable } from "./shopSlotData"
 import { _OutfitManager } from "./OutfitManager"
 import { ShopZone, shopZones } from "./shopZoneData"
 import { blockedCreatorAddresses, blockedItemURNs } from "./shopBlockedItems"
+import { FetchZoneItems } from "./utils"
 
 /**
  * Manages shop zones, their items, and UI interactions.
@@ -34,7 +35,7 @@ class ShopManager {
 		this.initializeZones()
 		this.createTriggerZones()
 		this.createShopUIs()
-		this.spawnDefaultItems()
+		this.SpawnAllZoneItems()
 	}
 
 	// MARK: - Zone Initialization
@@ -69,14 +70,14 @@ class ShopManager {
 			triggerAreaEventsSystem.onTriggerEnter(triggerEntity, (result) => {
 				if (result.trigger?.entity !== engine.PlayerEntity) return
 				console.log(`ShopManager: Player entered zone "${zone.key}"`)
-				//this.showUI(zone.key)
+				//this.showUI(zone)
 				_OutfitManager.ShowNPCMannequin()
 			})
 			
 			triggerAreaEventsSystem.onTriggerExit(triggerEntity, (result) => {
 				if (result.trigger?.entity !== engine.PlayerEntity) return
 				console.log(`ShopManager: Player exited zone "${zone.key}"`)
-				//this.hideUI(zone.key)
+				//this.hideUI(zone)
 				_OutfitManager.HideNPCMannequin()
 			})
 		})
@@ -128,8 +129,7 @@ class ShopManager {
 					} 
 				},
 				() => {
-					console.log(`ShopManager: Previous page for zone "${zone.key}"`)
-					this.previousPage(zone.key)
+					this.previousPage(zone)
 				}
 			)
 
@@ -151,8 +151,7 @@ class ShopManager {
 					} 
 				},
 				() => {
-					console.log(`ShopManager: Next page for zone "${zone.key}"`)
-					this.nextPage(zone.key)
+					this.nextPage(zone)
 				}
 			)
 
@@ -164,10 +163,10 @@ class ShopManager {
 	/**
 	 * Show the UI for a specific zone
 	 */
-	private showUI(zoneKey: string) {
-		const uiEntity = this.zoneUIs[zoneKey]
+	private showUI(zone: ShopZone) {
+		const uiEntity = this.zoneUIs[zone.key]
 		if (!uiEntity) {
-			console.error(`ShopManager: No UI entity found for zone "${zoneKey}"`)
+			console.error(`ShopManager: No UI entity found for zone "${zone.key}"`)
 			return
 		}
 		
@@ -176,16 +175,16 @@ class ShopManager {
 		if (transform) {
 			transform.scale = Vector3.One()
 		}
-		console.log(`ShopManager: Showing UI for zone "${zoneKey}"`)
+		console.log(`ShopManager: Showing UI for zone "${zone.key}"`)
 	}
 
 	/**
 	 * Hide the UI for a specific zone
 	 */
-	private hideUI(zoneKey: string) {
-		const uiEntity = this.zoneUIs[zoneKey]
+	private hideUI(zone: ShopZone) {
+		const uiEntity = this.zoneUIs[zone.key]
 		if (!uiEntity) {
-			console.error(`ShopManager: No UI entity found for zone "${zoneKey}"`)
+			console.error(`ShopManager: No UI entity found for zone "${zone.key}"`)
 			return
 		}
 		
@@ -194,7 +193,7 @@ class ShopManager {
 		if (transform) {
 			transform.scale = Vector3.Zero()
 		}
-		console.log(`ShopManager: Hiding UI for zone "${zoneKey}"`)
+		console.log(`ShopManager: Hiding UI for zone "${zone.key}"`)
 	}
 
 	// MARK: - Navigation
@@ -202,18 +201,20 @@ class ShopManager {
 	/**
 	 * Navigate to the next page of items for a zone
 	 */
-	private nextPage(zoneKey: string) {
-		this.zonePages[zoneKey]++
-		this.updateZoneItems(zoneKey)
+	private nextPage(zone: ShopZone) {
+		console.log(`ShopManager: NextPage: showing page ${zone.currentPage + 1} for zone "${zone.key}"`)
+		zone.currentPage++
+		this.updateZoneItems(zone)
 	}
 
 	/**
 	 * Navigate to the previous page of items for a zone
 	 */
-	private previousPage(zoneKey: string) {
-		if (this.zonePages[zoneKey] > 0) {
-			this.zonePages[zoneKey]--
-			this.updateZoneItems(zoneKey)
+	private previousPage(zone: ShopZone) {
+		console.log(`ShopManager: Previous: showing page ${zone.currentPage -1} for zone "${zone.key}"`)
+		if (zone.currentPage > -1) {
+			zone.currentPage--
+			this.updateZoneItems(zone)
 		}
 	}
 
@@ -222,86 +223,58 @@ class ShopManager {
 	/**
 	 * Update items in a zone by fetching new items from the API
 	 */
-	private async updateZoneItems(zoneKey: string) {
-		const zone = shopZones.find((z) => z.key === zoneKey)
-		if (!zone) {
-			console.error(`ShopManager: Couldn't find zone for key "${zoneKey}"`)
-			return
+	private async updateZoneItems(zone: ShopZone) {
+		console.log(`ShopManager: updateZoneItems: fetching items for zone "${zone.key}"`)
+		if (zone.currentPage == -1) {
+			this.ResetZoneToDefault(zone)
+		} else {
+			await FetchZoneItems(zone)
 		}
+		this.SpawnZoneItems(zone)
+	}
 
-		// Fetch new items from API
-		const url = this.buildAPIUrl(zoneKey)
-		if (!url) {
-			console.error(`ShopManager: Couldn't build API URL for zone "${zoneKey}"`)
-			return
-		}
-
-		try {
-			const response = await fetch(url)
-			const data = await response.json()
-			console.log(`ShopManager: Fetched ${data.data?.length || 0} items from API for zone "${zoneKey}"`)
-
-			// Remove existing items
-			this.removeZoneItems(zoneKey)
-
-			// Spawn new items
-			if (data.data && Array.isArray(data.data)) {
-				for (const [index, apiItem] of data.data.entries()) {
-					if (!zone.slots[index]) {
-						console.log(`ShopManager: No slot found at index ${index} for zone "${zoneKey}"`)
-						continue
-					}
-
-					zone.slots[index].currentWearable = {
-						bodyShapes     : apiItem.data?.wearable?.bodyShapes,
-						category       : apiItem.data?.wearable?.category,
-						contractAddress: apiItem.contractAddress,
-						creator        : apiItem.creator,
-						name           : apiItem.name,
-						rarity         : apiItem.rarity,
-						urn            : apiItem.urn,
-					} as Wearable
-
-					const itemEntity = this.spawnItem(zone.slots[index])
-					this.zoneItems[zoneKey].push(itemEntity)
-				}
-			}
-		} catch (error) {
-			console.error(`ShopManager: Failed to update items for zone "${zoneKey}":`, error)
+	private ResetZoneToDefault(zone: ShopZone) {
+		for (const slot of zone.slots) {
+			slot.currentWearable = undefined
 		}
 	}
 
 	/**
 	 * Remove all items from a zone
 	 */
-	private removeZoneItems(zoneKey: string) {
-		const items = this.zoneItems[zoneKey] || []
-		items.forEach((entity) => {
+	private removeZoneItems(zone: ShopZone) {
+		console.log(`ShopManager: removeZoneItems: removing items for zone "${zone.key}"`)
+		// Create a copy of the entities array and clear it immediately
+		// This prevents issues when new items are spawned before old ones are fully removed
+		const entitiesToRemove = [...zone.entities]
+		zone.entities.length = 0
+		
+		let counter = 0
+		entitiesToRemove.forEach((entity) => {
 			const transform = Transform.get(entity)
 			utils.tweens.startScaling(entity, transform.scale, Vector3.Zero(), 0.5, utils.InterpolationType.EASEINEXPO)
 			utils.timers.setTimeout(() => { engine.removeEntity(entity) }, 500)
+			counter++
 		})
-		this.zoneItems[zoneKey] = []
-		console.log(`ShopManager: Removed ${items.length} items from zone "${zoneKey}"`)
+		console.log(`ShopManager: Removed ${counter} items from zone "${zone.key}"`)
 	}
 
 	/**
 	 * Spawn default items for all zones using their default URNs
 	 */
-	private spawnDefaultItems() {
+	private SpawnAllZoneItems() {
 		console.log("ShopManager: Spawning default items for all zones")
 		
 		shopZones.forEach((zone: ShopZone) => {
-			this.spawnZoneDefaultItems(zone)
+			this.SpawnZoneItems(zone)
 		})
 	}
 
-	private spawnZoneDefaultItems(zone: ShopZone) {
-		this.removeZoneItems(zone.key)
+	private SpawnZoneItems(zone: ShopZone) {
+		this.removeZoneItems(zone)
 		zone.slots.forEach((slot) => {
-			slot.currentWearable = undefined
-			const itemEntity = this.spawnItem(slot)
-			this.zoneItems[zone.key].push(itemEntity)
+			//slot.currentWearable = undefined
+			zone.entities.push(this.spawnItem(slot))
 		})
 		console.log(`ShopManager: Spawned ${zone.slots.length} default items for zone "${zone.key}"`)
 	}
@@ -323,9 +296,7 @@ class ShopManager {
 
 		const wearable = slot.currentWearable ?? slot.defaultWearable
 
-
 		if (blockedItem) {
-			
 			// Add a gltf model showing an error 
 			GltfContainer.create(entity, {
 				src: `assets/models/error.${wearable.category}.gltf`,
@@ -333,7 +304,6 @@ class ShopManager {
 			})
 		} 
 		else {
-			
 			// Add a custom collider to ensure pointer works
 			GltfContainer.create(entity, {
 				src: `assets/models/avatarCollider.${wearable.category}.gltf`,
@@ -381,44 +351,6 @@ class ShopManager {
 		)
 
 		return entity
-	}
-
-
-	// MARK: - API Integration
-	
-	/**
-	 * Build the API URL for fetching items for a specific zone
-	 */
-	private buildAPIUrl(zoneKey: string): string | null {
-		const zone = shopZones.find((z) => z.key === zoneKey)
-		if (!zone) {
-			console.error(`ShopManager: Couldn't find zone for key "${zoneKey}"`)
-			return null
-		}
-
-		const pageSize = zone.slots.length || 1
-		const skip = (this.zonePages[zoneKey] || 0) * pageSize
-		
-		// Build URL parameters
-		const params: string[] = []
-		params.push(`skip=${skip}`)
-		params.push(`first=${pageSize}`) // API uses 'first' instead of 'limit'
-		params.push(`itemType=wearable`)
-		
-		// Handle category filtering
-		if (zone.wearableCategory) {
-			if (typeof zone.wearableCategory === 'string') {
-				params.push(`wearableCategory=${zone.wearableCategory}`)
-			} else if (Array.isArray(zone.wearableCategory)) {
-				zone.wearableCategory.forEach(category => {
-					params.push(`wearableCategory=${category}`)
-				})
-			}
-		}
-
-		const url = `https://marketplace-api.decentraland.org/v1/items?${params.join('&')}`
-		console.log(`ShopManager: Built API URL for zone "${zoneKey}": ${url}`)
-		return url
 	}
 }
 

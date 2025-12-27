@@ -1,5 +1,6 @@
 import { Quaternion, Vector3 } from "@dcl/sdk/math";
 import { ShopSlot, shopSlots } from "./shopSlotData";
+import { Entity } from "@dcl/sdk/ecs";
 
 
 
@@ -7,6 +8,8 @@ export type ShopZone = {
 	key              : string
 	title            : string
 	position         : Vector3
+	currentPage      : number,
+	entities         : Entity[],
 	scale?           : Vector3,
 	uiOffset         : Vector3,
 	uiRotation       : Quaternion,
@@ -17,14 +20,16 @@ export type ShopZone = {
 
 export const shopZones: ShopZone[] = [
 	{ // Shoes
-		key       : "shoes",
-		title     : "Shoes",
+		key             : "shoes",
+		title           : "Shoes",
+		currentPage     : -1,
+		entities        : [],
 		wearableCategory: "feet",
-		position  : Vector3.create(2.946, 0.086, 16.0),
-		scale     : Vector3.create(7.43, 7.43, 7.43),
-		uiOffset  : Vector3.create(3.017, 1.788, 16.001),
-		uiRotation: Quaternion.fromEulerDegrees(0, 90.0, 0),
-		slots     : [
+		position        : Vector3.create(2.946, 0.086, 16.0),
+		scale           : Vector3.create(7.43, 7.43, 7.43),
+		uiOffset        : Vector3.create(3.017, 1.788, 16.001),
+		uiRotation      : Quaternion.fromEulerDegrees(0, 90.0, 0),
+		slots           : [
 			shopSlots["shoes_0"],
 			shopSlots["shoes_1"],
 			shopSlots["shoes_2"],
@@ -45,14 +50,16 @@ export const shopZones: ShopZone[] = [
 	},
 	
 	{ // Outfits
-		key       : "outfits",
-		title     : "Outfits",
+		key             : "outfits",
+		title           : "Outfits",
+		currentPage     : -1,
+		entities        : [],
 		wearableCategory: "skin",
-		position  : Vector3.create(4.404, 0.1, 27.539),
-		scale     : Vector3.create(14.408, 14.408, 14.408),
-		uiOffset  : Vector3.create(4.366, 4.078, 27.578),
-		uiRotation: Quaternion.fromEulerDegrees(0, 135.0, 0),
-		slots     : [
+		position        : Vector3.create(4.404, 0.1, 27.539),
+		scale           : Vector3.create(14.408, 14.408, 14.408),
+		uiOffset        : Vector3.create(4.366, 4.078, 27.578),
+		uiRotation      : Quaternion.fromEulerDegrees(0, 135.0, 0),
+		slots           : [
 			shopSlots["outfit_0"],
 			shopSlots["outfit_1"],
 			shopSlots["outfit_2"],
@@ -61,14 +68,16 @@ export const shopZones: ShopZone[] = [
 	},
 	
 	{ // Upper body
-		key       : "upperBody",
-		title     : "Upper Body",
+		key             : "upperBody",
+		title           : "Upper Body",
+		currentPage     : -1,
+		entities        : [],
 		wearableCategory: "upper_body",
-		position  : Vector3.create(27.35, 0.1, 27.5),
-		scale     : Vector3.create(14.62, 14.62, 14.62),
-		uiOffset  : Vector3.create(25.854, 4.239, 25.809),
-		uiRotation: Quaternion.fromEulerDegrees(0, 225, 0),
-		slots     : [
+		position        : Vector3.create(27.35, 0.1, 27.5),
+		scale           : Vector3.create(14.62, 14.62, 14.62),
+		uiOffset        : Vector3.create(25.854, 4.239, 25.809),
+		uiRotation      : Quaternion.fromEulerDegrees(0, 225, 0),
+		slots           : [
 			shopSlots["upperBody_0"],
 			shopSlots["upperBody_1"],
 			shopSlots["upperBody_2"],
@@ -83,14 +92,16 @@ export const shopZones: ShopZone[] = [
 	},
 	
 	{ // Lower body
-		key       : "lowerBody",
-		title     : "Lower Body",
+		key             : "lowerBody",
+		title           : "Lower Body",
+		currentPage     : -1,
+		entities        : [],
 		wearableCategory: "lower_body",
-		position  : Vector3.create(27.26, 0.1, 16.0),
-		scale     : Vector3.create(8.201, 8.201, 8.201),
-		uiOffset  : Vector3.create(27.26, 2.488, 16.0),
-		uiRotation: Quaternion.fromEulerDegrees(0, 270, 0),
-		slots     : [
+		position        : Vector3.create(27.26, 0.1, 16.0),
+		scale           : Vector3.create(8.201, 8.201, 8.201),
+		uiOffset        : Vector3.create(27.26, 2.488, 16.0),
+		uiRotation      : Quaternion.fromEulerDegrees(0, 270, 0),
+		slots           : [
 			shopSlots["lowerBody_0"],
 			shopSlots["lowerBody_1"],
 			shopSlots["lowerBody_2"],
@@ -99,14 +110,16 @@ export const shopZones: ShopZone[] = [
 	},
 	
 	{ // Head (Helmets)
-		key       : "head",
-		title     : "Head",
+		key             : "head",
+		title           : "Head",
+		currentPage     : -1,
+		entities        : [],
 		wearableCategory: ["helmet"], // all cats: "head", "eyes", "earring", "helmet", "mask", "top_head", "tiara"
-		position  : Vector3.create(27.35, 0.1, 4.5),
-		scale     : Vector3.create(14.62, 14.62, 14.62),
-		uiOffset  : Vector3.create(25.854, 0.4, 6.191),
-		uiRotation: Quaternion.fromEulerDegrees(0, 315, 0),
-		slots     : [
+		position        : Vector3.create(27.35, 0.1, 4.5),
+		scale           : Vector3.create(14.62, 14.62, 14.62),
+		uiOffset        : Vector3.create(25.854, 0.4, 6.191),
+		uiRotation      : Quaternion.fromEulerDegrees(0, 315, 0),
+		slots           : [
 			shopSlots["head_0"],
 			shopSlots["head_1"],
 			shopSlots["head_2"],
@@ -116,14 +129,16 @@ export const shopZones: ShopZone[] = [
 	},
 	
 	{ // Earrings
-		key       : "earrings",
-		title     : "Earrings",
+		key             : "earrings",
+		title           : "Earrings",
+		currentPage     : -1,
+		entities        : [],
 		wearableCategory: ["earring"],
-		position  : Vector3.create(27.35, 0.1, 4.5),
-		scale     : Vector3.create(14.62, 14.62, 14.62),
-		uiOffset  : Vector3.create(25.854, 3.75, 6.191),
-		uiRotation: Quaternion.fromEulerDegrees(0, 315, 0),
-		slots     : [
+		position        : Vector3.create(27.35, 0.1, 4.5),
+		scale           : Vector3.create(14.62, 14.62, 14.62),
+		uiOffset        : Vector3.create(25.854, 3.75, 6.191),
+		uiRotation      : Quaternion.fromEulerDegrees(0, 315, 0),
+		slots           : [
 			shopSlots["head_5"],
 			shopSlots["head_6"],
 			shopSlots["head_7"],
@@ -133,14 +148,16 @@ export const shopZones: ShopZone[] = [
 	},
 	
 	{ // Hair
-		key       : "hair",
-		title     : "Hair",
+		key             : "hair",
+		title           : "Hair",
+		currentPage     : -1,
+		entities        : [],
 		wearableCategory: ["hair"],
-		position  : Vector3.create(5.548, 0.0, 5.636),
-		scale     : Vector3.create(7.906, 7.906, 7.906),
-		uiOffset  : Vector3.create(3.614, 3.25, 3.702),
-		uiRotation: Quaternion.fromEulerDegrees(0, 45, 0),
-		slots     : [
+		position        : Vector3.create(5.548, 0.0, 5.636),
+		scale           : Vector3.create(7.906, 7.906, 7.906),
+		uiOffset        : Vector3.create(3.614, 3.25, 3.702),
+		uiRotation      : Quaternion.fromEulerDegrees(0, 45, 0),
+		slots           : [
 			shopSlots["hair_0"],
 			shopSlots["hair_1"],
 			shopSlots["hair_2"],

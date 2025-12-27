@@ -4,6 +4,7 @@ import { getPlayer } from "@dcl/sdk/players"
 
 import * as utils from '@dcl-sdk/utils'
 import { Wearable } from "./shopSlotData"
+import { ShopZone, shopZones } from "./shopZoneData"
 
 
 // MARK: GetUTCTimestampMillis
@@ -76,6 +77,87 @@ export async function LoadUserData(
 	console.log("OutfitManager: loadUserData: User data never became available")
 	return
 }
+
+export async function FetchZoneItems( zone: ShopZone ) {
+	console.log(`ShopManager: FetchZoneItems: fetching items for zone "${zone.key}, page: ${zone.currentPage}, limit: ${zone.slots.length}"`)
+
+	// Fetch new items from API
+	const pageSize = zone.slots.length || 1
+	const skip     = (zone.currentPage || 0) * pageSize
+	const url      = buildAPIUrl(zone, skip, pageSize)
+	if (!url) {
+		console.error(`ShopManager: Couldn't build API URL for zone "${zone.key}"`)
+		return
+	}
+
+	try {
+		const response = await fetch(url)
+		const data = await response.json()
+		console.log(`ShopManager: Fetched ${data.data?.length || 0} items from API for zone "${zone.key}"`)
+
+		// Create data for new item
+		if (data.data && Array.isArray(data.data)) {
+			for (const [index, apiItem] of data.data.entries()) {
+				if (!zone.slots[index]) {
+					console.log(`ShopManager: No slot found at index ${index} for zone "${zone.key}"`)
+					continue
+				}
+
+				zone.slots[index].currentWearable = {
+					bodyShapes     : apiItem.data?.wearable?.bodyShapes,
+					category       : apiItem.data?.wearable?.category,
+					contractAddress: apiItem.contractAddress,
+					creator        : apiItem.creator,
+					name           : apiItem.name,
+					rarity         : apiItem.rarity,
+					urn            : apiItem.urn,
+				} as Wearable
+
+				//const itemEntity = this.spawnItem(zone.slots[index])
+				//this.zoneItems[zoneKey].push(itemEntity)
+			}
+		}
+
+		return true
+	} catch (error) {
+		console.error(`ShopManager: Failed to update items for zone "${zone.key}":`, error)
+	}
+}
+
+
+
+/**
+ * Build the API URL for fetching items for a specific zone
+ */
+function buildAPIUrl(
+	zone : ShopZone,
+	skip : number = 0,
+	limit: number = 1
+): string | null {
+	
+	// Build URL parameters
+	const params: string[] = []
+	params.push(`skip=${skip}`)
+	params.push(`first=${limit}`) // API uses 'first' instead of 'limit'
+	params.push(`itemType=wearable`)
+	
+	// Handle category filtering
+	if (zone.wearableCategory) {
+		if (typeof zone.wearableCategory === 'string') {
+			params.push(`wearableCategory=${zone.wearableCategory}`)
+		} else if (Array.isArray(zone.wearableCategory)) {
+			zone.wearableCategory.forEach(category => {
+				params.push(`wearableCategory=${category}`)
+			})
+		}
+	}
+
+	const url = `https://marketplace-api.decentraland.org/v1/items?${params.join('&')}`
+	console.log(`ShopManager: Built API URL for zone "${zone.key}": ${url}`)
+	return url
+}
+
+
 
 // Fetch a single wearable's metadata
 export async function GetWearableData(urn: string): Promise<Wearable> {
