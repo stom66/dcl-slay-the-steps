@@ -57,26 +57,25 @@ class OutfitManager {
 			}
 
 			// Fetch wearable data for each URN
-			const wearables: Wearable[] = []
+			this.playerWearables = []
 			const wearableUrns = this.userData.wearables
 			
 			for (const urn of wearableUrns) {
 				const data = await GetWearableData(urn)
-				wearables.push(data)
+				this.playerWearables.push(data)
 				//console.log("OutfitManager: InitUserWearables: got wearable data for", urn, ": ", JSON.stringify(data))
 			}
 
 			// Update singleton state
-			this.playerWearables = wearables
 			this.npcBodyShape = this.userData.avatar?.bodyShapeUrn || "urn:decentraland:off-chain:base-avatars:BaseMale"
-			this.npcWearables = wearables.map(w => ({ ...w }))
+			this.npcWearables = this.playerWearables.map(w => ({ ...w }))
 			this.isWearableDataLoaded = true
 
 			console.log("OutfitManager: InitUserWearables: npc body shape", this.npcBodyShape)
 
 			console.log(
 				"OutfitManager InitUserWearables: got",
-				wearables.length,
+				this.playerWearables.length,
 				"wearables for the player"
 			)
 		} catch (err) {
@@ -107,6 +106,7 @@ class OutfitManager {
 
 		// Rotate buttons to face the camera (only around Y axis)
 		const rotateButtonToFaceCamera = (buttonEntity: Entity) => {
+			if (!this.runUpdate) return
 			const buttonWorldPos = utils.getWorldPosition(buttonEntity)
 			const direction = Vector3.subtract(cameraPosition, buttonWorldPos)
 			
@@ -130,11 +130,8 @@ class OutfitManager {
 		
 		}
 
-		if (!this.runUpdate) return
 		rotateButtonToFaceCamera(this.npcBtnReset)
-		if (!this.runUpdate) return
 		rotateButtonToFaceCamera(this.npcBtnCopy)
-		if (!this.runUpdate) return
 		rotateButtonToFaceCamera(this.npcBtnSwap)
 	}
 
