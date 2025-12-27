@@ -15,6 +15,4 @@ export const blockedCreatorAddresses = [
 ]
 
 // An array of blocked keywords - applies to item urn, title, and description
-export const blockedKeywords = [
-	""
-]
+export const blockedKeywords = ["blockedwordexample"]
