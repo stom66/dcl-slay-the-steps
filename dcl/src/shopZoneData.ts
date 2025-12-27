@@ -25,9 +25,9 @@ export const shopZones: ShopZone[] = [
 		currentPage     : -1,
 		entities        : [],
 		wearableCategory: "feet",
-		position        : Vector3.create(2.946, 0.086, 16.0),
+		position        : Vector3.create(2.946, 0.249, 16.0),
 		scale           : Vector3.create(7.43, 7.43, 7.43),
-		uiOffset        : Vector3.create(3.017, 1.788, 16.001),
+		uiOffset        : Vector3.create(3.017, 1.951, 16.001),
 		uiRotation      : Quaternion.fromEulerDegrees(0, 90.0, 0),
 		slots           : [
 			shopSlots["shoes_0"],
