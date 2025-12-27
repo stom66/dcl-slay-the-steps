@@ -82,6 +82,7 @@ export async function GetWearableData(urn: string): Promise<Wearable> {
 	const defaultData = {
 		bodyShapes     : [],
 		category       : "",
+		creatorAddress : "",
 		contractAddress: "",
 		name           : "",
 		rarity         : "",
@@ -117,6 +118,7 @@ export async function GetWearableData(urn: string): Promise<Wearable> {
 					bodyShapes     : entry.data.wearable.bodyShapes ?? [],
 					category       : entry.data.wearable.category ?? "",
 					contractAddress: entry.contractAddress ?? "",
+					creatorAddress : entry.creatorAddress ?? "",
 					name           : entry.name ?? "",
 					rarity         : entry.rarity ?? "",
 					urn            : urn,
