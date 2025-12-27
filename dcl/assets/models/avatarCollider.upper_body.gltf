@@ -8,8 +8,7 @@
 		{
 			"name":"Scene",
 			"nodes":[
-				0,
-				1
+				0
 			]
 		}
 	],
@@ -17,15 +16,6 @@
 		{
 			"mesh":0,
 			"name":"upper_body.001._collider_box",
-			"translation":[
-				0,
-				1.2910032272338867,
-				-0.10000000149011612
-			]
-		},
-		{
-			"mesh":1,
-			"name":"upper_body.001._collider_box.001",
 			"translation":[
 				0,
 				1.2910032272338867,
@@ -42,19 +32,6 @@
 						"POSITION":0,
 						"NORMAL":1,
 						"TEXCOORD_0":2
-					},
-					"indices":3
-				}
-			]
-		},
-		{
-			"name":"Cube.212",
-			"primitives":[
-				{
-					"attributes":{
-						"POSITION":4,
-						"NORMAL":5,
-						"TEXCOORD_0":6
 					},
 					"indices":3
 				}
@@ -95,34 +72,6 @@
 			"componentType":5123,
 			"count":36,
 			"type":"SCALAR"
-		},
-		{
-			"bufferView":4,
-			"componentType":5126,
-			"count":24,
-			"max":[
-				0.3714562654495239,
-				0.37317007780075073,
-				0.25
-			],
-			"min":[
-				-0.3714562654495239,
-				-0.37317007780075073,
-				-0.25
-			],
-			"type":"VEC3"
-		},
-		{
-			"bufferView":5,
-			"componentType":5126,
-			"count":24,
-			"type":"VEC3"
-		},
-		{
-			"bufferView":6,
-			"componentType":5126,
-			"count":24,
-			"type":"VEC2"
 		}
 	],
 	"bufferViews":[
@@ -149,29 +98,11 @@
 			"byteLength":72,
 			"byteOffset":768,
 			"target":34963
-		},
-		{
-			"buffer":0,
-			"byteLength":288,
-			"byteOffset":840,
-			"target":34962
-		},
-		{
-			"buffer":0,
-			"byteLength":288,
-			"byteOffset":1128,
-			"target":34962
-		},
-		{
-			"buffer":0,
-			"byteLength":192,
-			"byteOffset":1416,
-			"target":34962
 		}
 	],
 	"buffers":[
 		{
-			"byteLength":1608,
+			"byteLength":840,
 			"uri":"avatarCollider.upper_body.bin"
 		}
 	]
