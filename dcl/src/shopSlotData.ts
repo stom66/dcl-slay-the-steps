@@ -20,7 +20,7 @@ export type Wearable = {
 	contractAddress?: string,   // These are all "optional", as the built-in items don't have them
 	name?           : string,   // These are all "optional", as the built-in items don't have them
 	rarity?         : string,   // These are all "optional", as the built-in items don't have them
-	creatorAddress? : string,   // These are all "optional", as the built-in items don't have them
+	creator?        : string,   // These are all "optional", as the built-in items don't have them
 }
 
 // Big list of the items to be shown in the shop
