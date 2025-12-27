@@ -6,7 +6,7 @@ import * as utils from '@dcl-sdk/utils'
 import { ShopSlot, Wearable } from "./shopSlotData"
 import { _OutfitManager } from "./OutfitManager"
 import { ShopZone, shopZones } from "./shopZoneData"
-import { blockedCreatorAddresses, blockedItemURNs } from "./shopBlockedItems"
+import { blockedCreatorAddresses, blockedItemURNs, blockedKeywords } from "./shopBlockedItems"
 import { FetchZoneItems } from "./utils"
 
 /**
@@ -368,6 +368,21 @@ function isBlockedItem(item: Wearable) {
 		if (blockedCreatorAddresses.includes(item.creator)) {
 			return true
 		}
+	}
+
+	// Check both the item name, and the item urn for any blocked keywords
+	// If any of the keywords are found, return true
+	
+	if (blockedKeywords.some(keyword => item.name?.toLowerCase().includes(keyword.toLowerCase()))) {
+		return true
+	}
+
+	if (blockedKeywords.some(keyword => item.urn?.toLowerCase().includes(keyword.toLowerCase()))) {
+		return true
+	}
+
+	if (blockedKeywords.some(keyword => item.description?.toLowerCase().includes(keyword.toLowerCase()))) {
+		return true
 	}
 
 	return false

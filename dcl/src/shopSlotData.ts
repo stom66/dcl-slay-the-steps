@@ -14,13 +14,14 @@ export type ShopSlot = {
 }
 
 export type Wearable = {
-	urn             : string,
-	bodyShapes?     : string[], // These are all "optional", as the built-in items don't have them
-	category?       : string,   // These are all "optional", as the built-in items don't have them
-	contractAddress?: string,   // These are all "optional", as the built-in items don't have them
-	name?           : string,   // These are all "optional", as the built-in items don't have them
-	rarity?         : string,   // These are all "optional", as the built-in items don't have them
-	creator?        : string,   // These are all "optional", as the built-in items don't have them
+	urn            : string,
+	bodyShapes     : string[], // These are all "optional", as the built-in items don't have them
+	category       : string,   // 
+	contractAddress: string,   // 
+	name           : string,   // 
+	rarity         : string,   // 
+	creator?       : string,   // Optional, added later, not yet added to the default items
+	description?   : string,   // Optional, added later, not yet added to the default items
 }
 
 // Big list of the items to be shown in the shop

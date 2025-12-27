@@ -96,6 +96,7 @@ export async function FetchZoneItems( zone: ShopZone ) {
 		console.log(`ShopManager: Fetched ${data.data?.length || 0} items from API for zone "${zone.key}"`)
 
 		// Create data for new item
+		// An example of the API response: https://marketplace-api.decentraland.org/v1/items?skip=5&first=5&itemType=wearable&wearableCategory=helmet
 		if (data.data && Array.isArray(data.data)) {
 			for (const [index, apiItem] of data.data.entries()) {
 				if (!zone.slots[index]) {
@@ -106,6 +107,7 @@ export async function FetchZoneItems( zone: ShopZone ) {
 				zone.slots[index].currentWearable = {
 					bodyShapes     : apiItem.data?.wearable?.bodyShapes,
 					category       : apiItem.data?.wearable?.category,
+					description    : apiItem.data?.wearable?.description,
 					contractAddress: apiItem.contractAddress,
 					creator        : apiItem.creator,
 					name           : apiItem.name,
@@ -172,9 +174,6 @@ export async function GetWearableData(urn: string): Promise<Wearable> {
 	}
 
 	try {
-
-
-
 		// Example: urn:decentraland:matic:collections-v2:0xf55afae51e08920469fcfd05c6d1c9905370e3d1:5:526561458342785933489590138418352161594475477002745556271554887684 :  {"bodyShapes":[],"category":"","contractAddress":"","name":"","rarity":"","urn":"urn:decentraland:matic:collections-v2:0xf55afae51e08920469fcfd05c6d1c9905370e3d1:5:526561458342785933489590138418352161594475477002745556271554887684"}
 		// First, break the urn down into it's parts, split by ":". The 5th part of the urn is the contract id
 		// The 6th part of the urn is the item id
@@ -193,6 +192,7 @@ export async function GetWearableData(urn: string): Promise<Wearable> {
 		//console.log("OutfitManager: GetWearableData: got wearable data for", urn, JSON.stringify(json))
 
 		// At this point we get a table of data back with n entries. We need to cycle through those entries and find the one with the matching itemId value
+		// An example of the API response: https://marketplace-api.decentraland.org/v1/items?contractAddress=0x9889b023641eab84d0831d21ea89184eba6c1c16
 		for (const entry of json.data) {
 			if (entry.itemId === itemId) {
 
@@ -200,6 +200,7 @@ export async function GetWearableData(urn: string): Promise<Wearable> {
 					bodyShapes     : entry.data.wearable.bodyShapes ?? [],
 					category       : entry.data.wearable.category ?? "",
 					contractAddress: entry.contractAddress ?? "",
+					description    : entry.data.wearable.description ?? "",
 					creator        : entry.creator ?? "",
 					name           : entry.name ?? "",
 					rarity         : entry.rarity ?? "",
