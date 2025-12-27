@@ -148,87 +148,99 @@ function BuildVotingOptions() {
 
 // MARK: Main GameUI
 export function VotingOptionsUI() {
-	return (			
+	return (
 		<UiEntity
-			key={`ui_Voting_root`}
+			key={`ui_VotingOptions_root`}
 			uiTransform={{
-				width         : 420,
-				height        : 'auto',
+				width         : '100%',
+				height        : '100%',
 				flexDirection : 'column',
 				alignItems    : 'center',
-				justifyContent: 'space-evenly',
-				alignSelf     : 'center',
-				flexShrink    : 1,
-				margin        : { bottom              : '35px', top: '-64px' },
-				display       : visibleVoting ? 'flex': 'none',
-				padding       : { top: 32, bottom: 32, left: 16, right: 16 },
-			}}
-			uiBackground={{
-				texture: {
-					src: "assets/images/ui/bg-square-border.png"
-				},
-				textureMode: "nine-slices",
-				textureSlices: {
-					top   : 0.5,
-					bottom: 0.5,
-					left  : 0.5,
-					right : 0.5
-				}
-
+				justifyContent: 'center',
+				positionType  : "absolute",
 			}}
 		>
 			<UiEntity
-				key={`ui_Voting_close`}
+				key={`ui_VotingOptions_body`}
 				uiTransform={{
-					width         : 48,
-					height        : 48,
-					positionType  : "absolute",
-					position      : { top: -8, right: -8 },
-					display       : "flex",
-					alignItems    : "center",
-					justifyContent: "center",
+					width         : 420,
+					height        : 'auto',
+					flexDirection : 'column',
+					alignItems    : 'center',
+					justifyContent: 'space-evenly',
+					alignSelf     : 'center',
+					flexShrink    : 1,
+					margin        : { bottom              : '35px', top: '-64px' },
+					display       : visibleVoting ? 'flex': 'none',
+					padding       : { top: 32, bottom: 32, left: 16, right: 16 },
 				}}
 				uiBackground={{
 					texture: {
-						src: "assets/images/ui/icon-circle.png"
+						src: "assets/images/ui/bg-square-border.png"
 					},
-					textureMode: "stretch"
+					textureMode: "nine-slices",
+					textureSlices: {
+						top   : 0.5,
+						bottom: 0.5,
+						left  : 0.5,
+						right : 0.5
+					}
+
 				}}
 			>
-				<Button
-					key={`ui_Voting_close_button`}
+				<UiEntity
+					key={`ui_VotingOptions_close_icon`}
 					uiTransform={{
-						width : "100%",
-						height: "100%",
+						width         : 48,
+						height        : 48,
+						positionType  : "absolute",
+						position      : { top: -8, right: -8 },
+						display       : "flex",
+						alignItems    : "center",
+						justifyContent: "center",
 					}}
 					uiBackground={{
 						texture: {
-							src: "assets/images/ui/icon-close.png"
+							src: "assets/images/ui/icon-circle.png"
 						},
-						textureMode: "center",
-						color: Color4.fromHexString("#D89130")
+						textureMode: "stretch"
 					}}
-					value=""
-					onMouseUp={() => HideVotingOptions()}
+				>
+					<Button
+						key={`ui_VotingOptions_close_button`}
+						uiTransform={{
+							width : "100%",
+							height: "100%",
+						}}
+						uiBackground={{
+							texture: {
+								src: "assets/images/ui/icon-close.png"
+							},
+							textureMode: "center",
+							color: Color4.fromHexString("#D89130")
+						}}
+						value=""
+						onMouseUp={() => HideVotingOptions()}
+					/>
+				</UiEntity>
+				<UiEntity
+					key={`ui_VotingOptions_header`}
+					uiTransform={{
+						width    : 240,
+						height   : 48,
+						alignSelf: "center",
+						margin   : { bottom: 16 },
+					}}
+					uiBackground={{
+						texture: {
+							src: "assets/images/ui/text-voting.png"
+						},
+						textureMode: "stretch"
+					}}
 				/>
-			</UiEntity>
-			<UiEntity
-				key={`ui_Voting_header`}
-				uiTransform={{
-					width    : 240,
-					height   : 48,
-					alignSelf: "center",
-					margin   : { bottom: 16 },
-				}}
-				uiBackground={{
-					texture: {
-						src: "assets/images/ui/text-voting.png"
-					},
-					textureMode: "stretch"
-				}}
-			/>
 
-			{votingOptions}
+				{votingOptions}
+			</UiEntity>
 		</UiEntity>
 	)
 }

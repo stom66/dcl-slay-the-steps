@@ -172,6 +172,7 @@ export function PlayerListUI() {
 			}}
 		>
 			<UiEntity
+				key={`ui_PlayerList_body`}
 				uiTransform={{
 					width         : 90,
 					height        : 60,
@@ -197,6 +198,7 @@ export function PlayerListUI() {
 			>
 
 				<UiEntity
+					key={`ui_PlayerList_icon`}
 					uiTransform={{
 						width : 75,
 						height: 50,

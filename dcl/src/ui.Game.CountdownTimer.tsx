@@ -17,42 +17,53 @@ export function HideCountdownTimer() {
 
 // MARK: Main GameUI
 export function CountdownTimerUI() {
-	return (			<UiEntity
-		key={`ui_CountdownTimer_root`}
-		uiTransform={{
-			width         : 340,
-			height        : 120,
-			flexShrink    : 0,
-			flexDirection : 'row',
-			alignItems    : 'center',
-			justifyContent: 'center',
-			margin        : { top: '35px' },
-			display       : visibleCountdownTimer ? 'flex' : 'none'
-		}}
-		uiBackground={{
-			texture: {
-				src: "assets/images/ui/bg-countdown.png"
-			},
-			textureMode: "stretch",
-
-		}}
-	>
+	return (
 		<UiEntity
-			key={`ui_CountdownTimer_value`}
+			key={`ui_CountdownTimer_root`}
 			uiTransform={{
-				width : 128,
-				height: 64,
-				margin: { right: 42 },
+				width         : '100%',
+				height        : '100%',
+				flexDirection : 'column',
+				alignItems    : 'center',
+				justifyContent: 'flex-start',
+				positionType  : "absolute",
 			}}
-			uiText={{
-				value    : (_GameManager?.countdownValue ?? 0).toString() == "0" ? "GO!" : (_GameManager?.countdownValue ?? 0).toString(),
-				fontSize : 64,
-				textAlign: "middle-center",
-				color    : Color4.White()
-			}}
-		/>
+		>
+			<UiEntity
+				key={`ui_CountdownTimer_body`}
+				uiTransform={{
+					width         : 340,
+					height        : 120,
+					flexShrink    : 0,
+					flexDirection : 'row',
+					alignItems    : 'center',
+					justifyContent: 'center',
+					margin        : { top: '35px' },
+					display       : visibleCountdownTimer ? 'flex' : 'none'
+				}}
+				uiBackground={{
+					texture: {
+						src: "assets/images/ui/bg-countdown.png"
+					},
+					textureMode: "stretch",
 
-
-	</UiEntity>
+				}}
+			>
+				<UiEntity
+					key={`ui_CountdownTimer_value`}
+					uiTransform={{
+						width : 128,
+						height: 64,
+						margin: { right: 42 },
+					}}
+					uiText={{
+						value    : (_GameManager?.countdownValue ?? 0).toString() == "0" ? "GO!" : (_GameManager?.countdownValue ?? 0).toString(),
+						fontSize : 64,
+						textAlign: "middle-center",
+						color    : Color4.White()
+					}}
+				/>
+			</UiEntity>
+		</UiEntity>
 	)
 }
