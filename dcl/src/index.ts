@@ -1,5 +1,5 @@
 import { setupUi }  from './ui'
-import { ShowWarning } from './ui.Game.Warning'
+import { ShowHowToPlay } from './ui.Game.HowToPlay'
 
 import { _CameraController } from './CameraController'
 import { _GameManager } from './GameManager'
@@ -9,6 +9,7 @@ import { _SoundManager } from './SoundManager'
 import { _StageController } from './StageController'
 
 import { SetupLights } from './Lights'
+
 
 export function main() {
 	_CameraController.init()
@@ -20,4 +21,6 @@ export function main() {
 
 	SetupLights()
 	setupUi()
+
+	ShowHowToPlay()
 }
