@@ -75,7 +75,7 @@ export const shopZones: ShopZone[] = [
 		wearableCategory: "upper_body",
 		position        : Vector3.create(27.35, 0.1, 27.5),
 		scale           : Vector3.create(14.62, 14.62, 14.62),
-		uiOffset        : Vector3.create(25.854, 4.239, 25.809),
+		uiOffset        : Vector3.create(25.854, 3.75, 25.809),
 		uiRotation      : Quaternion.fromEulerDegrees(0, 225, 0),
 		slots           : [
 			shopSlots["upperBody_0"],
