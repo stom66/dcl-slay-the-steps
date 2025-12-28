@@ -37,11 +37,13 @@ export class GameSettings {
 	static URL_WEARABLE_DATA_API      = "https://marketplace-api.decentraland.org/v1/items"
 
 	static COUNTDOWN_DURATION         = IS_DEBUG ? 8 : 60
-	static ROUND_DURATION_PER_PLAYER  = IS_DEBUG ? 18 : 18
+	static ROUND_DURATION_PER_PLAYER  = IS_DEBUG ? 18 : 20
 	static ROUND_START_DELAY          = IS_DEBUG ? 4 : 4 // Delay before the round starts
+	static ROUND_INTERVAL             = IS_DEBUG ? 2 : 2 // Interval between players, MUST be longer than the ROUND_START_DELAY
 	static VOTING_DURATION            = 10
 	static GAME_ENDED_DURATION        = 10
 	static UTC_UPDATE_INTERVAL        = IS_DEBUG ? 10 : 30
+	static YOU_ARE_NEXT_PREEMPT_TIME  = IS_DEBUG ? 3 : 3 // How far in advance of the players turn shoud we show the message letting them know they are next
 
 	static NPC_SPAWN_SCALE            = Vector3.create(1, 1, 1)
 	static NPC_SPAWN_ROTATION         = Quaternion.fromEulerDegrees(0, 180, 0)
