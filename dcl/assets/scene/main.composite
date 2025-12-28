@@ -126,7 +126,55 @@
           "json": {
             "states": [
               {
-                "clip": "stairs_sides_collider",
+                "clip": "pivot.mirror.railings",
+                "playing": false,
+                "weight": 1,
+                "speed": 1,
+                "loop": false,
+                "shouldReset": false
+              },
+              {
+                "clip": "Empty.001",
+                "playing": false,
+                "weight": 1,
+                "speed": 1,
+                "loop": false,
+                "shouldReset": false
+              },
+              {
+                "clip": "Empty.002",
+                "playing": false,
+                "weight": 1,
+                "speed": 1,
+                "loop": false,
+                "shouldReset": false
+              },
+              {
+                "clip": "Empty.003",
+                "playing": false,
+                "weight": 1,
+                "speed": 1,
+                "loop": false,
+                "shouldReset": false
+              },
+              {
+                "clip": "Empty.004",
+                "playing": false,
+                "weight": 1,
+                "speed": 1,
+                "loop": false,
+                "shouldReset": false
+              },
+              {
+                "clip": "Empty.005",
+                "playing": false,
+                "weight": 1,
+                "speed": 1,
+                "loop": false,
+                "shouldReset": false
+              },
+              {
+                "clip": "Empty.006",
                 "playing": false,
                 "weight": 1,
                 "speed": 1,
@@ -142,7 +190,7 @@
                 "shouldReset": false
               },
               {
-                "clip": "stage_collider_box",
+                "clip": "ceiling._collider_box",
                 "playing": false,
                 "weight": 1,
                 "speed": 1,
@@ -151,6 +199,62 @@
               },
               {
                 "clip": "stage_collider",
+                "playing": false,
+                "weight": 1,
+                "speed": 1,
+                "loop": false,
+                "shouldReset": false
+              },
+              {
+                "clip": "stage_collider_box",
+                "playing": false,
+                "weight": 1,
+                "speed": 1,
+                "loop": false,
+                "shouldReset": false
+              },
+              {
+                "clip": "stairs._collider",
+                "playing": false,
+                "weight": 1,
+                "speed": 1,
+                "loop": false,
+                "shouldReset": false
+              },
+              {
+                "clip": "center.podium._collider",
+                "playing": false,
+                "weight": 1,
+                "speed": 1,
+                "loop": false,
+                "shouldReset": false
+              },
+              {
+                "clip": "center.podium.small._collider",
+                "playing": false,
+                "weight": 1,
+                "speed": 1,
+                "loop": false,
+                "shouldReset": false
+              },
+              {
+                "clip": "gameHost.podium.base._collider",
+                "playing": false,
+                "weight": 1,
+                "speed": 1,
+                "loop": false,
+                "shouldReset": false
+              },
+              {
+                "clip": "gamehost.podium._collider",
+                "playing": false,
+                "weight": 1,
+                "speed": 1,
+                "loop": false,
+                "shouldReset": false
+              },
+              {
+                "clip": "salon.podium._collider",
                 "playing": false,
                 "weight": 1,
                 "speed": 1,
@@ -486,7 +590,7 @@
                 "shouldReset": false
               },
               {
-                "clip": "wall_001_collider_box",
+                "clip": "shoeCubby._010._collider_box",
                 "playing": false,
                 "weight": 1,
                 "speed": 1,
@@ -494,7 +598,351 @@
                 "shouldReset": false
               },
               {
-                "clip": "wall_002_collider_box",
+                "clip": "hedges.001._collider",
+                "playing": false,
+                "weight": 1,
+                "speed": 1,
+                "loop": false,
+                "shouldReset": false
+              },
+              {
+                "clip": "hedges.002._collider",
+                "playing": false,
+                "weight": 1,
+                "speed": 1,
+                "loop": false,
+                "shouldReset": false
+              },
+              {
+                "clip": "arch_001._collider_box",
+                "playing": false,
+                "weight": 1,
+                "speed": 1,
+                "loop": false,
+                "shouldReset": false
+              },
+              {
+                "clip": "arch_002._collider_box",
+                "playing": false,
+                "weight": 1,
+                "speed": 1,
+                "loop": false,
+                "shouldReset": false
+              },
+              {
+                "clip": "arch_003._collider_box",
+                "playing": false,
+                "weight": 1,
+                "speed": 1,
+                "loop": false,
+                "shouldReset": false
+              },
+              {
+                "clip": "arch_004._collider_box",
+                "playing": false,
+                "weight": 1,
+                "speed": 1,
+                "loop": false,
+                "shouldReset": false
+              },
+              {
+                "clip": "arch_005._collider_box",
+                "playing": false,
+                "weight": 1,
+                "speed": 1,
+                "loop": false,
+                "shouldReset": false
+              },
+              {
+                "clip": "arch_006._collider_box",
+                "playing": false,
+                "weight": 1,
+                "speed": 1,
+                "loop": false,
+                "shouldReset": false
+              },
+              {
+                "clip": "arch_007._collider_box",
+                "playing": false,
+                "weight": 1,
+                "speed": 1,
+                "loop": false,
+                "shouldReset": false
+              },
+              {
+                "clip": "arch_008._collider_box",
+                "playing": false,
+                "weight": 1,
+                "speed": 1,
+                "loop": false,
+                "shouldReset": false
+              },
+              {
+                "clip": "arch_009._collider_box",
+                "playing": false,
+                "weight": 1,
+                "speed": 1,
+                "loop": false,
+                "shouldReset": false
+              },
+              {
+                "clip": "arch_010._collider_box",
+                "playing": false,
+                "weight": 1,
+                "speed": 1,
+                "loop": false,
+                "shouldReset": false
+              },
+              {
+                "clip": "arch_011._collider_box",
+                "playing": false,
+                "weight": 1,
+                "speed": 1,
+                "loop": false,
+                "shouldReset": false
+              },
+              {
+                "clip": "arch_012._collider_box",
+                "playing": false,
+                "weight": 1,
+                "speed": 1,
+                "loop": false,
+                "shouldReset": false
+              },
+              {
+                "clip": "arch_013._collider_box",
+                "playing": false,
+                "weight": 1,
+                "speed": 1,
+                "loop": false,
+                "shouldReset": false
+              },
+              {
+                "clip": "arch_014._collider_box",
+                "playing": false,
+                "weight": 1,
+                "speed": 1,
+                "loop": false,
+                "shouldReset": false
+              },
+              {
+                "clip": "arch_015._collider_box",
+                "playing": false,
+                "weight": 1,
+                "speed": 1,
+                "loop": false,
+                "shouldReset": false
+              },
+              {
+                "clip": "seat_jail_016._collider",
+                "playing": false,
+                "weight": 1,
+                "speed": 1,
+                "loop": false,
+                "shouldReset": false
+              },
+              {
+                "clip": "seat_jail_015._collider",
+                "playing": false,
+                "weight": 1,
+                "speed": 1,
+                "loop": false,
+                "shouldReset": false
+              },
+              {
+                "clip": "seat_jail_014._collider",
+                "playing": false,
+                "weight": 1,
+                "speed": 1,
+                "loop": false,
+                "shouldReset": false
+              },
+              {
+                "clip": "seat_jail_013._collider",
+                "playing": false,
+                "weight": 1,
+                "speed": 1,
+                "loop": false,
+                "shouldReset": false
+              },
+              {
+                "clip": "seat_jail_012._collider",
+                "playing": false,
+                "weight": 1,
+                "speed": 1,
+                "loop": false,
+                "shouldReset": false
+              },
+              {
+                "clip": "seat_jail_011._collider",
+                "playing": false,
+                "weight": 1,
+                "speed": 1,
+                "loop": false,
+                "shouldReset": false
+              },
+              {
+                "clip": "seat_jail_010._collider",
+                "playing": false,
+                "weight": 1,
+                "speed": 1,
+                "loop": false,
+                "shouldReset": false
+              },
+              {
+                "clip": "seat_jail_009._collider",
+                "playing": false,
+                "weight": 1,
+                "speed": 1,
+                "loop": false,
+                "shouldReset": false
+              },
+              {
+                "clip": "seat_jail_008._collider",
+                "playing": false,
+                "weight": 1,
+                "speed": 1,
+                "loop": false,
+                "shouldReset": false
+              },
+              {
+                "clip": "seat_jail_007._collider",
+                "playing": false,
+                "weight": 1,
+                "speed": 1,
+                "loop": false,
+                "shouldReset": false
+              },
+              {
+                "clip": "seat_jail_006._collider",
+                "playing": false,
+                "weight": 1,
+                "speed": 1,
+                "loop": false,
+                "shouldReset": false
+              },
+              {
+                "clip": "seat_jail_005._collider",
+                "playing": false,
+                "weight": 1,
+                "speed": 1,
+                "loop": false,
+                "shouldReset": false
+              },
+              {
+                "clip": "seat_jail_004._collider",
+                "playing": false,
+                "weight": 1,
+                "speed": 1,
+                "loop": false,
+                "shouldReset": false
+              },
+              {
+                "clip": "seat_jail_003._collider",
+                "playing": false,
+                "weight": 1,
+                "speed": 1,
+                "loop": false,
+                "shouldReset": false
+              },
+              {
+                "clip": "seat_jail_002._collider",
+                "playing": false,
+                "weight": 1,
+                "speed": 1,
+                "loop": false,
+                "shouldReset": false
+              },
+              {
+                "clip": "seat_jail_001._collider",
+                "playing": false,
+                "weight": 1,
+                "speed": 1,
+                "loop": false,
+                "shouldReset": false
+              },
+              {
+                "clip": "shoeCubby._002._collider_box",
+                "playing": false,
+                "weight": 1,
+                "speed": 1,
+                "loop": false,
+                "shouldReset": false
+              },
+              {
+                "clip": "shoeCubby._003._collider_box",
+                "playing": false,
+                "weight": 1,
+                "speed": 1,
+                "loop": false,
+                "shouldReset": false
+              },
+              {
+                "clip": "shoeCubby._004._collider_box",
+                "playing": false,
+                "weight": 1,
+                "speed": 1,
+                "loop": false,
+                "shouldReset": false
+              },
+              {
+                "clip": "shoeCubby._005._collider_box",
+                "playing": false,
+                "weight": 1,
+                "speed": 1,
+                "loop": false,
+                "shouldReset": false
+              },
+              {
+                "clip": "shoeCubby._006._collider_box",
+                "playing": false,
+                "weight": 1,
+                "speed": 1,
+                "loop": false,
+                "shouldReset": false
+              },
+              {
+                "clip": "shoeCubby._007._collider_box",
+                "playing": false,
+                "weight": 1,
+                "speed": 1,
+                "loop": false,
+                "shouldReset": false
+              },
+              {
+                "clip": "shoeCubby._008._collider_box",
+                "playing": false,
+                "weight": 1,
+                "speed": 1,
+                "loop": false,
+                "shouldReset": false
+              },
+              {
+                "clip": "shoeCubby._009._collider_box",
+                "playing": false,
+                "weight": 1,
+                "speed": 1,
+                "loop": false,
+                "shouldReset": false
+              },
+              {
+                "clip": "shoeCubby._001._collider_box",
+                "playing": false,
+                "weight": 1,
+                "speed": 1,
+                "loop": false,
+                "shouldReset": false
+              },
+              {
+                "clip": "wallOutfits_008._collider_box",
+                "playing": false,
+                "weight": 1,
+                "speed": 1,
+                "loop": false,
+                "shouldReset": false
+              },
+              {
+                "clip": "wallOutfits_007._collider_box",
                 "playing": false,
                 "weight": 1,
                 "speed": 1,
@@ -510,7 +958,7 @@
                 "shouldReset": false
               },
               {
-                "clip": "wall_curved_018_collider_box",
+                "clip": "wallCurved_002._collider_box",
                 "playing": false,
                 "weight": 1,
                 "speed": 1,
@@ -518,7 +966,7 @@
                 "shouldReset": false
               },
               {
-                "clip": "wall_curved_019_collider_box",
+                "clip": "wallCurved_003._collider_box",
                 "playing": false,
                 "weight": 1,
                 "speed": 1,
@@ -526,7 +974,7 @@
                 "shouldReset": false
               },
               {
-                "clip": "wall_curved_003_collider_box",
+                "clip": "wallCurved_004._collider_box",
                 "playing": false,
                 "weight": 1,
                 "speed": 1,
@@ -534,7 +982,7 @@
                 "shouldReset": false
               },
               {
-                "clip": "wall_curved_020_collider_box",
+                "clip": "wallCurved_005._collider_box",
                 "playing": false,
                 "weight": 1,
                 "speed": 1,
@@ -542,7 +990,7 @@
                 "shouldReset": false
               },
               {
-                "clip": "wall_curved_004_collider_box",
+                "clip": "wallCurved_006._collider_box",
                 "playing": false,
                 "weight": 1,
                 "speed": 1,
@@ -550,7 +998,7 @@
                 "shouldReset": false
               },
               {
-                "clip": "wall_curved_021_collider_box",
+                "clip": "wallCurved_007._collider_box",
                 "playing": false,
                 "weight": 1,
                 "speed": 1,
@@ -558,7 +1006,7 @@
                 "shouldReset": false
               },
               {
-                "clip": "wall_curved_005_collider_box",
+                "clip": "wallCurved_008._collider_box",
                 "playing": false,
                 "weight": 1,
                 "speed": 1,
@@ -566,7 +1014,7 @@
                 "shouldReset": false
               },
               {
-                "clip": "wall_curved_022_collider_box",
+                "clip": "wallCurved_009._collider_box",
                 "playing": false,
                 "weight": 1,
                 "speed": 1,
@@ -574,7 +1022,7 @@
                 "shouldReset": false
               },
               {
-                "clip": "wall_curved_006_collider_box",
+                "clip": "wallCurved_010._collider_box",
                 "playing": false,
                 "weight": 1,
                 "speed": 1,
@@ -582,7 +1030,7 @@
                 "shouldReset": false
               },
               {
-                "clip": "wall_curved_001_collider_box",
+                "clip": "wallCurved_001._collider_box",
                 "playing": false,
                 "weight": 1,
                 "speed": 1,
@@ -590,7 +1038,7 @@
                 "shouldReset": false
               },
               {
-                "clip": "wall_curved_007_collider_box",
+                "clip": "wallCurved_011._collider_box",
                 "playing": false,
                 "weight": 1,
                 "speed": 1,
@@ -598,7 +1046,7 @@
                 "shouldReset": false
               },
               {
-                "clip": "wall_curved_023_collider_box",
+                "clip": "wallCurved_012._collider_box",
                 "playing": false,
                 "weight": 1,
                 "speed": 1,
@@ -606,7 +1054,7 @@
                 "shouldReset": false
               },
               {
-                "clip": "wall_curved_008_collider_box",
+                "clip": "wallCurved_013._collider_box",
                 "playing": false,
                 "weight": 1,
                 "speed": 1,
@@ -614,7 +1062,7 @@
                 "shouldReset": false
               },
               {
-                "clip": "wall_curved_024_collider_box",
+                "clip": "wallCurved_014._collider_box",
                 "playing": false,
                 "weight": 1,
                 "speed": 1,
@@ -622,7 +1070,7 @@
                 "shouldReset": false
               },
               {
-                "clip": "wall_curved_009_collider_box",
+                "clip": "wallCurved_015._collider_box",
                 "playing": false,
                 "weight": 1,
                 "speed": 1,
@@ -630,7 +1078,7 @@
                 "shouldReset": false
               },
               {
-                "clip": "wall_curved_025_collider_box",
+                "clip": "wallCurved_016._collider_box",
                 "playing": false,
                 "weight": 1,
                 "speed": 1,
@@ -638,7 +1086,7 @@
                 "shouldReset": false
               },
               {
-                "clip": "wall_curved_010_collider_box",
+                "clip": "wallCurved_017._collider_box",
                 "playing": false,
                 "weight": 1,
                 "speed": 1,
@@ -646,7 +1094,7 @@
                 "shouldReset": false
               },
               {
-                "clip": "wall_curved_026_collider_box",
+                "clip": "wallCurved_018._collider_box",
                 "playing": false,
                 "weight": 1,
                 "speed": 1,
@@ -654,7 +1102,7 @@
                 "shouldReset": false
               },
               {
-                "clip": "wall_curved_027_collider_box",
+                "clip": "wallCurved_019._collider_box",
                 "playing": false,
                 "weight": 1,
                 "speed": 1,
@@ -662,7 +1110,7 @@
                 "shouldReset": false
               },
               {
-                "clip": "wall_curved_011_collider_box",
+                "clip": "wallCurved_020._collider_box",
                 "playing": false,
                 "weight": 1,
                 "speed": 1,
@@ -670,7 +1118,7 @@
                 "shouldReset": false
               },
               {
-                "clip": "wall_curved_028_collider_box",
+                "clip": "wallCurved_021._collider_box",
                 "playing": false,
                 "weight": 1,
                 "speed": 1,
@@ -678,7 +1126,7 @@
                 "shouldReset": false
               },
               {
-                "clip": "wall_curved_012_collider_box",
+                "clip": "wallCurved_022._collider_box",
                 "playing": false,
                 "weight": 1,
                 "speed": 1,
@@ -686,7 +1134,7 @@
                 "shouldReset": false
               },
               {
-                "clip": "wall_curved_029_collider_box",
+                "clip": "wallCurved_023._collider_box",
                 "playing": false,
                 "weight": 1,
                 "speed": 1,
@@ -694,7 +1142,7 @@
                 "shouldReset": false
               },
               {
-                "clip": "wall_curved_013_collider_box",
+                "clip": "wallCurved_024._collider_box",
                 "playing": false,
                 "weight": 1,
                 "speed": 1,
@@ -702,7 +1150,7 @@
                 "shouldReset": false
               },
               {
-                "clip": "wall_curved_030_collider_box",
+                "clip": "wallCurved_025._collider_box",
                 "playing": false,
                 "weight": 1,
                 "speed": 1,
@@ -710,7 +1158,7 @@
                 "shouldReset": false
               },
               {
-                "clip": "wall_curved_031_collider_box",
+                "clip": "wallCurved_026._collider_box",
                 "playing": false,
                 "weight": 1,
                 "speed": 1,
@@ -718,7 +1166,7 @@
                 "shouldReset": false
               },
               {
-                "clip": "wall_curved_032_collider_box",
+                "clip": "wallCurved_027._collider_box",
                 "playing": false,
                 "weight": 1,
                 "speed": 1,
@@ -726,7 +1174,7 @@
                 "shouldReset": false
               },
               {
-                "clip": "wall_curved_033_collider_box",
+                "clip": "wallCurved_028._collider_box",
                 "playing": false,
                 "weight": 1,
                 "speed": 1,
@@ -734,7 +1182,7 @@
                 "shouldReset": false
               },
               {
-                "clip": "wall_curved_034_collider_box",
+                "clip": "wallCurved_029._collider_box",
                 "playing": false,
                 "weight": 1,
                 "speed": 1,
@@ -742,7 +1190,7 @@
                 "shouldReset": false
               },
               {
-                "clip": "wall_curved_035_collider_box",
+                "clip": "wallCurved_030._collider_box",
                 "playing": false,
                 "weight": 1,
                 "speed": 1,
@@ -750,7 +1198,7 @@
                 "shouldReset": false
               },
               {
-                "clip": "wall_curved_036_collider_box",
+                "clip": "wallCurved_031._collider_box",
                 "playing": false,
                 "weight": 1,
                 "speed": 1,
@@ -758,7 +1206,7 @@
                 "shouldReset": false
               },
               {
-                "clip": "wall_curved_037_collider_box",
+                "clip": "wallCurved_032._collider_box",
                 "playing": false,
                 "weight": 1,
                 "speed": 1,
@@ -766,7 +1214,7 @@
                 "shouldReset": false
               },
               {
-                "clip": "walls_upstairs_collider",
+                "clip": "baclony_upstairs_collider",
                 "playing": false,
                 "weight": 1,
                 "speed": 1,
@@ -782,7 +1230,7 @@
                 "shouldReset": false
               },
               {
-                "clip": "wall_curved_038_collider_box",
+                "clip": "wallCurved_033._collider_box",
                 "playing": false,
                 "weight": 1,
                 "speed": 1,
@@ -790,7 +1238,7 @@
                 "shouldReset": false
               },
               {
-                "clip": "wall_curved_014_collider_box",
+                "clip": "wallCurved_034._collider_box",
                 "playing": false,
                 "weight": 1,
                 "speed": 1,
@@ -798,7 +1246,7 @@
                 "shouldReset": false
               },
               {
-                "clip": "wall_curved_039_collider_box",
+                "clip": "wallCurved_035._collider_box",
                 "playing": false,
                 "weight": 1,
                 "speed": 1,
@@ -806,7 +1254,7 @@
                 "shouldReset": false
               },
               {
-                "clip": "wall_curved_015_collider_box",
+                "clip": "wallCurved_036._collider_box",
                 "playing": false,
                 "weight": 1,
                 "speed": 1,
@@ -814,7 +1262,7 @@
                 "shouldReset": false
               },
               {
-                "clip": "wall_curved_040_collider_box",
+                "clip": "wallCurved_037._collider_box",
                 "playing": false,
                 "weight": 1,
                 "speed": 1,
@@ -822,7 +1270,7 @@
                 "shouldReset": false
               },
               {
-                "clip": "wall_curved_016_collider_box",
+                "clip": "wallCurved_038._collider_box",
                 "playing": false,
                 "weight": 1,
                 "speed": 1,
@@ -830,7 +1278,7 @@
                 "shouldReset": false
               },
               {
-                "clip": "wall_curved_041_collider_box",
+                "clip": "wallCurved_039._collider_box",
                 "playing": false,
                 "weight": 1,
                 "speed": 1,
@@ -838,7 +1286,7 @@
                 "shouldReset": false
               },
               {
-                "clip": "wall_curved_017_collider_box",
+                "clip": "wallCurved_040._collider_box",
                 "playing": false,
                 "weight": 1,
                 "speed": 1,
@@ -846,7 +1294,7 @@
                 "shouldReset": false
               },
               {
-                "clip": "wall_curved_002_collider_box",
+                "clip": "wallCurved_041._collider_box",
                 "playing": false,
                 "weight": 1,
                 "speed": 1,
@@ -902,7 +1350,7 @@
                 "shouldReset": false
               },
               {
-                "clip": "wall_main_003_collider_box.004",
+                "clip": "exit.arch.left._collider_box",
                 "playing": false,
                 "weight": 1,
                 "speed": 1,
@@ -910,7 +1358,7 @@
                 "shouldReset": false
               },
               {
-                "clip": "wall_main_003_collider_box.005",
+                "clip": "exit.arch.right._collider_box",
                 "playing": false,
                 "weight": 1,
                 "speed": 1,
@@ -918,7 +1366,7 @@
                 "shouldReset": false
               },
               {
-                "clip": "wall_main_003_collider_box.006",
+                "clip": "railing.001._collider_box",
                 "playing": false,
                 "weight": 1,
                 "speed": 1,
@@ -926,7 +1374,7 @@
                 "shouldReset": false
               },
               {
-                "clip": "Changing Rooms.001",
+                "clip": "railing.002._collider_box",
                 "playing": false,
                 "weight": 1,
                 "speed": 1,
@@ -934,7 +1382,7 @@
                 "shouldReset": false
               },
               {
-                "clip": "Cube.004",
+                "clip": "railing.003._collider_box",
                 "playing": false,
                 "weight": 1,
                 "speed": 1,
@@ -942,7 +1390,1031 @@
                 "shouldReset": false
               },
               {
-                "clip": "Cube.005",
+                "clip": "railing.004._collider_box",
+                "playing": false,
+                "weight": 1,
+                "speed": 1,
+                "loop": false,
+                "shouldReset": false
+              },
+              {
+                "clip": "walls.facade._002._collider_box",
+                "playing": false,
+                "weight": 1,
+                "speed": 1,
+                "loop": false,
+                "shouldReset": false
+              },
+              {
+                "clip": "walls.facade._003._collider_box",
+                "playing": false,
+                "weight": 1,
+                "speed": 1,
+                "loop": false,
+                "shouldReset": false
+              },
+              {
+                "clip": "walls.facade._004._collider_box",
+                "playing": false,
+                "weight": 1,
+                "speed": 1,
+                "loop": false,
+                "shouldReset": false
+              },
+              {
+                "clip": "walls.facade._005._collider_box",
+                "playing": false,
+                "weight": 1,
+                "speed": 1,
+                "loop": false,
+                "shouldReset": false
+              },
+              {
+                "clip": "walls.facade._006._collider_box",
+                "playing": false,
+                "weight": 1,
+                "speed": 1,
+                "loop": false,
+                "shouldReset": false
+              },
+              {
+                "clip": "walls.facade._007._collider_box",
+                "playing": false,
+                "weight": 1,
+                "speed": 1,
+                "loop": false,
+                "shouldReset": false
+              },
+              {
+                "clip": "walls.facade._008._collider_box",
+                "playing": false,
+                "weight": 1,
+                "speed": 1,
+                "loop": false,
+                "shouldReset": false
+              },
+              {
+                "clip": "walls.facade._009._collider_box",
+                "playing": false,
+                "weight": 1,
+                "speed": 1,
+                "loop": false,
+                "shouldReset": false
+              },
+              {
+                "clip": "walls.facade._010._collider_box",
+                "playing": false,
+                "weight": 1,
+                "speed": 1,
+                "loop": false,
+                "shouldReset": false
+              },
+              {
+                "clip": "walls.facade._011._collider_box",
+                "playing": false,
+                "weight": 1,
+                "speed": 1,
+                "loop": false,
+                "shouldReset": false
+              },
+              {
+                "clip": "walls.facade._012._collider_box",
+                "playing": false,
+                "weight": 1,
+                "speed": 1,
+                "loop": false,
+                "shouldReset": false
+              },
+              {
+                "clip": "walls.facade._013._collider_box",
+                "playing": false,
+                "weight": 1,
+                "speed": 1,
+                "loop": false,
+                "shouldReset": false
+              },
+              {
+                "clip": "walls.facade._014._collider_box",
+                "playing": false,
+                "weight": 1,
+                "speed": 1,
+                "loop": false,
+                "shouldReset": false
+              },
+              {
+                "clip": "walls.facade._015._collider_box",
+                "playing": false,
+                "weight": 1,
+                "speed": 1,
+                "loop": false,
+                "shouldReset": false
+              },
+              {
+                "clip": "walls.facade._016._collider_box",
+                "playing": false,
+                "weight": 1,
+                "speed": 1,
+                "loop": false,
+                "shouldReset": false
+              },
+              {
+                "clip": "walls.facade._017._collider_box",
+                "playing": false,
+                "weight": 1,
+                "speed": 1,
+                "loop": false,
+                "shouldReset": false
+              },
+              {
+                "clip": "walls.facade._018._collider_box",
+                "playing": false,
+                "weight": 1,
+                "speed": 1,
+                "loop": false,
+                "shouldReset": false
+              },
+              {
+                "clip": "walls.facade._019._collider_box",
+                "playing": false,
+                "weight": 1,
+                "speed": 1,
+                "loop": false,
+                "shouldReset": false
+              },
+              {
+                "clip": "walls.facade._020._collider_box",
+                "playing": false,
+                "weight": 1,
+                "speed": 1,
+                "loop": false,
+                "shouldReset": false
+              },
+              {
+                "clip": "walls.facade._021._collider_box",
+                "playing": false,
+                "weight": 1,
+                "speed": 1,
+                "loop": false,
+                "shouldReset": false
+              },
+              {
+                "clip": "walls.facade._022._collider_box",
+                "playing": false,
+                "weight": 1,
+                "speed": 1,
+                "loop": false,
+                "shouldReset": false
+              },
+              {
+                "clip": "walls.facade._023._collider_box",
+                "playing": false,
+                "weight": 1,
+                "speed": 1,
+                "loop": false,
+                "shouldReset": false
+              },
+              {
+                "clip": "walls.facade._024._collider_box",
+                "playing": false,
+                "weight": 1,
+                "speed": 1,
+                "loop": false,
+                "shouldReset": false
+              },
+              {
+                "clip": "walls.facade._025._collider_box",
+                "playing": false,
+                "weight": 1,
+                "speed": 1,
+                "loop": false,
+                "shouldReset": false
+              },
+              {
+                "clip": "walls.facade._026._collider_box",
+                "playing": false,
+                "weight": 1,
+                "speed": 1,
+                "loop": false,
+                "shouldReset": false
+              },
+              {
+                "clip": "walls.facade._027._collider_box",
+                "playing": false,
+                "weight": 1,
+                "speed": 1,
+                "loop": false,
+                "shouldReset": false
+              },
+              {
+                "clip": "walls.facade._001._collider_box",
+                "playing": false,
+                "weight": 1,
+                "speed": 1,
+                "loop": false,
+                "shouldReset": false
+              },
+              {
+                "clip": "walls.facade._028._collider_box",
+                "playing": false,
+                "weight": 1,
+                "speed": 1,
+                "loop": false,
+                "shouldReset": false
+              },
+              {
+                "clip": "walls.facade._029._collider_box",
+                "playing": false,
+                "weight": 1,
+                "speed": 1,
+                "loop": false,
+                "shouldReset": false
+              },
+              {
+                "clip": "walls.facade._030._collider_box",
+                "playing": false,
+                "weight": 1,
+                "speed": 1,
+                "loop": false,
+                "shouldReset": false
+              },
+              {
+                "clip": "walls.facade._031._collider_box",
+                "playing": false,
+                "weight": 1,
+                "speed": 1,
+                "loop": false,
+                "shouldReset": false
+              },
+              {
+                "clip": "walls.facade._032._collider_box",
+                "playing": false,
+                "weight": 1,
+                "speed": 1,
+                "loop": false,
+                "shouldReset": false
+              },
+              {
+                "clip": "walls.facade._033._collider_box",
+                "playing": false,
+                "weight": 1,
+                "speed": 1,
+                "loop": false,
+                "shouldReset": false
+              },
+              {
+                "clip": "walls.facade._034._collider_box",
+                "playing": false,
+                "weight": 1,
+                "speed": 1,
+                "loop": false,
+                "shouldReset": false
+              },
+              {
+                "clip": "walls.facade._035._collider_box",
+                "playing": false,
+                "weight": 1,
+                "speed": 1,
+                "loop": false,
+                "shouldReset": false
+              },
+              {
+                "clip": "walls.facade._036._collider_box",
+                "playing": false,
+                "weight": 1,
+                "speed": 1,
+                "loop": false,
+                "shouldReset": false
+              },
+              {
+                "clip": "wallOutfits_004._collider_box",
+                "playing": false,
+                "weight": 1,
+                "speed": 1,
+                "loop": false,
+                "shouldReset": false
+              },
+              {
+                "clip": "wallOutfits_001._collider_box",
+                "playing": false,
+                "weight": 1,
+                "speed": 1,
+                "loop": false,
+                "shouldReset": false
+              },
+              {
+                "clip": "wallOutfits_002._collider_box",
+                "playing": false,
+                "weight": 1,
+                "speed": 1,
+                "loop": false,
+                "shouldReset": false
+              },
+              {
+                "clip": "wallOutfits_003._collider_box",
+                "playing": false,
+                "weight": 1,
+                "speed": 1,
+                "loop": false,
+                "shouldReset": false
+              },
+              {
+                "clip": "wallOutfits_005._collider_box",
+                "playing": false,
+                "weight": 1,
+                "speed": 1,
+                "loop": false,
+                "shouldReset": false
+              },
+              {
+                "clip": "wallOutfits_006._collider_box",
+                "playing": false,
+                "weight": 1,
+                "speed": 1,
+                "loop": false,
+                "shouldReset": false
+              },
+              {
+                "clip": "wallCurved_042._collider_box",
+                "playing": false,
+                "weight": 1,
+                "speed": 1,
+                "loop": false,
+                "shouldReset": false
+              },
+              {
+                "clip": "wallCurved_043._collider_box",
+                "playing": false,
+                "weight": 1,
+                "speed": 1,
+                "loop": false,
+                "shouldReset": false
+              },
+              {
+                "clip": "wallCurved_044._collider_box",
+                "playing": false,
+                "weight": 1,
+                "speed": 1,
+                "loop": false,
+                "shouldReset": false
+              },
+              {
+                "clip": "wallCurved_045._collider_box",
+                "playing": false,
+                "weight": 1,
+                "speed": 1,
+                "loop": false,
+                "shouldReset": false
+              },
+              {
+                "clip": "wallCurved_046._collider_box",
+                "playing": false,
+                "weight": 1,
+                "speed": 1,
+                "loop": false,
+                "shouldReset": false
+              },
+              {
+                "clip": "wallCurved_047._collider_box",
+                "playing": false,
+                "weight": 1,
+                "speed": 1,
+                "loop": false,
+                "shouldReset": false
+              },
+              {
+                "clip": "wallCurved_048._collider_box",
+                "playing": false,
+                "weight": 1,
+                "speed": 1,
+                "loop": false,
+                "shouldReset": false
+              },
+              {
+                "clip": "wallCurved_049._collider_box",
+                "playing": false,
+                "weight": 1,
+                "speed": 1,
+                "loop": false,
+                "shouldReset": false
+              },
+              {
+                "clip": "wallCurved_050._collider_box",
+                "playing": false,
+                "weight": 1,
+                "speed": 1,
+                "loop": false,
+                "shouldReset": false
+              },
+              {
+                "clip": "wallCurved_051._collider_box",
+                "playing": false,
+                "weight": 1,
+                "speed": 1,
+                "loop": false,
+                "shouldReset": false
+              },
+              {
+                "clip": "wallCurved_052._collider_box",
+                "playing": false,
+                "weight": 1,
+                "speed": 1,
+                "loop": false,
+                "shouldReset": false
+              },
+              {
+                "clip": "wallCurved_053._collider_box",
+                "playing": false,
+                "weight": 1,
+                "speed": 1,
+                "loop": false,
+                "shouldReset": false
+              },
+              {
+                "clip": "wallCurved_054._collider_box",
+                "playing": false,
+                "weight": 1,
+                "speed": 1,
+                "loop": false,
+                "shouldReset": false
+              },
+              {
+                "clip": "wallCurved_055._collider_box",
+                "playing": false,
+                "weight": 1,
+                "speed": 1,
+                "loop": false,
+                "shouldReset": false
+              },
+              {
+                "clip": "wallCurved_056._collider_box",
+                "playing": false,
+                "weight": 1,
+                "speed": 1,
+                "loop": false,
+                "shouldReset": false
+              },
+              {
+                "clip": "wallCurved_057._collider_box",
+                "playing": false,
+                "weight": 1,
+                "speed": 1,
+                "loop": false,
+                "shouldReset": false
+              },
+              {
+                "clip": "wallCurved_058._collider_box",
+                "playing": false,
+                "weight": 1,
+                "speed": 1,
+                "loop": false,
+                "shouldReset": false
+              },
+              {
+                "clip": "wallCurved_059._collider_box",
+                "playing": false,
+                "weight": 1,
+                "speed": 1,
+                "loop": false,
+                "shouldReset": false
+              },
+              {
+                "clip": "wallCurved_060._collider_box",
+                "playing": false,
+                "weight": 1,
+                "speed": 1,
+                "loop": false,
+                "shouldReset": false
+              },
+              {
+                "clip": "wallCurved_061._collider_box",
+                "playing": false,
+                "weight": 1,
+                "speed": 1,
+                "loop": false,
+                "shouldReset": false
+              },
+              {
+                "clip": "wallCurved_062._collider_box",
+                "playing": false,
+                "weight": 1,
+                "speed": 1,
+                "loop": false,
+                "shouldReset": false
+              },
+              {
+                "clip": "wallCurved_063._collider_box",
+                "playing": false,
+                "weight": 1,
+                "speed": 1,
+                "loop": false,
+                "shouldReset": false
+              },
+              {
+                "clip": "wallCurved_064._collider_box",
+                "playing": false,
+                "weight": 1,
+                "speed": 1,
+                "loop": false,
+                "shouldReset": false
+              },
+              {
+                "clip": "wallCurved_065._collider_box",
+                "playing": false,
+                "weight": 1,
+                "speed": 1,
+                "loop": false,
+                "shouldReset": false
+              },
+              {
+                "clip": "wallCurved_066._collider_box",
+                "playing": false,
+                "weight": 1,
+                "speed": 1,
+                "loop": false,
+                "shouldReset": false
+              },
+              {
+                "clip": "wallCurved_067._collider_box",
+                "playing": false,
+                "weight": 1,
+                "speed": 1,
+                "loop": false,
+                "shouldReset": false
+              },
+              {
+                "clip": "wallCurved_068._collider_box",
+                "playing": false,
+                "weight": 1,
+                "speed": 1,
+                "loop": false,
+                "shouldReset": false
+              },
+              {
+                "clip": "wallCurved_069._collider_box",
+                "playing": false,
+                "weight": 1,
+                "speed": 1,
+                "loop": false,
+                "shouldReset": false
+              },
+              {
+                "clip": "wallCurved_070._collider_box",
+                "playing": false,
+                "weight": 1,
+                "speed": 1,
+                "loop": false,
+                "shouldReset": false
+              },
+              {
+                "clip": "wallCurved_071._collider_box",
+                "playing": false,
+                "weight": 1,
+                "speed": 1,
+                "loop": false,
+                "shouldReset": false
+              },
+              {
+                "clip": "wallCurved_072._collider_box",
+                "playing": false,
+                "weight": 1,
+                "speed": 1,
+                "loop": false,
+                "shouldReset": false
+              },
+              {
+                "clip": "wallCurved_073._collider_box",
+                "playing": false,
+                "weight": 1,
+                "speed": 1,
+                "loop": false,
+                "shouldReset": false
+              },
+              {
+                "clip": "wallCurved_074._collider_box",
+                "playing": false,
+                "weight": 1,
+                "speed": 1,
+                "loop": false,
+                "shouldReset": false
+              },
+              {
+                "clip": "wallCurved_075._collider_box",
+                "playing": false,
+                "weight": 1,
+                "speed": 1,
+                "loop": false,
+                "shouldReset": false
+              },
+              {
+                "clip": "wallCurved_076._collider_box",
+                "playing": false,
+                "weight": 1,
+                "speed": 1,
+                "loop": false,
+                "shouldReset": false
+              },
+              {
+                "clip": "wallCurved_077._collider_box",
+                "playing": false,
+                "weight": 1,
+                "speed": 1,
+                "loop": false,
+                "shouldReset": false
+              },
+              {
+                "clip": "wallCurved_078._collider_box",
+                "playing": false,
+                "weight": 1,
+                "speed": 1,
+                "loop": false,
+                "shouldReset": false
+              },
+              {
+                "clip": "wallCurved_079._collider_box",
+                "playing": false,
+                "weight": 1,
+                "speed": 1,
+                "loop": false,
+                "shouldReset": false
+              },
+              {
+                "clip": "wallCurved_080._collider_box",
+                "playing": false,
+                "weight": 1,
+                "speed": 1,
+                "loop": false,
+                "shouldReset": false
+              },
+              {
+                "clip": "wallCurved_081._collider_box",
+                "playing": false,
+                "weight": 1,
+                "speed": 1,
+                "loop": false,
+                "shouldReset": false
+              },
+              {
+                "clip": "wallCurved_082._collider_box",
+                "playing": false,
+                "weight": 1,
+                "speed": 1,
+                "loop": false,
+                "shouldReset": false
+              },
+              {
+                "clip": "wallCurved_083._collider_box",
+                "playing": false,
+                "weight": 1,
+                "speed": 1,
+                "loop": false,
+                "shouldReset": false
+              },
+              {
+                "clip": "wallCurved_084._collider_box",
+                "playing": false,
+                "weight": 1,
+                "speed": 1,
+                "loop": false,
+                "shouldReset": false
+              },
+              {
+                "clip": "wallCurved_085._collider_box",
+                "playing": false,
+                "weight": 1,
+                "speed": 1,
+                "loop": false,
+                "shouldReset": false
+              },
+              {
+                "clip": "wallCurved_086._collider_box",
+                "playing": false,
+                "weight": 1,
+                "speed": 1,
+                "loop": false,
+                "shouldReset": false
+              },
+              {
+                "clip": "wallCurved_087._collider_box",
+                "playing": false,
+                "weight": 1,
+                "speed": 1,
+                "loop": false,
+                "shouldReset": false
+              },
+              {
+                "clip": "wallCurved_088._collider_box",
+                "playing": false,
+                "weight": 1,
+                "speed": 1,
+                "loop": false,
+                "shouldReset": false
+              },
+              {
+                "clip": "wallCurved_089._collider_box",
+                "playing": false,
+                "weight": 1,
+                "speed": 1,
+                "loop": false,
+                "shouldReset": false
+              },
+              {
+                "clip": "wallCurved_090._collider_box",
+                "playing": false,
+                "weight": 1,
+                "speed": 1,
+                "loop": false,
+                "shouldReset": false
+              },
+              {
+                "clip": "wallCurved_091._collider_box",
+                "playing": false,
+                "weight": 1,
+                "speed": 1,
+                "loop": false,
+                "shouldReset": false
+              },
+              {
+                "clip": "wallCurved_092._collider_box",
+                "playing": false,
+                "weight": 1,
+                "speed": 1,
+                "loop": false,
+                "shouldReset": false
+              },
+              {
+                "clip": "wallCurved_093._collider_box",
+                "playing": false,
+                "weight": 1,
+                "speed": 1,
+                "loop": false,
+                "shouldReset": false
+              },
+              {
+                "clip": "wallCurved_094._collider_box",
+                "playing": false,
+                "weight": 1,
+                "speed": 1,
+                "loop": false,
+                "shouldReset": false
+              },
+              {
+                "clip": "wallCurved_095._collider_box",
+                "playing": false,
+                "weight": 1,
+                "speed": 1,
+                "loop": false,
+                "shouldReset": false
+              },
+              {
+                "clip": "wallCurved_096._collider_box",
+                "playing": false,
+                "weight": 1,
+                "speed": 1,
+                "loop": false,
+                "shouldReset": false
+              },
+              {
+                "clip": "wallCurved_097._collider_box",
+                "playing": false,
+                "weight": 1,
+                "speed": 1,
+                "loop": false,
+                "shouldReset": false
+              },
+              {
+                "clip": "wallCurved_098._collider_box",
+                "playing": false,
+                "weight": 1,
+                "speed": 1,
+                "loop": false,
+                "shouldReset": false
+              },
+              {
+                "clip": "wallCurved_099._collider_box",
+                "playing": false,
+                "weight": 1,
+                "speed": 1,
+                "loop": false,
+                "shouldReset": false
+              },
+              {
+                "clip": "wallCurved_100._collider_box",
+                "playing": false,
+                "weight": 1,
+                "speed": 1,
+                "loop": false,
+                "shouldReset": false
+              },
+              {
+                "clip": "wallCurved_101._collider_box",
+                "playing": false,
+                "weight": 1,
+                "speed": 1,
+                "loop": false,
+                "shouldReset": false
+              },
+              {
+                "clip": "Lower-Body Shelves.004",
+                "playing": false,
+                "weight": 1,
+                "speed": 1,
+                "loop": false,
+                "shouldReset": false
+              },
+              {
+                "clip": "Lower-Body Shelves.005",
+                "playing": false,
+                "weight": 1,
+                "speed": 1,
+                "loop": false,
+                "shouldReset": false
+              },
+              {
+                "clip": "window pane.001",
+                "playing": false,
+                "weight": 1,
+                "speed": 1,
+                "loop": false,
+                "shouldReset": false
+              },
+              {
+                "clip": "archway1.002",
+                "playing": false,
+                "weight": 1,
+                "speed": 1,
+                "loop": false,
+                "shouldReset": false
+              },
+              {
+                "clip": "archway1.003",
+                "playing": false,
+                "weight": 1,
+                "speed": 1,
+                "loop": false,
+                "shouldReset": false
+              },
+              {
+                "clip": "archway exit.001",
+                "playing": false,
+                "weight": 1,
+                "speed": 1,
+                "loop": false,
+                "shouldReset": false
+              },
+              {
+                "clip": "main archway.001",
+                "playing": false,
+                "weight": 1,
+                "speed": 1,
+                "loop": false,
+                "shouldReset": false
+              },
+              {
+                "clip": "Shelf B",
+                "playing": false,
+                "weight": 1,
+                "speed": 1,
+                "loop": false,
+                "shouldReset": false
+              },
+              {
+                "clip": "Shelf A",
+                "playing": false,
+                "weight": 1,
+                "speed": 1,
+                "loop": false,
+                "shouldReset": false
+              },
+              {
+                "clip": "window pane",
+                "playing": false,
+                "weight": 1,
+                "speed": 1,
+                "loop": false,
+                "shouldReset": false
+              },
+              {
+                "clip": "hedge",
+                "playing": false,
+                "weight": 1,
+                "speed": 1,
+                "loop": false,
+                "shouldReset": false
+              },
+              {
+                "clip": "Shoe Shelves.001",
+                "playing": false,
+                "weight": 1,
+                "speed": 1,
+                "loop": false,
+                "shouldReset": false
+              },
+              {
+                "clip": "Lower-Body Shelves.003",
+                "playing": false,
+                "weight": 1,
+                "speed": 1,
+                "loop": false,
+                "shouldReset": false
+              },
+              {
+                "clip": "Lower-Body Shelves.002",
+                "playing": false,
+                "weight": 1,
+                "speed": 1,
+                "loop": false,
+                "shouldReset": false
+              },
+              {
+                "clip": "Wardrobe1.001",
+                "playing": false,
+                "weight": 1,
+                "speed": 1,
+                "loop": false,
+                "shouldReset": false
+              },
+              {
+                "clip": "Tanning Bed.001",
+                "playing": false,
+                "weight": 1,
+                "speed": 1,
+                "loop": false,
+                "shouldReset": false
+              },
+              {
+                "clip": "Tanning Bed.002",
+                "playing": false,
+                "weight": 1,
+                "speed": 1,
+                "loop": false,
+                "shouldReset": false
+              },
+              {
+                "clip": "Hair Station.003",
+                "playing": false,
+                "weight": 1,
+                "speed": 1,
+                "loop": false,
+                "shouldReset": false
+              },
+              {
+                "clip": "main archway.002",
+                "playing": false,
+                "weight": 1,
+                "speed": 1,
+                "loop": false,
+                "shouldReset": false
+              },
+              {
+                "clip": "archway exit.002",
+                "playing": false,
+                "weight": 1,
+                "speed": 1,
+                "loop": false,
+                "shouldReset": false
+              },
+              {
+                "clip": "Hair Salon.002",
+                "playing": false,
+                "weight": 1,
+                "speed": 1,
+                "loop": false,
+                "shouldReset": false
+              },
+              {
+                "clip": "runway.neons",
+                "playing": false,
+                "weight": 1,
+                "speed": 1,
+                "loop": false,
+                "shouldReset": false
+              },
+              {
+                "clip": "firstGround",
+                "playing": false,
+                "weight": 1,
+                "speed": 1,
+                "loop": false,
+                "shouldReset": false
+              },
+              {
+                "clip": "Cylinder",
+                "playing": false,
+                "weight": 1,
+                "speed": 1,
+                "loop": false,
+                "shouldReset": false
+              },
+              {
+                "clip": "salon.podium",
+                "playing": false,
+                "weight": 1,
+                "speed": 1,
+                "loop": false,
+                "shouldReset": false
+              },
+              {
+                "clip": "Cylinder.001",
                 "playing": false,
                 "weight": 1,
                 "speed": 1,
@@ -974,7 +2446,7 @@
                 "shouldReset": false
               },
               {
-                "clip": "firstFloorWalls.001",
+                "clip": "Cylinder.002",
                 "playing": false,
                 "weight": 1,
                 "speed": 1,
@@ -982,7 +2454,7 @@
                 "shouldReset": false
               },
               {
-                "clip": "firstGround.001",
+                "clip": "Cylinder.006",
                 "playing": false,
                 "weight": 1,
                 "speed": 1,
@@ -990,7 +2462,7 @@
                 "shouldReset": false
               },
               {
-                "clip": "Hair Salon.002",
+                "clip": "secondGround",
                 "playing": false,
                 "weight": 1,
                 "speed": 1,
@@ -998,7 +2470,7 @@
                 "shouldReset": false
               },
               {
-                "clip": "Hair Salon.003",
+                "clip": "walls.facade.001",
                 "playing": false,
                 "weight": 1,
                 "speed": 1,
@@ -1006,7 +2478,7 @@
                 "shouldReset": false
               },
               {
-                "clip": "Hair Station.001",
+                "clip": "walls.facade.002",
                 "playing": false,
                 "weight": 1,
                 "speed": 1,
@@ -1014,7 +2486,7 @@
                 "shouldReset": false
               },
               {
-                "clip": "Lower-Body Shelves.003",
+                "clip": "walls.facade.003",
                 "playing": false,
                 "weight": 1,
                 "speed": 1,
@@ -1022,7 +2494,7 @@
                 "shouldReset": false
               },
               {
-                "clip": "M_BaseMesh.002",
+                "clip": "walls.facade.004",
                 "playing": false,
                 "weight": 1,
                 "speed": 1,
@@ -1030,7 +2502,7 @@
                 "shouldReset": false
               },
               {
-                "clip": "M_BaseMesh.003",
+                "clip": "walls.facade.005",
                 "playing": false,
                 "weight": 1,
                 "speed": 1,
@@ -1038,7 +2510,343 @@
                 "shouldReset": false
               },
               {
-                "clip": "SeatinA.001",
+                "clip": "walls.facade.006",
+                "playing": false,
+                "weight": 1,
+                "speed": 1,
+                "loop": false,
+                "shouldReset": false
+              },
+              {
+                "clip": "walls.facade.007",
+                "playing": false,
+                "weight": 1,
+                "speed": 1,
+                "loop": false,
+                "shouldReset": false
+              },
+              {
+                "clip": "walls.facade.008",
+                "playing": false,
+                "weight": 1,
+                "speed": 1,
+                "loop": false,
+                "shouldReset": false
+              },
+              {
+                "clip": "walls.facade.009",
+                "playing": false,
+                "weight": 1,
+                "speed": 1,
+                "loop": false,
+                "shouldReset": false
+              },
+              {
+                "clip": "walls.facade.010",
+                "playing": false,
+                "weight": 1,
+                "speed": 1,
+                "loop": false,
+                "shouldReset": false
+              },
+              {
+                "clip": "walls.facade.011",
+                "playing": false,
+                "weight": 1,
+                "speed": 1,
+                "loop": false,
+                "shouldReset": false
+              },
+              {
+                "clip": "walls.facade.013",
+                "playing": false,
+                "weight": 1,
+                "speed": 1,
+                "loop": false,
+                "shouldReset": false
+              },
+              {
+                "clip": "walls.facade.014",
+                "playing": false,
+                "weight": 1,
+                "speed": 1,
+                "loop": false,
+                "shouldReset": false
+              },
+              {
+                "clip": "walls.facade.015",
+                "playing": false,
+                "weight": 1,
+                "speed": 1,
+                "loop": false,
+                "shouldReset": false
+              },
+              {
+                "clip": "walls.facade.016",
+                "playing": false,
+                "weight": 1,
+                "speed": 1,
+                "loop": false,
+                "shouldReset": false
+              },
+              {
+                "clip": "walls.facade.017",
+                "playing": false,
+                "weight": 1,
+                "speed": 1,
+                "loop": false,
+                "shouldReset": false
+              },
+              {
+                "clip": "walls.facade.018",
+                "playing": false,
+                "weight": 1,
+                "speed": 1,
+                "loop": false,
+                "shouldReset": false
+              },
+              {
+                "clip": "walls.facade.019",
+                "playing": false,
+                "weight": 1,
+                "speed": 1,
+                "loop": false,
+                "shouldReset": false
+              },
+              {
+                "clip": "walls.facade.020",
+                "playing": false,
+                "weight": 1,
+                "speed": 1,
+                "loop": false,
+                "shouldReset": false
+              },
+              {
+                "clip": "walls.facade.021",
+                "playing": false,
+                "weight": 1,
+                "speed": 1,
+                "loop": false,
+                "shouldReset": false
+              },
+              {
+                "clip": "walls.facade.022",
+                "playing": false,
+                "weight": 1,
+                "speed": 1,
+                "loop": false,
+                "shouldReset": false
+              },
+              {
+                "clip": "walls.facade.023",
+                "playing": false,
+                "weight": 1,
+                "speed": 1,
+                "loop": false,
+                "shouldReset": false
+              },
+              {
+                "clip": "walls.facade.024",
+                "playing": false,
+                "weight": 1,
+                "speed": 1,
+                "loop": false,
+                "shouldReset": false
+              },
+              {
+                "clip": "walls.facade.025",
+                "playing": false,
+                "weight": 1,
+                "speed": 1,
+                "loop": false,
+                "shouldReset": false
+              },
+              {
+                "clip": "walls.facade.027",
+                "playing": false,
+                "weight": 1,
+                "speed": 1,
+                "loop": false,
+                "shouldReset": false
+              },
+              {
+                "clip": "exteriorWall.neons_001",
+                "playing": false,
+                "weight": 1,
+                "speed": 1,
+                "loop": false,
+                "shouldReset": false
+              },
+              {
+                "clip": "exteriorWall.neons_002",
+                "playing": false,
+                "weight": 1,
+                "speed": 1,
+                "loop": false,
+                "shouldReset": false
+              },
+              {
+                "clip": "exteriorWall.neons_003",
+                "playing": false,
+                "weight": 1,
+                "speed": 1,
+                "loop": false,
+                "shouldReset": false
+              },
+              {
+                "clip": "exteriorWall.neons_004",
+                "playing": false,
+                "weight": 1,
+                "speed": 1,
+                "loop": false,
+                "shouldReset": false
+              },
+              {
+                "clip": "exteriorWall.neons_005",
+                "playing": false,
+                "weight": 1,
+                "speed": 1,
+                "loop": false,
+                "shouldReset": false
+              },
+              {
+                "clip": "exteriorWall.neons_006",
+                "playing": false,
+                "weight": 1,
+                "speed": 1,
+                "loop": false,
+                "shouldReset": false
+              },
+              {
+                "clip": "exteriorWall.neons_001.001",
+                "playing": false,
+                "weight": 1,
+                "speed": 1,
+                "loop": false,
+                "shouldReset": false
+              },
+              {
+                "clip": "exteriorWall.neons_005.001",
+                "playing": false,
+                "weight": 1,
+                "speed": 1,
+                "loop": false,
+                "shouldReset": false
+              },
+              {
+                "clip": "exteriorWall.neons_006.001",
+                "playing": false,
+                "weight": 1,
+                "speed": 1,
+                "loop": false,
+                "shouldReset": false
+              },
+              {
+                "clip": "exteriorWall.neons_001.002",
+                "playing": false,
+                "weight": 1,
+                "speed": 1,
+                "loop": false,
+                "shouldReset": false
+              },
+              {
+                "clip": "exteriorWall.neons_002.002",
+                "playing": false,
+                "weight": 1,
+                "speed": 1,
+                "loop": false,
+                "shouldReset": false
+              },
+              {
+                "clip": "exteriorWall.neons_003.002",
+                "playing": false,
+                "weight": 1,
+                "speed": 1,
+                "loop": false,
+                "shouldReset": false
+              },
+              {
+                "clip": "exteriorWall.neons_004.002",
+                "playing": false,
+                "weight": 1,
+                "speed": 1,
+                "loop": false,
+                "shouldReset": false
+              },
+              {
+                "clip": "exteriorWall.neons_005.002",
+                "playing": false,
+                "weight": 1,
+                "speed": 1,
+                "loop": false,
+                "shouldReset": false
+              },
+              {
+                "clip": "exteriorWall.neons_006.002",
+                "playing": false,
+                "weight": 1,
+                "speed": 1,
+                "loop": false,
+                "shouldReset": false
+              },
+              {
+                "clip": "exteriorWall.neons_001.003",
+                "playing": false,
+                "weight": 1,
+                "speed": 1,
+                "loop": false,
+                "shouldReset": false
+              },
+              {
+                "clip": "exteriorWall.neons_002.003",
+                "playing": false,
+                "weight": 1,
+                "speed": 1,
+                "loop": false,
+                "shouldReset": false
+              },
+              {
+                "clip": "exteriorWall.neons_003.003",
+                "playing": false,
+                "weight": 1,
+                "speed": 1,
+                "loop": false,
+                "shouldReset": false
+              },
+              {
+                "clip": "exteriorWall.neons_004.003",
+                "playing": false,
+                "weight": 1,
+                "speed": 1,
+                "loop": false,
+                "shouldReset": false
+              },
+              {
+                "clip": "exteriorWall.neons_005.003",
+                "playing": false,
+                "weight": 1,
+                "speed": 1,
+                "loop": false,
+                "shouldReset": false
+              },
+              {
+                "clip": "exteriorWall.neons_006.003",
+                "playing": false,
+                "weight": 1,
+                "speed": 1,
+                "loop": false,
+                "shouldReset": false
+              },
+              {
+                "clip": "walls.facade.012",
+                "playing": false,
+                "weight": 1,
+                "speed": 1,
+                "loop": false,
+                "shouldReset": false
+              },
+              {
+                "clip": "SeatinA",
                 "playing": false,
                 "weight": 1,
                 "speed": 1,
@@ -1054,7 +2862,7 @@
                 "shouldReset": false
               },
               {
-                "clip": "secondGround.002",
+                "clip": "SeatinB.002",
                 "playing": false,
                 "weight": 1,
                 "speed": 1,
@@ -1062,7 +2870,7 @@
                 "shouldReset": false
               },
               {
-                "clip": "secondGround.003",
+                "clip": "SeatinB.003",
                 "playing": false,
                 "weight": 1,
                 "speed": 1,
@@ -1070,7 +2878,7 @@
                 "shouldReset": false
               },
               {
-                "clip": "Shelf A.001",
+                "clip": "SeatinB.004",
                 "playing": false,
                 "weight": 1,
                 "speed": 1,
@@ -1078,7 +2886,7 @@
                 "shouldReset": false
               },
               {
-                "clip": "Shelf B.001",
+                "clip": "SeatinB.005",
                 "playing": false,
                 "weight": 1,
                 "speed": 1,
@@ -1086,7 +2894,7 @@
                 "shouldReset": false
               },
               {
-                "clip": "Shoe Shelves.001",
+                "clip": "SeatinB.006",
                 "playing": false,
                 "weight": 1,
                 "speed": 1,
@@ -1094,7 +2902,7 @@
                 "shouldReset": false
               },
               {
-                "clip": "Tanning Bed.001",
+                "clip": "SeatinB.007",
                 "playing": false,
                 "weight": 1,
                 "speed": 1,
@@ -1102,7 +2910,751 @@
                 "shouldReset": false
               },
               {
-                "clip": "Wardrobe1.001",
+                "clip": "SeatinB.008",
+                "playing": false,
+                "weight": 1,
+                "speed": 1,
+                "loop": false,
+                "shouldReset": false
+              },
+              {
+                "clip": "SeatinB.009",
+                "playing": false,
+                "weight": 1,
+                "speed": 1,
+                "loop": false,
+                "shouldReset": false
+              },
+              {
+                "clip": "SeatinB.010",
+                "playing": false,
+                "weight": 1,
+                "speed": 1,
+                "loop": false,
+                "shouldReset": false
+              },
+              {
+                "clip": "SeatinB.011",
+                "playing": false,
+                "weight": 1,
+                "speed": 1,
+                "loop": false,
+                "shouldReset": false
+              },
+              {
+                "clip": "SeatinB.012",
+                "playing": false,
+                "weight": 1,
+                "speed": 1,
+                "loop": false,
+                "shouldReset": false
+              },
+              {
+                "clip": "SeatinB.013",
+                "playing": false,
+                "weight": 1,
+                "speed": 1,
+                "loop": false,
+                "shouldReset": false
+              },
+              {
+                "clip": "SeatinB.014",
+                "playing": false,
+                "weight": 1,
+                "speed": 1,
+                "loop": false,
+                "shouldReset": false
+              },
+              {
+                "clip": "SeatinB.015",
+                "playing": false,
+                "weight": 1,
+                "speed": 1,
+                "loop": false,
+                "shouldReset": false
+              },
+              {
+                "clip": "SeatinB.016",
+                "playing": false,
+                "weight": 1,
+                "speed": 1,
+                "loop": false,
+                "shouldReset": false
+              },
+              {
+                "clip": "SeatinB.018",
+                "playing": false,
+                "weight": 1,
+                "speed": 1,
+                "loop": false,
+                "shouldReset": false
+              },
+              {
+                "clip": "Cube.007",
+                "playing": false,
+                "weight": 1,
+                "speed": 1,
+                "loop": false,
+                "shouldReset": false
+              },
+              {
+                "clip": "Cube.001",
+                "playing": false,
+                "weight": 1,
+                "speed": 1,
+                "loop": false,
+                "shouldReset": false
+              },
+              {
+                "clip": "Cube.002",
+                "playing": false,
+                "weight": 1,
+                "speed": 1,
+                "loop": false,
+                "shouldReset": false
+              },
+              {
+                "clip": "Cube.003",
+                "playing": false,
+                "weight": 1,
+                "speed": 1,
+                "loop": false,
+                "shouldReset": false
+              },
+              {
+                "clip": "Cube.004",
+                "playing": false,
+                "weight": 1,
+                "speed": 1,
+                "loop": false,
+                "shouldReset": false
+              },
+              {
+                "clip": "Cube.005",
+                "playing": false,
+                "weight": 1,
+                "speed": 1,
+                "loop": false,
+                "shouldReset": false
+              },
+              {
+                "clip": "Cube.006",
+                "playing": false,
+                "weight": 1,
+                "speed": 1,
+                "loop": false,
+                "shouldReset": false
+              },
+              {
+                "clip": "Cube.008",
+                "playing": false,
+                "weight": 1,
+                "speed": 1,
+                "loop": false,
+                "shouldReset": false
+              },
+              {
+                "clip": "Cube.009",
+                "playing": false,
+                "weight": 1,
+                "speed": 1,
+                "loop": false,
+                "shouldReset": false
+              },
+              {
+                "clip": "Cube.010",
+                "playing": false,
+                "weight": 1,
+                "speed": 1,
+                "loop": false,
+                "shouldReset": false
+              },
+              {
+                "clip": "Cube.011",
+                "playing": false,
+                "weight": 1,
+                "speed": 1,
+                "loop": false,
+                "shouldReset": false
+              },
+              {
+                "clip": "Cube.012",
+                "playing": false,
+                "weight": 1,
+                "speed": 1,
+                "loop": false,
+                "shouldReset": false
+              },
+              {
+                "clip": "Cube.013",
+                "playing": false,
+                "weight": 1,
+                "speed": 1,
+                "loop": false,
+                "shouldReset": false
+              },
+              {
+                "clip": "Cube.014",
+                "playing": false,
+                "weight": 1,
+                "speed": 1,
+                "loop": false,
+                "shouldReset": false
+              },
+              {
+                "clip": "Cube.015",
+                "playing": false,
+                "weight": 1,
+                "speed": 1,
+                "loop": false,
+                "shouldReset": false
+              },
+              {
+                "clip": "Cube.016",
+                "playing": false,
+                "weight": 1,
+                "speed": 1,
+                "loop": false,
+                "shouldReset": false
+              },
+              {
+                "clip": "main archway",
+                "playing": false,
+                "weight": 1,
+                "speed": 1,
+                "loop": false,
+                "shouldReset": false
+              },
+              {
+                "clip": "archway exit",
+                "playing": false,
+                "weight": 1,
+                "speed": 1,
+                "loop": false,
+                "shouldReset": false
+              },
+              {
+                "clip": "colum1",
+                "playing": false,
+                "weight": 1,
+                "speed": 1,
+                "loop": false,
+                "shouldReset": false
+              },
+              {
+                "clip": "column 2",
+                "playing": false,
+                "weight": 1,
+                "speed": 1,
+                "loop": false,
+                "shouldReset": false
+              },
+              {
+                "clip": "colum1.001",
+                "playing": false,
+                "weight": 1,
+                "speed": 1,
+                "loop": false,
+                "shouldReset": false
+              },
+              {
+                "clip": "colum1.002",
+                "playing": false,
+                "weight": 1,
+                "speed": 1,
+                "loop": false,
+                "shouldReset": false
+              },
+              {
+                "clip": "colum1.003",
+                "playing": false,
+                "weight": 1,
+                "speed": 1,
+                "loop": false,
+                "shouldReset": false
+              },
+              {
+                "clip": "colum1.004",
+                "playing": false,
+                "weight": 1,
+                "speed": 1,
+                "loop": false,
+                "shouldReset": false
+              },
+              {
+                "clip": "colum1.005",
+                "playing": false,
+                "weight": 1,
+                "speed": 1,
+                "loop": false,
+                "shouldReset": false
+              },
+              {
+                "clip": "colum1.006",
+                "playing": false,
+                "weight": 1,
+                "speed": 1,
+                "loop": false,
+                "shouldReset": false
+              },
+              {
+                "clip": "colum1.007",
+                "playing": false,
+                "weight": 1,
+                "speed": 1,
+                "loop": false,
+                "shouldReset": false
+              },
+              {
+                "clip": "column 2.001",
+                "playing": false,
+                "weight": 1,
+                "speed": 1,
+                "loop": false,
+                "shouldReset": false
+              },
+              {
+                "clip": "column 2.002",
+                "playing": false,
+                "weight": 1,
+                "speed": 1,
+                "loop": false,
+                "shouldReset": false
+              },
+              {
+                "clip": "column 2.003",
+                "playing": false,
+                "weight": 1,
+                "speed": 1,
+                "loop": false,
+                "shouldReset": false
+              },
+              {
+                "clip": "archway1.001",
+                "playing": false,
+                "weight": 1,
+                "speed": 1,
+                "loop": false,
+                "shouldReset": false
+              },
+              {
+                "clip": "archway1.006",
+                "playing": false,
+                "weight": 1,
+                "speed": 1,
+                "loop": false,
+                "shouldReset": false
+              },
+              {
+                "clip": "archway1.007",
+                "playing": false,
+                "weight": 1,
+                "speed": 1,
+                "loop": false,
+                "shouldReset": false
+              },
+              {
+                "clip": "archway1.008",
+                "playing": false,
+                "weight": 1,
+                "speed": 1,
+                "loop": false,
+                "shouldReset": false
+              },
+              {
+                "clip": "archway1.009",
+                "playing": false,
+                "weight": 1,
+                "speed": 1,
+                "loop": false,
+                "shouldReset": false
+              },
+              {
+                "clip": "archway1.010",
+                "playing": false,
+                "weight": 1,
+                "speed": 1,
+                "loop": false,
+                "shouldReset": false
+              },
+              {
+                "clip": "archway1.011",
+                "playing": false,
+                "weight": 1,
+                "speed": 1,
+                "loop": false,
+                "shouldReset": false
+              },
+              {
+                "clip": "archway1.012",
+                "playing": false,
+                "weight": 1,
+                "speed": 1,
+                "loop": false,
+                "shouldReset": false
+              },
+              {
+                "clip": "archway1.013",
+                "playing": false,
+                "weight": 1,
+                "speed": 1,
+                "loop": false,
+                "shouldReset": false
+              },
+              {
+                "clip": "archway1.014",
+                "playing": false,
+                "weight": 1,
+                "speed": 1,
+                "loop": false,
+                "shouldReset": false
+              },
+              {
+                "clip": "archway1.015",
+                "playing": false,
+                "weight": 1,
+                "speed": 1,
+                "loop": false,
+                "shouldReset": false
+              },
+              {
+                "clip": "archway1.016",
+                "playing": false,
+                "weight": 1,
+                "speed": 1,
+                "loop": false,
+                "shouldReset": false
+              },
+              {
+                "clip": "archway1.017",
+                "playing": false,
+                "weight": 1,
+                "speed": 1,
+                "loop": false,
+                "shouldReset": false
+              },
+              {
+                "clip": "archway1.018",
+                "playing": false,
+                "weight": 1,
+                "speed": 1,
+                "loop": false,
+                "shouldReset": false
+              },
+              {
+                "clip": "runway",
+                "playing": false,
+                "weight": 1,
+                "speed": 1,
+                "loop": false,
+                "shouldReset": false
+              },
+              {
+                "clip": "runway.002",
+                "playing": false,
+                "weight": 1,
+                "speed": 1,
+                "loop": false,
+                "shouldReset": false
+              },
+              {
+                "clip": "runway.003",
+                "playing": false,
+                "weight": 1,
+                "speed": 1,
+                "loop": false,
+                "shouldReset": false
+              },
+              {
+                "clip": "ceiling",
+                "playing": false,
+                "weight": 1,
+                "speed": 1,
+                "loop": false,
+                "shouldReset": false
+              },
+              {
+                "clip": "ceiling.topside",
+                "playing": false,
+                "weight": 1,
+                "speed": 1,
+                "loop": false,
+                "shouldReset": false
+              },
+              {
+                "clip": "ceiling.marble",
+                "playing": false,
+                "weight": 1,
+                "speed": 1,
+                "loop": false,
+                "shouldReset": false
+              },
+              {
+                "clip": "East.Wall.001",
+                "playing": false,
+                "weight": 1,
+                "speed": 1,
+                "loop": false,
+                "shouldReset": false
+              },
+              {
+                "clip": "Tanning Bed",
+                "playing": false,
+                "weight": 1,
+                "speed": 1,
+                "loop": false,
+                "shouldReset": false
+              },
+              {
+                "clip": "Hair Salon",
+                "playing": false,
+                "weight": 1,
+                "speed": 1,
+                "loop": false,
+                "shouldReset": false
+              },
+              {
+                "clip": "Changing Rooms.001",
+                "playing": false,
+                "weight": 1,
+                "speed": 1,
+                "loop": false,
+                "shouldReset": false
+              },
+              {
+                "clip": "Changing Rooms.002",
+                "playing": false,
+                "weight": 1,
+                "speed": 1,
+                "loop": false,
+                "shouldReset": false
+              },
+              {
+                "clip": "Lower-Body Shelves.008",
+                "playing": false,
+                "weight": 1,
+                "speed": 1,
+                "loop": false,
+                "shouldReset": false
+              },
+              {
+                "clip": "Lower-Body Shelves.001",
+                "playing": false,
+                "weight": 1,
+                "speed": 1,
+                "loop": false,
+                "shouldReset": false
+              },
+              {
+                "clip": "Changing Rooms",
+                "playing": false,
+                "weight": 1,
+                "speed": 1,
+                "loop": false,
+                "shouldReset": false
+              },
+              {
+                "clip": "railing 1",
+                "playing": false,
+                "weight": 1,
+                "speed": 1,
+                "loop": false,
+                "shouldReset": false
+              },
+              {
+                "clip": "railing 1.002",
+                "playing": false,
+                "weight": 1,
+                "speed": 1,
+                "loop": false,
+                "shouldReset": false
+              },
+              {
+                "clip": "Hair Station.002",
+                "playing": false,
+                "weight": 1,
+                "speed": 1,
+                "loop": false,
+                "shouldReset": false
+              },
+              {
+                "clip": "Shoe Shelves",
+                "playing": false,
+                "weight": 1,
+                "speed": 1,
+                "loop": false,
+                "shouldReset": false
+              },
+              {
+                "clip": "Hair Salon.001",
+                "playing": false,
+                "weight": 1,
+                "speed": 1,
+                "loop": false,
+                "shouldReset": false
+              },
+              {
+                "clip": "stairs",
+                "playing": false,
+                "weight": 1,
+                "speed": 1,
+                "loop": false,
+                "shouldReset": false
+              },
+              {
+                "clip": "hedge basin",
+                "playing": false,
+                "weight": 1,
+                "speed": 1,
+                "loop": false,
+                "shouldReset": false
+              },
+              {
+                "clip": "spect walkway",
+                "playing": false,
+                "weight": 1,
+                "speed": 1,
+                "loop": false,
+                "shouldReset": false
+              },
+              {
+                "clip": "railing 1.003",
+                "playing": false,
+                "weight": 1,
+                "speed": 1,
+                "loop": false,
+                "shouldReset": false
+              },
+              {
+                "clip": "spect walkway.003",
+                "playing": false,
+                "weight": 1,
+                "speed": 1,
+                "loop": false,
+                "shouldReset": false
+              },
+              {
+                "clip": "firstFloorWalls",
+                "playing": false,
+                "weight": 1,
+                "speed": 1,
+                "loop": false,
+                "shouldReset": false
+              },
+              {
+                "clip": "firstFloorWalls.001",
+                "playing": false,
+                "weight": 1,
+                "speed": 1,
+                "loop": false,
+                "shouldReset": false
+              },
+              {
+                "clip": "firstFloorWalls.002",
+                "playing": false,
+                "weight": 1,
+                "speed": 1,
+                "loop": false,
+                "shouldReset": false
+              },
+              {
+                "clip": "firstFloorWalls.003",
+                "playing": false,
+                "weight": 1,
+                "speed": 1,
+                "loop": false,
+                "shouldReset": false
+              },
+              {
+                "clip": "_welcome-sign",
+                "playing": false,
+                "weight": 1,
+                "speed": 1,
+                "loop": false,
+                "shouldReset": false
+              },
+              {
+                "clip": "origin",
+                "playing": false,
+                "weight": 1,
+                "speed": 1,
+                "loop": false,
+                "shouldReset": false
+              },
+              {
+                "clip": "welcome-sign",
+                "playing": false,
+                "weight": 1,
+                "speed": 1,
+                "loop": false,
+                "shouldReset": false
+              },
+              {
+                "clip": "welcome-sign.001",
+                "playing": false,
+                "weight": 1,
+                "speed": 1,
+                "loop": false,
+                "shouldReset": false
+              },
+              {
+                "clip": "ringLight",
+                "playing": false,
+                "weight": 1,
+                "speed": 1,
+                "loop": false,
+                "shouldReset": false
+              },
+              {
+                "clip": "ringLight.base",
+                "playing": false,
+                "weight": 1,
+                "speed": 1,
+                "loop": false,
+                "shouldReset": false
+              },
+              {
+                "clip": "zoneRing_001",
+                "playing": false,
+                "weight": 1,
+                "speed": 1,
+                "loop": false,
+                "shouldReset": false
+              },
+              {
+                "clip": "zoneRing_002",
+                "playing": false,
+                "weight": 1,
+                "speed": 1,
+                "loop": false,
+                "shouldReset": false
+              },
+              {
+                "clip": "zoneRing_003",
+                "playing": false,
+                "weight": 1,
+                "speed": 1,
+                "loop": false,
+                "shouldReset": false
+              },
+              {
+                "clip": "zoneRing_004",
+                "playing": false,
+                "weight": 1,
+                "speed": 1,
+                "loop": false,
+                "shouldReset": false
+              },
+              {
+                "clip": "zoneRing_005",
+                "playing": false,
+                "weight": 1,
+                "speed": 1,
+                "loop": false,
+                "shouldReset": false
+              },
+              {
+                "clip": "zoneRing_006",
                 "playing": false,
                 "weight": 1,
                 "speed": 1,
@@ -1194,7 +3746,7 @@
         "serializationType": "map"
       },
       "data": {
-        "0": {
+        "513": {
           "json": {
             "gizmo": 0
           }
