@@ -6,12 +6,18 @@ import { getPlayer, onEnterScene } from '@dcl/sdk/players'
 import { GameSettings } from "./_settings"
 import { _CameraController } from './CameraController'
 import { _SoundManager } from './SoundManager'
+import { Outfit } from './OutfitManager'
+import { SetCurrentPlayer } from './ui.Game.PlayerList'
+import { ShowYouAreNext } from './ui.Game.YouAreNext'
+import { ShowEmotesHint } from './ui.Game.Emotes'
+import { HideHowToPlay } from './ui.Game.HowToPlay'
+import { HideWarning } from './ui.Game.Warning'
 
 
 // Handles all Stage related stuff, such as spawning NPCs to represent the player
 // Also handles player cameras
 
-
+export let localPlayer: any
 
 class StageController {
 	isRunning                      : boolean                   = false
@@ -73,12 +79,22 @@ class StageController {
 			})
 		})
 
+		// Ensure we have player data for local player
+		utils.timers.setTimeout(() => {
+			localPlayer = getPlayer()
+			if (localPlayer) {
+				console.log("GameManager constructor: localPlayer" + localPlayer.userId)
+			} else {
+				console.log("GameManager constructor: localPlayer not found")
+			}
+		}, 2000)
+
 	}
 
 	// MARK: RunShow
 	RunShow(
 		players: string[], 
-		outfits: { userId: string, outfit: string[] }[]
+		outfits: Outfit[]
 	) {
 		console.log("StageController RunShow")
 
@@ -104,7 +120,7 @@ class StageController {
 			}
 			
 			// Create the NPC
-			const npc = this.CreateNPC(userId, outfit.outfit)
+			const npc = this.CreateNPC(userId, outfit.outfit, outfit.bodyShape)
 			if (!npc) {
 				console.error("StageController RunShow: Failed to create NPC clone for user", userId)
 				return
@@ -125,7 +141,7 @@ class StageController {
 		})
 
 		const npcCount = npcs.length
-		const npcInterval = GameSettings.ROUND_DURATION_PER_PLAYER
+		const npcInterval = GameSettings.ROUND_DURATION_PER_PLAYER + GameSettings.ROUND_INTERVAL
 		const totalDuration = GameSettings.ROUND_START_DELAY + (npcCount * npcInterval)
 
 		let currentIndex = 0
@@ -136,6 +152,9 @@ class StageController {
 			}
 
 			const { userId, npc } = npcs[currentIndex]
+
+			// Notify the UI that the player's turn has started
+			this.OnPlayerTurnStart(userId)
 
 			// Track the current NPC for the camera
 			const cameraTarget = cameraTargets.get(npc)
@@ -153,12 +172,23 @@ class StageController {
 			// Start a timeout, to complete when the NPC hits the end of the runway
 			if (this.currentTimeout) utils.timers.clearTimeout(this.currentTimeout)
 			this.currentTimeout = utils.timers.setTimeout(() => {
+				// Notify the UI that the player's turn has ended
+				this.OnPlayerTurnEnd(userId)
+
 				// If we're not at the last NPC, animate the next one
 				if (currentIndex < npcCount) animateNextNPC()
 
 				// When show has ended (after all NPCs have had a turn)
 				else this.OnShowEnd()
 			}, npcInterval * 1000)
+
+			// Notify the next player that they are next
+				const nextUserId = players[currentIndex]
+				if (nextUserId === localPlayer?.userId) {
+					utils.timers.setTimeout(() => {
+						ShowYouAreNext()
+					}, (GameSettings.ROUND_DURATION_PER_PLAYER - GameSettings.YOU_ARE_NEXT_PREEMPT_TIME) * 1000)
+				}
 		}
 
 		// Start the sequence after the round delay
@@ -167,7 +197,33 @@ class StageController {
 			animateNextNPC()
 		}, GameSettings.ROUND_START_DELAY * 1000)
 
+		// Notify the first user that it's their turn coming up
+		const firstUserId = players[0]
+		if (firstUserId === localPlayer?.userId) {
+			utils.timers.setTimeout(() => {
+				ShowYouAreNext()
+			}, (GameSettings.ROUND_START_DELAY - GameSettings.YOU_ARE_NEXT_PREEMPT_TIME) * 1000)
+		}
+
+
+		// Notify the UI that the show has started
 		this.OnShowStart()
+	}
+
+	AnimateNextNPC() {
+
+	}
+
+	OnPlayerTurnStart(userId: string) {
+		console.log("StageController OnPlayerTurnStart: userId", userId)
+		SetCurrentPlayer(userId)
+		if (userId === localPlayer?.userId) {
+			ShowEmotesHint()
+		}
+	}
+	OnPlayerTurnEnd(userId: string) {
+		console.log("StageController OnPlayerTurnEnd: userId", userId)
+		SetCurrentPlayer(undefined)
 	}
 
 
@@ -175,6 +231,8 @@ class StageController {
 	OnShowStart() {
 		console.log("StageController OnShowStart")
 		_SoundManager.StartBGM()
+		HideHowToPlay()
+		HideWarning()
 	}
 
 	// MARK: OnShowEnd
@@ -182,6 +240,11 @@ class StageController {
 		console.log("StageController OnShowEnd")
 		_CameraController.ResetCamera()
 		_SoundManager.StopBGM()
+
+		// Remove all the NPC entities
+		this.playerToNPC.forEach((npc, player) => {
+			this.DestroyNPC(npc)
+		})
 	}
 
 
@@ -195,7 +258,8 @@ class StageController {
 	// MARK: CreateNPC
 	CreateNPC(
 		userId: string, 
-		outfit: string[]
+		outfit: string[],
+		bodyShape: string
 	): Entity | undefined {
 		console.log("StageController CreateNPCClone: userId", userId)
 
@@ -213,7 +277,7 @@ class StageController {
 		AvatarShape.create(npc, {
 			id       : "npc_" + userId + "    ",
 			name     : userData.name,
-			bodyShape: userData.avatar!.bodyShapeUrn || "",
+			bodyShape: bodyShape,
 			wearables: outfit,
 			emotes   : userData.emotes,
 			eyeColor : userData.avatar!.eyesColor || Color3.create(0.5, 0.5, 0.5),
@@ -329,7 +393,7 @@ class StageController {
 					}),
 				},
 				{ // Turn at the catwalk junction
-					duration: this.durationPauseAtCatwalkJunction * 0.3 * 1000,
+					duration: this.durationPauseAtCatwalkJunction * 0.2 * 1000,
 					easingFunction: EasingFunction.EF_LINEAR,
 					mode: Tween.Mode.Rotate({
 						start: Quaternion.fromEulerDegrees(0, 180, 0),
@@ -337,7 +401,7 @@ class StageController {
 					}),
 				},
 				{ // Pause at the catwalk junction
-					duration: this.durationPauseAtCatwalkJunction * 0.7 * 1000,
+					duration: this.durationPauseAtCatwalkJunction * 0.8 * 1000,
 					easingFunction: EasingFunction.EF_LINEAR,
 					mode: Tween.Mode.Move({
 						start: GameSettings.NPC_PATH_CATWALK_JUNCTION,

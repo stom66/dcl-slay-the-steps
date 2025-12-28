@@ -3,6 +3,8 @@ import { getPlayer, onEnterScene, onLeaveScene } from "@dcl/sdk/players"
 import { Color3, Quaternion, Vector3 } from "@dcl/sdk/math"
 import { MessageBus } from "@dcl/sdk/message-bus"
 
+import * as utils from '@dcl-sdk/utils'
+
 import { GetUTCTimestampMillis } from "./utils"
 
 import { GameSettings } from "./_settings"
@@ -16,8 +18,6 @@ import { ShowWarning } from "./ui.Game.Warning"
 import { HideCountdownTimer, ShowCountdownTimer } from "./ui.Game.CountdownTimer"
 import { HideVotingOptions, ShowVotingOptions } from "./ui.Game.VotingOptions"
 import { HideVotingResults, ShowVotingResults } from "./ui.Game.VotingResults"
-
-import * as utils from '@dcl-sdk/utils'
 
 
 export enum GameStatus {
@@ -40,7 +40,7 @@ export type GameState = {
 
 export type RequestVote = {
 	voteFrom: string,
-	voteFor: string,
+	voteFor : string,
 }
 
 
@@ -115,8 +115,8 @@ class GameManager {
 
 		// MessageBus handling
 		// Handle players requesting to join the current game
-		sceneMessageBus.on('joinGameRequest', (request: { userId: string, outfit: string[] }) => {
-			this.OnRequestToJoinGame(request.userId, request.outfit)
+		sceneMessageBus.on('joinGameRequest', (request: { userId: string, outfit: string[], bodyShape: string }) => {
+			this.OnRequestToJoinGame(request.userId, request.outfit, request.bodyShape)
 		})
 
 		// Handle state requests
@@ -132,9 +132,9 @@ class GameManager {
 		})
 
 		// Handle outfit updates
-		sceneMessageBus.on('outfitUpdate', (outfit: { userId: string, outfit: string[] }) => {
+		sceneMessageBus.on('outfitUpdate', (outfit: { userId: string, outfit: string[], bodyShape: string }) => {
 			console.log("GameManager: sceneMessageBus: outfitUpdate:", outfit)
-			this.OnNotifyUpdateOutfit(outfit.userId, outfit.outfit)
+			this.OnNotifyUpdateOutfit(outfit.userId, outfit.outfit, outfit.bodyShape)
 		})
 
 		// Handle players requesting to vote
@@ -346,13 +346,18 @@ class GameManager {
 
 		if (!localPlayer || !localPlayer.userId) return
 		sceneMessageBus.emit('joinGameRequest', { 
-			userId: localPlayer.userId, 
-			outfit: _OutfitManager.GetCurrentOutfit() 
+			userId   : localPlayer.userId, 
+			outfit   : _OutfitManager.GetCurrentOutfit(),
+			bodyShape: _OutfitManager.GetCurrentBodyShape()
 		})
 	}
 
 	// MARK: OnRequestToJoinGame
-	OnRequestToJoinGame(userId: string, outfit: string[]) {
+	OnRequestToJoinGame(
+		userId   : string, 
+		outfit   : string[], 
+		bodyShape: string
+	) {
 		if (!this.iAmTheHost) return
 		console.log("GameManager: OnRequestToJoinExistingGame:", userId)
 
@@ -376,23 +381,28 @@ class GameManager {
 		}
 
 		this.state.players.push(userId)
-		this.state.outfits.push({ userId: userId, outfit: outfit })
+		this.state.outfits.push({ 
+			userId   : userId, 
+			outfit   : outfit, 
+			bodyShape: bodyShape 
+		})
 
 		this.TriggerStateUpdate()
 		UpdatePlayerList()
 	}
 
-	OnNotifyUpdateOutfit(userId: string, outfit: string[]) {
+	OnNotifyUpdateOutfit(userId: string, outfit: string[], bodyShape: string) {
 	
 		if (!this.iAmTheHost) return
-		console.log("GameManager: NotifyUpdateOutfit:", userId, outfit)
+		console.log("GameManager: NotifyUpdateOutfit:", userId, outfit, bodyShape)
 
 		// get the current outfit for the user, if it exists, update it
 		let currentOutfit = this.state.outfits.find((o) => o.userId === userId)
 		if (currentOutfit) {
 			currentOutfit.outfit = outfit
+			currentOutfit.bodyShape = bodyShape
 		} else {
-			this.state.outfits.push({ userId: userId, outfit: outfit })
+			this.state.outfits.push({ userId: userId, outfit: outfit, bodyShape: bodyShape })
 		}
 
 		this.TriggerStateUpdate()
@@ -408,12 +418,16 @@ class GameManager {
 			console.error("GameManager: StartHostingNewGame: localPlayer not found, or no userID, couldn't become host")
 			return
 		}
-		this.iAmTheHost             = true
-		this.iAmInTheGame           = true
-		this.state.hostUserId       = localPlayer.userId
-		this.state.players          = [localPlayer.userId]
-		this.state.outfits          = [{ userId: localPlayer.userId, outfit: _OutfitManager.GetCurrentOutfit() }]
+		this.iAmTheHost          = true
+		this.iAmInTheGame        = true
+		this.state.hostUserId    = localPlayer.userId
 		this.state.gameStartTime = this.utcTimestamp + GameSettings.COUNTDOWN_DURATION
+		this.state.players       = [localPlayer.userId]
+		this.state.outfits       = [{ 
+			userId   : localPlayer.userId, 
+			outfit   : _OutfitManager.GetCurrentOutfit(), 
+			bodyShape: _OutfitManager.GetCurrentBodyShape() 
+		}]
 
 		this.TriggerCountdownStart()
 	}

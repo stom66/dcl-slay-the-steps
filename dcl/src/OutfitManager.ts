@@ -9,8 +9,9 @@ import { MessageBus } from "@dcl/sdk/message-bus"
 const sceneMessageBus = new MessageBus()
 
 export type Outfit = {
-	userId: string,
-	outfit: string[],
+	userId   : string,
+	outfit   : string[],
+	bodyShape: string
 }
 
 
@@ -316,6 +317,9 @@ class OutfitManager {
 
 	GetCurrentOutfit(): string[] {
 		return this.npcWearables?.map(w => w.urn) ?? []
+	}
+	GetCurrentBodyShape(): string {
+		return this.npcBodyShape ?? "urn:decentraland:off-chain:base-avatars:BaseMale"
 	}
 
 	// MARK: Equip Wearable
