@@ -7,6 +7,9 @@ import { VotingOptionsUI } from './ui.Game.VotingOptions'
 import { VotingResultsUI } from './ui.Game.VotingResults'
 import { PlayerListUI } from './ui.Game.PlayerList'
 import { WarningUI } from './ui.Game.Warning'
+import { YouAreNextUI } from './ui.Game.YouAreNext'
+import { HowToPlayUI } from './ui.Game.HowToPlay'
+import { EmotesHintUI } from './ui.Game.Emotes'
 
 declare var process: {
 	env: {
@@ -22,6 +25,9 @@ const uiComponent = () => [
 	VotingResultsUI(),
 	PlayerListUI(),
 	WarningUI(),
+	YouAreNextUI(),
+	HowToPlayUI(),
+	EmotesHintUI(),
 	SHOW_DEBUG ? DebugUI() : null
 ]
 

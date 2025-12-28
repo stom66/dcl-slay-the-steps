@@ -8,6 +8,7 @@ import { _GameManager } from './GameManager'
 
 // Placeholders for dynamic content
 let playerList   : any[]  = [];
+let currentPlayer: undefined | string = ""
 var visiblePlayerList : boolean = true
 
 export function ShowPlayerList() {
@@ -17,6 +18,11 @@ export function ShowPlayerList() {
 export function HidePlayerList() {
 	console.log("HidePlayerList()")
 	visiblePlayerList = false
+}
+
+export function SetCurrentPlayer(userId?: string) {
+	currentPlayer = userId
+	UpdatePlayerList()
 }
 
 // MARK: BuildPlayerList
@@ -91,6 +97,19 @@ function BuildPlayerList() {
 					uiBackground={{
 						avatarTexture: { userId: userId },
 						textureMode  : "stretch"
+					}}
+				/>
+				<UiEntity
+					key={`player_${userId}_iconStar`}
+					uiTransform={{
+						width  : 36,
+						height : 36,
+						margin : { right: 10 },
+						display: currentPlayer === userId ? 'flex' : 'none',
+					}}
+					uiBackground={{
+						texture    : { src: "assets/images/ui/icon-star.png" },
+						textureMode: "stretch"
 					}}
 				/>
 				<Label
