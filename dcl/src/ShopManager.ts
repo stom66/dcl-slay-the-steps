@@ -123,7 +123,7 @@ class ShopManager {
 				{ 
 					entity: btnLeftEntity, 
 					opts: { 
-						button: InputAction.IA_PRIMARY,
+						button: InputAction.IA_POINTER,
 						hoverText: "Previous",
 						maxDistance: 20
 					} 
@@ -145,7 +145,7 @@ class ShopManager {
 				{ 
 					entity: btnRightEntity, 
 					opts: { 
-						button: InputAction.IA_PRIMARY,
+						button: InputAction.IA_POINTER,
 						hoverText: "Next",
 						maxDistance: 20
 					} 
@@ -160,6 +160,9 @@ class ShopManager {
 		})
 	}
 
+	private createHairColorWheel() {
+		const hairColorWheelEntity = engine.addEntity()
+	}
 	/**
 	 * Show the UI for a specific zone
 	 */
@@ -338,7 +341,7 @@ class ShopManager {
 			{ 
 				entity: entity, 
 				opts: { 
-					button     : InputAction.IA_PRIMARY,
+					button     : InputAction.IA_POINTER,
 					hoverText  : hoverText,
 					maxDistance: 10
 				} 

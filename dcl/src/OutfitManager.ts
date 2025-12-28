@@ -173,7 +173,7 @@ class OutfitManager {
 				{ 
 					entity: this.npcBtnReset, 
 					opts: { 
-						button: InputAction.IA_PRIMARY,
+						button: InputAction.IA_POINTER,
 						hoverText: "Reset all wearables",
 						maxDistance: 4,
 					}
@@ -195,7 +195,7 @@ class OutfitManager {
 				{ 
 					entity: this.npcBtnCopy, 
 					opts: { 
-						button: InputAction.IA_PRIMARY,
+						button: InputAction.IA_POINTER,
 						hoverText: "Copy my wearables",
 						maxDistance: 4,
 					}
@@ -217,7 +217,7 @@ class OutfitManager {
 				{ 
 					entity: this.npcBtnSwap, 
 					opts: { 
-						button: InputAction.IA_PRIMARY,
+						button: InputAction.IA_POINTER,
 						hoverText: "Swap gender",
 						maxDistance: 4,
 					}
