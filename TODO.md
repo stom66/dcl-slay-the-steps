@@ -4,8 +4,9 @@
 - [ ] Create scene thumbnail
 - [ ] Add UI hint to encourage contestants to emote during their turn
 - [ ] Add UI "GameStatus" panel
-- [ ] Revise the How To Play ui
-- [ ] reset zone items to defaults if user goes back to the first page
+- [x] Revise the How To Play ui
+- [x] reset zone items to defaults if user goes back to the first page
+- [x] Playerlist: highlight the current player?
 - [?] Implement TryOn feature
 - [x] Lock players to seats when they're in the game
 - [x] Dress the GameHost NPC
