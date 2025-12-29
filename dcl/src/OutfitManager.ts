@@ -11,7 +11,7 @@ const sceneMessageBus = new MessageBus()
 
 export type Outfit = {
 	userId   : string,
-	wearables: string[],
+	wearables: Wearable[],
 	bodyShape: string,
 	hairColor: Color3
 }
@@ -25,12 +25,14 @@ class OutfitManager {
 	npcBtnReset         : undefined | Entity     = undefined
 	npcBtnCopy          : undefined | Entity     = undefined
 	npcBtnSwap          : undefined | Entity     = undefined
-	npcWearables        : undefined | Wearable[] = undefined // What their mannequin is wearing (starts off same as player)
-	npcBodyShape        : undefined | string     = "BaseMale" // What their mannequin's body shape is
-	npcHairColor        : undefined | Color3     = Color3.create(0.5, 0.5, 0.5) // What their mannequin's hair color is
+
 	playerWearables     : undefined | Wearable[] = undefined // What the player is currently wearing
+	npcOutfit           : Outfit     = { userId: "", wearables: [], bodyShape: "", hairColor: Color3.Green() }
+	//npcWearables        : undefined | Wearable[] = undefined // What their mannequin is wearing (starts off same as player)
+	//npcBodyShape        : undefined | string     = "BaseMale" // What their mannequin's body shape is
+	//npcHairColor        : undefined | Color3     = Color3.create(0.5, 0.5, 0.5) // What their mannequin's hair color is
+
 	isWearableDataLoaded: boolean                = false
-	wearableDataCache   : Map<string, Wearable>  = new Map()
 	runUpdate           : boolean                = false
 
 	constructor() { }
@@ -72,12 +74,17 @@ class OutfitManager {
 			}
 
 			// Update other avatar properties
-			this.npcBodyShape = this.userData.avatar?.bodyShapeUrn || "urn:decentraland:off-chain:base-avatars:BaseMale"
-			this.npcHairColor = this.userData.avatar?.hairColor || Color3.create(0.5, 0.5, 0.5)
-			this.npcWearables = this.playerWearables.map(w => ({ ...w }))
-			this.isWearableDataLoaded = true
+			//this.npcBodyShape = this.userData.avatar?.bodyShapeUrn || "urn:decentraland:off-chain:base-avatars:BaseMale"
+			//this.npcHairColor = this.userData.avatar?.hairColor || Color3.create(0.5, 0.5, 0.5)
+			//this.npcOutfit.wearables = this.playerWearables.map(w => ({ ...w }))
 
-			console.log("OutfitManager: InitUserWearables: npc body shape", this.npcBodyShape)
+			this.npcOutfit = {
+				userId   : this.userData.userId,
+				wearables: this.playerWearables.map(w => w),
+				bodyShape: this.userData.avatar?.bodyShapeUrn || "urn:decentraland:off-chain:base-avatars:BaseMale",
+				hairColor: this.userData.avatar?.hairColor || Color3.create(0.5, 0.5, 0.5)
+			}
+			this.isWearableDataLoaded = true
 
 			console.log(
 				"OutfitManager InitUserWearables: got",
@@ -144,7 +151,7 @@ class OutfitManager {
 
 
 
-	// MARK: Show/Hide NPC Mannequin
+	// MARK: Show NPC Mannequin
 	ShowNPCMannequin() {
 		
 		this.runUpdate = false
@@ -243,13 +250,14 @@ class OutfitManager {
 		AvatarShape.createOrReplace(this.npcMannequin, {
 			id       : "npc_mannequin    ",
 			name     : "",
-			bodyShape: this.npcBodyShape,
-			wearables: this.npcWearables?.map(w => w.urn) ?? [],
+			bodyShape: this.npcOutfit?.bodyShape,
+			wearables: this.npcOutfit?.wearables?.map(w => w.urn) ?? [],
 			emotes   : [],
-			hairColor: this.npcHairColor,
+			hairColor: this.npcOutfit.hairColor,
 		})
-		
-		Animator.createOrReplace(this.npcMannequin, {
+	
+		// Attempt to stop walking animation on character but doesn't work
+/* 		Animator.createOrReplace(this.npcMannequin, {
 			states: [
 			  {
 				clip: 'idle',
@@ -257,11 +265,12 @@ class OutfitManager {
 				loop: true
 			  }
 			]
-		})
+		}) */
 		this.runUpdate = true
 
 	}
 
+	// MARK: Hide NPC Mannequin
 	HideNPCMannequin() {
 		this.runUpdate = false
 		if (this.npcMannequin) {
@@ -291,14 +300,14 @@ class OutfitManager {
 
 	ResetOutfit() {
 		console.log("OutfitManager ResetOutfit")
-		this.npcWearables = []
+		this.npcOutfit.wearables = []
 		//this.HideNPCMannequin()
 		this.ShowNPCMannequin()
 	}
 
 	CopyMyOutfit() {
 		console.log("OutfitManager CopyMyOutfit")
-		this.npcWearables = this.playerWearables?.map(w => ({ ...w })) ?? []
+		this.npcOutfit.wearables = this.playerWearables?.map(w => w) ?? []
 		//this.HideNPCMannequin()
 		this.ShowNPCMannequin()
 	}
@@ -307,10 +316,10 @@ class OutfitManager {
 		console.log("OutfitManager SwapGender")
 		// if the current this.npcBodyShape contains "Female" then set it to "BaseMale"
 		// otherwise set it to "BaseFemale"
-		if (this.npcBodyShape?.includes("Female")) {
-			this.npcBodyShape = "urn:decentraland:off-chain:base-avatars:BaseMale"
+		if (this.npcOutfit?.bodyShape?.includes("Female")) {
+			this.npcOutfit.bodyShape = "urn:decentraland:off-chain:base-avatars:BaseMale"
 		} else {
-			this.npcBodyShape = "urn:decentraland:off-chain:base-avatars:BaseFemale"
+			this.npcOutfit.bodyShape = "urn:decentraland:off-chain:base-avatars:BaseFemale"
 		}
 
 		this.runUpdate = false
@@ -321,15 +330,18 @@ class OutfitManager {
 
 	// MARK: Util
 
-	GetCurrentWearables(): string[] {
-		return this.npcWearables?.map(w => w.urn) ?? []
+	GetCurrentOutfit(): Outfit {
+		return this.npcOutfit
+	}
+/* 	GetCurrentWearables(): Wearable[] {
+		return this.npcOutfit.wearables?.map(w => w) ?? []
 	}
 	GetCurrentBodyShape(): string {
 		return this.npcBodyShape ?? "urn:decentraland:off-chain:base-avatars:BaseMale"
 	}
 	GetCurrentHairColor(): Color3 {
 		return this.npcHairColor ?? Color3.create(0.5, 0.5, 0.5)
-	}
+	} */
 
 	// MARK: Equip Wearable
 	async EquipWearable(wearable: Wearable) {
@@ -342,40 +354,34 @@ class OutfitManager {
 		}
 
 		// Make sure the npc wearables exist
-		if (!this.npcWearables) {
-			console.error("OutfitManager EquipWearable: npc wearables not found")
+		if (!this.npcOutfit.wearables) {
+			console.error("OutfitManager EquipWearable: npcOutfit.wearables not found")
 			return
 		}
 
 		// Remove any existing wearables in the same category
-		for (const currentWearable of this.npcWearables) {
+		for (const currentWearable of this.npcOutfit.wearables) {
 			if (currentWearable.category === wearable.category) {
-				this.npcWearables.splice(this.npcWearables.indexOf(currentWearable), 1)
+				this.npcOutfit.wearables.splice(this.npcOutfit.wearables.indexOf(currentWearable), 1)
 				break
 			}
 		}
 
 		// Add the new wearable to the npc wearables
-		this.npcWearables.push(wearable)
+		this.npcOutfit.wearables.push(wearable)
 
 		// Update the mannequin with the new wearables
 		this.ShowNPCMannequin()
 
 		// Let the host know about the new outfit
-		sceneMessageBus.emit(MessageBusEvents.NOTIFY_SERVER_OUTFIT, {
-			userId   : this.userData?.userId ?? "",
-			outfit   : this.npcWearables.map(w => w.urn),
-			bodyShape: this.npcBodyShape ?? "urn:decentraland:off-chain:base-avatars:BaseMale"
-		})
+		sceneMessageBus.emit(MessageBusEvents.NOTIFY_SERVER_OUTFIT, this.npcOutfit)
 	}
 
 	// MARK: Set Hair Color
 	SetHairColor(color: Color3) {
 		console.log("OutfitManager SetHairColor: setting hair color to", color)
-		this.npcHairColor = color
+		this.npcOutfit.hairColor = color
 		this.ShowNPCMannequin()
-
-
 	}
 }
 

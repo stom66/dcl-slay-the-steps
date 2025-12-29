@@ -120,7 +120,7 @@ class StageController {
 			}
 			
 			// Create the NPC
-			const npc = this.CreateNPC(userId, outfit.wearables, outfit.bodyShape)
+			const npc = this.CreateNPC(outfit)
 			if (!npc) {
 				console.error("StageController RunShow: Failed to create NPC clone for user", userId)
 				return
@@ -253,15 +253,11 @@ class StageController {
 	}
 
 	// MARK: CreateNPC
-	CreateNPC(
-		userId: string, 
-		outfit: string[],
-		bodyShape: string
-	): Entity | undefined {
-		console.log("StageController CreateNPCClone: userId", userId)
+	CreateNPC(outfit: Outfit): Entity | undefined {
+		console.log("StageController CreateNPCClone: userId", outfit.userId)
 
 		// Fetch the userData
-		let userData = getPlayer({ userId: userId })
+		let userData = getPlayer({ userId: outfit.userId })
 		console.log(userData)	  
 		if (!userData || !userData.wearables) return
 
@@ -272,14 +268,14 @@ class StageController {
 
 		// the avatars wearables are in the outfit array, so we need to get the wearables from the outfit
 		AvatarShape.create(npc, {
-			id       : "npc_" + userId + "    ",
+			id       : "npc_" + outfit.userId + "    ",
 			name     : userData.name,
-			bodyShape: bodyShape,
-			wearables: outfit,
+			bodyShape: outfit.bodyShape,
+			wearables: outfit.wearables.map((w) => w.urn) ?? [],
 			emotes   : userData.emotes,
 			eyeColor : userData.avatar!.eyesColor || Color3.create(0.5, 0.5, 0.5),
 			skinColor: userData.avatar!.skinColor || Color3.create(0.5, 0.5, 0.5),
-			hairColor: userData.avatar!.hairColor || Color3.create(0.5, 0.5, 0.5)
+			hairColor: outfit.hairColor
 		})
 
 		// Position the Avatar

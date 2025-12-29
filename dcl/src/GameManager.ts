@@ -120,8 +120,8 @@ class GameManager {
 
 		// MessageBus handling
 		// Handle players requesting to join the current game
-		sceneMessageBus.on(MessageBusEvents.REQUEST_JOIN_GAME, (request: { userId: string, outfit: string[], bodyShape: string }) => {
-			this.OnRequestToJoinGame(request.userId, request.outfit, request.bodyShape)
+		sceneMessageBus.on(MessageBusEvents.REQUEST_JOIN_GAME, (outfit: Outfit) => {
+			this.OnRequestToJoinGame(outfit)
 		})
 
 		// Handle state requests
@@ -360,21 +360,13 @@ class GameManager {
 		}
 
 		if (!localPlayer || !localPlayer.userId) return
-		sceneMessageBus.emit(MessageBusEvents.REQUEST_JOIN_GAME, { 
-			userId   : localPlayer.userId, 
-			outfit   : _OutfitManager.GetCurrentWearables(),
-			bodyShape: _OutfitManager.GetCurrentBodyShape()
-		})
+		sceneMessageBus.emit(MessageBusEvents.REQUEST_JOIN_GAME, _OutfitManager.GetCurrentOutfit())
 	}
 
 	// MARK: OnRequestToJoinGame
-	OnRequestToJoinGame(
-		userId   : string, 
-		outfit   : string[], 
-		bodyShape: string
-	) {
+	OnRequestToJoinGame(outfit: Outfit) {
 		if (!this.iAmTheHost) return
-		console.log("GameManager: OnRequestToJoinExistingGame:", userId)
+		console.log("GameManager: OnRequestToJoinExistingGame:", outfit.userId)
 
 		// Ignore if game is not in the starting state
 		if (this.state.gameState != GameStatus.STARTING) {
@@ -383,8 +375,8 @@ class GameManager {
 		} 
 
 		// Ignore if player is already in the list of players
-		if (this.state.players.includes(userId)) {
-			console.log("GameManager: OnRequestToJoinExistingGame: Player already in the list of players", userId)
+		if (this.state.players.includes(outfit.userId)) {
+			console.log("GameManager: OnRequestToJoinExistingGame: Player already in the list of players", outfit.userId)
 			return
 		}
 
@@ -395,18 +387,14 @@ class GameManager {
 			return
 		}
 
-		this.state.players.push(userId)
-		this.state.outfits.push({ 
-			userId   : userId, 
-			wearables   : outfit, 
-			bodyShape: bodyShape,
-			hairColor: _OutfitManager.GetCurrentHairColor()
-		})
+		this.state.players.push(outfit.userId)
+		this.state.outfits.push(outfit)
 
 		this.TriggerStateUpdate()
 		UpdatePlayerList()
 	}
 
+	// MARK: OnNotifyUpdateOutfit
 	OnNotifyUpdateOutfit(outfit: Outfit) {
 	
 		if (!this.iAmTheHost) return
@@ -415,6 +403,7 @@ class GameManager {
 		// get the current outfit for the user, if it exists, update it
 		let currentOutfit = this.state.outfits.find((o) => o.userId === outfit.userId)
 		if (currentOutfit) {
+			currentOutfit.userId    = outfit.userId
 			currentOutfit.wearables = outfit.wearables
 			currentOutfit.bodyShape = outfit.bodyShape
 			currentOutfit.hairColor = outfit.hairColor
@@ -440,12 +429,7 @@ class GameManager {
 		this.state.hostUserId    = localPlayer.userId
 		this.state.gameStartTime = this.utcTimestamp + GameSettings.COUNTDOWN_DURATION
 		this.state.players       = [localPlayer.userId]
-		this.state.outfits       = [{ 
-			userId   : localPlayer.userId, 
-			wearables   : _OutfitManager.GetCurrentWearables(), 
-			bodyShape: _OutfitManager.GetCurrentBodyShape(),
-			hairColor: _OutfitManager.GetCurrentHairColor()
-		}]
+		this.state.outfits       = [_OutfitManager.GetCurrentOutfit()]
 
 		this.TriggerCountdownStart()
 
