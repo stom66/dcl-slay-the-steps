@@ -1,4 +1,4 @@
-import { Vector3 } from "@dcl/sdk/math"
+import { Color3, Vector3 } from "@dcl/sdk/math"
 import { GameSettings } from "./_settings"
 import { getPlayer } from "@dcl/sdk/players"
 
@@ -219,3 +219,22 @@ export async function GetWearableData(urn: string): Promise<Wearable> {
 		return defaultData
 	}
 }
+
+export function hsvToColor3(h: number, s: number, v: number) {
+	const i = Math.floor(h * 6)
+	const f = h * 6 - i
+	const p = v * (1 - s)
+	const q = v * (1 - f * s)
+	const t = v * (1 - (1 - f) * s)
+  
+	switch (i % 6) {
+	  case 0: return Color3.create(v, t, p)
+	  case 1: return Color3.create(q, v, p)
+	  case 2: return Color3.create(p, v, t)
+	  case 3: return Color3.create(p, q, v)
+	  case 4: return Color3.create(t, p, v)
+	  case 5: return Color3.create(v, p, q)
+	  default: return Color3.create(0, 0, 0)
+	}
+  }
+  
