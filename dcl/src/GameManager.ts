@@ -137,9 +137,9 @@ class GameManager {
 		})
 
 		// Handle outfit updates
-		sceneMessageBus.on(MessageBusEvents.NOTIFY_SERVER_OUTFIT, (outfit: { userId: string, outfit: string[], bodyShape: string }) => {
+		sceneMessageBus.on(MessageBusEvents.NOTIFY_SERVER_OUTFIT, (outfit: Outfit) => {
 			console.log("GameManager: sceneMessageBus: outfitUpdate:", outfit)
-			this.OnNotifyUpdateOutfit(outfit.userId, outfit.outfit, outfit.bodyShape)
+			this.OnNotifyUpdateOutfit(outfit)
 		})
 
 		// Handle players requesting to vote
@@ -265,7 +265,15 @@ class GameManager {
 
 	// MARK: UpdateUTCTimestamp
 	UpdateUTCTimestamp() {
-		GetUTCTimestampMillis().then((timestampMillis) => {
+		const timestamp = Date.now()
+		
+		console.log("UTC updated to:", timestamp)
+		this.utcTimestamp           = Math.floor(timestamp / 1000)
+		this.utcTimestampMillis     = timestamp
+		this.timeSinceLastUTCUpdate = 0
+
+		// Old code here, when we were using an external API for the timestamp
+/* 		GetUTCTimestampMillis().then((timestampMillis) => {
 			if (!timestampMillis) {
 				console.error("GameManager: UpdateUTCTimestamp: Failed to get UTC timestamp")
 				return
@@ -274,7 +282,7 @@ class GameManager {
 			this.utcTimestamp           = Math.floor(timestampMillis / 1000)
 			this.utcTimestampMillis     = timestampMillis
 			this.timeSinceLastUTCUpdate = 0
-		})
+		}) */
 	}
 
 
@@ -354,7 +362,7 @@ class GameManager {
 		if (!localPlayer || !localPlayer.userId) return
 		sceneMessageBus.emit(MessageBusEvents.REQUEST_JOIN_GAME, { 
 			userId   : localPlayer.userId, 
-			outfit   : _OutfitManager.GetCurrentOutfit(),
+			outfit   : _OutfitManager.GetCurrentWearables(),
 			bodyShape: _OutfitManager.GetCurrentBodyShape()
 		})
 	}
@@ -390,26 +398,28 @@ class GameManager {
 		this.state.players.push(userId)
 		this.state.outfits.push({ 
 			userId   : userId, 
-			outfit   : outfit, 
-			bodyShape: bodyShape 
+			wearables   : outfit, 
+			bodyShape: bodyShape,
+			hairColor: _OutfitManager.GetCurrentHairColor()
 		})
 
 		this.TriggerStateUpdate()
 		UpdatePlayerList()
 	}
 
-	OnNotifyUpdateOutfit(userId: string, outfit: string[], bodyShape: string) {
+	OnNotifyUpdateOutfit(outfit: Outfit) {
 	
 		if (!this.iAmTheHost) return
-		console.log("GameManager: NotifyUpdateOutfit:", userId, outfit, bodyShape)
+		console.log("GameManager: NotifyUpdateOutfit:", outfit.userId, outfit.wearables, outfit.bodyShape, outfit.hairColor)
 
 		// get the current outfit for the user, if it exists, update it
-		let currentOutfit = this.state.outfits.find((o) => o.userId === userId)
+		let currentOutfit = this.state.outfits.find((o) => o.userId === outfit.userId)
 		if (currentOutfit) {
-			currentOutfit.outfit = outfit
-			currentOutfit.bodyShape = bodyShape
+			currentOutfit.wearables = outfit.wearables
+			currentOutfit.bodyShape = outfit.bodyShape
+			currentOutfit.hairColor = outfit.hairColor
 		} else {
-			this.state.outfits.push({ userId: userId, outfit: outfit, bodyShape: bodyShape })
+			this.state.outfits.push(outfit)
 		}
 
 		this.TriggerStateUpdate()
@@ -432,8 +442,9 @@ class GameManager {
 		this.state.players       = [localPlayer.userId]
 		this.state.outfits       = [{ 
 			userId   : localPlayer.userId, 
-			outfit   : _OutfitManager.GetCurrentOutfit(), 
-			bodyShape: _OutfitManager.GetCurrentBodyShape() 
+			wearables   : _OutfitManager.GetCurrentWearables(), 
+			bodyShape: _OutfitManager.GetCurrentBodyShape(),
+			hairColor: _OutfitManager.GetCurrentHairColor()
 		}]
 
 		this.TriggerCountdownStart()
@@ -496,11 +507,16 @@ class GameManager {
 		if (this.currentTimeout) {
 			utils.timers.clearTimeout(this.currentTimeout)
 		}
-		const roundDuration = (GameSettings.ROUND_DURATION_PER_PLAYER * this.state.players.length + GameSettings.ROUND_START_DELAY) * 1000
+		let duration = 0
+		duration += GameSettings.ROUND_START_DELAY
+		duration += GameSettings.ROUND_INTERVAL * (this.state.players.length - 1)
+		duration += GameSettings.ROUND_DURATION_PER_PLAYER * this.state.players.length
+		duration *= 1000
+
 		this.currentTimeout = utils.timers.setTimeout(() => {
 			if (this.state.gameState == GameStatus.IDLE) return
 			this.TriggerVotingStart()
-		}, roundDuration)
+		}, duration)
 	}
 
 
