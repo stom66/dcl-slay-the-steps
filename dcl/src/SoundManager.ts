@@ -11,7 +11,7 @@ class SoundManager {
 	private volume       = 0.5
 	
 	constructor() {
-		engine.addSystem(this.update)
+		engine.addSystem(this.System_UpdateSound)
 	}
 	
 	init() {
@@ -50,7 +50,7 @@ class SoundManager {
 		this.volume = audio.volume ?? 0.5
 	}
 	
-	private update = (dt: number) => {
+	private System_UpdateSound = (dt: number) => {
 		if (!(this.fadingOut || this.fadingIn) || !this.bgm) return
 		
 		const audio = AudioSource.getMutableOrNull(this.bgm)
