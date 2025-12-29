@@ -56,7 +56,8 @@ class GameManager {
 	iAmInTheGame          : boolean = false
 	countdownValue        : number  = 0
 
-	currentTimeout: utils.TimerId | undefined = undefined
+	currentTimeout: utils.TimerId | undefined = undefined // used to start the countdown
+	timerInterval: utils.TimerId | undefined = undefined // used to send out repeated updates during the countdown
 
 	state: GameState = {
 		gameState    : GameStatus.IDLE,
@@ -84,6 +85,10 @@ class GameManager {
 		if (this.currentTimeout) {
 			utils.timers.clearTimeout(this.currentTimeout)
 			this.currentTimeout = undefined
+		}
+		if (this.timerInterval) {
+			utils.timers.clearInterval(this.timerInterval)
+			this.timerInterval = undefined
 		}
 
 		HideCountdownTimer()
@@ -300,6 +305,20 @@ class GameManager {
 			return
 		}
 
+		// Ignore if a game is in progress
+		if (this.state.gameState == GameStatus.ROUND_ACTIVE || this.state.gameState == GameStatus.VOTING || this.state.gameState == GameStatus.GAME_ENDED) {
+			console.log("GameManager: OnJoinOrStartGame: Game is in progress, please wait for the next game")
+			ShowWarning("A Game is currently in progress, please wait for the next game!")
+			return
+		}
+
+		// Ignore if the game is full
+		if (this.state.players.length >= GameSettings.MAX_PLAYERS) {
+			console.log("GameManager: OnJoinOrStartGame: Max players reached, please wait for the next game")
+			ShowWarning("The current game is full, please wait for the next game!")
+			return
+		}
+
 		// If game is starting then request to join
 		if (this.state.gameState == GameStatus.STARTING) {
 			this.RequestToJoinGame()
@@ -310,18 +329,6 @@ class GameManager {
 		if (this.state.gameState == GameStatus.IDLE) {
 			// TODO: more checks here to ensure there's not currently a game running? perhaps check how many other players are currently in the scene?
 			this.StartHostingNewGame()
-			return
-		}
-
-		if (this.state.gameState == GameStatus.ROUND_ACTIVE || this.state.gameState == GameStatus.VOTING || this.state.gameState == GameStatus.GAME_ENDED) {
-			console.log("GameManager: OnJoinOrStartGame: Game is in progress, please wait for the next game")
-			ShowWarning("A Game is currently in progress, please wait for the next game!")
-			return
-		}
-
-		if (this.state.players.length >= GameSettings.MAX_PLAYERS) {
-			console.log("GameManager: OnJoinOrStartGame: Max players reached, please wait for the next game")
-			ShowWarning("The current game is full, please wait for the next game!")
 			return
 		}
 	}
@@ -430,6 +437,16 @@ class GameManager {
 		}]
 
 		this.TriggerCountdownStart()
+
+		// Send out repeated updates during the countdown
+		if (this.timerInterval) utils.timers.clearInterval(this.timerInterval)
+		this.timerInterval = utils.timers.setInterval(() => {
+			this.TriggerStateUpdate()
+		}, 1000)
+
+		utils.timers.setTimeout(() => {
+			if (this.timerInterval) utils.timers.clearInterval(this.timerInterval)
+		}, (GameSettings.COUNTDOWN_DURATION - 1) * 1000)
 	}
 	
 
