@@ -47,7 +47,7 @@ class SeatManager {
 		})
 
 		// Also freeze their inputs
-		InputModifier.create(engine.PlayerEntity, {
+		InputModifier.createOrReplace(engine.PlayerEntity, {
 			mode: InputModifier.Mode.Standard({
 				disableAll  : false,
 				disableEmote: false,
