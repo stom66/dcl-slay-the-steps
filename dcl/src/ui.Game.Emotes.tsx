@@ -8,7 +8,7 @@ import { GameSettings } from './_settings'
 
 
 // Placeholders for dynamic content
-export var visibleEmotesHint: boolean = false
+export var visibleEmotesHint: boolean = true
 
 export function ShowEmotesHint() {
 	console.log("ShowEmotesHint()")
@@ -57,41 +57,41 @@ export function EmotesHintUI() {
 
 				}}
 			>
-			</UiEntity>
-			<UiEntity
-				key={`ui_EmotesHint_close_icon`}
-				uiTransform={{
-					width         : 56,
-					height        : 56,
-					positionType  : "absolute",
-					position      : { top: -8, right: -8 },
-					display       : "flex",
-					alignItems    : "center",
-					justifyContent: "center",
-				}}
-				uiBackground={{
-					texture: {
-						src: "assets/images/ui/icon-circle.png"
-					},
-					textureMode: "stretch"
-				}}
-			>
-				<Button
-					key={`ui_EmotesHint_close_button`}
+				<UiEntity
+					key={`ui_EmotesHint_close_icon`}
 					uiTransform={{
-						width : "100%",
-						height: "100%",
+						width         : 48,
+						height        : 48,
+						positionType  : "absolute",
+						position      : { top: -12, right: -12 },
+						display       : "flex",
+						alignItems    : "center",
+						justifyContent: "center",
 					}}
 					uiBackground={{
 						texture: {
-							src: "assets/images/ui/icon-close.png"
+							src: "assets/images/ui/icon-circle.png"
 						},
-						textureMode: "stretch",
-						color: Color4.fromHexString("#D89130")
+						textureMode: "stretch"
 					}}
-					value=""
-					onMouseUp={() => HideEmotesHint()}
-				/>
+				>
+					<Button
+						key={`ui_EmotesHint_close_button`}
+						uiTransform={{
+							width : "100%",
+							height: "100%",
+						}}
+						uiBackground={{
+							texture: {
+								src: "assets/images/ui/icon-close.png"
+							},
+							textureMode: "stretch",
+							color: Color4.fromHexString("#D89130")
+						}}
+						value=""
+						onMouseUp={() => HideEmotesHint()}
+					/>
+				</UiEntity>
 			</UiEntity>
 		</UiEntity>
 	)
