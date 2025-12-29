@@ -4,7 +4,7 @@ import { movePlayerTo } from "~system/RestrictedActions"
 import { GameSettings } from "./_settings"
 import { GetRandomPointInCircle } from "./utils"
 import { _CameraController } from "./CameraController"
-import { engine, Transform } from "@dcl/sdk/ecs"
+import { engine, InputModifier, Transform } from "@dcl/sdk/ecs"
 
 const LOOK_AT_TARGET = Vector3.create(16, 13.5, 26)
 
@@ -45,6 +45,18 @@ class SeatManager {
 			newRelativePosition: this.seatPositions[seatIndex], 
 			cameraTarget: GameSettings.ARENA_SPAWN_LOOK_AT_TARGET
 		})
+
+		// Also freeze their inputs
+		InputModifier.create(engine.PlayerEntity, {
+			mode: InputModifier.Mode.Standard({
+				disableAll  : false,
+				disableEmote: false,
+				disableJog  : true,
+				disableJump : true,
+				disableRun  : true,
+				disableWalk : true,
+			}),
+		})
 	}
 
 	
@@ -59,6 +71,17 @@ class SeatManager {
  		movePlayerTo({
 			newRelativePosition:randomPoint,
 			cameraTarget: GameSettings.LOBBY_SPAWN_LOOK_AT_TARGET
+		})
+
+		InputModifier.createOrReplace(engine.PlayerEntity, {
+			mode: InputModifier.Mode.Standard({
+				disableAll  : false,
+				disableEmote: false,
+				disableJog  : false,
+				disableJump : false,
+				disableRun  : false,
+				disableWalk : false,
+			}),
 		})
 	}
 
