@@ -10,12 +10,14 @@ import { GameSettings } from './_settings'
 // Placeholders for dynamic content
 export var visibleYouAreNext: boolean = false
 
-export function ShowYouAreNext() {
+export function ShowYouAreNext(ignoreInterval: boolean = false) {
 	console.log("ShowYouAreNext()")
 	visibleYouAreNext = true
+
+	let timeout = ignoreInterval ? GameSettings.YOU_ARE_NEXT_PREEMPT_TIME : GameSettings.YOU_ARE_NEXT_PREEMPT_TIME + GameSettings.ROUND_INTERVAL
 	utils.timers.setTimeout(() => {
 		HideYouAreNext()
-	}, GameSettings.YOU_ARE_NEXT_PREEMPT_TIME * 1000)
+	}, timeout * 1000)
 }
 
 export function HideYouAreNext() {
