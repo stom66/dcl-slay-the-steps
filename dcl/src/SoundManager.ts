@@ -28,7 +28,8 @@ class SoundManager {
 	StartBGM() {
 		if (!this.bgm) return
 
-		const audio = AudioSource.getMutable(this.bgm)
+		const audio = AudioSource.getMutableOrNull(this.bgm)
+		if (!audio) return
 		if (audio.playing) return
 
 		this.fadingIn = true
@@ -40,7 +41,8 @@ class SoundManager {
 	StopBGM() {
 		if (!this.bgm) return
 		
-		const audio = AudioSource.getMutable(this.bgm)
+		const audio = AudioSource.getMutableOrNull(this.bgm)
+		if (!audio) return
 		if (!audio.playing) return
 		
 		this.fadingOut = true
@@ -51,7 +53,8 @@ class SoundManager {
 	private update = (dt: number) => {
 		if (!(this.fadingOut || this.fadingIn) || !this.bgm) return
 		
-		const audio = AudioSource.getMutable(this.bgm)
+		const audio = AudioSource.getMutableOrNull(this.bgm)
+		if (!audio) return
 		this.fadeElapsed += dt
 		
 		if (this.fadeElapsed >= this.fadeDuration) {

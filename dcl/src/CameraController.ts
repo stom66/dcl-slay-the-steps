@@ -28,9 +28,9 @@ class CameraController {
 			return
 		}
 	
-		const camera = Transform.getMutable(this.currentCamera)
-		const player = Transform.get(engine.PlayerEntity)
-		const target = Transform.get(this.currentTarget)
+		const camera = Transform.getMutableOrNull(this.currentCamera)
+		const player = Transform.getOrNull(engine.PlayerEntity)
+		const target = Transform.getOrNull(this.currentTarget)
 
 		if (!camera || !player || !target) return
 
@@ -84,7 +84,8 @@ class CameraController {
 		})
 
 		// Enable the virtual camera
-		const mainCamera = MainCamera.getMutable(engine.CameraEntity)
+		const mainCamera = MainCamera.getMutableOrNull(engine.CameraEntity)
+		if (!mainCamera) return
 		mainCamera.virtualCameraEntity = camera
 	}
 

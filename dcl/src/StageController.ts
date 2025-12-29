@@ -23,7 +23,7 @@ class StageController {
 	isRunning                      : boolean                   = false
 	currentTimeout                 : utils.TimerId | undefined = undefined
 
-	playerToNPC                    : Map<Entity, Entity>       = new Map()
+	playerToNPC                    : Map<Entity, Entity> = new Map()
 	NPCToPlayer                    : Map<Entity, Entity> = new Map()
 
 	durationPauseAtTopOfStairs     = 2 // How long should the avatar wait at the top of the stairs
@@ -210,10 +210,6 @@ class StageController {
 		this.OnShowStart()
 	}
 
-	AnimateNextNPC() {
-
-	}
-
 	OnPlayerTurnStart(userId: string) {
 		console.log("StageController OnPlayerTurnStart: userId", userId)
 		SetCurrentPlayer(userId)
@@ -242,7 +238,8 @@ class StageController {
 		_SoundManager.StopBGM()
 
 		// Remove all the NPC entities
-		this.playerToNPC.forEach((npc, player) => {
+		this.playerToNPC.forEach((npc: Entity, player) => {
+			console.log("StageController OnShowEnd: destroying npc:", npc.toString())
 			this.DestroyNPC(npc)
 		})
 	}
@@ -299,7 +296,7 @@ class StageController {
 	DestroyNPC(npc: Entity) {
 		console.log("StageController DestroyNPC: npc", npc)
 		
-		const tween = Tween.getMutable(npc)
+		const tween = Tween.getMutableOrNull(npc)
 		if (tween) {
 			tween.playing = false
 			Tween.deleteFrom(npc)
@@ -321,7 +318,7 @@ class StageController {
 		console.log("StageController HandleEmotes: player", player, "emote", emote)
 		const npc = this.playerToNPC.get(player)
 		if (npc) {
-			const avatarShape = AvatarShape.getMutable(npc)
+			const avatarShape = AvatarShape.getMutableOrNull(npc)
 			if (avatarShape) {
 				avatarShape.expressionTriggerId = emote?.emoteUrn
 				avatarShape.expressionTriggerTimestamp = (avatarShape.expressionTriggerTimestamp ?? 0) + 1
@@ -424,8 +421,10 @@ class StageController {
 			if (tweenCompleted) {
 				console.log("StageController AnimateNPC: tween completed for npc", npc)
 				const tween = Tween.getMutable(npc)
-				tween.playing = false
-				Tween.deleteFrom(npc)
+				if (tween) {
+					tween.playing = false	
+					Tween.deleteFrom(npc)
+				}
 			}
 		})
 	}
