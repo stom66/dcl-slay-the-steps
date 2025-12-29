@@ -5,6 +5,7 @@ import { Quaternion, Vector3 } from "@dcl/sdk/math"
 import { Wearable } from "./shopSlotData"
 import { GetWearableData, LoadUserData } from "./utils"
 import { MessageBus } from "@dcl/sdk/message-bus"
+import { MessageBusEvents } from "./_settings"
 
 const sceneMessageBus = new MessageBus()
 
@@ -40,7 +41,7 @@ class OutfitManager {
 			this.InitUserWearables(true)
 		})
 
-		engine.addSystem(this.update)
+		engine.addSystem(this.System_UpdateMannequin)
 	}
 
 	// MARK: Init User Wearables
@@ -85,7 +86,7 @@ class OutfitManager {
 	}
 
 	// MARK: Update
-	update = (dt: number) => {
+	System_UpdateMannequin = (dt: number) => {
 		if (!this.runUpdate) return
 		if (!this.npcMannequin) return
 		if (!this.npcPodium) return
@@ -349,15 +350,15 @@ class OutfitManager {
 		// Add the new wearable to the npc wearables
 		this.npcWearables.push(wearable)
 
-		// Let the host know about the new outfit
-		sceneMessageBus.emit('outfitUpdate', {
-			userId: this.userData?.userId ?? "",
-			outfit: this.npcWearables.map(w => w.urn)
-		})
-
 		// Update the mannequin with the new wearables
-		//this.HideNPCMannequin()
 		this.ShowNPCMannequin()
+
+		// Let the host know about the new outfit
+		sceneMessageBus.emit(MessageBusEvents.NOTIFY_SERVER_OUTFIT, {
+			userId   : this.userData?.userId ?? "",
+			outfit   : this.npcWearables.map(w => w.urn),
+			bodyShape: this.npcBodyShape ?? "urn:decentraland:off-chain:base-avatars:BaseMale"
+		})
 	}
 }
 

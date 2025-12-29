@@ -5,6 +5,7 @@ import { getPlayer } from '@dcl/sdk/players'
 
 import { GetBackgroundTexture } from './utils'
 import { _GameManager, localPlayer } from './GameManager'
+import { MessageBusEvents } from './_settings'
 
 const sceneMessageBus = new MessageBus()
 
@@ -37,7 +38,7 @@ function VoteForWinner(userId: string) {
 
 	console.log("VoteForWinner()",)
 	UpdateVotingOptions()
-	sceneMessageBus.emit('requestVote', {
+	sceneMessageBus.emit(MessageBusEvents.NOTIFY_SERVER_VOTE, {
 		voteFrom: localPlayer.userId,
 		voteFor : userId
 	})
@@ -53,7 +54,6 @@ function BuildVotingOptions() {
 		return elements
 	}
 
-	//const playerList = fakePlayers
 	const playerList = _GameManager.state.players
 
 	//_GameManager.state.players.forEach((votingOption: string) => {

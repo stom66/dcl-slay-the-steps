@@ -7,7 +7,7 @@ import * as utils from '@dcl-sdk/utils'
 
 import { GetUTCTimestampMillis } from "./utils"
 
-import { GameSettings } from "./_settings"
+import { GameSettings, MessageBusEvents } from "./_settings"
 import { _StageController } from "./StageController"
 import { _SeatManager } from "./SeatManager"
 import { _CameraController } from "./CameraController"
@@ -120,30 +120,30 @@ class GameManager {
 
 		// MessageBus handling
 		// Handle players requesting to join the current game
-		sceneMessageBus.on('joinGameRequest', (request: { userId: string, outfit: string[], bodyShape: string }) => {
+		sceneMessageBus.on(MessageBusEvents.REQUEST_JOIN_GAME, (request: { userId: string, outfit: string[], bodyShape: string }) => {
 			this.OnRequestToJoinGame(request.userId, request.outfit, request.bodyShape)
 		})
 
 		// Handle state requests
-		sceneMessageBus.on('stateRequest', () => {
+		sceneMessageBus.on(MessageBusEvents.REQUEST_STATE, () => {
 			console.log("GameManager: sceneMessageBus: stateRequest")
 			this.OnStateRequest()
 		})
 
 		// Handle state updates
-		sceneMessageBus.on('stateUpdate', (state: GameState) => {
+		sceneMessageBus.on(MessageBusEvents.NOTIFY_CLIENT_STATE, (state: GameState) => {
 			console.log("GameManager: sceneMessageBus: stateUpdate:", state)
 			this.OnStateUpdate(state)
 		})
 
 		// Handle outfit updates
-		sceneMessageBus.on('outfitUpdate', (outfit: { userId: string, outfit: string[], bodyShape: string }) => {
+		sceneMessageBus.on(MessageBusEvents.NOTIFY_SERVER_OUTFIT, (outfit: { userId: string, outfit: string[], bodyShape: string }) => {
 			console.log("GameManager: sceneMessageBus: outfitUpdate:", outfit)
 			this.OnNotifyUpdateOutfit(outfit.userId, outfit.outfit, outfit.bodyShape)
 		})
 
 		// Handle players requesting to vote
-		sceneMessageBus.on('requestVote', (vote: RequestVote) => {
+		sceneMessageBus.on(MessageBusEvents.NOTIFY_SERVER_VOTE, (vote: RequestVote) => {
 			console.log("GameManager: sceneMessageBus: requestVote:", vote)
 			this.OnRequestVote(vote)
 		})
@@ -177,7 +177,7 @@ class GameManager {
 		})
 
 		// Do a state request to get the current game state
-		sceneMessageBus.emit('stateRequest', {})
+		sceneMessageBus.emit(MessageBusEvents.REQUEST_STATE, {})
 	}
 
 	// MARK: ---
@@ -352,7 +352,7 @@ class GameManager {
 		}
 
 		if (!localPlayer || !localPlayer.userId) return
-		sceneMessageBus.emit('joinGameRequest', { 
+		sceneMessageBus.emit(MessageBusEvents.REQUEST_JOIN_GAME, { 
 			userId   : localPlayer.userId, 
 			outfit   : _OutfitManager.GetCurrentOutfit(),
 			bodyShape: _OutfitManager.GetCurrentBodyShape()

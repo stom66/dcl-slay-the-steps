@@ -64,3 +64,11 @@ export class GameSettings {
 
 	static MAX_PLAYERS = 16
 }
+
+export class MessageBusEvents {
+	static REQUEST_JOIN_GAME    = 'joinGameRequest' // Used by the clients, to request to join a game
+	static REQUEST_STATE        = 'stateRequest'    // Used by the clients, to request the current game state
+	static NOTIFY_CLIENT_STATE  = 'stateUpdate'     // Used by the server, to notify the clients of a game state update
+	static NOTIFY_SERVER_OUTFIT = 'outfitUpdate'    // Used by the clients, to notify the server of an outfit update
+	static NOTIFY_SERVER_VOTE   = 'requestVote'     // Used by the clients, to notify the server of a vote
+}
