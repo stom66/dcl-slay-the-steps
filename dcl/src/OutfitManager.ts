@@ -1,7 +1,7 @@
 import { getPlayer } from "@dcl/sdk/players"
 import * as utils from '@dcl-sdk/utils'
 import { Animator, AvatarEquippedData, AvatarShape, engine, Entity, GltfContainer, InputAction, pointerEventsSystem, Transform } from "@dcl/sdk/ecs"
-import { Quaternion, Vector3 } from "@dcl/sdk/math"
+import { Color3, Quaternion, Vector3 } from "@dcl/sdk/math"
 import { Wearable } from "./shopSlotData"
 import { GetWearableData, LoadUserData } from "./utils"
 import { MessageBus } from "@dcl/sdk/message-bus"
@@ -11,8 +11,9 @@ const sceneMessageBus = new MessageBus()
 
 export type Outfit = {
 	userId   : string,
-	outfit   : string[],
-	bodyShape: string
+	wearables: string[],
+	bodyShape: string,
+	hairColor: Color3
 }
 
 
@@ -26,10 +27,12 @@ class OutfitManager {
 	npcBtnSwap          : undefined | Entity     = undefined
 	npcWearables        : undefined | Wearable[] = undefined // What their mannequin is wearing (starts off same as player)
 	npcBodyShape        : undefined | string     = "BaseMale" // What their mannequin's body shape is
+	npcHairColor        : undefined | Color3     = Color3.create(0.5, 0.5, 0.5) // What their mannequin's hair color is
 	playerWearables     : undefined | Wearable[] = undefined // What the player is currently wearing
 	isWearableDataLoaded: boolean                = false
 	wearableDataCache   : Map<string, Wearable>  = new Map()
 	runUpdate           : boolean                = false
+
 	constructor() { }
 
 	init() {
@@ -68,8 +71,9 @@ class OutfitManager {
 				//console.log("OutfitManager: InitUserWearables: got wearable data for", urn, ": ", JSON.stringify(data))
 			}
 
-			// Update singleton state
+			// Update other avatar properties
 			this.npcBodyShape = this.userData.avatar?.bodyShapeUrn || "urn:decentraland:off-chain:base-avatars:BaseMale"
+			this.npcHairColor = this.userData.avatar?.hairColor || Color3.create(0.5, 0.5, 0.5)
 			this.npcWearables = this.playerWearables.map(w => ({ ...w }))
 			this.isWearableDataLoaded = true
 
@@ -242,6 +246,7 @@ class OutfitManager {
 			bodyShape: this.npcBodyShape,
 			wearables: this.npcWearables?.map(w => w.urn) ?? [],
 			emotes   : [],
+			hairColor: this.npcHairColor,
 		})
 		
 		Animator.createOrReplace(this.npcMannequin, {
@@ -316,11 +321,14 @@ class OutfitManager {
 
 	// MARK: Util
 
-	GetCurrentOutfit(): string[] {
+	GetCurrentWearables(): string[] {
 		return this.npcWearables?.map(w => w.urn) ?? []
 	}
 	GetCurrentBodyShape(): string {
 		return this.npcBodyShape ?? "urn:decentraland:off-chain:base-avatars:BaseMale"
+	}
+	GetCurrentHairColor(): Color3 {
+		return this.npcHairColor ?? Color3.create(0.5, 0.5, 0.5)
 	}
 
 	// MARK: Equip Wearable
@@ -359,6 +367,15 @@ class OutfitManager {
 			outfit   : this.npcWearables.map(w => w.urn),
 			bodyShape: this.npcBodyShape ?? "urn:decentraland:off-chain:base-avatars:BaseMale"
 		})
+	}
+
+	// MARK: Set Hair Color
+	SetHairColor(color: Color3) {
+		console.log("OutfitManager SetHairColor: setting hair color to", color)
+		this.npcHairColor = color
+		this.ShowNPCMannequin()
+
+
 	}
 }
 
