@@ -1,5 +1,5 @@
-import { AvatarShape, ColliderLayer, EasingFunction, engine, Entity, GltfContainer, InputAction, MeshCollider, pointerEventsSystem, Transform, TriggerArea, triggerAreaEventsSystem } from "@dcl/sdk/ecs"
-import { Quaternion, Vector3 } from "@dcl/sdk/math"
+import { AvatarShape, ColliderLayer, EasingFunction, engine, Entity, GltfContainer, InputAction, Material, MeshCollider, MeshRenderer, pointerEventsSystem, PrimaryPointerInfo, RaycastQueryType, raycastSystem, Transform, TriggerArea, triggerAreaEventsSystem } from "@dcl/sdk/ecs"
+import { Color3, Color4, Quaternion, Vector3 } from "@dcl/sdk/math"
 
 import * as utils from '@dcl-sdk/utils'
 
@@ -7,7 +7,7 @@ import { ShopSlot, Wearable } from "./shopSlotData"
 import { _OutfitManager } from "./OutfitManager"
 import { ShopZone, shopZones } from "./shopZoneData"
 import { blockedCreatorAddresses, blockedItemURNs, blockedKeywords } from "./shopBlockedItems"
-import { FetchZoneItems } from "./utils"
+import { FetchZoneItems, hsvToColor3 } from "./utils"
 
 /**
  * Manages shop zones, their items, and UI interactions.
@@ -36,6 +36,7 @@ class ShopManager {
 		this.createTriggerZones()
 		this.createShopUIs()
 		this.SpawnAllZoneItems()
+		this.createHairColorWheel() // disabled while WIP
 	}
 
 	// MARK: - Zone Initialization
@@ -85,6 +86,7 @@ class ShopManager {
 
 	// MARK: - UI Management
 	
+	// MARK: createShopUI
 	/**
 	 * Create UI panels for each shop zone with navigation buttons
 	 */
@@ -145,7 +147,7 @@ class ShopManager {
 				{ 
 					entity: btnRightEntity, 
 					opts: { 
-						button: InputAction.IA_POINTER,
+						button: InputAction.IA_PRIMARY,
 						hoverText: "Next",
 						maxDistance: 20
 					} 
@@ -160,9 +162,105 @@ class ShopManager {
 		})
 	}
 
+	// MARK: createHairColorWheel
 	private createHairColorWheel() {
 		const hairColorWheelEntity = engine.addEntity()
+		Transform.create(hairColorWheelEntity, {
+			position: Vector3.create(8, 2.5, 1.75),
+			rotation: Quaternion.fromEulerDegrees(0, 0, 0)
+		})
+		GltfContainer.create(hairColorWheelEntity, {
+			src: 'assets/models/shopZoneColorPicker.gltf'
+		})
+		
+		pointerEventsSystem.onPointerDown(
+			{ 
+				entity: hairColorWheelEntity, 
+				opts: { 
+					button: InputAction.IA_PRIMARY,
+					hoverText: "Hair Color Wheel",
+					maxDistance: 10
+				} 
+			},
+			() => {
+				this.SampleHairColor(hairColorWheelEntity)
+			}
+		)
 	}
+
+	// MARK: SampleHairColor
+	private SampleHairColor(hairColorWheelEntity: Entity) {
+
+		console.log("ShopManager: SampleHairColor")
+
+		const pointerInfo = PrimaryPointerInfo.getOrCreateMutable(engine.RootEntity)
+    	let dir = pointerInfo.worldRayDirection
+
+		raycastSystem.registerGlobalDirectionRaycast({
+			entity: engine.CameraEntity,
+			opts: {
+				queryType: RaycastQueryType.RQT_HIT_FIRST,
+				direction: dir,
+			},
+		}, function (raycastResult) {
+			let result = raycastResult.hits[0]
+
+			console.log("raycastResult: ", JSON.stringify(raycastResult, null, 2))
+
+			// do something in the hit position
+			if (result && result.position) {
+				// Work out where the cast hit the wheel
+				const worldPosition = utils.getWorldPosition(hairColorWheelEntity)
+				const local = Vector3.subtract(result.position, worldPosition)
+				
+				// XZ plane
+				const x = local.x
+				const z = local.y
+				
+				const angle = Math.atan2(-x, z)
+				
+				let hue = angle / (2 * Math.PI)
+				if (hue < 0) hue += 1
+				
+				// Radius → brightness (doesn't work currently)
+				const radius = Math.sqrt(x * x + z * z)
+				const wheelRadius = 0.75 // check the model collider in blender, radius = dimensions/2
+				
+				// Value is based on distance from center of the wheel
+				const value = Math.min(radius / wheelRadius, 1)
+				const invValue = 1 - value
+				
+				// Final color is based on hue, saturation, and value
+				const color = hsvToColor3(hue, 1, value)
+
+				_OutfitManager.SetHairColor(color)
+
+
+				// Make a temporary marker entity to show where the cast hit
+				const markerEntity = engine.addEntity()
+				Transform.create(markerEntity, {
+					position: result.position,
+					scale: Vector3.create(0.1, 0.1, 0.1)
+				})
+				MeshRenderer.setSphere(markerEntity)
+				Material.setPbrMaterial(markerEntity, {
+					albedoColor: Color4.fromColor3(color)
+				})
+
+				utils.timers.setTimeout(() => { 
+					engine.removeEntity(markerEntity) 
+				}, 1000)
+			}
+
+
+			/* // do something with the hit entity
+			const entity = result.entityId as Entity
+			if (entity) {
+				console.log("entity: ", entity)
+			} */
+		})
+	}
+
 	/**
 	 * Show the UI for a specific zone
 	 */
@@ -174,7 +272,7 @@ class ShopManager {
 		}
 		
 		// Make UI visible by ensuring it has a transform
-		const transform = Transform.getMutable(uiEntity)
+		const transform = Transform.getMutableOrNull(uiEntity)
 		if (transform) {
 			transform.scale = Vector3.One()
 		}
@@ -192,7 +290,7 @@ class ShopManager {
 		}
 		
 		// Hide UI by scaling to zero
-		const transform = Transform.getMutable(uiEntity)
+		const transform = Transform.getMutableOrNull(uiEntity)
 		if (transform) {
 			transform.scale = Vector3.Zero()
 		}
@@ -341,7 +439,7 @@ class ShopManager {
 			{ 
 				entity: entity, 
 				opts: { 
-					button     : InputAction.IA_POINTER,
+					button     : InputAction.IA_PRIMARY,
 					hoverText  : hoverText,
 					maxDistance: 10
 				} 
