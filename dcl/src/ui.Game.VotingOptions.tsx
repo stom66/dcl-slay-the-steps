@@ -69,7 +69,7 @@ function BuildVotingOptions() {
 
 		elements.push(
 			<UiEntity
-				key={`voting_option_${playerData.userId}`}
+				key={`voting_option_${userId}`}
 				uiTransform={{
 					width        : "100%",
 					height       : 48,
@@ -94,19 +94,19 @@ function BuildVotingOptions() {
 				}}
 			>
 				<UiEntity
-					key={`voting_option_avatar_${playerData.userId}`}
+					key={`voting_option_avatar_${userId}`}
 					uiTransform={{
 						width : 36,
 						height: 36,
 						margin: { right: 10 },
 					}}
 					uiBackground={{
-						avatarTexture: { userId: playerData.userId },
+						avatarTexture: { userId: userId },
 						textureMode  : "stretch"
 					}}
 				/>
 				<Label
-					key={`voting_option_label_${playerData.userId}`}
+					key={`voting_option_label_${userId}`}
 					uiTransform={{
 						height  : "100%",
 						flexGrow: 1,
@@ -119,11 +119,11 @@ function BuildVotingOptions() {
 					textAlign = "middle-left"
 				/>
 				<Button
-					key={`voting_option_button_${playerData.userId}`}
+					key={`voting_option_button_${userId}`}
 					uiTransform={{
 						width  : 92,
 						height : 36,
-						display: playerData.userId !== localPlayer.userId ? 'flex' : 'none',
+						display: userId !== localPlayer.userId ? 'flex' : 'none',
 					}}
 					value    = ""
 					fontSize = {16}
@@ -148,6 +148,11 @@ function BuildVotingOptions() {
 
 // MARK: Main GameUI
 export function VotingOptionsUI() {
+	// This continues to build the voting options every frame the UI is visible, in an attempt 
+	// to combat a bug with the AvatarTexture being incorrect. It does not work.
+	//if (visibleVoting) {
+	//	votingOptions = BuildVotingOptions()
+	//}
 	return (
 		<UiEntity
 			key={`ui_VotingOptions_root`}
