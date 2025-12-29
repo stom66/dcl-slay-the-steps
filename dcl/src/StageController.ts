@@ -120,7 +120,7 @@ class StageController {
 			}
 			
 			// Create the NPC
-			const npc = this.CreateNPC(userId, outfit.outfit, outfit.bodyShape)
+			const npc = this.CreateNPC(userId, outfit.wearables, outfit.bodyShape)
 			if (!npc) {
 				console.error("StageController RunShow: Failed to create NPC clone for user", userId)
 				return
@@ -201,7 +201,7 @@ class StageController {
 		const firstUserId = players[0]
 		if (firstUserId === localPlayer?.userId) {
 			utils.timers.setTimeout(() => {
-				ShowYouAreNext()
+				ShowYouAreNext(true)
 			}, (GameSettings.ROUND_START_DELAY - GameSettings.YOU_ARE_NEXT_PREEMPT_TIME) * 1000)
 		}
 
