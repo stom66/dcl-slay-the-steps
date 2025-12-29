@@ -4,6 +4,7 @@
 - [ ] Create scene thumbnail
 - [ ] Add UI hint to encourage contestants to emote during their turn
 - [ ] Add UI "GameStatus" panel
+- [x] When a game is starting, host should broadcast it's status every second
 - [x] Revise the How To Play ui
 - [x] reset zone items to defaults if user goes back to the first page
 - [x] Playerlist: highlight the current player?
@@ -33,9 +34,10 @@
 
 ### Bug list:
 
-- [ ] NPCs not getting cleaned up after a round
+- [x] NPCs not getting cleaned up after a round
 - [ ] Vote For, and Vote Results avatar icons are showing the same icon for every player
-- [ ] Teleport at round end not working?
+- [ ] Teleport at round end not working? Seems to be the game crashing at the round end. Suspect Camera.
 - [x] Spawning an avatar with bodyShape: "BaseFemale" causes the wearables to not show up
 - [x] Timer goes to -1
 - [x] Results show vote for winner title
+- [ ] OnTriggerExit doesn't fire reliably
