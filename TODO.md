@@ -2,8 +2,8 @@
 
 - [ ] Make a logo
 - [ ] Create scene thumbnail
-- [ ] Add UI hint to encourage contestants to emote during their turn
 - [ ] Add UI "GameStatus" panel
+- [x] Add UI hint to encourage contestants to emote during their turn
 - [x] When a game is starting, host should broadcast it's status every second
 - [x] Revise the How To Play ui
 - [x] reset zone items to defaults if user goes back to the first page
@@ -34,10 +34,15 @@
 
 ### Bug list:
 
-- [x] NPCs not getting cleaned up after a round
-- [ ] Vote For, and Vote Results avatar icons are showing the same icon for every player
 - [ ] Teleport at round end not working? Seems to be the game crashing at the round end. Suspect Camera.
+- [x] Ensure mannequin is hidden at start of round
+- [x] NPCs not getting cleaned up after a round
 - [x] Spawning an avatar with bodyShape: "BaseFemale" causes the wearables to not show up
 - [x] Timer goes to -1
 - [x] Results show vote for winner title
+
+### SDK bugs
+
+- [ ] AvatarTexture showing the same icon for every player/wrong player
+- [ ] fetch timeout property is ignored
 - [ ] OnTriggerExit doesn't fire reliably
