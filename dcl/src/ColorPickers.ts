@@ -8,13 +8,14 @@ import { hsvToColor3 } from "./utils"
 class ColorPickers {
 
 	private colorPresetHexCodes: string[] = ["#FFE4C6", "#FFDDBC", "#F2C2A5", "#DDB18F", "#CC9B77", "#9A765B", "#7D5D47", "#704C38", "#522C1C", "#3C2216"]
+	private interactionDistance = 8
 
 	constructor() { }
 
 	// MARK: Init
 	init() {
 		this.CreateColorWheel("Hair", Vector3.create(8, 1.92, 1.75))
-		this.CreateColorWheel("Skin", Vector3.create(1.75, 1.92, 8), Vector3.create(0, 90, 0))
+		this.CreateColorWheel("Skin", Vector3.create(1.75, 1.92, 8.25), Vector3.create(0, 90, 0))
 	}
 
 	// MARK: Create Color Wheel
@@ -37,9 +38,9 @@ class ColorPickers {
 			{ 
 				entity: wheelEntity, 
 				opts: { 
-					button: InputAction.IA_PRIMARY,
-					hoverText: "Choose " + title + " Color",
-					maxDistance: 6
+					button     : InputAction.IA_PRIMARY,
+					hoverText  : "Choose " + title + " Color",
+					maxDistance: this.interactionDistance
 				} 
 			},
 			() => {
@@ -76,9 +77,16 @@ class ColorPickers {
 			const color = Color3.fromHexString(hexCode)
 
 			const buttonEntity = engine.addEntity()
+			const parentTransform = Transform.getOrNull(parentEntity)
+			if (!parentTransform) return
+
+			const parentRot   = Quaternion.toEulerAngles(parentTransform.rotation)
+			const elementRot  = Vector3.create(0, 0, rotStep * index)
+			const combinedRot = Vector3.add(parentRot, elementRot)
+
 			Transform.create(buttonEntity, {
-				parent: parentEntity,
-				rotation: Quaternion.fromEulerDegrees(0, 0, rotStep * index)
+				position: parentTransform.position,
+				rotation: Quaternion.fromEulerDegrees(combinedRot.x, combinedRot.y, combinedRot.z)
 			})
 			GltfContainer.create(buttonEntity, {
 				src: `assets/models/shopZoneColorPickerBtn.gltf`
@@ -90,7 +98,7 @@ class ColorPickers {
 					opts: { 
 						button     : InputAction.IA_PRIMARY,
 						hoverText  : "Choose Color",
-						maxDistance: 6
+						maxDistance: this.interactionDistance
 					} 
 				},
 				() => {
