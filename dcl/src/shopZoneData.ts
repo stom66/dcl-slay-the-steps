@@ -155,7 +155,7 @@ export const shopZones: ShopZone[] = [
 		wearableCategory: ["hair"],
 		position        : Vector3.create(5.548, 0.0, 5.636),
 		scale           : Vector3.create(7.906, 7.906, 7.906),
-		uiOffset        : Vector3.create(3.614, 3.25, 3.702),
+		uiOffset        : Vector3.create(3.614, 3.55, 3.702),
 		uiRotation      : Quaternion.fromEulerDegrees(0, 45, 0),
 		slots           : [
 			shopSlots["hair_0"],
