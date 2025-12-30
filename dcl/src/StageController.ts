@@ -82,10 +82,8 @@ class StageController {
 		// Ensure we have player data for local player
 		utils.timers.setTimeout(() => {
 			localPlayer = getPlayer()
-			if (localPlayer) {
-				console.log("GameManager constructor: localPlayer" + localPlayer.userId)
-			} else {
-				console.log("GameManager constructor: localPlayer not found")
+			if (!localPlayer) {
+				console.error("StageController: init(): localPlayer not found")
 			}
 		}, 2000)
 

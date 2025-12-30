@@ -40,14 +40,15 @@ class OutfitManager {
 
 	init() {
 		console.log("OutfitManager init")	
-		this.InitUserWearables()
-
+		
 		AvatarEquippedData.onChange(engine.PlayerEntity, (equipped) => {
 			if (!equipped) return
 			this.InitUserWearables(true)
 		})
-
+		
 		engine.addSystem(this.System_UpdateMannequin)
+
+		this.InitUserWearables()
 	}
 
 	// MARK: Init User Wearables
@@ -382,7 +383,7 @@ class OutfitManager {
 
 	// MARK: Set Hair Color
 	SetHairColor(color: Color3) {
-		console.log("OutfitManager SetHairColor: setting hair color to", color)
+		console.log("OutfitManager SetHairColor:", Color3.toHexString(color))
 		this.npcOutfit.hairColor = color
 		this.ShowNPCMannequin()
 	}

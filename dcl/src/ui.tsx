@@ -32,6 +32,5 @@ const uiComponent = () => [
 ]
 
 export function setupUi() {
-	console.log("Setup UI")
 	ReactEcsRenderer.setUiRenderer(uiComponent)
 }

@@ -132,7 +132,6 @@ class ColorPickers {
 		callback: (color: Color3) => void
 	) {
 
-		console.log("ColorPicker: SampleColorWheel")
 
 		const pointerInfo = PrimaryPointerInfo.getOrCreateMutable(engine.RootEntity)
     	let dir = pointerInfo.worldRayDirection
@@ -182,12 +181,8 @@ class ColorPickers {
 				
 				// Final color is based on hue, saturation, and value
 				const color = hsvToColor3(hue, 1, value)
-				console.log("hitRadius: ", hitRadius, ", value: ", value, ", color: ", color.r, ", ", color.g, ", ", color.b)
+				console.log("ColorPicker: SampleColorWheel(): hitRadius: ", hitRadius, " value: ", value, " color: ", Color3.toHexString(color))
 
-				if (callback) {
-					callback(color)
-				}
-				//_OutfitManager.SetHairColor(color)
 
 
 				// Make a temporary marker entity to show where the cast hit
@@ -213,6 +208,12 @@ class ColorPickers {
 						})
 					}, markerLifespan)
 				})
+
+				// Callback:
+				if (callback) {
+					callback(color)
+				}
+				//_OutfitManager.SetHairColor(color)
 			}
 		})
 	}

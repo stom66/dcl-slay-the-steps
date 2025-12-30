@@ -244,7 +244,7 @@ class ShopManager {
 	 * Remove all items from a zone
 	 */
 	private removeZoneItems(zone: ShopZone) {
-		console.log(`ShopManager: removeZoneItems: removing items for zone "${zone.key}"`)
+		//console.log(`ShopManager: removeZoneItems: removing items for zone "${zone.key}"`)
 		// Create a copy of the entities array and clear it immediately
 		// This prevents issues when new items are spawned before old ones are fully removed
 		const entitiesToRemove = [...zone.entities]
@@ -257,7 +257,7 @@ class ShopManager {
 			utils.timers.setTimeout(() => { engine.removeEntity(entity) }, 500)
 			counter++
 		})
-		console.log(`ShopManager: Removed ${counter} items from zone "${zone.key}"`)
+		if (counter > 0) console.log(`ShopManager: Removed ${counter} items from zone "${zone.key}"`)
 	}
 
 	/**
