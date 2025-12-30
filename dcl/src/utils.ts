@@ -220,7 +220,7 @@ export async function GetWearableData(urn: string): Promise<Wearable> {
 	}
 }
 
-export function hsvToColor3(h: number, s: number, v: number) {
+export function hsvToColor3(h: number, s: number, v: number): Color3 {
 	const i = Math.floor(h * 6)
 	const f = h * 6 - i
 	const p = v * (1 - s)
