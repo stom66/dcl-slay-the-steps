@@ -274,7 +274,7 @@ class StageController {
 			wearables: outfit.wearables.map((w) => w.urn) ?? [],
 			emotes   : userData.emotes,
 			eyeColor : userData.avatar!.eyesColor || Color3.create(0.5, 0.5, 0.5),
-			skinColor: userData.avatar!.skinColor || Color3.create(0.5, 0.5, 0.5),
+			skinColor: outfit.skinColor,
 			hairColor: outfit.hairColor
 		})
 

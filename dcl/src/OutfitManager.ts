@@ -13,7 +13,8 @@ export type Outfit = {
 	userId   : string,
 	wearables: Wearable[],
 	bodyShape: string,
-	hairColor: Color3
+	hairColor: Color3,
+	skinColor: Color3
 }
 
 
@@ -27,7 +28,7 @@ class OutfitManager {
 	npcBtnSwap          : undefined | Entity     = undefined
 
 	playerWearables     : undefined | Wearable[] = undefined // What the player is currently wearing
-	npcOutfit           : Outfit     = { userId: "", wearables: [], bodyShape: "", hairColor: Color3.Green() }
+	npcOutfit           : Outfit     = { userId: "", wearables: [], bodyShape: "", hairColor: Color3.Green(), skinColor: Color3.Green() }
 	//npcWearables        : undefined | Wearable[] = undefined // What their mannequin is wearing (starts off same as player)
 	//npcBodyShape        : undefined | string     = "BaseMale" // What their mannequin's body shape is
 	//npcHairColor        : undefined | Color3     = Color3.create(0.5, 0.5, 0.5) // What their mannequin's hair color is
@@ -82,7 +83,8 @@ class OutfitManager {
 				userId   : this.userData.userId,
 				wearables: this.playerWearables.map(w => w),
 				bodyShape: this.userData.avatar?.bodyShapeUrn || "urn:decentraland:off-chain:base-avatars:BaseMale",
-				hairColor: this.userData.avatar?.hairColor || Color3.create(0.5, 0.5, 0.5)
+				hairColor: this.userData.avatar?.hairColor || Color3.create(0.5, 0.5, 0.5),
+				skinColor: this.userData.avatar?.skinColor || Color3.create(0.5, 0.5, 0.5)
 			}
 			this.isWearableDataLoaded = true
 
@@ -254,6 +256,7 @@ class OutfitManager {
 			wearables: this.npcOutfit?.wearables?.map(w => w.urn) ?? [],
 			emotes   : [],
 			hairColor: this.npcOutfit.hairColor,
+			skinColor: this.npcOutfit.skinColor,
 		})
 	
 		// Attempt to stop walking animation on character but doesn't work
@@ -381,6 +384,13 @@ class OutfitManager {
 	SetHairColor(color: Color3) {
 		console.log("OutfitManager SetHairColor: setting hair color to", color)
 		this.npcOutfit.hairColor = color
+		this.ShowNPCMannequin()
+	}
+
+	// MARK: Set Skin Color
+	SetSkinColor(color: Color3) {
+		console.log("OutfitManager SetSkinColor:", Color3.toHexString(color))
+		this.npcOutfit.skinColor = color
 		this.ShowNPCMannequin()
 	}
 }

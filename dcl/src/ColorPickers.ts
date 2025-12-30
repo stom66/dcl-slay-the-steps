@@ -1,20 +1,23 @@
-import { engine, Entity, GltfContainer, InputAction, Material, MeshRenderer, pointerEventsSystem, PrimaryPointerInfo, RaycastQueryType, raycastSystem, Transform } from "@dcl/sdk/ecs"
+import { engine, Entity, GltfContainer, GltfNodeModifiers, InputAction, Material, MeshRenderer, pointerEventsSystem, PrimaryPointerInfo, RaycastQueryType, raycastSystem, Transform } from "@dcl/sdk/ecs"
 import { _OutfitManager } from "./OutfitManager"
-import { Color4, Quaternion, Vector3 } from "@dcl/sdk/math"
+import { Color3, Color4, Quaternion, Vector3 } from "@dcl/sdk/math"
 
 import * as utils from '@dcl-sdk/utils'
 import { hsvToColor3 } from "./utils"
 
 class ColorPickers {
 
-	constructor() {
-	}
+	private colorPresetHexCodes: string[] = ["#FFE4C6", "#FFDDBC", "#F2C2A5", "#DDB18F", "#CC9B77", "#9A765B", "#7D5D47", "#704C38", "#522C1C", "#3C2216"]
 
+	constructor() { }
+
+	// MARK: Init
 	init() {
-		this.CreateColorWheel("Hair", Vector3.create(8, 1.3, 1.75))
-		this.CreateColorWheel("Skin", Vector3.create(1.75, 1.3, 8), Vector3.create(0, 90, 0))
+		this.CreateColorWheel("Hair", Vector3.create(8, 1.92, 1.75))
+		this.CreateColorWheel("Skin", Vector3.create(1.75, 1.92, 8), Vector3.create(0, 90, 0))
 	}
 
+	// MARK: Create Color Wheel
 	private CreateColorWheel(
 		title    : string, 
 		position : Vector3, 
@@ -40,7 +43,11 @@ class ColorPickers {
 				} 
 			},
 			() => {
-				this.SampleColorWheel(wheelEntity, title)
+				if (title.toLowerCase() == "hair") {
+					this.SampleColorWheel(wheelEntity, (color) => _OutfitManager.SetHairColor(color))
+				} else {
+					this.SampleColorWheel(wheelEntity, (color) => _OutfitManager.SetSkinColor(color))
+				}
 			}
 		)
 
@@ -52,15 +59,72 @@ class ColorPickers {
 		GltfContainer.create(titleEntity, {
 			src: `assets/models/shopZoneColorPicker.Text${title}.gltf`
 		})
+
+		if (title.toLowerCase() === "skin") {
+			this.CreatePresetButtons(wheelEntity)
+		}
 	}
 
-	// MARK: SampleHairColor
+	// MARK: Create Color presets
+	private CreatePresetButtons(parentEntity: Entity) {
+
+		const rotStep = -22.5
+		let index = 0
+
+		for (const hexCode of this.colorPresetHexCodes) {
+
+			const color = Color3.fromHexString(hexCode)
+
+			const buttonEntity = engine.addEntity()
+			Transform.create(buttonEntity, {
+				parent: parentEntity,
+				rotation: Quaternion.fromEulerDegrees(0, 0, rotStep * index)
+			})
+			GltfContainer.create(buttonEntity, {
+				src: `assets/models/shopZoneColorPickerBtn.gltf`
+			})
+
+			pointerEventsSystem.onPointerDown(
+				{ 
+					entity: buttonEntity, 
+					opts: { 
+						button     : InputAction.IA_PRIMARY,
+						hoverText  : "Choose Color",
+						maxDistance: 6
+					} 
+				},
+				() => {
+					_OutfitManager.SetSkinColor(color)
+				}
+			)
+
+			GltfNodeModifiers.create(buttonEntity, {
+				modifiers: [
+					{
+						path: 'tint',
+						material: {
+							material: {
+								$case: 'pbr',
+								pbr: {
+									albedoColor: Color4.fromColor3(color),
+								},
+							},
+						},
+					},
+				],})
+
+			index++
+		}
+
+	}
+
+	// MARK: SampleColorWheel
 	private SampleColorWheel(
 		wheelEntity: Entity,
-		title      : string
+		callback: (color: Color3) => void
 	) {
 
-		console.log("ShopManager: SampleHairColor")
+		console.log("ColorPicker: SampleColorWheel")
 
 		const pointerInfo = PrimaryPointerInfo.getOrCreateMutable(engine.RootEntity)
     	let dir = pointerInfo.worldRayDirection
@@ -80,20 +144,29 @@ class ColorPickers {
 			if (result && result.position) {
 				// Work out where the cast hit the wheel
 				const worldPosition = utils.getWorldPosition(wheelEntity)
-				const local = Vector3.subtract(result.position, worldPosition)
+				const worldRotation = utils.getWorldRotation(wheelEntity)
+
+				// Convert hit point into the wheel's local space so rotated wheels work
+				const rotationInverse = Quaternion.create(
+					-worldRotation.x,
+					-worldRotation.y,
+					-worldRotation.z,
+					worldRotation.w
+				)
+				const local = Vector3.rotate(Vector3.subtract(result.position, worldPosition), rotationInverse)
 				
 				// XZ plane
 				const x = local.x
-				const z = local.y
+				const y = local.y
 				
-				const angle = Math.atan2(-x, z)
+				const angle = Math.atan2(-x, y)
 				
 				let hue = angle / (2 * Math.PI)
 				if (hue < 0) hue += 1
 				
 				// Radius = brightness
 				const wheelRadius = 0.75 // check the model collider in blender, radius = dimensions/2
-				const hitRadius = Math.min(Math.sqrt(x * x + z * z), wheelRadius)
+				const hitRadius = Math.min(Math.sqrt(x * x + y * y), wheelRadius)
 				
 				// Value is based on distance from center of the wheel
 
@@ -103,7 +176,10 @@ class ColorPickers {
 				const color = hsvToColor3(hue, 1, value)
 				console.log("hitRadius: ", hitRadius, ", value: ", value, ", color: ", color.r, ", ", color.g, ", ", color.b)
 
-				_OutfitManager.SetHairColor(color)
+				if (callback) {
+					callback(color)
+				}
+				//_OutfitManager.SetHairColor(color)
 
 
 				// Make a temporary marker entity to show where the cast hit
