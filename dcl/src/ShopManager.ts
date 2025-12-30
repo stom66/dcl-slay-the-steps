@@ -146,7 +146,7 @@ class ShopManager {
 				{ 
 					entity: btnRightEntity, 
 					opts: { 
-						button: InputAction.IA_PRIMARY,
+						button: InputAction.IA_POINTER,
 						hoverText: "Next",
 						maxDistance: 20
 					} 
