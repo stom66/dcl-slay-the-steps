@@ -8,7 +8,7 @@ import { GameSettings } from './_settings'
 
 
 // Placeholders for dynamic content
-export var visibleEmotesHint: boolean = true
+export var visibleEmotesHint: boolean = false
 
 export function ShowEmotesHint() {
 	console.log("ShowEmotesHint()")
