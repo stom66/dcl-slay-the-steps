@@ -103,7 +103,7 @@ class StageController {
 		const cameraTargets: Map<Entity, Entity> = new Map()
 
 		players.forEach((userId) => {
-			console.log("StageController: RunShow(): creating npc for", userId)
+			console.log("StageController: RunShow(): setup for userId", userId)
 
 			const playerData = getPlayer({ userId: userId })
 			if (!playerData) {
@@ -151,6 +151,7 @@ class StageController {
 			}
 
 			const { userId, npc } = npcs[currentIndex]
+			console.log("StageController: animateNextNPC():", userId)
 
 			// Notify the UI that the player's turn has started
 			this.OnPlayerTurnStart(userId)
@@ -234,7 +235,7 @@ class StageController {
 	// MARK: OnShowEnd
 	OnShowEnd() {
 		console.log("StageController: OnShowEnd()")
-		
+
 		SetCurrentPlayer(undefined)
 		_CameraController.ResetCamera()
 		_SoundManager.StopBGM()
