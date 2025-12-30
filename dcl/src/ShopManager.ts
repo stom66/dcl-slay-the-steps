@@ -36,7 +36,6 @@ class ShopManager {
 		this.createTriggerZones()
 		this.createShopUIs()
 		this.SpawnAllZoneItems()
-		this.createHairColorWheel() // disabled while WIP
 	}
 
 	// MARK: - Zone Initialization
@@ -159,105 +158,6 @@ class ShopManager {
 
 			// Store the root UI entity (sign) for visibility control
 			this.zoneUIs[zone.key] = signEntity
-		})
-	}
-
-	// MARK: createHairColorWheel
-	private createHairColorWheel() {
-		const hairColorWheelEntity = engine.addEntity()
-		Transform.create(hairColorWheelEntity, {
-			position: Vector3.create(8, 2.5, 1.75),
-			rotation: Quaternion.fromEulerDegrees(0, 0, 0)
-		})
-		GltfContainer.create(hairColorWheelEntity, {
-			src: 'assets/models/shopZoneColorPicker.gltf'
-		})
-		
-		pointerEventsSystem.onPointerDown(
-			{ 
-				entity: hairColorWheelEntity, 
-				opts: { 
-					button: InputAction.IA_PRIMARY,
-					hoverText: "Hair Color Wheel",
-					maxDistance: 10
-				} 
-			},
-			() => {
-				this.SampleHairColor(hairColorWheelEntity)
-			}
-		)
-	}
-
-	// MARK: SampleHairColor
-	private SampleHairColor(hairColorWheelEntity: Entity) {
-
-		console.log("ShopManager: SampleHairColor")
-
-		const pointerInfo = PrimaryPointerInfo.getOrCreateMutable(engine.RootEntity)
-    	let dir = pointerInfo.worldRayDirection
-
-		raycastSystem.registerGlobalDirectionRaycast({
-			entity: engine.CameraEntity,
-			opts: {
-				queryType: RaycastQueryType.RQT_HIT_FIRST,
-				direction: dir,
-			},
-		}, function (raycastResult) {
-			let result = raycastResult.hits[0]
-
-			console.log("raycastResult: ", JSON.stringify(raycastResult, null, 2))
-
-			// do something in the hit position
-			if (result && result.position) {
-				// Work out where the cast hit the wheel
-				const worldPosition = utils.getWorldPosition(hairColorWheelEntity)
-				const local = Vector3.subtract(result.position, worldPosition)
-				
-				// XZ plane
-				const x = local.x
-				const z = local.y
-				
-				const angle = Math.atan2(-x, z)
-				
-				let hue = angle / (2 * Math.PI)
-				if (hue < 0) hue += 1
-				
-				// Radius → brightness (doesn't work currently)
-				const radius = Math.sqrt(x * x + z * z)
-				const wheelRadius = 0.75 // check the model collider in blender, radius = dimensions/2
-				
-				// Value is based on distance from center of the wheel
-				const value = Math.min(radius / wheelRadius, 1)
-				const invValue = 1 - value
-				
-				// Final color is based on hue, saturation, and value
-				const color = hsvToColor3(hue, 1, value)
-
-				_OutfitManager.SetHairColor(color)
-
-
-				// Make a temporary marker entity to show where the cast hit
-				const markerEntity = engine.addEntity()
-				Transform.create(markerEntity, {
-					position: result.position,
-					scale: Vector3.create(0.1, 0.1, 0.1)
-				})
-				MeshRenderer.setSphere(markerEntity)
-				Material.setPbrMaterial(markerEntity, {
-					albedoColor: Color4.fromColor3(color)
-				})
-
-				utils.timers.setTimeout(() => { 
-					engine.removeEntity(markerEntity) 
-				}, 1000)
-			}
-
-
-			/* // do something with the hit entity
-			const entity = result.entityId as Entity
-			if (entity) {
-				console.log("entity: ", entity)
-			} */
 		})
 	}
 

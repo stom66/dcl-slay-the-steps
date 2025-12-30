@@ -9,6 +9,7 @@ import { _SoundManager } from './SoundManager'
 import { _StageController } from './StageController'
 
 import { SetupLights } from './Lights'
+import { _ColorPickers } from './ColorPickers'
 
 
 export function main() {
@@ -18,6 +19,7 @@ export function main() {
 	_SoundManager.init()
 	_StageController.init()
 	_OutfitManager.init()
+	_ColorPickers.init()
 
 	SetupLights()
 	setupUi()
