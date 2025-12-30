@@ -514,6 +514,7 @@ class GameManager {
 		this.MovePlayersToArena()
 
 		_StageController.RunShow(this.state.players, this.state.outfits)
+		_OutfitManager.HideNPCMannequin()
 	}
 
 
