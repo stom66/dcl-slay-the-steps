@@ -11,6 +11,12 @@ import { _StageController } from './StageController'
 import { SetupLights } from './Lights'
 import { _ColorPickers } from './ColorPickers'
 
+declare var process: {
+	env: {
+		NODE_ENV: string
+	}
+}
+const DEBUG = process.env.NODE_ENV == "development"
 
 export function main() {
 	_CameraController.init()
@@ -24,5 +30,7 @@ export function main() {
 	SetupLights()
 	setupUi()
 
-	ShowHowToPlay()
+	if (!DEBUG) {
+		ShowHowToPlay()
+	}
 }
