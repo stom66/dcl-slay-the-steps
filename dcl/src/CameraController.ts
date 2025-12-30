@@ -19,7 +19,7 @@ class CameraController {
 	}
 
 	init() {
-		console.log("CameraController init")
+		console.log("CameraController: init()")
 		engine.addSystem(this.System_CameraPositionUpdate)
 
 		this.maxCameraDistanceSquared = this.maxCameraDistance * this.maxCameraDistance
@@ -59,6 +59,8 @@ class CameraController {
 	TrackEntity(
 		entity: Entity
 	) {
+		console.log("CameraController: TrackEntity(): ", entity.toString())
+
 		// Virtual Camera entity
 		const camera = engine.addEntity()
 		this.cameraEntities.push(camera)
@@ -95,7 +97,7 @@ class CameraController {
 	}
 
 	ResetCamera() {
-		console.log("CameraController ResetCamera")
+		console.log("CameraController: ResetCamera()")
 		this.cameraActive = false
 
 		// Stop using virtual camera

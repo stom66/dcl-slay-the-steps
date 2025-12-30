@@ -378,21 +378,36 @@ class OutfitManager {
 		this.ShowNPCMannequin()
 
 		// Let the host know about the new outfit
-		sceneMessageBus.emit(MessageBusEvents.NOTIFY_SERVER_OUTFIT, this.npcOutfit)
+		this.NotifyOutfitChange()
 	}
 
 	// MARK: Set Hair Color
 	SetHairColor(color: Color3) {
 		console.log("OutfitManager SetHairColor:", Color3.toHexString(color))
 		this.npcOutfit.hairColor = color
+
+		// Update the mannequin with the new color
 		this.ShowNPCMannequin()
+
+		// Let the host know about the new outfit
+		this.NotifyOutfitChange()
 	}
 
 	// MARK: Set Skin Color
 	SetSkinColor(color: Color3) {
 		console.log("OutfitManager SetSkinColor:", Color3.toHexString(color))
 		this.npcOutfit.skinColor = color
+
+		// Update the mannequin with the new color
 		this.ShowNPCMannequin()
+
+		// Let the host know about the new outfit
+		this.NotifyOutfitChange()
+	}
+
+	NotifyOutfitChange() {
+		// Let the host know about the new outfit
+		sceneMessageBus.emit(MessageBusEvents.NOTIFY_SERVER_OUTFIT, this.npcOutfit)
 	}
 }
 

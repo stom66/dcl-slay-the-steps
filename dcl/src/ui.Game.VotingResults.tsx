@@ -38,12 +38,12 @@ function BuildVotingResults() {
 
 	//const votes = fakeVoteData // DEBUG DATA
 	const votes = _GameManager.state.votes
-	console.log("BuildVotingResults(), votes.length:", votes.length)
+	console.log("ui.Game.VotingResults: BuildVotingResults(), votes.length:", votes.length)
 	if (!votes) {
 		return elements
 	}
 
-	console.log("BuildVotingResults()", votes.length)
+	console.log("ui.Game.VotingResults: BuildVotingResults()", votes.length)
 
 
 	Object.entries(votes).forEach(([userId, votedFor]) => {
@@ -104,7 +104,7 @@ function BuildVotingResults() {
 	sortedResults.forEach(([userId, score]: [string, number]) => {
 		const playerData = getPlayer({ userId: userId })
 		if (!playerData) {
-			console.error("BuildVotingResults: Failed to get player data for user", userId)
+			console.error("ui.Game.VotingResults: BuildVotingResults: Failed to get player data for user", userId)
 			return
 		}
 

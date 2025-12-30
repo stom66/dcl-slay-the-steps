@@ -11,7 +11,7 @@ import { GameSettings } from './_settings'
 export var visibleYouAreNext: boolean = false
 
 export function ShowYouAreNext(ignoreInterval: boolean = false) {
-	console.log("ShowYouAreNext()")
+	console.log("ui.Game.YouAreNext: ShowYouAreNext()")
 	visibleYouAreNext = true
 
 	let timeout = ignoreInterval ? GameSettings.YOU_ARE_NEXT_PREEMPT_TIME : GameSettings.YOU_ARE_NEXT_PREEMPT_TIME + GameSettings.ROUND_INTERVAL

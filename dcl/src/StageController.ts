@@ -48,12 +48,12 @@ class StageController {
 	durationToCatwalkExit          = this.durationRemaining * this.dCatwalkJunctionToExit / this.totalDistance
 
 	constructor() {
-		console.log("StageController constructor")
+		console.log("StageController: constructor()")
 	}
 
 	// MARK: init
 	init() {
-		console.log("StageController init")
+		console.log("StageController: init()")
 
 		// Handle emotes from local player, players already in scene, and players who join
 		AvatarEmoteCommand.onChange(engine.PlayerEntity, (emote) => {
@@ -94,7 +94,7 @@ class StageController {
 		players: string[], 
 		outfits: Outfit[]
 	) {
-		console.log("StageController RunShow")
+		console.log("StageController: RunShow()")
 
 		this.isRunning = true
 
@@ -103,24 +103,25 @@ class StageController {
 		const cameraTargets: Map<Entity, Entity> = new Map()
 
 		players.forEach((userId) => {
+			console.log("StageController: RunShow(): creating npc for", userId)
+
 			const playerData = getPlayer({ userId: userId })
 			if (!playerData) {
-				console.error("StageController RunShow: Failed to get player data for user", userId)
+				console.error("StageController RunShow(): Failed to get player data for user", userId)
 				return
 			}
-			console.log("StageController RunShow: playerName", playerData.name)
 
 			// Get their outfit
 			const outfit = outfits.find((o) => o.userId === userId)
 			if (!outfit) {
-				console.error("StageController RunShow: Failed to find outfit for user", userId)
+				console.error("StageController RunShow(): Failed to find outfit for user", userId)
 				return
 			}
 			
 			// Create the NPC
 			const npc = this.CreateNPC(outfit)
 			if (!npc) {
-				console.error("StageController RunShow: Failed to create NPC clone for user", userId)
+				console.error("StageController RunShow(): Failed to create NPC clone for user", userId)
 				return
 			}
 			npcs.push({ userId, npc })
@@ -140,7 +141,7 @@ class StageController {
 
 		const npcCount = npcs.length
 		const npcInterval = GameSettings.ROUND_DURATION_PER_PLAYER + GameSettings.ROUND_INTERVAL
-		const totalDuration = GameSettings.ROUND_START_DELAY + (npcCount * npcInterval)
+		//const totalDuration = GameSettings.ROUND_START_DELAY + (npcCount * npcInterval)
 
 		let currentIndex = 0
 
@@ -180,20 +181,17 @@ class StageController {
 				else this.OnShowEnd()
 			}, npcInterval * 1000)
 
-			// Notify the next player that they are next
-				const nextUserId = players[currentIndex]
-				if (nextUserId === localPlayer?.userId) {
-					utils.timers.setTimeout(() => {
-						ShowYouAreNext()
-					}, (GameSettings.ROUND_DURATION_PER_PLAYER - GameSettings.YOU_ARE_NEXT_PREEMPT_TIME) * 1000)
-				}
+		// Notify the next player that they are next
+			const nextUserId = players[currentIndex]
+			if (nextUserId === localPlayer?.userId) {
+				utils.timers.setTimeout(() => {
+					ShowYouAreNext()
+				}, (GameSettings.ROUND_DURATION_PER_PLAYER - GameSettings.YOU_ARE_NEXT_PREEMPT_TIME) * 1000)
+			}
 		}
 
-		// Start the sequence after the round delay
-		if (this.currentTimeout) utils.timers.clearTimeout(this.currentTimeout)
-		this.currentTimeout = utils.timers.setTimeout(() => {
-			animateNextNPC()
-		}, GameSettings.ROUND_START_DELAY * 1000)
+		// Notify the UI that the show has started
+		this.OnShowStart()
 
 		// Notify the first user that it's their turn coming up
 		const firstUserId = players[0]
@@ -203,27 +201,31 @@ class StageController {
 			}, (GameSettings.ROUND_START_DELAY - GameSettings.YOU_ARE_NEXT_PREEMPT_TIME) * 1000)
 		}
 
-
-		// Notify the UI that the show has started
-		this.OnShowStart()
+		// Start the sequence after the start delay
+		if (this.currentTimeout) utils.timers.clearTimeout(this.currentTimeout)
+		this.currentTimeout = utils.timers.setTimeout(() => {
+			animateNextNPC()
+		}, GameSettings.ROUND_START_DELAY * 1000)
 	}
 
+	//MARK: OnPlayerTurnStart
 	OnPlayerTurnStart(userId: string) {
-		console.log("StageController OnPlayerTurnStart: userId", userId)
+		console.log("StageController: OnPlayerTurnStart(): userId", userId)
 		SetCurrentPlayer(userId)
 		if (userId === localPlayer?.userId) {
 			ShowEmotesHint()
 		}
 	}
-	OnPlayerTurnEnd(userId: string) {
-		console.log("StageController OnPlayerTurnEnd: userId", userId)
-		SetCurrentPlayer(undefined)
-	}
 
+	//MARK: OnPlayerTurnEnd
+	OnPlayerTurnEnd(userId: string) {
+		console.log("StageController: OnPlayerTurnEnd(): userId", userId)
+		//SetCurrentPlayer(undefined) // Don't think we should do this in case of race conditions.
+	}
 
 	// MARK: OnShowStart
 	OnShowStart() {
-		console.log("StageController OnShowStart")
+		console.log("StageController: OnShowStart()")
 		_SoundManager.StartBGM()
 		HideHowToPlay()
 		HideWarning()
@@ -231,13 +233,15 @@ class StageController {
 
 	// MARK: OnShowEnd
 	OnShowEnd() {
-		console.log("StageController OnShowEnd")
+		console.log("StageController: OnShowEnd()")
+		
+		SetCurrentPlayer(undefined)
 		_CameraController.ResetCamera()
 		_SoundManager.StopBGM()
 
 		// Remove all the NPC entities
 		this.playerToNPC.forEach((npc: Entity, player) => {
-			console.log("StageController OnShowEnd: destroying npc:", npc.toString())
+			console.log("StageController: OnShowEnd(): destroying npc:", npc.toString())
 			this.DestroyNPC(npc)
 		})
 	}
@@ -252,7 +256,7 @@ class StageController {
 
 	// MARK: CreateNPC
 	CreateNPC(outfit: Outfit): Entity | undefined {
-		console.log("StageController CreateNPCClone: userId", outfit.userId)
+		console.log("StageController: CreateNPCClone(): userId", outfit.userId)
 
 		// Fetch the userData
 		let userData = getPlayer({ userId: outfit.userId })
@@ -288,7 +292,7 @@ class StageController {
 
 	// MARK: DestroyNPC
 	DestroyNPC(npc: Entity) {
-		console.log("StageController DestroyNPC: npc", npc)
+		console.log("StageController: DestroyNPC(): npc", npc)
 		
 		const tween = Tween.getMutableOrNull(npc)
 		if (tween) {
@@ -309,7 +313,7 @@ class StageController {
 
 	// MARK: Handle emotes
 	HandleEmotes(player: Entity, emote: PBAvatarEmoteCommand | undefined) {
-		console.log("StageController HandleEmotes: player", player, "emote", emote)
+		console.log("StageController: HandleEmotes(): player", player, "emote", emote)
 		const npc = this.playerToNPC.get(player)
 		if (npc) {
 			const avatarShape = AvatarShape.getMutableOrNull(npc)
@@ -325,7 +329,7 @@ class StageController {
 		npc: Entity, 
 		goLeft: boolean = false
 	) {
-		console.log("StageController AnimateNPC: npc", npc)
+		console.log("StageController: AnimateNPC(): npc", npc)
 
 		Tween.setMove(npc, 
 			GameSettings.NPC_SPAWN_POSITION, 
@@ -413,7 +417,7 @@ class StageController {
 		engine.addSystem(() => {
 			const tweenCompleted = tweenSystem.tweenCompleted(npc)
 			if (tweenCompleted) {
-				console.log("StageController AnimateNPC: tween completed for npc", npc)
+				console.log("StageController: AnimateNPC(): tween completed for npc", npc)
 				const tween = Tween.getMutable(npc)
 				if (tween) {
 					tween.playing = false	

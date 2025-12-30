@@ -11,7 +11,7 @@ import { GameSettings } from './_settings'
 export var visibleEmotesHint: boolean = false
 
 export function ShowEmotesHint() {
-	console.log("ShowEmotesHint()")
+	console.log("ui.Game.Emotes: ShowEmotesHint()")
 	visibleEmotesHint = true
 	utils.timers.setTimeout(() => {
 		HideEmotesHint()

@@ -40,6 +40,8 @@ class SeatManager {
 	MovePlayerToSeat(
 		seatIndex: number
 	) {
+		console.log("SeatManager: MovePlayerToSeat(): seatIndex", seatIndex.toString())
+		
 		// Move the player to that seat
 		movePlayerTo({
 			newRelativePosition: this.seatPositions[seatIndex], 
@@ -64,7 +66,7 @@ class SeatManager {
 		_CameraController.ResetCamera()
 
 		const randomPoint = GetRandomPointInCircle(Vector3.create(16, 0, 16), 6)
-		console.log("SeatManager: MovePlayerToLobby: randomPoint", randomPoint.x, randomPoint.y, randomPoint.z)
+		console.log("SeatManager: MovePlayerToLobby(): randomPoint", randomPoint.x, randomPoint.y, randomPoint.z)
 
 		// const playerTransform = Transform.getMutable(engine.PlayerEntity) // despite what the docs say, this doesn't work. classic.
 		// playerTransform.position = randomPoint

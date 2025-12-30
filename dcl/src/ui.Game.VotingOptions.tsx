@@ -36,7 +36,7 @@ function VoteForWinner(userId: string) {
 		votedFor = userId
 	}
 
-	console.log("VoteForWinner()",)
+	console.log("ui.Game.VotingOptions: VoteForWinner(): userId", userId)
 	UpdateVotingOptions()
 	sceneMessageBus.emit(MessageBusEvents.NOTIFY_SERVER_VOTE, {
 		voteFrom: localPlayer.userId,
@@ -60,7 +60,7 @@ function BuildVotingOptions() {
 	playerList.forEach((userId: string) => {
 		const playerData = getPlayer({ userId: userId })
 		if (!playerData) {
-			console.error("BuildVotingOptions: Failed to get player data for user", userId)
+			console.error("ui.Game.VotingOptions: BuildVotingOptions(): Failed to get player data for user", userId)
 			return
 		}
 
@@ -141,7 +141,7 @@ function BuildVotingOptions() {
 			</UiEntity>
 		)
 	})
-	console.log("BuildVotingOptions()", elements)
+	console.log("ui.Game.VotingOptions: BuildVotingOptions()", elements.length, "elements")
 	return elements
 }
 

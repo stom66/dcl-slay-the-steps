@@ -124,25 +124,25 @@ class GameManager {
 
 		// Handle state requests
 		sceneMessageBus.on(MessageBusEvents.REQUEST_STATE, () => {
-			console.log("GameManager: sceneMessageBus: stateRequest")
+			//console.log("GameManager: sceneMessageBus: stateRequest")
 			this.OnStateRequest()
 		})
 
 		// Handle state updates
 		sceneMessageBus.on(MessageBusEvents.NOTIFY_CLIENT_STATE, (state: GameState) => {
-			console.log("GameManager: sceneMessageBus: stateUpdate:", state)
+			//console.log("GameManager: sceneMessageBus: stateUpdate:", state)
 			this.OnStateUpdate(state)
 		})
 
 		// Handle outfit updates
 		sceneMessageBus.on(MessageBusEvents.NOTIFY_SERVER_OUTFIT, (outfit: Outfit) => {
-			console.log("GameManager: sceneMessageBus: outfitUpdate:", outfit)
+			//console.log("GameManager: sceneMessageBus: outfitUpdate:", outfit)
 			this.OnNotifyUpdateOutfit(outfit)
 		})
 
 		// Handle players requesting to vote
 		sceneMessageBus.on(MessageBusEvents.NOTIFY_SERVER_VOTE, (vote: RequestVote) => {
-			console.log("GameManager: sceneMessageBus: requestVote:", vote)
+			//console.log("GameManager: sceneMessageBus: requestVote:", vote)
 			this.OnRequestVote(vote)
 		})
 
@@ -203,7 +203,6 @@ class GameManager {
 				} 
 			},
 			() => {
-				console.log("GameManager: OnPointerDown: Join/Start Game")
 				this.JoinOrStartGame()
 			}
 		)
@@ -291,10 +290,12 @@ class GameManager {
 	JoinOrStartGame() {
 		if (!localPlayer || !localPlayer.userId) {
 			localPlayer = getPlayer()
-			console.error("GameManager: JoinOrStartGame: localPlayer not found")
-			return
+			if (!localPlayer || !localPlayer.userId) {
+				console.error("GameManager: JoinOrStartGame: localPlayer not found")
+				return
+			}
 		}
-		console.log("GameManager: JoinOrStartGame", localPlayer.userId)
+		console.log("GameManager: JoinOrStartGame: userId", localPlayer.userId)
 
 		// Ensure we have a proper UTC time
 		if (this.utcTimestamp < 10000) {
@@ -313,14 +314,14 @@ class GameManager {
 
 		// Ignore if a game is in progress
 		if (this.state.gameState == GameStatus.ROUND_ACTIVE || this.state.gameState == GameStatus.VOTING || this.state.gameState == GameStatus.GAME_ENDED) {
-			console.log("GameManager: OnJoinOrStartGame: Game is in progress, please wait for the next game")
+			console.log("GameManager: OnJoinOrStartGame: Game is in progress, can't join")
 			ShowWarning("A Game is currently in progress, please wait for the next game!")
 			return
 		}
 
 		// Ignore if the game is full
 		if (this.state.players.length >= GameSettings.MAX_PLAYERS) {
-			console.log("GameManager: OnJoinOrStartGame: Max players reached, please wait for the next game")
+			console.log("GameManager: OnJoinOrStartGame: Max players reached, can't join")
 			ShowWarning("The current game is full, please wait for the next game!")
 			return
 		}
@@ -396,7 +397,7 @@ class GameManager {
 	OnNotifyUpdateOutfit(outfit: Outfit) {
 	
 		if (!this.iAmTheHost) return
-		console.log("GameManager: NotifyUpdateOutfit:", outfit.userId, outfit.wearables, outfit.bodyShape, outfit.hairColor)
+		console.log("GameManager: OnNotifyUpdateOutfit():", outfit.userId, outfit.wearables.length, "wearables", outfit.bodyShape, Color3.toHexString(outfit.hairColor), Color3.toHexString(outfit.skinColor))
 
 		// get the current outfit for the user, if it exists, update it
 		let currentOutfit = this.state.outfits.find((o) => o.userId === outfit.userId)
@@ -655,7 +656,7 @@ class GameManager {
 	// MARK: ---
 	// MARK: OnStateRequest
 	OnStateRequest() {
-		console.log("GameManager: OnStateRequest")
+		console.log("GameManager: OnStateRequest()")
 		if (this.iAmTheHost) {
 			this.TriggerStateUpdate()
 		}

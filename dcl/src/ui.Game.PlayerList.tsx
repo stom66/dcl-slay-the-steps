@@ -12,11 +12,11 @@ let currentPlayer: undefined | string = ""
 var visiblePlayerList : boolean = true
 
 export function ShowPlayerList() {
-	console.log("ShowPlayerList()")
+	console.log("ui.Game.PlayerList: ShowPlayerList()")
 	visiblePlayerList = true
 }
 export function HidePlayerList() {
-	console.log("HidePlayerList()")
+	console.log("ui.Game.PlayerList: HidePlayerList()")
 	visiblePlayerList = false
 }
 
@@ -57,7 +57,7 @@ function BuildPlayerList() {
 
 		const playerData = getPlayer({ userId: userId })
 		if (!playerData) {
-			console.error("BuildPlayerList: Failed to get player data for user", userId)
+			console.error("ui.Game.PlayerList: BuildPlayerList(): Failed to get player data for user", userId)
 			return
 		}
 
@@ -129,6 +129,8 @@ function BuildPlayerList() {
 		)
 	})
 
+	console.log("ui.Game.PlayerList: BuildPlayerList():", elements.length, "players")
+
 	if (elements.length < 1) {
 		elements.push(
 			<UiEntity
@@ -148,7 +150,6 @@ function BuildPlayerList() {
 		)
 	}
 
-	console.log("BuildPlayerList()", elements)
 	return elements
 }
 
