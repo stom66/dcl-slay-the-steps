@@ -621,7 +621,8 @@ class GameManager {
 		if (!this.iAmTheHost) return
 		console.log("GameManager: TriggerIdle")
 
-		this.ResetState()
+		this.state.gameState = GameStatus.IDLE
+
 		this.TriggerStateUpdate()
 
 		this.OnIdle()
