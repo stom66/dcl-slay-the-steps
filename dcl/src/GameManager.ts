@@ -74,6 +74,7 @@ class GameManager {
 		console.log("GameManager constructor")
 	}
 
+	// MARK: ResetState
 	ResetState() {
 		this.state.gameState     = GameStatus.IDLE
 		this.state.hostUserId    = ""
@@ -96,6 +97,7 @@ class GameManager {
 		HideVotingResults()
 		UpdatePlayerList()
 	}
+
 
 	// MARK: init
 	async init() {
@@ -239,6 +241,7 @@ class GameManager {
 		})
 	}
 
+
 	// MARK: System_UpdateTimers
 	System_UpdateTimers = (dt: number) => {
 		// Fetch current UTC time
@@ -259,6 +262,7 @@ class GameManager {
 			this.countdownValue = remainingTime
 		}
 	}
+
 
 	// MARK: UpdateUTCTimestamp
 	UpdateUTCTimestamp() {
@@ -283,7 +287,6 @@ class GameManager {
 	}
 
 
-	
 	// MARK: ---
 	// MARK: JoinOrStartGame
 	// When a player presses the button to Start/Join a game
@@ -340,7 +343,6 @@ class GameManager {
 		}
 	}
 	
-	
 
 	// MARK: ---
 	// MARK: RequestToJoinGame
@@ -361,6 +363,7 @@ class GameManager {
 		if (!localPlayer || !localPlayer.userId) return
 		sceneMessageBus.emit(MessageBusEvents.REQUEST_JOIN_GAME, _OutfitManager.GetCurrentOutfit())
 	}
+
 
 	// MARK: OnRequestToJoinGame
 	OnRequestToJoinGame(outfit: Outfit) {
@@ -393,6 +396,7 @@ class GameManager {
 		UpdatePlayerList()
 	}
 
+	
 	// MARK: OnNotifyUpdateOutfit
 	OnNotifyUpdateOutfit(outfit: Outfit) {
 	
@@ -442,7 +446,6 @@ class GameManager {
 			if (this.timerInterval) utils.timers.clearInterval(this.timerInterval)
 		}, (GameSettings.COUNTDOWN_DURATION - 1) * 1000)
 	}
-	
 
 
 	// MARK: ---
@@ -465,6 +468,7 @@ class GameManager {
 		}, GameSettings.COUNTDOWN_DURATION * 1000)
 	}
 
+
 	// MARK: OnCountdownStart
 	OnCountdownStart() {
 		console.log("GameManager: OnCountdownStart: starting in", this.state.gameStartTime - this.utcTimestamp, "seconds")
@@ -472,8 +476,6 @@ class GameManager {
 		ShowCountdownTimer()		
 		UpdatePlayerList()
 	}
-
-
 
 
 	// MARK: ---
@@ -517,7 +519,6 @@ class GameManager {
 	}
 
 
-
 	// MARK: ---
 	// MARK: TriggerVoting
 	TriggerVotingStart() {
@@ -537,6 +538,7 @@ class GameManager {
 			this.TriggerVotingEnd()
 		}, GameSettings.VOTING_DURATION * 1000)
 	}
+
 
 	// MARK: OnVotingStart
 	OnVotingStart() {
@@ -578,7 +580,6 @@ class GameManager {
 	}
 
 
-
 	// MARK: ---
 	// MARK: TriggerVotingEnd
 	TriggerVotingEnd() {
@@ -599,6 +600,7 @@ class GameManager {
 		}, GameSettings.GAME_ENDED_DURATION * 1000)
 	}
 
+
 	// MARK: OnVotingEnd
 	OnVotingEnd() {
 		// Ignore if we are not in the game
@@ -613,7 +615,6 @@ class GameManager {
 	}
 
 
-
 	// MARK: ---
 	// MARK: TriggerIdle
 	TriggerIdle() {
@@ -625,6 +626,7 @@ class GameManager {
 
 		this.OnIdle()
 	}
+
 
 	// MARK: OnIdle
 	OnIdle() {
@@ -662,6 +664,7 @@ class GameManager {
 		}
 	}
 
+
 	// MARK: TriggerStateUpdate
 	TriggerStateUpdate() {
 		if (!this.iAmTheHost) return
@@ -674,6 +677,7 @@ class GameManager {
 		sceneMessageBus.emit('stateUpdate', this.state)
 		UpdatePlayerList()
 	}
+
 
 	// MARK: OnStateUpdate
 	OnStateUpdate(newState: GameState) {
@@ -732,6 +736,7 @@ class GameManager {
 		UpdatePlayerList()
 	}
 	
+
 	// MARK: ---
 	// MARK: Utils
 	MovePlayersToArena() {
