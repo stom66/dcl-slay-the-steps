@@ -117,7 +117,7 @@ class CameraController {
 			this.cameraEntities = []
 			this.currentCamera = undefined
 			this.currentTarget = undefined
-		}, this.transitionDuration * 1000)
+		}, this.transitionDuration * 1000 + 100)
 	}
 }
 
