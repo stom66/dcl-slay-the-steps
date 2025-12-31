@@ -41,7 +41,7 @@ export class GameSettings {
 	static ROUND_START_DELAY          = IS_DEBUG ? 4 : 4 // Delay before the round starts
 	static ROUND_INTERVAL             = IS_DEBUG ? 2 : 2 // Interval between players, MUST be longer than the ROUND_START_DELAY
 	static VOTING_DURATION            = 10
-	static GAME_ENDED_DURATION        = 5
+	static GAME_ENDED_DURATION        = 4
 	static UTC_UPDATE_INTERVAL        = IS_DEBUG ? 30 : 300 // Set to five minutes now we're not using the external API any more
 	static YOU_ARE_NEXT_PREEMPT_TIME  = IS_DEBUG ? 3 : 3 // How far in advance of the players turn shoud we show the message letting them know they are next
 
