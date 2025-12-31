@@ -7,10 +7,12 @@ import { _GameManager } from './GameManager'
 
 
 // Placeholders for dynamic content
-let playerList   : any[]  = [];
-let currentPlayer: undefined | string = ""
-var visiblePlayerList : boolean = true
+let currentPlayer    : undefined | string = ""   // userId of the currently active player to show the star icon during a round
+let playerList       : any[]              = []   // array of UIElements for each player
+var visiblePlayerList: boolean            = true // unused - toggles root element visibility
 
+
+// Utility functions
 export function ShowPlayerList() {
 	console.log("ui.Game.PlayerList: ShowPlayerList()")
 	visiblePlayerList = true
@@ -25,41 +27,37 @@ export function SetCurrentPlayer(userId?: string) {
 	UpdatePlayerList()
 }
 
+
 // MARK: BuildPlayerList
 function BuildPlayerList() {
-	let elements: any[] = []
 
 	// Defensive check: ensure _GameManager is initialized
 	if (!_GameManager || !_GameManager.state) {
-		return elements
+		return []
 	}
 
-/* 	let gameStateImage = "assets/images/ui/text-idle.png"
-	switch (_GameManager.state.gameState) {
-		case GameStatus.STARTING:
-			gameStateImage = "assets/images/ui/text-game-starting.png"
-			break
-		case GameStatus.ROUND_ACTIVE:
-			gameStateImage = "assets/images/ui/text-game-in-progress.png"
-			break
-		case GameStatus.VOTING:
-			gameStateImage = "assets/images/ui/text-voting-in-progress.png"
-			break
-		case GameStatus.GAME_ENDED:
-			gameStateImage = "assets/images/ui/text-voting-finished.png"
-			break
-	} */
+	// Debugging incorrect AvatarTextures showing up
+	const userIds: string[] = _GameManager.state.players.map(
+		(userId: string) => userId
+	)
+	console.log("ui.Game.PlayerList: BuildPlayerList(): adding", userIds.length, "elements for userIDs:")
+	userIds.forEach((userId: string) => {
+		console.log(userId)
+	})
+	
+	let elements: any[] = []
 
-	_GameManager.state.players.forEach((userId: string) => {
-		const currentIndex = elements.length;
-		const isEven = currentIndex % 2 === 0;
-		const backgroundTexture = GetBackgroundTexture(isEven)
-
+	// Build the "row" elements
+	userIds.forEach((userId: string) => {
+		// Fetch the player data, so we can get their name
 		const playerData = getPlayer({ userId: userId })
 		if (!playerData) {
 			console.error("ui.Game.PlayerList: BuildPlayerList(): Failed to get player data for user", userId)
 			return
 		}
+
+		const isEven    = elements.length % 2 === 0
+		const bgTexture = GetBackgroundTexture(isEven)
 
 		elements.push(
 			<UiEntity
@@ -76,7 +74,7 @@ function BuildPlayerList() {
 				}}
 				uiBackground={{
 					texture: {
-						src: backgroundTexture
+						src: bgTexture
 					},
 					textureMode: "nine-slices",
 					textureSlices: {
@@ -129,8 +127,7 @@ function BuildPlayerList() {
 		)
 	})
 
-	console.log("ui.Game.PlayerList: BuildPlayerList():", elements.length, "players")
-
+	// If no players, add the "no players" image
 	if (elements.length < 1) {
 		elements.push(
 			<UiEntity
@@ -162,8 +159,14 @@ export function UpdatePlayerList() {
 UpdatePlayerList()
 
 
-// MARK: Main GameUI
+// MARK: Main PlayerList UI
 export function PlayerListUI() {
+	// DISABLED: Constantly refresh the player list every frame
+	// An effort to combat a bug with the AvatarTexture being incorrect. It does not work.
+
+	//if (visiblePlayerList) {
+	//	playerList = BuildPlayerList()
+	//}
 	return (
 		<UiEntity
 			key={`ui_PlayerList_root`}

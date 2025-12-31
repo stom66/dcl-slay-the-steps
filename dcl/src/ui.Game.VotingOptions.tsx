@@ -11,11 +11,12 @@ const sceneMessageBus = new MessageBus()
 
 
 // Placeholders for dynamic content
-var visibleVoting: boolean = false
-let votingOptions: any[]  = [];
-let votedFor     : string = ""
+var visibleVoting: boolean = false // toggles root element visibility
+let votedFor     : string  = ""    // userId of the currently active player to show the star icon during a round
+let votingOptions: any[]   = []    // array of UIElements for each option
 
 
+// Utility functions
 export function ShowVotingOptions() {
 	visibleVoting = true
 	votingOptions = BuildVotingOptions()
@@ -25,11 +26,10 @@ export function HideVotingOptions() {
 	votedFor      = ""
 }
 
-export function UpdateVotingOptions() {
-	votingOptions = BuildVotingOptions()
-}
 
+// Button function which triggers the actual vote
 function VoteForWinner(userId: string) {
+	// Allow player to remove their existing vote without voting for someone else
 	if (votedFor === userId) {
 		votedFor = ""
 	} else {
@@ -47,17 +47,26 @@ function VoteForWinner(userId: string) {
 
 // MARK: BuildVotingOptions
 function BuildVotingOptions() {
-	let elements: any[] = []
-
+	
 	// Defensive check: ensure _GameManager is initialized
 	if (!_GameManager || !_GameManager.state) {
-		return elements
+		return []
 	}
 
-	const playerList = _GameManager.state.players
+	// Debugging incorrect AvatarTextures showing up
+	const userIds: string[] = _GameManager.state.players.map(
+		(userId: string) => userId
+	)
+	console.log("ui.Game.VotingOptions: BuildVotingOptions(): adding", userIds.length, "elements for userIDs:")
+	userIds.forEach((userId: string) => {
+		console.log(userId)
+	})
+	
+	let elements: any[] = []
 
-	//_GameManager.state.players.forEach((votingOption: string) => {
-	playerList.forEach((userId: string) => {
+	// Build the "row" elements
+	userIds.forEach((userId: string) => {
+		// Fetch the player data, so we can get their name
 		const playerData = getPlayer({ userId: userId })
 		if (!playerData) {
 			console.error("ui.Game.VotingOptions: BuildVotingOptions(): Failed to get player data for user", userId)
@@ -145,14 +154,20 @@ function BuildVotingOptions() {
 	return elements
 }
 
+export function UpdateVotingOptions() {
+	votingOptions = BuildVotingOptions()
+}
 
-// MARK: Main GameUI
+
+// MARK: Main VotingOptionsUI
 export function VotingOptionsUI() {
-	// This continues to build the voting options every frame the UI is visible, in an attempt 
-	// to combat a bug with the AvatarTexture being incorrect. It does not work.
+	// DISABLED: Constantly refresh the voting options every frame
+	// An effort to combat a bug with the AvatarTexture being incorrect. It does not work.
+
 	//if (visibleVoting) {
 	//	votingOptions = BuildVotingOptions()
 	//}
+
 	return (
 		<UiEntity
 			key={`ui_VotingOptions_root`}
@@ -222,7 +237,7 @@ export function VotingOptionsUI() {
 								src: "assets/images/ui/icon-close.png"
 							},
 							textureMode: "center",
-							color: Color4.fromHexString("#D89130")
+							color      : Color4.fromHexString("#D89130")
 						}}
 						value=""
 						onMouseUp={() => HideVotingOptions()}

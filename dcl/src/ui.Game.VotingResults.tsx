@@ -12,6 +12,8 @@ import { HideVotingOptions } from './ui.Game.VotingOptions';
 let votingResults: any[]  = [];
 var visibleVotingResults : boolean = false
 
+
+// Utility functions
 export function ShowVotingResults() {
 	HideVotingOptions()
 	UpdateVotingResults()
@@ -28,35 +30,29 @@ export function UpdateVotingResults() {
 
 // MARK: BuildVotingResults
 function BuildVotingResults() {
-	let elements: any[] = []
-	const results: Record<string, number> = {}
-
 	// Defensive check: ensure _GameManager is initialized
 	if (!_GameManager || !_GameManager.state) {
-		return elements
+		return []
 	}
 
-	//const votes = fakeVoteData // DEBUG DATA
-	const votes = _GameManager.state.votes
-	console.log("ui.Game.VotingResults: BuildVotingResults(), votes.length:", votes.length)
-	if (!votes) {
-		return elements
-	}
+	const elements: any[]                  = [] // array of UIElements for each player
+	const results : Record<string, number> = {} // dictionary of vote results
+	
+	console.log("ui.Game.VotingResults: BuildVotingResults(), votes.length:", _GameManager.state.votes.length)
 
-	console.log("ui.Game.VotingResults: BuildVotingResults()", votes.length)
-
-
-	Object.entries(votes).forEach(([userId, votedFor]) => {
-		const voteTarget = votedFor as string
-		if (results[voteTarget] === undefined) {
-			results[voteTarget] = 1
+	// Build the results, getting the count of votes for each player
+	Object.entries(_GameManager.state.votes).forEach(([userId, votedFor]) => {
+		if (results[votedFor] === undefined) {
+			results[votedFor] = 1
 		} else {
-			results[voteTarget]++
+			results[votedFor]++
 		}
 	})
+
 	// To sort voting results, we need an array, not an object. Let's get an array of [userId, count] and sort it.
 	const sortedResults = Object.entries(results).sort((a, b) => b[1] - a[1])
 
+	// If there are no votes, show a message
 	if (sortedResults.length === 0) {
 		elements.push(
 			<UiEntity
@@ -101,6 +97,7 @@ function BuildVotingResults() {
 		return elements
 	}
 
+	// Build the "row" elements
 	sortedResults.forEach(([userId, score]: [string, number]) => {
 		const playerData = getPlayer({ userId: userId })
 		if (!playerData) {
@@ -108,7 +105,7 @@ function BuildVotingResults() {
 			return
 		}
 
-		const isEven            = elements.length % 2 === 0;
+		const isEven            = elements.length % 2 === 0
 		const backgroundTexture = GetBackgroundTexture(isEven)
 
 		elements.push(
@@ -195,7 +192,7 @@ function BuildVotingResults() {
 }
 
 
-// MARK: Main GameUI
+// MARK: Main VotingResultsUI
 export function VotingResultsUI() {
 	return (
 		<UiEntity
@@ -219,7 +216,7 @@ export function VotingResultsUI() {
 					justifyContent: 'space-evenly',
 					alignSelf     : 'center',
 					flexShrink    : 1,
-					margin        : { bottom                     : '35px' },
+					margin        : { bottom: '35px' },
 					display       : visibleVotingResults ? 'flex': 'none',
 					padding       : { top: 16, bottom: 32, left: 16, right: 16 },
 				}}
@@ -266,7 +263,7 @@ export function VotingResultsUI() {
 								src: "assets/images/ui/icon-close.png"
 							},
 							textureMode: "center",
-							color: Color4.fromHexString("#D89130")
+							color      : Color4.fromHexString("#D89130")
 						}}
 						value=""
 						onMouseUp={() => HideVotingResults()}
