@@ -1,4 +1,4 @@
-import { getWorldPosition } from "@dcl-sdk/utils"
+import { getWorldPosition, timers } from "@dcl-sdk/utils"
 import { engine, Entity, MainCamera, Transform, VirtualCamera } from "@dcl/sdk/ecs"
 import { Vector3 } from "@dcl/sdk/math"
 
@@ -108,13 +108,16 @@ class CameraController {
 		}
 		mainCamera.virtualCameraEntity = undefined
 
-		// Cleanup old cameras
-		this.cameraEntities.forEach((camera) => {
-			engine.removeEntity(camera)
-		})
-		this.cameraEntities = []
-		this.currentCamera = undefined
-		this.currentTarget = undefined
+		
+		// Cleanup old cameras, after a delay
+		timers.setTimeout(() => {
+			this.cameraEntities.forEach((camera) => {
+				engine.removeEntity(camera)
+			})
+			this.cameraEntities = []
+			this.currentCamera = undefined
+			this.currentTarget = undefined
+		}, this.transitionDuration * 1000)
 	}
 }
 
