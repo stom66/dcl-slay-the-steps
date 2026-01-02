@@ -2,8 +2,8 @@ import ReactEcs, { Button, Label, ReactEcsRenderer, UiEntity} from '@dcl/sdk/rea
 import { Color4 } from '@dcl/sdk/math'
 import { MessageBus } from '@dcl/sdk/message-bus'
 
-import { _GameManager, localPlayer } from './GameManager'
-import { _SeatManager } from './SeatManager'
+import { GameManager, localPlayer } from './GameManager'
+import { SeatManager } from './SeatManager'
 
 const sceneMessageBus = new MessageBus()
 
@@ -32,7 +32,7 @@ export function DebugUI() {
 				variant     = 'primary'
 				fontSize    = {14}
 				onMouseDown = {() => {
-					_SeatManager.MovePlayerToLobby()
+					SeatManager.MovePlayerToLobby()
 				}}
 			/>
 
@@ -44,7 +44,7 @@ export function DebugUI() {
 				variant     = 'primary'
 				fontSize    = {14}
 				onMouseDown = {() => {
-					_SeatManager.MovePlayerToSeat(Math.floor(Math.random() * 16))
+					SeatManager.MovePlayerToSeat(Math.floor(Math.random() * 16))
 				}}
 			/>
 			<Label
@@ -73,7 +73,7 @@ export function DebugUI() {
 					alignItems    : 'flex-start',
 					justifyContent: 'space-between'
 				}}
-				value          = {`timestamp: ${_GameManager.utcTimestamp}`}
+				value          = {`timestamp: ${GameManager.utcTimestamp}`}
 				color          = {Color4.White()}
 				fontSize       = {14}
 				textAlign      = "middle-left"
@@ -89,7 +89,7 @@ export function DebugUI() {
 					alignItems    : 'flex-start',
 					justifyContent: 'space-between'
 				}}
-				value          = {`gameState: ${_GameManager.state.gameState}`}
+				value          = {`gameState: ${GameManager.state.gameState}`}
 				color          = {Color4.White()}
 				fontSize       = {14}
 				textAlign      = "middle-left"
@@ -105,7 +105,7 @@ export function DebugUI() {
 					alignItems    : 'flex-start',
 					justifyContent: 'space-between'
 				}}
-				value          = {`IAmTheHost: ${_GameManager.iAmTheHost ? "TRUE" : "FALSE"}`}
+				value          = {`IAmTheHost: ${GameManager.iAmTheHost ? "TRUE" : "FALSE"}`}
 				color          = {Color4.White()}
 				fontSize       = {14}
 				textAlign      = "middle-left"
@@ -121,7 +121,7 @@ export function DebugUI() {
 					alignItems    : 'flex-start',
 					justifyContent: 'space-between'
 				}}
-				value          = {`IAmInTheGame: ${_GameManager.state.players.includes(localPlayer?.userId) ? "TRUE" : "FALSE"}`}
+				value          = {`IAmInTheGame: ${GameManager.state.players.includes(localPlayer?.userId) ? "TRUE" : "FALSE"}`}
 				color          = {Color4.White()}
 				fontSize       = {14}
 				textAlign      = "middle-left"
@@ -136,7 +136,7 @@ export function DebugUI() {
 					alignItems    : 'flex-start',
 					justifyContent: 'space-between'
 				}}
-				value          = {`hostUserId: ${_GameManager.state.hostUserId}`}
+				value          = {`hostUserId: ${GameManager.state.hostUserId}`}
 				color          = {Color4.White()}
 				fontSize       = {14}
 				textAlign      = "middle-left"

@@ -4,7 +4,7 @@ import { MessageBus } from '@dcl/sdk/message-bus'
 import { getPlayer } from '@dcl/sdk/players'
 
 import { GetBackgroundTexture } from './utils'
-import { _GameManager, localPlayer } from './GameManager'
+import { GameManager, localPlayer } from './GameManager'
 import { MessageBusEvents } from './_settings'
 
 const sceneMessageBus = new MessageBus()
@@ -48,13 +48,13 @@ function VoteForWinner(userId: string) {
 // MARK: BuildVotingOptions
 function BuildVotingOptions() {
 	
-	// Defensive check: ensure _GameManager is initialized
-	if (!_GameManager || !_GameManager.state) {
+	// Defensive check: ensure GameManager is initialized
+	if (!GameManager || !GameManager.state) {
 		return []
 	}
 
 	// Debugging incorrect AvatarTextures showing up
-	const userIds: string[] = _GameManager.state.players.map(
+	const userIds: string[] = GameManager.state.players.map(
 		(userId: string) => userId
 	)
 	console.log("ui.Game.VotingOptions: BuildVotingOptions(): adding", userIds.length, "elements for userIDs:")

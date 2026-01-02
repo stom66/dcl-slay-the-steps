@@ -1,85 +1,81 @@
 import { AudioSource, engine, Entity, Transform } from "@dcl/sdk/ecs"
 
-class SoundManager {
-	private bgm_src = "assets/sfx/bgm.mp3"
-	bgm?: Entity
+export namespace SoundManager {
+	const bgm_src = "assets/sfx/bgm.mp3"
+	let bgm: Entity
 	
-	private fadingOut    = false
-	private fadingIn     = false
-	private fadeElapsed  = 0
-	private fadeDuration = 3.0
-	private volume       = 0.5
+	const fadeDuration = 3.0
+	let fadingOut    = false
+	let fadingIn     = false
+	let fadeElapsed  = 0
+	let volume       = 0.5
 	
-	constructor() {
-		engine.addSystem(this.System_UpdateSound)
-	}
 	
-	init() {
-		this.bgm = engine.addEntity()
-		Transform.create(this.bgm, {})
-		AudioSource.create(this.bgm, {
-			audioClipUrl: this.bgm_src,
+	export function init() {
+		engine.addSystem(System_UpdateSound)
+		bgm = engine.addEntity()
+		Transform.create(bgm, {})
+		AudioSource.create(bgm, {
+			audioClipUrl: bgm_src,
 			playing: false,
 			global: true,
 			volume: 0.5,
 		})
 	}
 	
-	StartBGM() {
-		if (!this.bgm) return
+	export function StartBGM() {
+		if (!bgm) return
 
-		const audio = AudioSource.getMutableOrNull(this.bgm)
+		const audio = AudioSource.getMutableOrNull(bgm)
 		if (!audio) return
 		if (audio.playing) return
 
-		this.fadingIn = true
-		this.fadeElapsed = 0
+		fadingIn = true
+		fadeElapsed = 0
 		audio.volume = 0
 		audio.playing = true
 	}
 	
-	StopBGM() {
-		if (!this.bgm) return
+	export function StopBGM() {
+		if (!bgm) return
 		
-		const audio = AudioSource.getMutableOrNull(this.bgm)
+		const audio = AudioSource.getMutableOrNull(bgm)
 		if (!audio) return
 		if (!audio.playing) return
 		
-		this.fadingOut = true
-		this.fadeElapsed = 0
-		this.volume = audio.volume ?? 0.5
+		fadingOut = true
+		fadeElapsed = 0
+		volume = audio.volume ?? 0.5
 	}
 	
-	private System_UpdateSound = (dt: number) => {
-		if (!(this.fadingOut || this.fadingIn) || !this.bgm) return
+	const System_UpdateSound = (dt: number) => {
+		if (!(fadingOut || fadingIn) || !bgm) return
 		
-		const audio = AudioSource.getMutableOrNull(this.bgm)
+		const audio = AudioSource.getMutableOrNull(bgm)
 		if (!audio) return
-		this.fadeElapsed += dt
+		fadeElapsed += dt
 		
-		if (this.fadeElapsed >= this.fadeDuration) {
-			if (this.fadingOut) {
+		if (fadeElapsed >= fadeDuration) {
+			if (fadingOut) {
 				audio.volume = 0
 				audio.playing = false
-				this.fadingOut = false
+				fadingOut = false
 			} else {
-				audio.volume = this.volume
-				this.fadingIn = false
+				audio.volume = volume
+				fadingIn = false
 			}
 		} else {
-			if (this.fadingOut) {
+			if (fadingOut) {
 				audio.volume = Math.max(
 					0,
-					this.volume * (1 - this.fadeElapsed / this.fadeDuration)
+					volume * (1 - fadeElapsed / fadeDuration)
 				)
 			} else {
 				audio.volume = Math.min(
 					1,
-					this.volume * (this.fadeElapsed / this.fadeDuration)
+					volume * (fadeElapsed / fadeDuration)
 				)
 			}
 		}
 	}
 }
-
-export const _SoundManager = new SoundManager()

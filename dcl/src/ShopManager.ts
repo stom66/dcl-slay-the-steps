@@ -4,7 +4,7 @@ import { Color3, Color4, Quaternion, Vector3 } from "@dcl/sdk/math"
 import * as utils from '@dcl-sdk/utils'
 
 import { ShopSlot, Wearable } from "./shopSlotData"
-import { _OutfitManager } from "./OutfitManager"
+import { OutfitManager } from "./OutfitManager"
 import { ShopZone, shopZones } from "./shopZoneData"
 import { blockedCreatorAddresses, blockedItemURNs, blockedKeywords } from "./shopBlockedItems"
 import { FetchZoneItems, hsvToColor3 } from "./utils"
@@ -13,49 +13,41 @@ import { FetchZoneItems, hsvToColor3 } from "./utils"
  * Manages shop zones, their items, and UI interactions.
  * Each zone can display items from the API and allow users to browse through pages.
  */
-class ShopManager {
+export namespace ShopManager {
 	// Zone state: maps zone key to array of spawned item entities
-	private zoneItems: Record<string, Entity[]> = {}
+	let zoneItems: Record<string, Entity[]> = {}
 	
 	// UI entities: maps zone key to UI root entity
-	private zoneUIs: Record<string, Entity> = {}
+	let zoneUIs: Record<string, Entity> = {}
 	
 	// Navigation state: maps zone key to current page number
-	private zonePages: Record<string, number> = {}
+	let zonePages: Record<string, number> = {}
 	
 	// Trigger zone entities: maps zone key to trigger entity
-	private triggerZones: Record<string, Entity> = {}
+	let triggerZones: Record<string, Entity> = {}
 
-	constructor() {
-		console.log("ShopManager constructor")
-	}
-
-	init() {
+	export function init() {
 		console.log("ShopManager init")
-		this.initializeZones()
-		this.createTriggerZones()
-		this.createShopUIs()
-		this.SpawnAllZoneItems()
+		initializeZones()
+		createTriggerZones()
+		createShopUIs()
+		SpawnAllZoneItems()
 	}
 
 	// MARK: - Zone Initialization
 	
-	/**
-	 * Initialize all zones with empty item arrays and page 0
-	 */
-	private initializeZones() {
+	// Initialize all zones with empty item arrays and page 0
+	function initializeZones() {
 		shopZones.forEach((zone) => {
-			this.zoneItems[zone.key] = []
-			this.zonePages[zone.key] = 0
+			zoneItems[zone.key] = []
+			zonePages[zone.key] = 0
 		})
 	}
 
 	// MARK: - Trigger Zones
 	
-	/**
-	 * Create trigger zones that detect when players enter/exit shop areas
-	 */
-	private createTriggerZones() {
+	// Create trigger zones that detect when players enter/exit shop areas
+	function createTriggerZones() {
 		console.log("ShopManager: Creating trigger zones")
 		shopZones.forEach((zone) => {
 			const triggerEntity = engine.addEntity()
@@ -65,31 +57,30 @@ class ShopManager {
 			})
 			TriggerArea.setSphere(triggerEntity)
 			
-			this.triggerZones[zone.key] = triggerEntity
+			triggerZones[zone.key] = triggerEntity
 			
 			triggerAreaEventsSystem.onTriggerEnter(triggerEntity, (result) => {
 				if (result.trigger?.entity !== engine.PlayerEntity) return
 				console.log(`ShopManager: Player entered zone "${zone.key}"`)
-				//this.showUI(zone)
-				_OutfitManager.ShowNPCMannequin()
+				//showUI(zone)
+				OutfitManager.ShowNPCMannequin()
 			})
 			
 			triggerAreaEventsSystem.onTriggerExit(triggerEntity, (result) => {
 				if (result.trigger?.entity !== engine.PlayerEntity) return
 				console.log(`ShopManager: Player exited zone "${zone.key}"`)
-				//this.hideUI(zone)
-				_OutfitManager.HideNPCMannequin()
+				//hideUI(zone)
+				OutfitManager.HideNPCMannequin()
 			})
 		})
 	}
 
+
 	// MARK: - UI Management
 	
 	// MARK: createShopUI
-	/**
-	 * Create UI panels for each shop zone with navigation buttons
-	 */
-	private createShopUIs() {
+	// Create UI panels for each shop zone with navigation buttons
+	function createShopUIs() {
 		console.log("ShopManager: Creating shop UIs")
 		shopZones.forEach((zone) => {
 			// Root sign entity
@@ -130,7 +121,7 @@ class ShopManager {
 					} 
 				},
 				() => {
-					this.previousPage(zone)
+					previousPage(zone)
 				}
 			)
 
@@ -152,20 +143,19 @@ class ShopManager {
 					} 
 				},
 				() => {
-					this.nextPage(zone)
+					nextPage(zone)
 				}
 			)
 
 			// Store the root UI entity (sign) for visibility control
-			this.zoneUIs[zone.key] = signEntity
+			zoneUIs[zone.key] = signEntity
 		})
 	}
 
-	/**
-	 * Show the UI for a specific zone
-	 */
-	private showUI(zone: ShopZone) {
-		const uiEntity = this.zoneUIs[zone.key]
+
+	// Show the UI for a specific zone
+	function showUI(zone: ShopZone) {
+		const uiEntity = zoneUIs[zone.key]
 		if (!uiEntity) {
 			console.error(`ShopManager: No UI entity found for zone "${zone.key}"`)
 			return
@@ -179,11 +169,10 @@ class ShopManager {
 		console.log(`ShopManager: Showing UI for zone "${zone.key}"`)
 	}
 
-	/**
-	 * Hide the UI for a specific zone
-	 */
-	private hideUI(zone: ShopZone) {
-		const uiEntity = this.zoneUIs[zone.key]
+
+	// Hide the UI for a specific zone
+	function hideUI(zone: ShopZone) {
+		const uiEntity = zoneUIs[zone.key]
 		if (!uiEntity) {
 			console.error(`ShopManager: No UI entity found for zone "${zone.key}"`)
 			return
@@ -197,53 +186,48 @@ class ShopManager {
 		console.log(`ShopManager: Hiding UI for zone "${zone.key}"`)
 	}
 
-	// MARK: - Navigation
-	
-	/**
-	 * Navigate to the next page of items for a zone
-	 */
-	private nextPage(zone: ShopZone) {
+
+	// MARK: - Navigation	
+	// Navigate to the next page of items for a zone
+	function nextPage(zone: ShopZone) {
 		console.log(`ShopManager: NextPage: showing page ${zone.currentPage + 1} for zone "${zone.key}"`)
 		zone.currentPage++
-		this.updateZoneItems(zone)
+		updateZoneItems(zone)
 	}
 
-	/**
-	 * Navigate to the previous page of items for a zone
-	 */
-	private previousPage(zone: ShopZone) {
+
+	// Navigate to the previous page of items for a zone
+	function previousPage(zone: ShopZone) {
 		console.log(`ShopManager: Previous: showing page ${zone.currentPage -1} for zone "${zone.key}"`)
 		if (zone.currentPage > -1) {
 			zone.currentPage--
-			this.updateZoneItems(zone)
+			updateZoneItems(zone)
 		}
 	}
 
-	// MARK: - Item Management
-	
-	/**
-	 * Update items in a zone by fetching new items from the API
-	 */
-	private async updateZoneItems(zone: ShopZone) {
+
+	// MARK: Item Management	
+	// Update items in a zone by fetching new items from the API
+	async function updateZoneItems(zone: ShopZone) {
 		console.log(`ShopManager: updateZoneItems: fetching items for zone "${zone.key}"`)
 		if (zone.currentPage == -1) {
-			this.ResetZoneToDefault(zone)
+			ResetZoneToDefault(zone)
 		} else {
 			await FetchZoneItems(zone)
 		}
-		this.SpawnZoneItems(zone)
+		SpawnZoneItems(zone)
 	}
 
-	private ResetZoneToDefault(zone: ShopZone) {
+	function ResetZoneToDefault(zone: ShopZone) {
 		for (const slot of zone.slots) {
 			slot.currentWearable = undefined
 		}
 	}
 
-	/**
-	 * Remove all items from a zone
-	 */
-	private removeZoneItems(zone: ShopZone) {
+
+	// MARK: removeZoneItems
+	// Remove all items from a zone
+	function removeZoneItems(zone: ShopZone) {
 		//console.log(`ShopManager: removeZoneItems: removing items for zone "${zone.key}"`)
 		// Create a copy of the entities array and clear it immediately
 		// This prevents issues when new items are spawned before old ones are fully removed
@@ -260,31 +244,30 @@ class ShopManager {
 		if (counter > 0) console.log(`ShopManager: Removed ${counter} items from zone "${zone.key}"`)
 	}
 
-	/**
-	 * Spawn default items for all zones using their default URNs
-	 */
-	private SpawnAllZoneItems() {
+
+	// MARK: SpawnZoneItems
+	// Spawn default items for all zones using their default URNs
+	function SpawnAllZoneItems() {
 		console.log("ShopManager: Spawning default items for all zones")
 		
 		shopZones.forEach((zone: ShopZone) => {
-			this.SpawnZoneItems(zone)
+			SpawnZoneItems(zone)
 		})
 	}
 
-	private SpawnZoneItems(zone: ShopZone) {
-		this.removeZoneItems(zone)
+	function SpawnZoneItems(zone: ShopZone) {
+		removeZoneItems(zone)
 		zone.slots.forEach((slot) => {
 			//slot.currentWearable = undefined
-			zone.entities.push(this.spawnItem(slot))
+			zone.entities.push(spawnItem(slot))
 		})
 		console.log(`ShopManager: Spawned ${zone.slots.length} default items for zone "${zone.key}"`)
 	}
 
-	//MARK: spawnItem
-	/**
-	 * Spawn a single item entity at a slot location
-	 */
-	private spawnItem(slot: ShopSlot): Entity {
+
+	// MARK: spawnItem
+	// Spawn a single item entity at a slot location
+	function spawnItem(slot: ShopSlot): Entity {
 		const entity = engine.addEntity()
 
 		const blockedItem = isBlockedItem(slot.currentWearable ?? slot.defaultWearable)
@@ -347,44 +330,44 @@ class ShopManager {
 			() => {
 				if (blockedItem) return
 				console.log("ShopManager: Equip urn: " + wearable.urn)
-				_OutfitManager.EquipWearable(wearable)
+				OutfitManager.EquipWearable(wearable)
 			}
 		)
 
 		return entity
 	}
-}
-
-export const _ShopManager = new ShopManager()
 
 
-
-function isBlockedItem(item: Wearable) {
-	// if the urn is in the blockedItemURNs array, return true
-	if (blockedItemURNs.includes(item.urn)) {
-		return true
-	}
-
-	if (item.creator) {	
-		if (blockedCreatorAddresses.includes(item.creator)) {
+	// MARK: isBlockedItem
+	function isBlockedItem(item: Wearable) {
+		// if the urn is in the blockedItemURNs array, return true
+		if (blockedItemURNs.includes(item.urn)) {
 			return true
 		}
-	}
-
-	// Check both the item name, and the item urn for any blocked keywords
-	// If any of the keywords are found, return true
 	
-	if (blockedKeywords.some(keyword => item.name?.toLowerCase().includes(keyword.toLowerCase()))) {
-		return true
+		if (item.creator) {	
+			if (blockedCreatorAddresses.includes(item.creator)) {
+				return true
+			}
+		}
+	
+		// Check both the item name, and the item urn for any blocked keywords
+		// If any of the keywords are found, return true
+		
+		if (blockedKeywords.some(keyword => item.name?.toLowerCase().includes(keyword.toLowerCase()))) {
+			return true
+		}
+	
+		if (blockedKeywords.some(keyword => item.urn?.toLowerCase().includes(keyword.toLowerCase()))) {
+			return true
+		}
+	
+		if (blockedKeywords.some(keyword => item.description?.toLowerCase().includes(keyword.toLowerCase()))) {
+			return true
+		}
+	
+		return false
 	}
-
-	if (blockedKeywords.some(keyword => item.urn?.toLowerCase().includes(keyword.toLowerCase()))) {
-		return true
-	}
-
-	if (blockedKeywords.some(keyword => item.description?.toLowerCase().includes(keyword.toLowerCase()))) {
-		return true
-	}
-
-	return false
 }
+
+

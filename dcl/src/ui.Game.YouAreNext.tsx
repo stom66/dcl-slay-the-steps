@@ -3,7 +3,7 @@ import { Color4 } from '@dcl/sdk/math'
 import * as utils from '@dcl-sdk/utils'
 
 
-import { _GameManager } from './GameManager'
+import { GameManager } from './GameManager'
 import { GameSettings } from './_settings'
 
 

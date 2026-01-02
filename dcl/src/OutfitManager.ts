@@ -18,80 +18,76 @@ export type Outfit = {
 }
 
 
-class OutfitManager {
+export namespace OutfitManager {
 	
-	userData            : undefined | any        = undefined
-	npcMannequin        : undefined | Entity     = undefined
-	npcPodium           : undefined | Entity     = undefined
-	npcBtnReset         : undefined | Entity     = undefined
-	npcBtnCopy          : undefined | Entity     = undefined
-	npcBtnSwap          : undefined | Entity     = undefined
+	let userData            : undefined | any        = undefined
+	let npcMannequin        : undefined | Entity     = undefined
+	let npcPodium           : undefined | Entity     = undefined
+	let npcBtnReset         : undefined | Entity     = undefined
+	let npcBtnCopy          : undefined | Entity     = undefined
+	let npcBtnSwap          : undefined | Entity     = undefined
 
-	playerWearables     : undefined | Wearable[] = undefined // What the player is currently wearing
-	npcOutfit           : Outfit     = { userId: "", wearables: [], bodyShape: "", hairColor: Color3.Green(), skinColor: Color3.Green() }
-	//npcWearables        : undefined | Wearable[] = undefined // What their mannequin is wearing (starts off same as player)
-	//npcBodyShape        : undefined | string     = "BaseMale" // What their mannequin's body shape is
-	//npcHairColor        : undefined | Color3     = Color3.create(0.5, 0.5, 0.5) // What their mannequin's hair color is
+	let playerWearables     : undefined | Wearable[] = undefined // What the player is currently wearing
+	let npcOutfit           : Outfit     = { userId: "", wearables: [], bodyShape: "", hairColor: Color3.Green(), skinColor: Color3.Green() }
 
-	isWearableDataLoaded: boolean                = false
-	runUpdate           : boolean                = false
+	let isWearableDataLoaded: boolean                = false
+	let runUpdate           : boolean                = false
 
-	constructor() { }
 
-	init() {
+	export function init() {
 		console.log("OutfitManager init")	
 		
 		AvatarEquippedData.onChange(engine.PlayerEntity, (equipped) => {
 			if (!equipped) return
-			this.InitUserWearables(true)
+			InitUserWearables(true)
 		})
 		
-		engine.addSystem(this.System_UpdateMannequin)
+		engine.addSystem(System_UpdateMannequin)
 
-		this.InitUserWearables()
+		InitUserWearables()
 	}
 
 	// MARK: Init User Wearables
 	// Entry point: call once in main()
-	async InitUserWearables(forceRefresh: boolean = false): Promise<void> {
-		if (this.isWearableDataLoaded && !forceRefresh) return
+	async function InitUserWearables(forceRefresh: boolean = false): Promise<void> {
+		if (isWearableDataLoaded && !forceRefresh) return
 
 		try {
-			this.userData = await LoadUserData()
+			userData = await LoadUserData()
 
 			// Check if we got user data with wearables
-			if (!this.userData?.wearables?.length) {
+			if (!userData?.wearables?.length) {
 				console.log("OutfitManager: InitUserWearables: No wearables available after retries")
 				return
 			}
 
 			// Fetch wearable data for each URN
-			this.playerWearables = []
-			const wearableUrns = this.userData.wearables
+			playerWearables = []
+			const wearableUrns = userData.wearables
 			
 			for (const urn of wearableUrns) {
 				const data = await GetWearableData(urn)
-				this.playerWearables.push(data)
+				playerWearables.push(data)
 				//console.log("OutfitManager: InitUserWearables: got wearable data for", urn, ": ", JSON.stringify(data))
 			}
 
 			// Update other avatar properties
-			//this.npcBodyShape = this.userData.avatar?.bodyShapeUrn || "urn:decentraland:off-chain:base-avatars:BaseMale"
-			//this.npcHairColor = this.userData.avatar?.hairColor || Color3.create(0.5, 0.5, 0.5)
-			//this.npcOutfit.wearables = this.playerWearables.map(w => ({ ...w }))
+			//npcBodyShape = userData.avatar?.bodyShapeUrn || "urn:decentraland:off-chain:base-avatars:BaseMale"
+			//npcHairColor = userData.avatar?.hairColor || Color3.create(0.5, 0.5, 0.5)
+			//npcOutfit.wearables = playerWearables.map(w => ({ ...w }))
 
-			this.npcOutfit = {
-				userId   : this.userData.userId,
-				wearables: this.playerWearables.map(w => w),
-				bodyShape: this.userData.avatar?.bodyShapeUrn || "urn:decentraland:off-chain:base-avatars:BaseMale",
-				hairColor: this.userData.avatar?.hairColor || Color3.create(0.5, 0.5, 0.5),
-				skinColor: this.userData.avatar?.skinColor || Color3.create(0.5, 0.5, 0.5)
+			npcOutfit = {
+				userId   : userData.userId,
+				wearables: playerWearables.map(w => w),
+				bodyShape: userData.avatar?.bodyShapeUrn || "urn:decentraland:off-chain:base-avatars:BaseMale",
+				hairColor: userData.avatar?.hairColor || Color3.create(0.5, 0.5, 0.5),
+				skinColor: userData.avatar?.skinColor || Color3.create(0.5, 0.5, 0.5)
 			}
-			this.isWearableDataLoaded = true
+			isWearableDataLoaded = true
 
 			console.log(
 				"OutfitManager InitUserWearables: got",
-				this.playerWearables.length,
+				playerWearables.length,
 				"wearables for the player"
 			)
 		} catch (err) {
@@ -100,13 +96,13 @@ class OutfitManager {
 	}
 
 	// MARK: Update
-	System_UpdateMannequin = (dt: number) => {
-		if (!this.runUpdate) return
-		if (!this.npcMannequin) return
-		if (!this.npcPodium) return
-		if (!this.npcBtnReset) return
-		if (!this.npcBtnCopy) return
-		if (!this.npcBtnSwap) return
+	const System_UpdateMannequin = (dt: number) => {
+		if (!runUpdate) return
+		if (!npcMannequin) return
+		if (!npcPodium) return
+		if (!npcBtnReset) return
+		if (!npcBtnCopy) return
+		if (!npcBtnSwap) return
 
 		// Get camera position (what the player sees)
 		const cameraTransform = Transform.get(engine.CameraEntity)
@@ -122,7 +118,7 @@ class OutfitManager {
 
 		// Rotate buttons to face the camera (only around Y axis)
 		const rotateButtonToFaceCamera = (buttonEntity: Entity) => {
-			if (!this.runUpdate) return
+			if (!runUpdate) return
 			const buttonWorldPos = utils.getWorldPosition(buttonEntity)
 			const direction = Vector3.subtract(cameraPosition, buttonWorldPos)
 			
@@ -146,122 +142,122 @@ class OutfitManager {
 		
 		}
 
-		rotateButtonToFaceCamera(this.npcBtnReset)
-		rotateButtonToFaceCamera(this.npcBtnCopy)
-		rotateButtonToFaceCamera(this.npcBtnSwap)
+		rotateButtonToFaceCamera(npcBtnReset)
+		rotateButtonToFaceCamera(npcBtnCopy)
+		rotateButtonToFaceCamera(npcBtnSwap)
 	}
 
 
 
 
 	// MARK: Show NPC Mannequin
-	ShowNPCMannequin() {
+	export function ShowNPCMannequin() {
 		
-		this.runUpdate = false
+		runUpdate = false
 
 		const position = Vector3.create(1.5, 0.25, 0)
 		
 		// Create the podium
-		if (!this.npcPodium) {
-			this.npcPodium = engine.addEntity()
-			Transform.createOrReplace(this.npcPodium, {
+		if (!npcPodium) {
+			npcPodium = engine.addEntity()
+			Transform.createOrReplace(npcPodium, {
 				position: position,
 				rotation: Quaternion.fromEulerDegrees(0, 0, 0),
 				scale   : Vector3.create(1, 1, 1),
 				parent  : engine.PlayerEntity,
 			})
-			GltfContainer.createOrReplace(this.npcPodium, {
+			GltfContainer.createOrReplace(npcPodium, {
 				src: "assets/models/podiumnocollider.gltf",
 			})
 		}
 
 		// Create the reset button
-		if (!this.npcBtnReset) {
-			this.npcBtnReset = engine.addEntity()
-			Transform.create(this.npcBtnReset, {
-				parent  : this.npcPodium,
+		if (!npcBtnReset) {
+			npcBtnReset = engine.addEntity()
+			Transform.create(npcBtnReset, {
+				parent  : npcPodium,
 			})
-			GltfContainer.create(this.npcBtnReset, {
+			GltfContainer.create(npcBtnReset, {
 				src: "assets/models/btnReset.gltf",
 			})
 			pointerEventsSystem.onPointerDown(
 				{ 
-					entity: this.npcBtnReset, 
+					entity: npcBtnReset, 
 					opts: { 
 						button: InputAction.IA_POINTER,
 						hoverText: "Reset all wearables",
 						maxDistance: 4,
 					}
 				}, 
-				() => { this.ResetOutfit() }
+				() => { ResetOutfit() }
 			)
 		}
 
 		// Create the copy outfit button
-		if (!this.npcBtnCopy) {
-			this.npcBtnCopy = engine.addEntity()
-			Transform.create(this.npcBtnCopy, {
-				parent  : this.npcPodium,
+		if (!npcBtnCopy) {
+			npcBtnCopy = engine.addEntity()
+			Transform.create(npcBtnCopy, {
+				parent  : npcPodium,
 			})
-			GltfContainer.create(this.npcBtnCopy, {
+			GltfContainer.create(npcBtnCopy, {
 				src: "assets/models/btnCopy.gltf",
 			})
 			pointerEventsSystem.onPointerDown(
 				{ 
-					entity: this.npcBtnCopy, 
+					entity: npcBtnCopy, 
 					opts: { 
 						button: InputAction.IA_POINTER,
 						hoverText: "Copy my wearables",
 						maxDistance: 4,
 					}
 				}, 
-				() => { this.CopyMyOutfit() }
+				() => { CopyMyOutfit() }
 			)
 		}
 
 		// Create the swap gender
-		if (!this.npcBtnSwap) {
-			this.npcBtnSwap = engine.addEntity()
-			Transform.create(this.npcBtnSwap, {
-				parent  : this.npcPodium,
+		if (!npcBtnSwap) {
+			npcBtnSwap = engine.addEntity()
+			Transform.create(npcBtnSwap, {
+				parent  : npcPodium,
 			})
-			GltfContainer.create(this.npcBtnSwap, {
+			GltfContainer.create(npcBtnSwap, {
 				src: "assets/models/btnGenderSwap.gltf",
 			})
 			pointerEventsSystem.onPointerDown(
 				{ 
-					entity: this.npcBtnSwap, 
+					entity: npcBtnSwap, 
 					opts: { 
 						button: InputAction.IA_POINTER,
 						hoverText: "Swap gender",
 						maxDistance: 4,
 					}
 				}, 
-				() => { this.SwapGender() }
+				() => { SwapGender() }
 			)
 		}
 
 		// Create the mannequin
-		if (!this.npcMannequin) {
-			this.npcMannequin = engine.addEntity()
+		if (!npcMannequin) {
+			npcMannequin = engine.addEntity()
 
-			Transform.create(this.npcMannequin, {
-				parent: this.npcPodium,
+			Transform.create(npcMannequin, {
+				parent: npcPodium,
 			})
 		}
 
-		AvatarShape.createOrReplace(this.npcMannequin, {
+		AvatarShape.createOrReplace(npcMannequin, {
 			id       : "npc_mannequin    ",
 			name     : "",
-			bodyShape: this.npcOutfit?.bodyShape,
-			wearables: this.npcOutfit?.wearables?.map(w => w.urn) ?? [],
+			bodyShape: npcOutfit?.bodyShape,
+			wearables: npcOutfit?.wearables?.map(w => w.urn) ?? [],
 			emotes   : [],
-			hairColor: this.npcOutfit.hairColor,
-			skinColor: this.npcOutfit.skinColor,
+			hairColor: npcOutfit.hairColor,
+			skinColor: npcOutfit.skinColor,
 		})
 	
 		// Attempt to stop walking animation on character but doesn't work
-/* 		Animator.createOrReplace(this.npcMannequin, {
+/* 		Animator.createOrReplace(npcMannequin, {
 			states: [
 			  {
 				clip: 'idle',
@@ -270,145 +266,144 @@ class OutfitManager {
 			  }
 			]
 		}) */
-		this.runUpdate = true
+		runUpdate = true
 
 	}
 
 	// MARK: Hide NPC Mannequin
-	HideNPCMannequin() {
-		this.runUpdate = false
-		if (this.npcMannequin) {
-			engine.removeEntity(this.npcMannequin)
-			this.npcMannequin = undefined
+	export function HideNPCMannequin() {
+		runUpdate = false
+		if (npcMannequin) {
+			engine.removeEntity(npcMannequin)
+			npcMannequin = undefined
 		}
-		if (this.npcBtnReset) {
-			engine.removeEntity(this.npcBtnReset)
-			this.npcBtnReset = undefined
+		if (npcBtnReset) {
+			engine.removeEntity(npcBtnReset)
+			npcBtnReset = undefined
 		}
-		if (this.npcBtnCopy) {
-			engine.removeEntity(this.npcBtnCopy)
-			this.npcBtnCopy = undefined
+		if (npcBtnCopy) {
+			engine.removeEntity(npcBtnCopy)
+			npcBtnCopy = undefined
 		}
-		if (this.npcBtnSwap) {
-			engine.removeEntity(this.npcBtnSwap)
-			this.npcBtnSwap = undefined
+		if (npcBtnSwap) {
+			engine.removeEntity(npcBtnSwap)
+			npcBtnSwap = undefined
 		}
-		if (this.npcPodium) {
-			engine.removeEntity(this.npcPodium)
-			this.npcPodium = undefined
+		if (npcPodium) {
+			engine.removeEntity(npcPodium)
+			npcPodium = undefined
 		}
 	}
 
 	// MARK: Button funcs
 
 
-	ResetOutfit() {
+	function ResetOutfit() {
 		console.log("OutfitManager ResetOutfit")
-		this.npcOutfit.wearables = []
-		//this.HideNPCMannequin()
-		this.ShowNPCMannequin()
+		npcOutfit.wearables = []
+		//HideNPCMannequin()
+		ShowNPCMannequin()
 	}
 
-	CopyMyOutfit() {
+	function CopyMyOutfit() {
 		console.log("OutfitManager CopyMyOutfit")
-		this.npcOutfit.wearables = this.playerWearables?.map(w => w) ?? []
-		//this.HideNPCMannequin()
-		this.ShowNPCMannequin()
+		npcOutfit.wearables = playerWearables?.map(w => w) ?? []
+		//HideNPCMannequin()
+		ShowNPCMannequin()
 	}
 
-	SwapGender() {
+	function SwapGender() {
 		console.log("OutfitManager SwapGender")
-		// if the current this.npcBodyShape contains "Female" then set it to "BaseMale"
+		// if the current npcBodyShape contains "Female" then set it to "BaseMale"
 		// otherwise set it to "BaseFemale"
-		if (this.npcOutfit?.bodyShape?.includes("Female")) {
-			this.npcOutfit.bodyShape = "urn:decentraland:off-chain:base-avatars:BaseMale"
+		if (npcOutfit?.bodyShape?.includes("Female")) {
+			npcOutfit.bodyShape = "urn:decentraland:off-chain:base-avatars:BaseMale"
 		} else {
-			this.npcOutfit.bodyShape = "urn:decentraland:off-chain:base-avatars:BaseFemale"
+			npcOutfit.bodyShape = "urn:decentraland:off-chain:base-avatars:BaseFemale"
 		}
 
-		this.runUpdate = false
-		this.ShowNPCMannequin()
+		runUpdate = false
+		ShowNPCMannequin()
 
 	}
 
 
 	// MARK: Util
 
-	GetCurrentOutfit(): Outfit {
-		return this.npcOutfit
+	export function GetCurrentOutfit(): Outfit {
+		return npcOutfit
 	}
+
 /* 	GetCurrentWearables(): Wearable[] {
-		return this.npcOutfit.wearables?.map(w => w) ?? []
+		return npcOutfit.wearables?.map(w => w) ?? []
 	}
 	GetCurrentBodyShape(): string {
-		return this.npcBodyShape ?? "urn:decentraland:off-chain:base-avatars:BaseMale"
+		return npcBodyShape ?? "urn:decentraland:off-chain:base-avatars:BaseMale"
 	}
 	GetCurrentHairColor(): Color3 {
-		return this.npcHairColor ?? Color3.create(0.5, 0.5, 0.5)
+		return npcHairColor ?? Color3.create(0.5, 0.5, 0.5)
 	} */
 
 	// MARK: Equip Wearable
-	async EquipWearable(wearable: Wearable) {
+	export async function EquipWearable(wearable: Wearable) {
 		console.log("OutfitManager EquipWearable: equipping wearable", wearable.name, wearable.category)
 
 		// Make sure the mannequin exists
-		if (!this.npcMannequin) {
+		if (!npcMannequin) {
 			console.error("OutfitManager EquipWearable: npc mannequin not found")
 			return
 		}
 
 		// Make sure the npc wearables exist
-		if (!this.npcOutfit.wearables) {
+		if (!npcOutfit.wearables) {
 			console.error("OutfitManager EquipWearable: npcOutfit.wearables not found")
 			return
 		}
 
 		// Remove any existing wearables in the same category
-		for (const currentWearable of this.npcOutfit.wearables) {
+		for (const currentWearable of npcOutfit.wearables) {
 			if (currentWearable.category === wearable.category) {
-				this.npcOutfit.wearables.splice(this.npcOutfit.wearables.indexOf(currentWearable), 1)
+				npcOutfit.wearables.splice(npcOutfit.wearables.indexOf(currentWearable), 1)
 				break
 			}
 		}
 
 		// Add the new wearable to the npc wearables
-		this.npcOutfit.wearables.push(wearable)
+		npcOutfit.wearables.push(wearable)
 
 		// Update the mannequin with the new wearables
-		this.ShowNPCMannequin()
+		ShowNPCMannequin()
 
 		// Let the host know about the new outfit
-		this.NotifyOutfitChange()
+		NotifyOutfitChange()
 	}
 
 	// MARK: Set Hair Color
-	SetHairColor(color: Color3) {
+	export function SetHairColor(color: Color3) {
 		console.log("OutfitManager SetHairColor:", Color3.toHexString(color))
-		this.npcOutfit.hairColor = color
+		npcOutfit.hairColor = color
 
 		// Update the mannequin with the new color
-		this.ShowNPCMannequin()
+		ShowNPCMannequin()
 
 		// Let the host know about the new outfit
-		this.NotifyOutfitChange()
+		NotifyOutfitChange()
 	}
 
 	// MARK: Set Skin Color
-	SetSkinColor(color: Color3) {
+	export function SetSkinColor(color: Color3) {
 		console.log("OutfitManager SetSkinColor:", Color3.toHexString(color))
-		this.npcOutfit.skinColor = color
+		npcOutfit.skinColor = color
 
 		// Update the mannequin with the new color
-		this.ShowNPCMannequin()
+		ShowNPCMannequin()
 
 		// Let the host know about the new outfit
-		this.NotifyOutfitChange()
+		NotifyOutfitChange()
 	}
 
-	NotifyOutfitChange() {
+	function NotifyOutfitChange() {
 		// Let the host know about the new outfit
-		sceneMessageBus.emit(MessageBusEvents.NOTIFY_SERVER_OUTFIT, this.npcOutfit)
+		sceneMessageBus.emit(MessageBusEvents.NOTIFY_SERVER_OUTFIT, npcOutfit)
 	}
 }
-
-export const _OutfitManager = new OutfitManager();

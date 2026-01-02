@@ -2,77 +2,72 @@ import { getWorldPosition, timers } from "@dcl-sdk/utils"
 import { engine, Entity, MainCamera, Transform, VirtualCamera } from "@dcl/sdk/ecs"
 import { Vector3 } from "@dcl/sdk/math"
 
-class CameraController {
-	transitionDuration: number = 0.5 // Time the camera takes to switch from main to virtual cameras
+export namespace CameraController {
+	const transitionDuration: number             = 0.5                        // Time the camera takes to switch from main to virtual cameras
 
-	cameraEntities: Entity[] = []
-	cameraActive: boolean = false
-	currentCamera: Entity | undefined = undefined
-	currentTarget: Entity | undefined = undefined
+	let cameraActive        : boolean            = false
+	let cameraEntities      : Entity[]           = []
+	let currentCamera       : Entity | undefined = undefined
+	let currentTarget       : Entity | undefined = undefined
 
-	maxCameraDistance: number = 6
-	maxCameraDistanceSquared: number = 0 // gets worked out during init so don't worry about it
-	cameraOffset: Vector3 = Vector3.create(0, 1.75, 0) // relative to the player's position
+	const cameraOffset      : Vector3            = Vector3.create(0, 1.75, 0) // relative to the player's position
+	const maxCameraDistance : number             = 6
+	let maxCameraDistanceSq : number             = 0                          // gets worked out during init so don't worry about it
 
-	constructor() {
-		console.log("CameraController constructor")
-	}
 
-	init() {
+	export function init() {
 		console.log("CameraController: init()")
-		engine.addSystem(this.System_CameraPositionUpdate)
+		engine.addSystem(System_CameraPositionUpdate)
 
-		this.maxCameraDistanceSquared = this.maxCameraDistance * this.maxCameraDistance
+		maxCameraDistanceSq = maxCameraDistance * maxCameraDistance
 	}
 	
-	System_CameraPositionUpdate = (dt: number) => {
-		if (!this.cameraActive || !this.currentCamera || !this.currentTarget) return
+	const System_CameraPositionUpdate = (dt: number) => {
+		if (!cameraActive || !currentCamera || !currentTarget) return
 
 		// Ensure all components are present
-		const camera = Transform.getMutableOrNull(this.currentCamera)
+		const camera = Transform.getMutableOrNull(currentCamera)
 		const player = Transform.getOrNull(engine.PlayerEntity)
-		const target = Transform.has(this.currentTarget)
+		const target = Transform.has(currentTarget)
 
 		if (!camera || !player || !target) return
 
 		// If the target is parented, use its world position by adding the parent's position.
-		let targetWorldPosition = getWorldPosition(this.currentTarget)
+		let targetWorldPosition = getWorldPosition(currentTarget)
 	
 		// Compute the vector from player to target in world space
 		const direction = Vector3.subtract(targetWorldPosition, player.position)
 		const distanceSq = Vector3.lengthSquared(direction)
 	
-		if (distanceSq > this.maxCameraDistanceSquared) {
+		if (distanceSq > maxCameraDistanceSq) {
 			// Move the camera on a line from player toward the target, to ensure camera is never more than max distance from target
 			const distance       = Math.sqrt(distanceSq)
-			const excessDistance = distance - this.maxCameraDistance
+			const excessDistance = distance - maxCameraDistance
 			const worldDirection = Vector3.normalize(direction)
 			const worldPosition  = Vector3.add(player.position, Vector3.scale(worldDirection, excessDistance))
 
-			camera.position = Vector3.add(this.cameraOffset, worldPosition)
+			camera.position = Vector3.add(cameraOffset, worldPosition)
 		} else {
 			// Default offset
-			camera.position = Vector3.add(player.position, this.cameraOffset)
+			camera.position = Vector3.add(player.position, cameraOffset)
 		}
 	}
 
-	TrackEntity(
-		entity: Entity
-	) {
+	export function TrackEntity(entity: Entity) {
 		console.log("CameraController: TrackEntity(): ", entity.toString())
 
 		// Virtual Camera entity
 		const camera = engine.addEntity()
-		this.cameraEntities.push(camera)
-		this.currentCamera = camera
-		this.currentTarget = entity
-		this.cameraActive = true
+		cameraEntities.push(camera)
+		currentCamera = camera
+		currentTarget = entity
+		cameraActive = true
 
 		// Virtual camera component
 		VirtualCamera.create(camera, {
 			lookAtEntity     : entity,
 			defaultTransition: {
-				transitionMode: VirtualCamera.Transition.Time(this.transitionDuration),
+				transitionMode: VirtualCamera.Transition.Time(transitionDuration),
 			}
 		})
 
@@ -84,7 +79,7 @@ class CameraController {
 		}
 		
 		Transform.create(camera, {
-			position: Vector3.add(playerTransform.position, this.cameraOffset),
+			position: Vector3.add(playerTransform.position, cameraOffset),
 		})
 
 		// Enable the virtual camera
@@ -96,9 +91,9 @@ class CameraController {
 		mainCamera.virtualCameraEntity = camera
 	}
 
-	ResetCamera() {
+	export function ResetCamera() {
 		console.log("CameraController: ResetCamera()")
-		this.cameraActive = false
+		cameraActive = false
 
 		// Stop using virtual camera
 		const mainCamera = MainCamera.getMutableOrNull(engine.CameraEntity)
@@ -111,14 +106,12 @@ class CameraController {
 		
 		// Cleanup old cameras, after a delay
 		timers.setTimeout(() => {
-			this.cameraEntities.forEach((camera) => {
+			cameraEntities.forEach((camera) => {
 				engine.removeEntity(camera)
 			})
-			this.cameraEntities = []
-			this.currentCamera = undefined
-			this.currentTarget = undefined
-		}, this.transitionDuration * 1000 + 100)
+			cameraEntities = []
+			currentCamera = undefined
+			currentTarget = undefined
+		}, transitionDuration * 1000 + 100)
 	}
 }
-
-export const _CameraController = new CameraController()

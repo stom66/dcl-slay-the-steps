@@ -3,7 +3,7 @@ import { getPlayer } from '@dcl/sdk/players'
 import { Color4 } from '@dcl/sdk/math'
 
 import { GetBackgroundTexture } from './utils'
-import { _GameManager } from './GameManager'
+import { GameManager } from './GameManager'
 
 
 // Placeholders for dynamic content
@@ -31,13 +31,13 @@ export function SetCurrentPlayer(userId?: string) {
 // MARK: BuildPlayerList
 function BuildPlayerList() {
 
-	// Defensive check: ensure _GameManager is initialized
-	if (!_GameManager || !_GameManager.state) {
+	// Defensive check: ensure GameManager is initialized
+	if (!GameManager || !GameManager.state) {
 		return []
 	}
 
 	// Debugging incorrect AvatarTextures showing up
-	const userIds: string[] = _GameManager.state.players.map(
+	const userIds: string[] = GameManager.state.players.map(
 		(userId: string) => userId
 	)
 	console.log("ui.Game.PlayerList: BuildPlayerList(): adding", userIds.length, "elements for userIDs:")

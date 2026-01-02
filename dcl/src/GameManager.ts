@@ -8,10 +8,10 @@ import * as utils from '@dcl-sdk/utils'
 import { GetUTCTimestampMillis } from "./utils"
 
 import { GameSettings, MessageBusEvents } from "./_settings"
-import { _StageController } from "./StageController"
-import { _SeatManager } from "./SeatManager"
-import { _CameraController } from "./CameraController"
-import { _OutfitManager, Outfit } from "./OutfitManager"
+import { StageController } from "./StageController"
+import { SeatManager } from "./SeatManager"
+import { CameraController } from "./CameraController"
+import { OutfitManager, Outfit } from "./OutfitManager"
 
 import { UpdatePlayerList } from "./ui.Game.PlayerList"
 import { ShowWarning } from "./ui.Game.Warning"
@@ -47,19 +47,19 @@ export type RequestVote = {
 const sceneMessageBus = new MessageBus()
 export let localPlayer: any
 
-class GameManager {
-	utcTimestamp          : number  = 0
-	utcTimestampMillis    : number  = 0
-	timeSinceLastUTCUpdate: number  = 0
+export namespace GameManager {
+	export let utcTimestamp          : number  = 0
+	export let utcTimestampMillis    : number  = 0
+	export let timeSinceLastUTCUpdate: number  = 0
 
-	iAmTheHost            : boolean = false
-	iAmInTheGame          : boolean = false
-	countdownValue        : number  = 0
+	export let iAmTheHost            : boolean = false
+	export let iAmInTheGame          : boolean = false
+	export let countdownValue        : number  = 0
 
-	currentTimeout: utils.TimerId | undefined = undefined // used to start the countdown
-	timerInterval: utils.TimerId | undefined = undefined // used to send out repeated updates during the countdown
+	let currentTimeout: utils.TimerId | undefined = undefined // used to start the countdown
+	let timerInterval: utils.TimerId | undefined = undefined // used to send out repeated updates during the countdown
 
-	state: GameState = {
+	export let state: GameState = {
 		gameState    : GameStatus.IDLE,
 		hostUserId   : "",
 		players      : [],
@@ -70,26 +70,22 @@ class GameManager {
 	}
 
 
-	constructor() {
-		console.log("GameManager constructor")
-	}
-
 	// MARK: ResetState
-	ResetState() {
-		this.state.gameState     = GameStatus.IDLE
-		this.state.hostUserId    = ""
-		this.state.players       = []
-		this.state.gameStartTime = 0	
-		this.state.votes         = {}
-		this.state.timestamp     = 0
-		this.state.outfits       = []
-		if (this.currentTimeout) {
-			utils.timers.clearTimeout(this.currentTimeout)
-			this.currentTimeout = undefined
+	function ResetState() {
+		state.gameState     = GameStatus.IDLE
+		state.hostUserId    = ""
+		state.players       = []
+		state.gameStartTime = 0	
+		state.votes         = {}
+		state.timestamp     = 0
+		state.outfits       = []
+		if (currentTimeout) {
+			utils.timers.clearTimeout(currentTimeout)
+			currentTimeout = undefined
 		}
-		if (this.timerInterval) {
-			utils.timers.clearInterval(this.timerInterval)
-			this.timerInterval = undefined
+		if (timerInterval) {
+			utils.timers.clearInterval(timerInterval)
+			timerInterval = undefined
 		}
 
 		HideCountdownTimer()
@@ -100,14 +96,14 @@ class GameManager {
 
 
 	// MARK: init
-	async init() {
+	export async function init() {
 		console.log("GameManager Init")
 
-		this.ResetState()
-		this.SpawnGameHostNPC()
+		ResetState()
+		SpawnGameHostNPC()
 
-		this.UpdateUTCTimestamp()
-		engine.addSystem((dt) => this.System_UpdateTimers(dt))
+		UpdateUTCTimestamp()
+		engine.addSystem((dt) => System_UpdateTimers(dt))
 
 		// Ensure we have player data for local player
 		utils.timers.setTimeout(() => {
@@ -121,31 +117,31 @@ class GameManager {
 		// MessageBus handling
 		// Handle players requesting to join the current game
 		sceneMessageBus.on(MessageBusEvents.REQUEST_JOIN_GAME, (outfit: Outfit) => {
-			this.OnRequestToJoinGame(outfit)
+			OnRequestToJoinGame(outfit)
 		})
 
 		// Handle state requests
 		sceneMessageBus.on(MessageBusEvents.REQUEST_STATE, () => {
 			//console.log("GameManager: sceneMessageBus: stateRequest")
-			this.OnStateRequest()
+			OnStateRequest()
 		})
 
 		// Handle state updates
 		sceneMessageBus.on(MessageBusEvents.NOTIFY_CLIENT_STATE, (state: GameState) => {
 			//console.log("GameManager: sceneMessageBus: stateUpdate:", state)
-			this.OnStateUpdate(state)
+			OnStateUpdate(state)
 		})
 
 		// Handle outfit updates
 		sceneMessageBus.on(MessageBusEvents.NOTIFY_SERVER_OUTFIT, (outfit: Outfit) => {
 			//console.log("GameManager: sceneMessageBus: outfitUpdate:", outfit)
-			this.OnNotifyUpdateOutfit(outfit)
+			OnNotifyUpdateOutfit(outfit)
 		})
 
 		// Handle players requesting to vote
 		sceneMessageBus.on(MessageBusEvents.NOTIFY_SERVER_VOTE, (vote: RequestVote) => {
 			//console.log("GameManager: sceneMessageBus: requestVote:", vote)
-			this.OnRequestVote(vote)
+			OnRequestVote(vote)
 		})
 
 		// Handle players entering the scene
@@ -153,9 +149,9 @@ class GameManager {
 			if (!player) return
 
 			if (player != localPlayer) {
-				if (this.iAmTheHost) {
+				if (iAmTheHost) {
 					console.log("GameManager: Player joined:", player.userId)
-					this.TriggerStateUpdate()
+					TriggerStateUpdate()
 				}
 			} 
 				
@@ -165,8 +161,8 @@ class GameManager {
 			if (!userId) return
 			console.log("GameManager: Player left:", userId)
 
-			if (userId == this.state.hostUserId) {
-				this.OnAbort()
+			if (userId == state.hostUserId) {
+				OnAbort()
 				if (userId == localPlayer?.userId) {
 					ShowWarning("You left the game! Game was cancelled")
 				} else {
@@ -182,7 +178,7 @@ class GameManager {
 
 	// MARK: ---
 	// MARK: SpawnGameHostNPC
-	SpawnGameHostNPC() {
+	function SpawnGameHostNPC() {
 		const position = Vector3.create(15.0718, 0.4, 28.95)
 
 		// Create the podium
@@ -205,7 +201,7 @@ class GameManager {
 				} 
 			},
 			() => {
-				this.JoinOrStartGame()
+				JoinOrStartGame()
 			}
 		)
 
@@ -243,35 +239,35 @@ class GameManager {
 
 
 	// MARK: System_UpdateTimers
-	System_UpdateTimers = (dt: number) => {
+	const System_UpdateTimers = (dt: number) => {
 		// Fetch current UTC time
-		this.timeSinceLastUTCUpdate += dt
-		this.utcTimestampMillis     += dt * 1000
-		this.utcTimestamp           =  Math.floor(this.utcTimestampMillis / 1000)
+		timeSinceLastUTCUpdate += dt
+		utcTimestampMillis     += dt * 1000
+		utcTimestamp           =  Math.floor(utcTimestampMillis / 1000)
 
-		if (this.timeSinceLastUTCUpdate >= GameSettings.UTC_UPDATE_INTERVAL) {
-			this.timeSinceLastUTCUpdate = 0 // set this here to prevent multiple calls to UpdateUTCTimestamp()
-			this.UpdateUTCTimestamp()
+		if (timeSinceLastUTCUpdate >= GameSettings.UTC_UPDATE_INTERVAL) {
+			timeSinceLastUTCUpdate = 0 // set this here to prevent multiple calls to UpdateUTCTimestamp()
+			UpdateUTCTimestamp()
 		}
 
-		if (this.state.gameState == GameStatus.STARTING) {
+		if (state.gameState == GameStatus.STARTING) {
 			// Calculate countdown value
-			let remainingTime   = (this.state.gameStartTime - this.utcTimestamp) % (GameSettings.COUNTDOWN_DURATION + 1)
+			let remainingTime   = (state.gameStartTime - utcTimestamp) % (GameSettings.COUNTDOWN_DURATION + 1)
 			remainingTime       = Math.max(0, remainingTime)
 			remainingTime       = Math.floor(remainingTime)
-			this.countdownValue = remainingTime
+			countdownValue = remainingTime
 		}
 	}
 
 
 	// MARK: UpdateUTCTimestamp
-	UpdateUTCTimestamp() {
+	function UpdateUTCTimestamp() {
 		const timestamp = Date.now()
 		
 		console.log("UTC updated to:", timestamp)
-		this.utcTimestamp           = Math.floor(timestamp / 1000)
-		this.utcTimestampMillis     = timestamp
-		this.timeSinceLastUTCUpdate = 0
+		utcTimestamp           = Math.floor(timestamp / 1000)
+		utcTimestampMillis     = timestamp
+		timeSinceLastUTCUpdate = 0
 
 		// Old code here, when we were using an external API for the timestamp
 /* 		GetUTCTimestampMillis().then((timestampMillis) => {
@@ -280,9 +276,9 @@ class GameManager {
 				return
 			}
 			console.log("UTC updated to:", timestampMillis)
-			this.utcTimestamp           = Math.floor(timestampMillis / 1000)
-			this.utcTimestampMillis     = timestampMillis
-			this.timeSinceLastUTCUpdate = 0
+			utcTimestamp           = Math.floor(timestampMillis / 1000)
+			utcTimestampMillis     = timestampMillis
+			timeSinceLastUTCUpdate = 0
 		}) */
 	}
 
@@ -290,7 +286,7 @@ class GameManager {
 	// MARK: ---
 	// MARK: JoinOrStartGame
 	// When a player presses the button to Start/Join a game
-	JoinOrStartGame() {
+	function JoinOrStartGame() {
 		if (!localPlayer || !localPlayer.userId) {
 			localPlayer = getPlayer()
 			if (!localPlayer || !localPlayer.userId) {
@@ -301,44 +297,44 @@ class GameManager {
 		console.log("GameManager: JoinOrStartGame: userId", localPlayer.userId)
 
 		// Ensure we have a proper UTC time
-		if (this.utcTimestamp < 10000) {
+		if (utcTimestamp < 10000) {
 			console.log("GameManager: JoinOrStartGame: UTC time not set, waiting for it to be set")
 			ShowWarning("Game not ready yet, please wait while we sync the time")
-			this.UpdateUTCTimestamp()
+			UpdateUTCTimestamp()
 			return
 		}
 
 		// Ignore if we're already in the list of players
-		if (this.state.players.includes(localPlayer.userId)) {
+		if (state.players.includes(localPlayer.userId)) {
 			console.log("GameManager: OnJoinOrStartGame: Player already in the list of players")
 			ShowWarning("You are already in the game, please wait for it to start")
 			return
 		}
 
 		// Ignore if a game is in progress
-		if (this.state.gameState == GameStatus.ROUND_ACTIVE || this.state.gameState == GameStatus.VOTING || this.state.gameState == GameStatus.GAME_ENDED) {
+		if (state.gameState == GameStatus.ROUND_ACTIVE || state.gameState == GameStatus.VOTING || state.gameState == GameStatus.GAME_ENDED) {
 			console.log("GameManager: OnJoinOrStartGame: Game is in progress, can't join")
 			ShowWarning("A Game is currently in progress, please wait for the next game!")
 			return
 		}
 
 		// Ignore if the game is full
-		if (this.state.players.length >= GameSettings.MAX_PLAYERS) {
+		if (state.players.length >= GameSettings.MAX_PLAYERS) {
 			console.log("GameManager: OnJoinOrStartGame: Max players reached, can't join")
 			ShowWarning("The current game is full, please wait for the next game!")
 			return
 		}
 
 		// If game is starting then request to join
-		if (this.state.gameState == GameStatus.STARTING) {
-			this.RequestToJoinGame()
+		if (state.gameState == GameStatus.STARTING) {
+			RequestToJoinGame()
 			return
 		} 
 		
 		// If no game in progress then the player is now the Host
-		if (this.state.gameState == GameStatus.IDLE) {
+		if (state.gameState == GameStatus.IDLE) {
 			// TODO: more checks here to ensure there's not currently a game running? perhaps check how many other players are currently in the scene?
-			this.StartHostingNewGame()
+			StartHostingNewGame()
 			return
 		}
 	}
@@ -347,131 +343,131 @@ class GameManager {
 	// MARK: ---
 	// MARK: RequestToJoinGame
 	// When a player presses the button to Join Game
-	RequestToJoinGame() {
-		if (this.state.gameState != GameStatus.STARTING) {
+	function RequestToJoinGame() {
+		if (state.gameState != GameStatus.STARTING) {
 			console.log("GameManager: RequestToJoinExistingGame: Game not STARTING")
 			// TODO: trigger UI popup to notify player that the game is not in the waiting for players state
 			return
 		} 
 
 		// Ignore if the game is full
-		if (this.state.players.length >= GameSettings.MAX_PLAYERS) {
+		if (state.players.length >= GameSettings.MAX_PLAYERS) {
 			ShowWarning("The current game is full, please wait for the next game!")
 			return
 		}
 
 		if (!localPlayer || !localPlayer.userId) return
-		sceneMessageBus.emit(MessageBusEvents.REQUEST_JOIN_GAME, _OutfitManager.GetCurrentOutfit())
+		sceneMessageBus.emit(MessageBusEvents.REQUEST_JOIN_GAME, OutfitManager.GetCurrentOutfit())
 	}
 
 
 	// MARK: OnRequestToJoinGame
-	OnRequestToJoinGame(outfit: Outfit) {
-		if (!this.iAmTheHost) return
+	function OnRequestToJoinGame(outfit: Outfit) {
+		if (!iAmTheHost) return
 		console.log("GameManager: OnRequestToJoinExistingGame:", outfit.userId)
 
 		// Ignore if game is not in the starting state
-		if (this.state.gameState != GameStatus.STARTING) {
+		if (state.gameState != GameStatus.STARTING) {
 			console.log("GameManager: OnRequestToJoinExistingGame: Game not STARTING, ignoring request to join")
 			return
 		} 
 
 		// Ignore if player is already in the list of players
-		if (this.state.players.includes(outfit.userId)) {
+		if (state.players.includes(outfit.userId)) {
 			console.log("GameManager: OnRequestToJoinExistingGame: Player already in the list of players", outfit.userId)
 			return
 		}
 
 		// Ignore if the game is full
-		if (this.state.players.length >= GameSettings.MAX_PLAYERS) {
+		if (state.players.length >= GameSettings.MAX_PLAYERS) {
 			console.log("GameManager: OnRequestToJoinExistingGame: Max players reached, ignoring request to join")
-			this.TriggerStateUpdate() // Push latest state to all clients, as the client whor equests must be missing data
+			TriggerStateUpdate() // Push latest state to all clients, as the client whor equests must be missing data
 			return
 		}
 
-		this.state.players.push(outfit.userId)
-		this.state.outfits.push(outfit)
+		state.players.push(outfit.userId)
+		state.outfits.push(outfit)
 
-		this.TriggerStateUpdate()
+		TriggerStateUpdate()
 		UpdatePlayerList()
 	}
 
 	
 	// MARK: OnNotifyUpdateOutfit
-	OnNotifyUpdateOutfit(outfit: Outfit) {
+	function OnNotifyUpdateOutfit(outfit: Outfit) {
 	
-		if (!this.iAmTheHost) return
+		if (!iAmTheHost) return
 		console.log("GameManager: OnNotifyUpdateOutfit():", outfit.userId, outfit.wearables.length, "wearables", outfit.bodyShape, Color3.toHexString(outfit.hairColor), Color3.toHexString(outfit.skinColor))
 
 		// get the current outfit for the user, if it exists, update it
-		let currentOutfit = this.state.outfits.find((o) => o.userId === outfit.userId)
+		let currentOutfit = state.outfits.find((o) => o.userId === outfit.userId)
 		if (currentOutfit) {
 			currentOutfit.userId    = outfit.userId
 			currentOutfit.wearables = outfit.wearables
 			currentOutfit.bodyShape = outfit.bodyShape
 			currentOutfit.hairColor = outfit.hairColor
 		} else {
-			this.state.outfits.push(outfit)
+			state.outfits.push(outfit)
 		}
 
-		this.TriggerStateUpdate()
+		TriggerStateUpdate()
 	}
 
 
 	// MARK: ---
 	// MARK: StartHostingNewGame
-	StartHostingNewGame() {
+	function StartHostingNewGame() {
 		console.log("GameManager: StartHostingNewGame")
 		if (!localPlayer || !localPlayer.userId) {
 			localPlayer = getPlayer()
 			console.error("GameManager: StartHostingNewGame: localPlayer not found, or no userID, couldn't become host")
 			return
 		}
-		this.iAmTheHost          = true
-		this.iAmInTheGame        = true
-		this.state.hostUserId    = localPlayer.userId
-		this.state.gameStartTime = this.utcTimestamp + GameSettings.COUNTDOWN_DURATION
-		this.state.players       = [localPlayer.userId]
-		this.state.outfits       = [_OutfitManager.GetCurrentOutfit()]
+		iAmTheHost          = true
+		iAmInTheGame        = true
+		state.hostUserId    = localPlayer.userId
+		state.gameStartTime = utcTimestamp + GameSettings.COUNTDOWN_DURATION
+		state.players       = [localPlayer.userId]
+		state.outfits       = [OutfitManager.GetCurrentOutfit()]
 
-		this.TriggerCountdownStart()
+		TriggerCountdownStart()
 
 		// Send out repeated updates during the countdown
-		if (this.timerInterval) utils.timers.clearInterval(this.timerInterval)
-		this.timerInterval = utils.timers.setInterval(() => {
-			this.TriggerStateUpdate()
+		if (timerInterval) utils.timers.clearInterval(timerInterval)
+		timerInterval = utils.timers.setInterval(() => {
+			TriggerStateUpdate()
 		}, 1000)
 
 		utils.timers.setTimeout(() => {
-			if (this.timerInterval) utils.timers.clearInterval(this.timerInterval)
+			if (timerInterval) utils.timers.clearInterval(timerInterval)
 		}, (GameSettings.COUNTDOWN_DURATION - 1) * 1000)
 	}
 
 
 	// MARK: ---
 	// MARK: TriggerCountdownStart
-	TriggerCountdownStart() {
-		if (!this.iAmTheHost) return
-		console.log("GameManager: TriggerCountdownStart: starting in", this.state.gameStartTime - this.utcTimestamp, "seconds")
+	function TriggerCountdownStart() {
+		if (!iAmTheHost) return
+		console.log("GameManager: TriggerCountdownStart: starting in", state.gameStartTime - utcTimestamp, "seconds")
 
-		this.state.gameState = GameStatus.STARTING
-		this.TriggerStateUpdate()
+		state.gameState = GameStatus.STARTING
+		TriggerStateUpdate()
 
-		this.OnCountdownStart() // Manually trigger this here to apply it to the host
+		OnCountdownStart() // Manually trigger this here to apply it to the host
 
-		if (this.currentTimeout) {
-			utils.timers.clearTimeout(this.currentTimeout)
+		if (currentTimeout) {
+			utils.timers.clearTimeout(currentTimeout)
 		}
-		this.currentTimeout = utils.timers.setTimeout(() => {
-			if (this.state.gameState == GameStatus.IDLE) return
-			this.TriggerRoundStart()
+		currentTimeout = utils.timers.setTimeout(() => {
+			if (state.gameState == GameStatus.IDLE) return
+			TriggerRoundStart()
 		}, GameSettings.COUNTDOWN_DURATION * 1000)
 	}
 
 
 	// MARK: OnCountdownStart
-	OnCountdownStart() {
-		console.log("GameManager: OnCountdownStart: starting in", this.state.gameStartTime - this.utcTimestamp, "seconds")
+	function OnCountdownStart() {
+		console.log("GameManager: OnCountdownStart: starting in", state.gameStartTime - utcTimestamp, "seconds")
 		// The timer now starts automatically. We should pop up a UI to encourage the players to get dressed?
 		ShowCountdownTimer()		
 		UpdatePlayerList()
@@ -480,70 +476,70 @@ class GameManager {
 
 	// MARK: ---
 	// MARK: TriggerRoundStart
-	TriggerRoundStart() {
-		if (!this.iAmTheHost) return
+	function TriggerRoundStart() {
+		if (!iAmTheHost) return
 		console.log("GameManager: TriggerRoundStart")
 
-		this.state.gameState = GameStatus.ROUND_ACTIVE
-		this.TriggerStateUpdate()
+		state.gameState = GameStatus.ROUND_ACTIVE
+		TriggerStateUpdate()
 
-		this.OnRoundStart() // Manually trigger this here to apply it to the host
+		OnRoundStart() // Manually trigger this here to apply it to the host
 
-		if (this.currentTimeout) {
-			utils.timers.clearTimeout(this.currentTimeout)
+		if (currentTimeout) {
+			utils.timers.clearTimeout(currentTimeout)
 		}
 		let duration = 0
 		duration += GameSettings.ROUND_START_DELAY
-		duration += GameSettings.ROUND_INTERVAL * (this.state.players.length - 1)
-		duration += GameSettings.ROUND_DURATION_PER_PLAYER * this.state.players.length
+		duration += GameSettings.ROUND_INTERVAL * (state.players.length - 1)
+		duration += GameSettings.ROUND_DURATION_PER_PLAYER * state.players.length
 		duration *= 1000
 
-		this.currentTimeout = utils.timers.setTimeout(() => {
-			if (this.state.gameState == GameStatus.IDLE) return
-			this.TriggerVotingStart()
+		currentTimeout = utils.timers.setTimeout(() => {
+			if (state.gameState == GameStatus.IDLE) return
+			TriggerVotingStart()
 		}, duration)
 	}
 
 
 	// MARK: OnRoundStart
-	OnRoundStart() {
+	function OnRoundStart() {
 		HideCountdownTimer()
 
-		if (!this.iAmInTheGame) return
+		if (!iAmInTheGame) return
 		console.log("GameManager: OnRoundStart")
 
-		this.MovePlayersToArena()
+		MovePlayersToArena()
 
-		_StageController.RunShow(this.state.players, this.state.outfits)
-		_OutfitManager.HideNPCMannequin()
+		StageController.RunShow(state.players, state.outfits)
+		OutfitManager.HideNPCMannequin()
 	}
 
 
 	// MARK: ---
 	// MARK: TriggerVoting
-	TriggerVotingStart() {
-		if (!this.iAmTheHost) return
+	function TriggerVotingStart() {
+		if (!iAmTheHost) return
 		console.log("GameManager: TriggerVoting")
 
-		this.state.gameState = GameStatus.VOTING
-		this.TriggerStateUpdate()
+		state.gameState = GameStatus.VOTING
+		TriggerStateUpdate()
 
-		this.OnVotingStart()
+		OnVotingStart()
 		
-		if (this.currentTimeout) {
-			utils.timers.clearTimeout(this.currentTimeout)
+		if (currentTimeout) {
+			utils.timers.clearTimeout(currentTimeout)
 		}
-		this.currentTimeout = utils.timers.setTimeout(() => {
-			if (this.state.gameState == GameStatus.IDLE) return
-			this.TriggerVotingEnd()
+		currentTimeout = utils.timers.setTimeout(() => {
+			if (state.gameState == GameStatus.IDLE) return
+			TriggerVotingEnd()
 		}, GameSettings.VOTING_DURATION * 1000)
 	}
 
 
 	// MARK: OnVotingStart
-	OnVotingStart() {
+	function OnVotingStart() {
 		// Ignore if we are not in the game
-		if (!this.iAmInTheGame) return
+		if (!iAmInTheGame) return
 		console.log("GameManager: OnVotingStart")
 
 		ShowVotingOptions()
@@ -552,12 +548,12 @@ class GameManager {
 	
 	// MARK: ---
 	// MARK: OnRequestVote
-	OnRequestVote(vote: RequestVote) {
+	function OnRequestVote(vote: RequestVote) {
 		// Ignore if we are not the host
-		if (!this.iAmTheHost) return
+		if (!iAmTheHost) return
 
 		// Ignore if we're not in the voting stage
-		if (this.state.gameState != GameStatus.VOTING) {
+		if (state.gameState != GameStatus.VOTING) {
 			console.log("GameManager: OnRequestVote: Not in the voting stage")
 			return
 		}
@@ -565,51 +561,51 @@ class GameManager {
 		console.log("GameManager: OnRequestVote:", vote)
 
 		// Ignore if the player is not in the list of players
-		if (!this.state.players.includes(vote.voteFrom)) {
+		if (!state.players.includes(vote.voteFrom)) {
 			console.log("GameManager: OnRequestVote: Player not in the list of players", vote.voteFrom)
 			return
 		}
 		// Ignore if the player is not in the list of players
-		if (!this.state.players.includes(vote.voteFor)) {
+		if (!state.players.includes(vote.voteFor)) {
 			console.log("GameManager: OnRequestVote: Player not in the list of players", vote.voteFor)
 			return
 		}
 
-		this.state.votes[vote.voteFrom] = vote.voteFor
-		this.TriggerStateUpdate()
+		state.votes[vote.voteFrom] = vote.voteFor
+		TriggerStateUpdate()
 	}
 
 
 	// MARK: ---
 	// MARK: TriggerVotingEnd
-	TriggerVotingEnd() {
-		if (!this.iAmTheHost) return
+	function TriggerVotingEnd() {
+		if (!iAmTheHost) return
 		console.log("GameManager: TriggerVotingEnd")
 
-		this.state.gameState = GameStatus.GAME_ENDED
-		this.TriggerStateUpdate()
+		state.gameState = GameStatus.GAME_ENDED
+		TriggerStateUpdate()
 
-		this.OnVotingEnd()
+		OnVotingEnd()
 
-		if (this.currentTimeout) {
-			utils.timers.clearTimeout(this.currentTimeout)
+		if (currentTimeout) {
+			utils.timers.clearTimeout(currentTimeout)
 		}
-		this.currentTimeout = utils.timers.setTimeout(() => {
-			if (this.state.gameState == GameStatus.IDLE) return
-			this.TriggerIdle()
+		currentTimeout = utils.timers.setTimeout(() => {
+			if (state.gameState == GameStatus.IDLE) return
+			TriggerIdle()
 		}, GameSettings.GAME_ENDED_DURATION * 1000)
 	}
 
 
 	// MARK: OnVotingEnd
-	OnVotingEnd() {
+	function OnVotingEnd() {
 		// Ignore if we are not in the game
-		if (!this.iAmInTheGame) return
+		if (!iAmInTheGame) return
 		
 		console.log("GameManager: OnVotingEnd")
 		ShowVotingResults()
 
-		_SeatManager.MovePlayerToLobby()
+		SeatManager.MovePlayerToLobby()
 		UpdatePlayerList()
 
 	}
@@ -617,119 +613,119 @@ class GameManager {
 
 	// MARK: ---
 	// MARK: TriggerIdle
-	TriggerIdle() {
-		if (!this.iAmTheHost) return
+	function TriggerIdle() {
+		if (!iAmTheHost) return
 		console.log("GameManager: TriggerIdle")
 
-		this.state.gameState = GameStatus.IDLE
+		state.gameState = GameStatus.IDLE
 
-		this.TriggerStateUpdate()
+		TriggerStateUpdate()
 
-		this.OnIdle()
+		OnIdle()
 	}
 
 
 	// MARK: OnIdle
-	OnIdle() {
+	function OnIdle() {
 		console.log("GameManager: OnIdle")
-		this.ResetState()
+		ResetState()
 	}
 
 
 	// MARK: OnAbort
-	OnAbort() {
+	function OnAbort() {
 		console.log("GameManager: OnAbort")
 
 		// Clear any existing timers
-		if (this.currentTimeout) {
-			utils.timers.clearTimeout(this.currentTimeout)
+		if (currentTimeout) {
+			utils.timers.clearTimeout(currentTimeout)
 		}
 
 		// Reset our gamestate
-		this.ResetState()
+		ResetState()
 
 		// Move everyone back to the lobby
-		_SeatManager.MovePlayerToLobby()
+		SeatManager.MovePlayerToLobby()
 
 		// Let the stage controller know that the game has ended
-		_StageController.Abort()
+		StageController.Abort()
 	}
 
 
 	// MARK: ---
 	// MARK: OnStateRequest
-	OnStateRequest() {
+	function OnStateRequest() {
 		console.log("GameManager: OnStateRequest()")
-		if (this.iAmTheHost) {
-			this.TriggerStateUpdate()
+		if (iAmTheHost) {
+			TriggerStateUpdate()
 		}
 	}
 
 
 	// MARK: TriggerStateUpdate
-	TriggerStateUpdate() {
-		if (!this.iAmTheHost) return
+	function TriggerStateUpdate() {
+		if (!iAmTheHost) return
 		console.log("GameManager: SendStateToAllClients")
 		
 		// Update the timestamp
-		this.state.timestamp = this.utcTimestamp
+		state.timestamp = utcTimestamp
 
 		// Send the state to all clients
-		sceneMessageBus.emit('stateUpdate', this.state)
+		sceneMessageBus.emit('stateUpdate', state)
 		UpdatePlayerList()
 	}
 
 
 	// MARK: OnStateUpdate
-	OnStateUpdate(newState: GameState) {
+	function OnStateUpdate(newState: GameState) {
 		console.log("GameManager: OnStateUpdate:", newState)
 
 		// Ignore if we don't have localPlayer data - eg after a player joins the scene while we're still loading
 		if (!localPlayer || !localPlayer.userId) return
 
 		// Ignore updates if we are the host
-		if (this.iAmTheHost && newState.hostUserId !== localPlayer!.userId) {
+		if (iAmTheHost && newState.hostUserId !== localPlayer!.userId) {
 			console.log("GameManager: OnStateUpdate: Problem, another player thinks they are the host!")
 			return
 		}
-		if (this.iAmTheHost) return
+		if (iAmTheHost) return
 
 
 		// If there's a game in progress and the update didn't come from the current host, ignore it
-		if (this.state.gameState != GameStatus.IDLE && newState.hostUserId !== this.state.hostUserId) {
+		if (state.gameState != GameStatus.IDLE && newState.hostUserId !== state.hostUserId) {
 			console.log("GameManager: OnStateUpdate: Recieved an update from someone other than host")
 			return
 		}
 
 		// Ignore updates if the timestamp is older than the current timestamp
-		if (newState.timestamp < this.state.timestamp) {
+		if (newState.timestamp < state.timestamp) {
 			console.log("GameManager: OnStateUpdate: Recieved an update with an older timestamp")
 			return
 		}
 
 		// Store the state, then update it
-		const lastGameState = this.state.gameState
-		this.state = newState
+		const lastGameState = state.gameState
+		state = newState
 
 		// Check if we are in the game
-		this.iAmInTheGame = this.state.players.includes(localPlayer!.userId)
+		iAmInTheGame = state.players.includes(localPlayer!.userId)
 
-		if (this.state.gameState != lastGameState) {
-			switch (this.state.gameState) {
+		if (state.gameState != lastGameState) {
+			switch (state.gameState) {
 				case GameStatus.STARTING:
-					this.OnCountdownStart()
+					OnCountdownStart()
 					break
 				case GameStatus.ROUND_ACTIVE:
-					this.OnRoundStart()
+					OnRoundStart()
 					break
 				case GameStatus.VOTING:
-					this.OnVotingStart()
+					OnVotingStart()
 					break
 				case GameStatus.GAME_ENDED:
-					this.OnVotingEnd()
+					OnVotingEnd()
 					break
 				case GameStatus.IDLE:
-					this.OnIdle()
+					OnIdle()
 					break
 			}
 		}
@@ -740,13 +736,11 @@ class GameManager {
 
 	// MARK: ---
 	// MARK: Utils
-	MovePlayersToArena() {
+	function MovePlayersToArena() {
 		if (!localPlayer || !localPlayer.userId) return
-		const playerIndex = this.state.players.indexOf(localPlayer.userId)
-		_SeatManager.MovePlayerToSeat(playerIndex)
+		const playerIndex = state.players.indexOf(localPlayer.userId)
+		SeatManager.MovePlayerToSeat(playerIndex)
 	}
 
 
 }
-
-export const _GameManager = new GameManager()

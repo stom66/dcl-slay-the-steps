@@ -3,14 +3,15 @@ import { movePlayerTo } from "~system/RestrictedActions"
 
 import { GameSettings } from "./_settings"
 import { GetRandomPointInCircle } from "./utils"
-import { _CameraController } from "./CameraController"
+import { CameraController } from "./CameraController"
 import { engine, InputModifier, Transform } from "@dcl/sdk/ecs"
 
-const LOOK_AT_TARGET = Vector3.create(16, 13.5, 26)
 
-class SeatManager {
+export namespace SeatManager {
 
-	seatPositions = [
+	const LOOK_AT_TARGET = Vector3.create(16, 13.5, 26)
+
+	const seatPositions = [
 		Vector3.create(23.71,  10, 3.787),
 		Vector3.create(6.169,  10, 18.313),
 		Vector3.create(21.589, 10, 5.909),
@@ -29,23 +30,16 @@ class SeatManager {
 		Vector3.create(8.29,   10, 16.192),
 	]
 
-	constructor() {
-		console.log("SeatManager constructor")
-	}
 
-	init() {
-		console.log("SeatManager init")
-	}
-
-	MovePlayerToSeat(
+	export function MovePlayerToSeat(
 		seatIndex: number
 	) {
 		console.log("SeatManager: MovePlayerToSeat(): seatIndex", seatIndex.toString())
 		
 		// Move the player to that seat
 		movePlayerTo({
-			newRelativePosition: this.seatPositions[seatIndex], 
-			cameraTarget: GameSettings.ARENA_SPAWN_LOOK_AT_TARGET
+			newRelativePosition: seatPositions[seatIndex], 
+			cameraTarget       : GameSettings.ARENA_SPAWN_LOOK_AT_TARGET
 		})
 
 		// Also freeze their inputs
@@ -62,8 +56,8 @@ class SeatManager {
 	}
 
 	
-	MovePlayerToLobby() {
-		_CameraController.ResetCamera()
+	export function MovePlayerToLobby() {
+		CameraController.ResetCamera()
 
 		const randomPoint = GetRandomPointInCircle(Vector3.create(16, 0, 16), 6)
 		console.log("SeatManager: MovePlayerToLobby(): randomPoint", randomPoint.x, randomPoint.y, randomPoint.z)
@@ -88,5 +82,3 @@ class SeatManager {
 	}
 
 }
-
-export const _SeatManager = new SeatManager()

@@ -4,8 +4,8 @@ import { Color3, Quaternion, Vector3 } from '@dcl/sdk/math'
 import { getPlayer, onEnterScene } from '@dcl/sdk/players'
 
 import { GameSettings } from "./_settings"
-import { _CameraController } from './CameraController'
-import { _SoundManager } from './SoundManager'
+import { CameraController } from './CameraController'
+import { SoundManager } from './SoundManager'
 import { Outfit } from './OutfitManager'
 import { SetCurrentPlayer } from './ui.Game.PlayerList'
 import { ShowYouAreNext } from './ui.Game.YouAreNext'
@@ -17,47 +17,44 @@ import { HideWarning } from './ui.Game.Warning'
 // Handles all Stage related stuff, such as spawning NPCs to represent the player
 // Also handles player cameras
 
-export let localPlayer: any
+let localPlayer: any
 
-class StageController {
-	isRunning                      : boolean                   = false
-	currentTimeout                 : utils.TimerId | undefined = undefined
+export namespace StageController {
+	let isRunning                      : boolean                   = false
+	let currentTimeout                 : utils.TimerId | undefined = undefined
 
-	playerToNPC                    : Map<Entity, Entity> = new Map()
-	NPCToPlayer                    : Map<Entity, Entity> = new Map()
+	let playerToNPC                    : Map<Entity, Entity> = new Map()
+	let NPCToPlayer                    : Map<Entity, Entity> = new Map()
 
-	durationPauseAtTopOfStairs     = 2 // How long should the avatar wait at the top of the stairs
-	durationPauseAtCatwalkJunction = 3 // How long to pause at the Catwalk Junction
-	durationPauseAtCatwalkMidpoint = 2.5 // How long to pause at the Catwalk Midpoint
-	durationRemaining              = (GameSettings.ROUND_DURATION_PER_PLAYER - this.durationPauseAtTopOfStairs - this.durationPauseAtCatwalkJunction - this.durationPauseAtCatwalkMidpoint)
+	const durationPauseAtTopOfStairs     = 2 // How long should the avatar wait at the top of the stairs
+	const durationPauseAtCatwalkJunction = 3 // How long to pause at the Catwalk Junction
+	const durationPauseAtCatwalkMidpoint = 2.5 // How long to pause at the Catwalk Midpoint
+	const durationRemaining              = (GameSettings.ROUND_DURATION_PER_PLAYER - durationPauseAtTopOfStairs - durationPauseAtCatwalkJunction - durationPauseAtCatwalkMidpoint)
 
-	dSpawnToStairsWait             = Vector3.distance(GameSettings.NPC_SPAWN_POSITION, GameSettings.NPC_PATH_STAIRS_WAIT)
-	dStairsWaitToTop               = Vector3.distance(GameSettings.NPC_PATH_STAIRS_WAIT, GameSettings.NPC_PATH_STAIRS_TOP)
-	dStairsTopToBottom             = Vector3.distance(GameSettings.NPC_PATH_STAIRS_TOP, GameSettings.NPC_PATH_STAIRS_BOTTOM)
-	dStairsBottomToCatwalkMidpoint = Vector3.distance(GameSettings.NPC_PATH_STAIRS_BOTTOM, GameSettings.NPC_PATH_CATWALK_MIDPOINT)
-	dCatwalkMidpointToJunction     = Vector3.distance(GameSettings.NPC_PATH_CATWALK_MIDPOINT, GameSettings.NPC_PATH_CATWALK_JUNCTION)
-	dCatwalkJunctionToExit         = Vector3.distance(GameSettings.NPC_PATH_CATWALK_JUNCTION, GameSettings.NPC_PATH_EXIT_LEFT)
+	const dSpawnToStairsWait             = Vector3.distance(GameSettings.NPC_SPAWN_POSITION, GameSettings.NPC_PATH_STAIRS_WAIT)
+	const dStairsWaitToTop               = Vector3.distance(GameSettings.NPC_PATH_STAIRS_WAIT, GameSettings.NPC_PATH_STAIRS_TOP)
+	const dStairsTopToBottom             = Vector3.distance(GameSettings.NPC_PATH_STAIRS_TOP, GameSettings.NPC_PATH_STAIRS_BOTTOM)
+	const dStairsBottomToCatwalkMidpoint = Vector3.distance(GameSettings.NPC_PATH_STAIRS_BOTTOM, GameSettings.NPC_PATH_CATWALK_MIDPOINT)
+	const dCatwalkMidpointToJunction     = Vector3.distance(GameSettings.NPC_PATH_CATWALK_MIDPOINT, GameSettings.NPC_PATH_CATWALK_JUNCTION)
+	const dCatwalkJunctionToExit         = Vector3.distance(GameSettings.NPC_PATH_CATWALK_JUNCTION, GameSettings.NPC_PATH_EXIT_LEFT)
 
-	totalDistance                  = this.dSpawnToStairsWait + this.dStairsWaitToTop + this.dStairsTopToBottom + this.dStairsBottomToCatwalkMidpoint + this.dCatwalkMidpointToJunction + this.dCatwalkJunctionToExit
+	const totalDistance                  = dSpawnToStairsWait + dStairsWaitToTop + dStairsTopToBottom + dStairsBottomToCatwalkMidpoint + dCatwalkMidpointToJunction + dCatwalkJunctionToExit
 	
-	durationToStairsWait           = this.durationRemaining * this.dSpawnToStairsWait / this.totalDistance
-	durationToStairsTop            = this.durationRemaining * this.dStairsWaitToTop / this.totalDistance
-	durationToStairsBottom         = this.durationRemaining * this.dStairsTopToBottom / this.totalDistance
-	durationToCatwalkMidpoint      = this.durationRemaining * this.dStairsBottomToCatwalkMidpoint / this.totalDistance
-	durationToCatwalkJunction      = this.durationRemaining * this.dCatwalkMidpointToJunction / this.totalDistance
-	durationToCatwalkExit          = this.durationRemaining * this.dCatwalkJunctionToExit / this.totalDistance
+	const durationToStairsWait           = durationRemaining * dSpawnToStairsWait / totalDistance
+	const durationToStairsTop            = durationRemaining * dStairsWaitToTop / totalDistance
+	const durationToStairsBottom         = durationRemaining * dStairsTopToBottom / totalDistance
+	const durationToCatwalkMidpoint      = durationRemaining * dStairsBottomToCatwalkMidpoint / totalDistance
+	const durationToCatwalkJunction      = durationRemaining * dCatwalkMidpointToJunction / totalDistance
+	const durationToCatwalkExit          = durationRemaining * dCatwalkJunctionToExit / totalDistance
 
-	constructor() {
-		console.log("StageController: constructor()")
-	}
 
 	// MARK: init
-	init() {
+	export function init() {
 		console.log("StageController: init()")
 
 		// Handle emotes from local player, players already in scene, and players who join
 		AvatarEmoteCommand.onChange(engine.PlayerEntity, (emote) => {
-			this.HandleEmotes(engine.PlayerEntity, emote)
+			HandleEmotes(engine.PlayerEntity, emote)
 		})
 
 		// All players cuirrently in scene
@@ -67,7 +64,7 @@ class StageController {
 		)) {
 			console.log('PLAYER: ', { entity, data, transform })
 			AvatarEmoteCommand.onChange(entity, (emote) => {
-				this.HandleEmotes(entity, emote)
+				HandleEmotes(entity, emote)
 			})
 		}
 
@@ -75,7 +72,7 @@ class StageController {
 		onEnterScene((player) => {
 			if (!player) return
 			AvatarEmoteCommand.onChange(player.entity, (emote) => {
-				this.HandleEmotes(player.entity, emote)
+				HandleEmotes(player.entity, emote)
 			})
 		})
 
@@ -90,13 +87,13 @@ class StageController {
 	}
 
 	// MARK: RunShow
-	RunShow(
+	export function RunShow(
 		players: string[], 
 		outfits: Outfit[]
 	) {
 		console.log("StageController: RunShow()")
 
-		this.isRunning = true
+		isRunning = true
 
 		// Create all NPCs first and track them by userId
 		const npcs: { userId: string, npc: Entity }[] = []
@@ -119,7 +116,7 @@ class StageController {
 			}
 			
 			// Create the NPC
-			const npc = this.CreateNPC(outfit)
+			const npc = CreateNPC(outfit)
 			if (!npc) {
 				console.error("StageController RunShow(): Failed to create NPC clone for user", userId)
 				return
@@ -127,8 +124,8 @@ class StageController {
 			npcs.push({ userId, npc })
 
 			// Store the NPC in the maps
-			this.playerToNPC.set(playerData.entity, npc)
-			this.NPCToPlayer.set(npc, playerData.entity)
+			playerToNPC.set(playerData.entity, npc)
+			NPCToPlayer.set(npc, playerData.entity)
 
 			// Create the camera target
 			const npcCameraTarget = engine.addEntity()
@@ -146,7 +143,7 @@ class StageController {
 		let currentIndex = 0
 
 		const animateNextNPC = () => {
-			if (!this.isRunning || currentIndex >= npcCount) {
+			if (!isRunning || currentIndex >= npcCount) {
 				return
 			}
 
@@ -154,32 +151,32 @@ class StageController {
 			console.log("StageController: animateNextNPC():", userId)
 
 			// Notify the UI that the player's turn has started
-			this.OnPlayerTurnStart(userId)
+			OnPlayerTurnStart(userId)
 
 			// Track the current NPC for the camera
 			const cameraTarget = cameraTargets.get(npc)
 			if (cameraTarget) {
-				_CameraController.TrackEntity(cameraTarget)
+				CameraController.TrackEntity(cameraTarget)
 			}
 
 			// Animate the NPC (alternate left/right)
 			const goLeft = currentIndex % 2 === 0
-			this.AnimateNPC(npc, goLeft)
+			AnimateNPC(npc, goLeft)
 
 			// Prepare to animate the next NPC when this one is done
 			currentIndex++
 
 			// Start a timeout, to complete when the NPC hits the end of the runway
-			if (this.currentTimeout) utils.timers.clearTimeout(this.currentTimeout)
-			this.currentTimeout = utils.timers.setTimeout(() => {
+			if (currentTimeout) utils.timers.clearTimeout(currentTimeout)
+			currentTimeout = utils.timers.setTimeout(() => {
 				// Notify the UI that the player's turn has ended
-				this.OnPlayerTurnEnd(userId)
+				OnPlayerTurnEnd(userId)
 
 				// If we're not at the last NPC, animate the next one
 				if (currentIndex < npcCount) animateNextNPC()
 
 				// When show has ended (after all NPCs have had a turn)
-				else this.OnShowEnd()
+				else OnShowEnd()
 			}, npcInterval * 1000)
 
 		// Notify the next player that they are next
@@ -192,7 +189,7 @@ class StageController {
 		}
 
 		// Notify the UI that the show has started
-		this.OnShowStart()
+		OnShowStart()
 
 		// Notify the first user that it's their turn coming up
 		const firstUserId = players[0]
@@ -203,14 +200,14 @@ class StageController {
 		}
 
 		// Start the sequence after the start delay
-		if (this.currentTimeout) utils.timers.clearTimeout(this.currentTimeout)
-		this.currentTimeout = utils.timers.setTimeout(() => {
+		if (currentTimeout) utils.timers.clearTimeout(currentTimeout)
+		currentTimeout = utils.timers.setTimeout(() => {
 			animateNextNPC()
 		}, GameSettings.ROUND_START_DELAY * 1000)
 	}
 
 	//MARK: OnPlayerTurnStart
-	OnPlayerTurnStart(userId: string) {
+	function OnPlayerTurnStart(userId: string) {
 		console.log("StageController: OnPlayerTurnStart(): userId", userId)
 		SetCurrentPlayer(userId)
 		if (userId === localPlayer?.userId) {
@@ -219,44 +216,44 @@ class StageController {
 	}
 
 	//MARK: OnPlayerTurnEnd
-	OnPlayerTurnEnd(userId: string) {
+	function OnPlayerTurnEnd(userId: string) {
 		console.log("StageController: OnPlayerTurnEnd(): userId", userId)
 		//SetCurrentPlayer(undefined) // Don't think we should do this in case of race conditions.
 	}
 
 	// MARK: OnShowStart
-	OnShowStart() {
+	function OnShowStart() {
 		console.log("StageController: OnShowStart()")
-		_SoundManager.StartBGM()
+		SoundManager.StartBGM()
 		HideHowToPlay()
 		HideWarning()
 	}
 
 	// MARK: OnShowEnd
-	OnShowEnd() {
+	function OnShowEnd() {
 		console.log("StageController: OnShowEnd()")
 
 		SetCurrentPlayer(undefined)
-		_CameraController.ResetCamera()
-		_SoundManager.StopBGM()
+		CameraController.ResetCamera()
+		SoundManager.StopBGM()
 
 		// Remove all the NPC entities
-		this.playerToNPC.forEach((npc: Entity, player) => {
+		playerToNPC.forEach((npc: Entity, player) => {
 			console.log("StageController: OnShowEnd(): destroying npc:", npc.toString())
-			this.DestroyNPC(npc)
+			DestroyNPC(npc)
 		})
 	}
 
 
 	// MARK: Abort
-	Abort() {
-		this.OnShowEnd()
-		this.isRunning = false
-		if (this.currentTimeout) utils.timers.clearTimeout(this.currentTimeout)
+	export function Abort() {
+		OnShowEnd()
+		isRunning = false
+		if (currentTimeout) utils.timers.clearTimeout(currentTimeout)
 	}
 
 	// MARK: CreateNPC
-	CreateNPC(outfit: Outfit): Entity | undefined {
+	function CreateNPC(outfit: Outfit): Entity | undefined {
 		console.log("StageController: CreateNPCClone(): userId", outfit.userId)
 
 		// Fetch the userData
@@ -292,7 +289,7 @@ class StageController {
 	}
 
 	// MARK: DestroyNPC
-	DestroyNPC(npc: Entity) {
+	function DestroyNPC(npc: Entity) {
 		console.log("StageController: DestroyNPC(): npc", npc)
 		
 		const tween = Tween.getMutableOrNull(npc)
@@ -303,19 +300,19 @@ class StageController {
 
 		engine.removeEntity(npc)
 
-		// remove the npc from the this.npcs map
-		const playerEntity = this.NPCToPlayer.get(npc)
+		// remove the npc from the npcs map
+		const playerEntity = NPCToPlayer.get(npc)
 		if (playerEntity) {
-			this.playerToNPC.delete(playerEntity)
-			this.NPCToPlayer.delete(npc)
+			playerToNPC.delete(playerEntity)
+			NPCToPlayer.delete(npc)
 		}
 
 	}
 
 	// MARK: Handle emotes
-	HandleEmotes(player: Entity, emote: PBAvatarEmoteCommand | undefined) {
+	function HandleEmotes(player: Entity, emote: PBAvatarEmoteCommand | undefined) {
 		console.log("StageController: HandleEmotes(): player", player, "emote", emote)
-		const npc = this.playerToNPC.get(player)
+		const npc = playerToNPC.get(player)
 		if (npc) {
 			const avatarShape = AvatarShape.getMutableOrNull(npc)
 			if (avatarShape) {
@@ -326,7 +323,7 @@ class StageController {
 	}
 
 	// MARK: AnimateNPC
-	AnimateNPC(
+	function AnimateNPC(
 		npc: Entity, 
 		goLeft: boolean = false
 	) {
@@ -335,13 +332,13 @@ class StageController {
 		Tween.setMove(npc, 
 			GameSettings.NPC_SPAWN_POSITION, 
 			GameSettings.NPC_PATH_STAIRS_WAIT, 
-			this.durationToStairsWait * 1000
+			durationToStairsWait * 1000
 		)
 
 		TweenSequence.create(npc, {
 			sequence: [
 				{ // Pause at the top of the stairs
-					duration: this.durationPauseAtTopOfStairs * 1000,
+					duration: durationPauseAtTopOfStairs * 1000,
 					easingFunction: EasingFunction.EF_LINEAR,
 					mode: Tween.Mode.Move({
 						start: GameSettings.NPC_PATH_STAIRS_WAIT,
@@ -349,7 +346,7 @@ class StageController {
 					}),
 				},
 				{ // Walk to the top of the stairs
-					duration: this.durationToStairsTop * 1000,
+					duration: durationToStairsTop * 1000,
 					easingFunction: EasingFunction.EF_LINEAR,
 					mode: Tween.Mode.Move({
 						start: GameSettings.NPC_PATH_STAIRS_WAIT,
@@ -357,7 +354,7 @@ class StageController {
 					}),
 				},
 				{ // Walk down the stairs to the bottom
-					duration: this.durationToStairsBottom * 1000,
+					duration: durationToStairsBottom * 1000,
 					easingFunction: EasingFunction.EF_LINEAR,
 					mode: Tween.Mode.Move({
 						start: GameSettings.NPC_PATH_STAIRS_TOP,
@@ -365,7 +362,7 @@ class StageController {
 					}),
 				},
 				{ // Walk to the catwalk midpoint junction
-					duration: this.durationToCatwalkMidpoint * 1000,
+					duration: durationToCatwalkMidpoint * 1000,
 					easingFunction: EasingFunction.EF_LINEAR,
 					mode: Tween.Mode.Move({
 						start: GameSettings.NPC_PATH_STAIRS_BOTTOM,
@@ -373,7 +370,7 @@ class StageController {
 					}),
 				},
 				{ // Pause at the catwalk midpoint
-					duration: this.durationPauseAtCatwalkMidpoint * 1000,
+					duration: durationPauseAtCatwalkMidpoint * 1000,
 					easingFunction: EasingFunction.EF_LINEAR,
 					mode: Tween.Mode.Move({
 						start: GameSettings.NPC_PATH_CATWALK_MIDPOINT,
@@ -381,7 +378,7 @@ class StageController {
 					}),
 				},
 				{ // Walk to the catwalk junction
-					duration: this.durationToCatwalkMidpoint * 1000,
+					duration: durationToCatwalkMidpoint * 1000,
 					easingFunction: EasingFunction.EF_LINEAR,
 					mode: Tween.Mode.Move({
 						start: GameSettings.NPC_PATH_CATWALK_MIDPOINT,
@@ -389,7 +386,7 @@ class StageController {
 					}),
 				},
 				{ // Turn at the catwalk junction
-					duration: this.durationPauseAtCatwalkJunction * 0.2 * 1000,
+					duration: durationPauseAtCatwalkJunction * 0.2 * 1000,
 					easingFunction: EasingFunction.EF_LINEAR,
 					mode: Tween.Mode.Rotate({
 						start: Quaternion.fromEulerDegrees(0, 180, 0),
@@ -397,7 +394,7 @@ class StageController {
 					}),
 				},
 				{ // Pause at the catwalk junction
-					duration: this.durationPauseAtCatwalkJunction * 0.8 * 1000,
+					duration: durationPauseAtCatwalkJunction * 0.8 * 1000,
 					easingFunction: EasingFunction.EF_LINEAR,
 					mode: Tween.Mode.Move({
 						start: GameSettings.NPC_PATH_CATWALK_JUNCTION,
@@ -405,7 +402,7 @@ class StageController {
 					}),
 				},
 				{ // Walk to the exit (either left or right)
-					duration: this.durationToCatwalkExit * 1000,
+					duration: durationToCatwalkExit * 1000,
 					easingFunction: EasingFunction.EF_LINEAR,
 					mode: Tween.Mode.Move({
 						start: GameSettings.NPC_PATH_CATWALK_JUNCTION,
@@ -429,5 +426,3 @@ class StageController {
 	}
 
 }
-
-export const _StageController = new StageController()

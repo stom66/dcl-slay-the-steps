@@ -4,7 +4,7 @@ import { getPlayer } from '@dcl/sdk/players';
 import { Color4 } from '@dcl/sdk/math'
 
 import { GetBackgroundTexture } from './utils';
-import { _GameManager } from './GameManager';
+import { GameManager } from './GameManager';
 import { HideVotingOptions } from './ui.Game.VotingOptions';
 
 
@@ -30,18 +30,18 @@ export function UpdateVotingResults() {
 
 // MARK: BuildVotingResults
 function BuildVotingResults() {
-	// Defensive check: ensure _GameManager is initialized
-	if (!_GameManager || !_GameManager.state) {
+	// Defensive check: ensure GameManager is initialized
+	if (!GameManager || !GameManager.state) {
 		return []
 	}
 
 	const elements: any[]                  = [] // array of UIElements for each player
 	const results : Record<string, number> = {} // dictionary of vote results
 	
-	console.log("ui.Game.VotingResults: BuildVotingResults(), votes.length:", _GameManager.state.votes.length)
+	console.log("ui.Game.VotingResults: BuildVotingResults(), votes.length:", GameManager.state.votes.length)
 
 	// Build the results, getting the count of votes for each player
-	Object.entries(_GameManager.state.votes).forEach(([userId, votedFor]) => {
+	Object.entries(GameManager.state.votes).forEach(([userId, votedFor]) => {
 		if (results[votedFor] === undefined) {
 			results[votedFor] = 1
 		} else {
