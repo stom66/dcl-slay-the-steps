@@ -31,6 +31,6 @@ const uiComponent = () => [
 	SHOW_DEBUG ? DebugUI() : null
 ]
 
-export function setupUi() {
+export function SetupUI() {
 	ReactEcsRenderer.setUiRenderer(uiComponent)
 }
