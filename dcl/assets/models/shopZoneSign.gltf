@@ -148,7 +148,7 @@
 		{
 			"bufferView":7,
 			"componentType":5123,
-			"count":1356,
+			"count":1332,
 			"type":"SCALAR"
 		}
 	],
@@ -197,7 +197,7 @@
 		},
 		{
 			"buffer":0,
-			"byteLength":2712,
+			"byteLength":2664,
 			"byteOffset":20544,
 			"target":34963
 		}
@@ -210,7 +210,7 @@
 	],
 	"buffers":[
 		{
-			"byteLength":23256,
+			"byteLength":23208,
 			"uri":"shopZoneSign.bin"
 		}
 	]
