@@ -16,9 +16,9 @@
 		{
 			"name":"mirror",
 			"translation":[
-				-1.1999999284744263,
+				-0.7799999117851257,
 				0,
-				0.11999998986721039
+				0.07799999415874481
 			]
 		},
 		{
@@ -127,14 +127,14 @@
 			"componentType":5126,
 			"count":224,
 			"max":[
-				-1.1430689096450806,
-				0.23970967531204224,
-				0.11999998986721039
+				-0.7429947257041931,
+				0.15581128001213074,
+				0.07799999415874481
 			],
 			"min":[
-				-1.256930947303772,
-				-0.23970967531204224,
-				0.08810140192508698
+				-0.8170050978660583,
+				-0.15581128001213074,
+				0.057265907526016235
 			],
 			"type":"VEC3"
 		},
@@ -159,29 +159,29 @@
 		{
 			"bufferView":4,
 			"componentType":5126,
-			"count":53,
+			"count":51,
 			"max":[
-				-1.161909580230713,
-				0.22072593867778778,
-				0.1262499988079071
+				-0.7552411556243896,
+				0.1434718519449234,
+				0.0820624977350235
 			],
 			"min":[
-				-1.2380902767181396,
-				-0.22072593867778778,
-				0.1262499988079071
+				-0.8047586679458618,
+				-0.1434718519449234,
+				0.0820624977350235
 			],
 			"type":"VEC3"
 		},
 		{
 			"bufferView":5,
 			"componentType":5126,
-			"count":53,
+			"count":51,
 			"type":"VEC3"
 		},
 		{
 			"bufferView":6,
 			"componentType":5126,
-			"count":53,
+			"count":51,
 			"type":"VEC2"
 		},
 		{
@@ -193,29 +193,29 @@
 		{
 			"bufferView":8,
 			"componentType":5126,
-			"count":216,
+			"count":214,
 			"max":[
-				-1.1493490934371948,
-				0.23338176310062408,
-				0.1262499988079071
+				-0.7470768690109253,
+				0.15169814229011536,
+				0.0820624977350235
 			],
 			"min":[
-				-1.2506507635116577,
-				-0.23338176310062408,
-				0.11999998986721039
+				-0.8129229545593262,
+				-0.15169814229011536,
+				0.07799999415874481
 			],
 			"type":"VEC3"
 		},
 		{
 			"bufferView":9,
 			"componentType":5126,
-			"count":216,
+			"count":214,
 			"type":"VEC3"
 		},
 		{
 			"bufferView":10,
 			"componentType":5126,
-			"count":216,
+			"count":214,
 			"type":"VEC2"
 		},
 		{
@@ -252,50 +252,50 @@
 		},
 		{
 			"buffer":0,
-			"byteLength":636,
+			"byteLength":612,
 			"byteOffset":8416,
 			"target":34962
 		},
 		{
 			"buffer":0,
-			"byteLength":636,
-			"byteOffset":9052,
+			"byteLength":612,
+			"byteOffset":9028,
 			"target":34962
 		},
 		{
 			"buffer":0,
-			"byteLength":424,
-			"byteOffset":9688,
+			"byteLength":408,
+			"byteOffset":9640,
 			"target":34962
 		},
 		{
 			"buffer":0,
 			"byteLength":312,
-			"byteOffset":10112,
+			"byteOffset":10048,
 			"target":34963
 		},
 		{
 			"buffer":0,
-			"byteLength":2592,
-			"byteOffset":10424,
+			"byteLength":2568,
+			"byteOffset":10360,
 			"target":34962
 		},
 		{
 			"buffer":0,
-			"byteLength":2592,
-			"byteOffset":13016,
+			"byteLength":2568,
+			"byteOffset":12928,
 			"target":34962
 		},
 		{
 			"buffer":0,
-			"byteLength":1728,
-			"byteOffset":15608,
+			"byteLength":1712,
+			"byteOffset":15496,
 			"target":34962
 		},
 		{
 			"buffer":0,
 			"byteLength":1248,
-			"byteOffset":17336,
+			"byteOffset":17208,
 			"target":34963
 		}
 	],
@@ -307,7 +307,7 @@
 	],
 	"buffers":[
 		{
-			"byteLength":18584,
+			"byteLength":18456,
 			"uri":"shopZoneColorPicker.ValueHandle.bin"
 		}
 	]

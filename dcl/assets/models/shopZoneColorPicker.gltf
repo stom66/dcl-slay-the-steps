@@ -10,7 +10,8 @@
 			"nodes":[
 				0,
 				1,
-				2
+				2,
+				3
 			]
 		}
 	],
@@ -46,6 +47,20 @@
 				1.2000000476837158,
 				1.2000000476837158,
 				1.2000000476837158
+			]
+		},
+		{
+			"mesh":3,
+			"name":"colorWheel.blackOverlay",
+			"scale":[
+				1.2000000476837158,
+				1.2000000476837158,
+				1.2000000476837158
+			],
+			"translation":[
+				0,
+				0,
+				0.009999999776482582
 			]
 		}
 	],
@@ -84,11 +99,24 @@
 			"emissiveTexture":{
 				"index":1
 			},
-			"name":"MarblePure",
+			"name":"ColorWheel",
 			"pbrMetallicRoughness":{
 				"baseColorTexture":{
 					"index":2
 				},
+				"metallicFactor":0
+			}
+		},
+		{
+			"doubleSided":true,
+			"name":"ColorWheelOverlay",
+			"pbrMetallicRoughness":{
+				"baseColorFactor":[
+					0,
+					0,
+					0,
+					1
+				],
 				"metallicFactor":0,
 				"roughnessFactor":0
 			}
@@ -142,6 +170,20 @@
 						"TEXCOORD_0":14
 					},
 					"indices":15
+				}
+			]
+		},
+		{
+			"name":"Cylinder.008",
+			"primitives":[
+				{
+					"attributes":{
+						"POSITION":16,
+						"NORMAL":17,
+						"TEXCOORD_0":18
+					},
+					"indices":11,
+					"material":3
 				}
 			]
 		}
@@ -308,6 +350,34 @@
 			"componentType":5123,
 			"count":396,
 			"type":"SCALAR"
+		},
+		{
+			"bufferView":16,
+			"componentType":5126,
+			"count":34,
+			"max":[
+				0.7596620917320251,
+				0.7596620321273804,
+				0
+			],
+			"min":[
+				-0.7596620917320251,
+				-0.7596619725227356,
+				0
+			],
+			"type":"VEC3"
+		},
+		{
+			"bufferView":17,
+			"componentType":5126,
+			"count":34,
+			"type":"VEC3"
+		},
+		{
+			"bufferView":18,
+			"componentType":5126,
+			"count":34,
+			"type":"VEC2"
 		}
 	],
 	"bufferViews":[
@@ -406,6 +476,24 @@
 			"byteLength":792,
 			"byteOffset":35132,
 			"target":34963
+		},
+		{
+			"buffer":0,
+			"byteLength":408,
+			"byteOffset":35924,
+			"target":34962
+		},
+		{
+			"buffer":0,
+			"byteLength":408,
+			"byteOffset":36332,
+			"target":34962
+		},
+		{
+			"buffer":0,
+			"byteLength":272,
+			"byteOffset":36740,
+			"target":34962
 		}
 	],
 	"samplers":[
@@ -416,7 +504,7 @@
 	],
 	"buffers":[
 		{
-			"byteLength":35924,
+			"byteLength":37012,
 			"uri":"shopZoneColorPicker.bin"
 		}
 	]

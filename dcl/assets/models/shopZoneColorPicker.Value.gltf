@@ -9,18 +9,33 @@
 			"name":"Scene",
 			"nodes":[
 				0,
-				1
+				1,
+				2,
+				3
 			]
 		}
 	],
 	"nodes":[
 		{
 			"mesh":0,
-			"name":"shopZone.sign.001"
+			"name":"valueSlider.body"
 		},
 		{
 			"mesh":1,
-			"name":"value.tint"
+			"name":"valueSlider.gradient",
+			"translation":[
+				0,
+				0,
+				0.004999999888241291
+			]
+		},
+		{
+			"mesh":2,
+			"name":"valueSlider._collider_box"
+		},
+		{
+			"mesh":3,
+			"name":"valueSlider.tint"
 		}
 	],
 	"materials":[
@@ -49,13 +64,33 @@
 			}
 		},
 		{
+			"alphaMode":"BLEND",
 			"doubleSided":true,
-			"name":"BlackWhiteGradient",
+			"name":"Gradient",
 			"pbrMetallicRoughness":{
 				"baseColorTexture":{
 					"index":1
 				},
 				"metallicFactor":0
+			}
+		},
+		{
+			"doubleSided":true,
+			"emissiveFactor":[
+				0.10000000149011612,
+				0.10000000149011612,
+				0.10000000149011612
+			],
+			"name":"Tint",
+			"pbrMetallicRoughness":{
+				"baseColorFactor":[
+					1,
+					0.8529866337776184,
+					0.8529866337776184,
+					1
+				],
+				"metallicFactor":0,
+				"roughnessFactor":0.5
 			}
 		}
 	],
@@ -96,6 +131,33 @@
 					"material":2
 				}
 			]
+		},
+		{
+			"name":"Cube",
+			"primitives":[
+				{
+					"attributes":{
+						"POSITION":12,
+						"NORMAL":13,
+						"TEXCOORD_0":14
+					},
+					"indices":15
+				}
+			]
+		},
+		{
+			"name":"Cylinder.004",
+			"primitives":[
+				{
+					"attributes":{
+						"POSITION":16,
+						"NORMAL":17,
+						"TEXCOORD_0":18
+					},
+					"indices":11,
+					"material":3
+				}
+			]
 		}
 	],
 	"textures":[
@@ -126,14 +188,14 @@
 			"componentType":5126,
 			"count":142,
 			"max":[
-				1.5299997329711914,
-				0.32999998331069946,
-				0.09000001102685928
+				0.9944998025894165,
+				0.21449998021125793,
+				0.058500006794929504
 			],
 			"min":[
-				-1.5299997329711914,
-				-0.32999998331069946,
-				-0.07500001043081284
+				-0.9944998025894165,
+				-0.21449998021125793,
+				-0.048750005662441254
 			],
 			"type":"VEC3"
 		},
@@ -160,14 +222,14 @@
 			"componentType":5126,
 			"count":222,
 			"max":[
-				1.5299997329711914,
-				0.32999998331069946,
-				0.12000000476837158
+				0.9944998025894165,
+				0.21449998021125793,
+				0.07800000160932541
 			],
 			"min":[
-				-1.5299997329711914,
-				-0.32999998331069946,
-				0.07499998062849045
+				-0.9944998025894165,
+				-0.21449998021125793,
+				0.04874998703598976
 			],
 			"type":"VEC3"
 		},
@@ -194,14 +256,14 @@
 			"componentType":5126,
 			"count":8,
 			"max":[
-				1.469854712486267,
-				0.2562825679779053,
-				0.07499999552965164
+				0.9554055333137512,
+				0.16658365726470947,
+				0.04874999448657036
 			],
 			"min":[
-				-1.469854712486267,
-				-0.2562825679779053,
-				0.07499998062849045
+				-0.9554055333137512,
+				-0.16658365726470947,
+				0.04874998703598976
 			],
 			"type":"VEC3"
 		},
@@ -222,6 +284,68 @@
 			"componentType":5123,
 			"count":18,
 			"type":"SCALAR"
+		},
+		{
+			"bufferView":12,
+			"componentType":5126,
+			"count":24,
+			"max":[
+				1.0023627281188965,
+				0.1781158447265625,
+				0.04874998703598976
+			],
+			"min":[
+				-1.0023627281188965,
+				-0.1781158447265625,
+				-0.09516572952270508
+			],
+			"type":"VEC3"
+		},
+		{
+			"bufferView":13,
+			"componentType":5126,
+			"count":24,
+			"type":"VEC3"
+		},
+		{
+			"bufferView":14,
+			"componentType":5126,
+			"count":24,
+			"type":"VEC2"
+		},
+		{
+			"bufferView":15,
+			"componentType":5123,
+			"count":36,
+			"type":"SCALAR"
+		},
+		{
+			"bufferView":16,
+			"componentType":5126,
+			"count":8,
+			"max":[
+				0.9554055333137512,
+				0.16658365726470947,
+				0.04874999448657036
+			],
+			"min":[
+				-0.9554055333137512,
+				-0.16658365726470947,
+				0.04874998703598976
+			],
+			"type":"VEC3"
+		},
+		{
+			"bufferView":17,
+			"componentType":5126,
+			"count":8,
+			"type":"VEC3"
+		},
+		{
+			"bufferView":18,
+			"componentType":5126,
+			"count":8,
+			"type":"VEC2"
 		}
 	],
 	"bufferViews":[
@@ -296,6 +420,48 @@
 			"byteLength":36,
 			"byteOffset":13836,
 			"target":34963
+		},
+		{
+			"buffer":0,
+			"byteLength":288,
+			"byteOffset":13872,
+			"target":34962
+		},
+		{
+			"buffer":0,
+			"byteLength":288,
+			"byteOffset":14160,
+			"target":34962
+		},
+		{
+			"buffer":0,
+			"byteLength":192,
+			"byteOffset":14448,
+			"target":34962
+		},
+		{
+			"buffer":0,
+			"byteLength":72,
+			"byteOffset":14640,
+			"target":34963
+		},
+		{
+			"buffer":0,
+			"byteLength":96,
+			"byteOffset":14712,
+			"target":34962
+		},
+		{
+			"buffer":0,
+			"byteLength":96,
+			"byteOffset":14808,
+			"target":34962
+		},
+		{
+			"buffer":0,
+			"byteLength":64,
+			"byteOffset":14904,
+			"target":34962
 		}
 	],
 	"samplers":[
@@ -306,7 +472,7 @@
 	],
 	"buffers":[
 		{
-			"byteLength":13872,
+			"byteLength":14968,
 			"uri":"shopZoneColorPicker.Value.bin"
 		}
 	]
