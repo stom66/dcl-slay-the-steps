@@ -57,7 +57,7 @@ class ColorPicker {
 			this.CreatePresetButtons()
 		}
 
-		this.SetValueSlider(1)
+		this.SetValueSlider(1, true)
 	}
 
 	// MARK: Create Color Wheel
@@ -271,7 +271,7 @@ class ColorPicker {
 	}
 
 
-	private SetValueSlider(value: number) {		
+	private SetValueSlider(value: number, skipCallback: boolean = false) {		
 		// Store the new value, and the new color
 		this.currentValue = value
 		this.currentColor = hsvToColor3(this.currentHue, this.currentSaturation, this.currentValue)
@@ -287,7 +287,7 @@ class ColorPicker {
 		Tween.setMove(this.entityValueHandle, Transform.get(this.entityValueHandle).position, Vector3.create(-value * this.sliderRange, 0, 0), 100, EasingFunction.EF_EASEINBOUNCE)
 
 		// Callback:
-		if (this.callback) {
+		if (this.callback && !skipCallback) {
 			this.callback(this.currentColor)
 		}
 	}
