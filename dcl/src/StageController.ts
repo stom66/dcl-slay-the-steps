@@ -20,26 +20,30 @@ import { HideWarning } from './ui.Game.Warning'
 let localPlayer: any
 
 export namespace StageController {
+	// State variables
 	let isRunning                      : boolean                   = false
 	let currentTimeout                 : utils.TimerId | undefined = undefined
 
+	// Maps
 	let playerToNPC                    : Map<Entity, Entity> = new Map()
 	let NPCToPlayer                    : Map<Entity, Entity> = new Map()
 
+	// Duration configs
 	const durationPauseAtTopOfStairs     = 2 // How long should the avatar wait at the top of the stairs
 	const durationPauseAtCatwalkJunction = 3 // How long to pause at the Catwalk Junction
 	const durationPauseAtCatwalkMidpoint = 2.5 // How long to pause at the Catwalk Midpoint
 	const durationRemaining              = (GameSettings.ROUND_DURATION_PER_PLAYER - durationPauseAtTopOfStairs - durationPauseAtCatwalkJunction - durationPauseAtCatwalkMidpoint)
 
+	// Distance calculations
 	const dSpawnToStairsWait             = Vector3.distance(GameSettings.NPC_SPAWN_POSITION, GameSettings.NPC_PATH_STAIRS_WAIT)
 	const dStairsWaitToTop               = Vector3.distance(GameSettings.NPC_PATH_STAIRS_WAIT, GameSettings.NPC_PATH_STAIRS_TOP)
 	const dStairsTopToBottom             = Vector3.distance(GameSettings.NPC_PATH_STAIRS_TOP, GameSettings.NPC_PATH_STAIRS_BOTTOM)
 	const dStairsBottomToCatwalkMidpoint = Vector3.distance(GameSettings.NPC_PATH_STAIRS_BOTTOM, GameSettings.NPC_PATH_CATWALK_MIDPOINT)
 	const dCatwalkMidpointToJunction     = Vector3.distance(GameSettings.NPC_PATH_CATWALK_MIDPOINT, GameSettings.NPC_PATH_CATWALK_JUNCTION)
 	const dCatwalkJunctionToExit         = Vector3.distance(GameSettings.NPC_PATH_CATWALK_JUNCTION, GameSettings.NPC_PATH_EXIT_LEFT)
-
 	const totalDistance                  = dSpawnToStairsWait + dStairsWaitToTop + dStairsTopToBottom + dStairsBottomToCatwalkMidpoint + dCatwalkMidpointToJunction + dCatwalkJunctionToExit
 	
+	// Duration calculations
 	const durationToStairsWait           = durationRemaining * dSpawnToStairsWait / totalDistance
 	const durationToStairsTop            = durationRemaining * dStairsWaitToTop / totalDistance
 	const durationToStairsBottom         = durationRemaining * dStairsTopToBottom / totalDistance
@@ -57,7 +61,7 @@ export namespace StageController {
 			HandleEmotes(engine.PlayerEntity, emote)
 		})
 
-		// All players cuirrently in scene
+		// All players currently in scene
 		for (const [entity, data, transform] of engine.getEntitiesWith(
 			PlayerIdentityData,
 			Transform
