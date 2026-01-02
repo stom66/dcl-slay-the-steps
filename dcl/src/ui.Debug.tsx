@@ -4,6 +4,7 @@ import { MessageBus } from '@dcl/sdk/message-bus'
 
 import { GameManager, localPlayer } from './GameManager'
 import { SeatManager } from './SeatManager'
+import { ShowHowToPlay } from './ui.Game.HowToPlay'
 
 const sceneMessageBus = new MessageBus()
 
@@ -45,6 +46,18 @@ export function DebugUI() {
 				fontSize    = {14}
 				onMouseDown = {() => {
 					SeatManager.MovePlayerToSeat(Math.floor(Math.random() * 16))
+				}}
+			/>
+
+
+			<Button
+				key         = "btnMoveToLobby"
+				uiTransform = {{ width: 180, height: 40, margin: 8 }}
+				value       = 'ShowHowToPlay'
+				variant     = 'primary'
+				fontSize    = {14}
+				onMouseDown = {() => {
+					ShowHowToPlay()
 				}}
 			/>
 			<Label
