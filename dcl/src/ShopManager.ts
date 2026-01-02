@@ -1,4 +1,4 @@
-import { AvatarShape, ColliderLayer, EasingFunction, engine, Entity, GltfContainer, InputAction, Material, MeshCollider, MeshRenderer, pointerEventsSystem, PrimaryPointerInfo, RaycastQueryType, raycastSystem, Transform, TriggerArea, triggerAreaEventsSystem } from "@dcl/sdk/ecs"
+import { Animator, AvatarShape, ColliderLayer, EasingFunction, engine, Entity, GltfContainer, InputAction, Material, MeshCollider, MeshRenderer, pointerEventsSystem, PrimaryPointerInfo, RaycastQueryType, raycastSystem, Transform, TriggerArea, triggerAreaEventsSystem } from "@dcl/sdk/ecs"
 import { Color3, Color4, Quaternion, Vector3 } from "@dcl/sdk/math"
 
 import * as utils from '@dcl-sdk/utils'
@@ -62,14 +62,15 @@ export namespace ShopManager {
 			triggerAreaEventsSystem.onTriggerEnter(triggerEntity, (result) => {
 				if (result.trigger?.entity !== engine.PlayerEntity) return
 				console.log(`ShopManager: Player entered zone "${zone.key}"`)
-				//showUI(zone)
+				//ShowUI(zone)
 				OutfitManager.ShowNPCMannequin()
+				ShowHighlight(zone)
 			})
 			
 			triggerAreaEventsSystem.onTriggerExit(triggerEntity, (result) => {
 				if (result.trigger?.entity !== engine.PlayerEntity) return
 				console.log(`ShopManager: Player exited zone "${zone.key}"`)
-				//hideUI(zone)
+				//HideUI(zone)
 				OutfitManager.HideNPCMannequin()
 			})
 		})
@@ -121,7 +122,7 @@ export namespace ShopManager {
 					} 
 				},
 				() => {
-					previousPage(zone)
+					PreviousPage(zone)
 				}
 			)
 
@@ -143,7 +144,7 @@ export namespace ShopManager {
 					} 
 				},
 				() => {
-					nextPage(zone)
+					NextPage(zone)
 				}
 			)
 
@@ -152,9 +153,36 @@ export namespace ShopManager {
 		})
 	}
 
+	// MARK: ShowHighlight
+	function ShowHighlight(zone: ShopZone) {
+		console.log(`ShopManager: ShowHighlight: showing highlight for zone "${zone.key}"`)
+		
+		const highlightEntity = engine.addEntity()
+		Transform.create(highlightEntity, {
+			position: zone.uiOffset,
+			rotation: zone.uiRotation
+		})
+		GltfContainer.create(highlightEntity, {
+			src: 'assets/models/shopZoneSignHighlight.gltf'
+		})
+		Animator.create(highlightEntity, {
+			states: [{
+				clip   : 'highlight',
+				loop   : false,
+				playing: true,
+			}]
+		})
 
+		// Remove it after the animation has played
+		utils.timers.setTimeout(() => {
+			engine.removeEntity(highlightEntity)
+		}, 3000)
+	}
+
+
+	// MARK: ShowUI
 	// Show the UI for a specific zone
-	function showUI(zone: ShopZone) {
+	function ShowUI(zone: ShopZone) {
 		const uiEntity = zoneUIs[zone.key]
 		if (!uiEntity) {
 			console.error(`ShopManager: No UI entity found for zone "${zone.key}"`)
@@ -170,8 +198,9 @@ export namespace ShopManager {
 	}
 
 
+	// MARK: HideUI
 	// Hide the UI for a specific zone
-	function hideUI(zone: ShopZone) {
+	function HideUI(zone: ShopZone) {
 		const uiEntity = zoneUIs[zone.key]
 		if (!uiEntity) {
 			console.error(`ShopManager: No UI entity found for zone "${zone.key}"`)
@@ -187,9 +216,9 @@ export namespace ShopManager {
 	}
 
 
-	// MARK: - Navigation	
+	// MARK: Navigation	
 	// Navigate to the next page of items for a zone
-	function nextPage(zone: ShopZone) {
+	function NextPage(zone: ShopZone) {
 		console.log(`ShopManager: NextPage: showing page ${zone.currentPage + 1} for zone "${zone.key}"`)
 		zone.currentPage++
 		updateZoneItems(zone)
@@ -197,7 +226,7 @@ export namespace ShopManager {
 
 
 	// Navigate to the previous page of items for a zone
-	function previousPage(zone: ShopZone) {
+	function PreviousPage(zone: ShopZone) {
 		console.log(`ShopManager: Previous: showing page ${zone.currentPage -1} for zone "${zone.key}"`)
 		if (zone.currentPage > -1) {
 			zone.currentPage--
