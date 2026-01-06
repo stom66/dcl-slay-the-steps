@@ -3,7 +3,7 @@ import { MessageBus } from '@dcl/sdk/message-bus'
 import { getPlayer } from '@dcl/sdk/players';
 import { Color4 } from '@dcl/sdk/math'
 
-import { GetBackgroundTexture } from './utils';
+import { FetchUserAvatarUrl, GetBackgroundTexture } from './utils';
 import { GameManager } from './GameManager';
 import { HideVotingOptions } from './ui.Game.VotingOptions';
 
@@ -142,7 +142,7 @@ function BuildVotingResults() {
 						margin: { right: 10 },
 					}}
 					uiBackground={{
-						avatarTexture: { userId: userId },
+						texture: { src: FetchUserAvatarUrl(userId) },
 						textureMode  : "stretch"
 					}}
 				/>
