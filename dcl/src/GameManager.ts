@@ -5,8 +5,6 @@ import { MessageBus } from "@dcl/sdk/message-bus"
 
 import * as utils from '@dcl-sdk/utils'
 
-import { GetUTCTimestampMillis } from "./utils"
-
 import { GameSettings, MessageBusEvents } from "./_settings"
 import { StageController } from "./StageController"
 import { SeatManager } from "./SeatManager"
@@ -148,13 +146,13 @@ export namespace GameManager {
 		onEnterScene((player) => {
 			if (!player) return
 
+
 			if (player != localPlayer) {
 				if (iAmTheHost) {
 					console.log("GameManager: Player joined:", player.userId)
 					TriggerStateUpdate()
 				}
 			} 
-				
 		})
 
 		onLeaveScene((userId) => {
