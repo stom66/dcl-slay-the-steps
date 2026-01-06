@@ -17,8 +17,8 @@
     "update-shop-data": "tsx scripts/update-shop-data.ts"
   },
   "devDependencies": {
-    "@dcl/js-runtime": "7.16.0",
-    "@dcl/sdk": "^7.16.0",
+    "@dcl/js-runtime": "7.17.0",
+    "@dcl/sdk": "7.17.0",
     "@types/node-fetch": "^2.6.11",
     "node-fetch": "^2.7.0",
     "tsx": "^4.7.0"

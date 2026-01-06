@@ -3754,18 +3754,10 @@
       }
     },
     {
-      "name": "inspector::SceneMetadata-v1",
+      "name": "inspector::SceneMetadata-v2",
       "jsonSchema": {
         "type": "object",
         "properties": {
-          "version": {
-            "type": "integer",
-            "serializationType": "optional",
-            "optionalJsonSchema": {
-              "type": "integer",
-              "serializationType": "int32"
-            }
-          },
           "name": {
             "type": "string",
             "serializationType": "optional",
@@ -3928,43 +3920,6 @@
               "serializationType": "boolean"
             }
           },
-          "skyboxConfig": {
-            "type": "object",
-            "serializationType": "optional",
-            "optionalJsonSchema": {
-              "type": "object",
-              "properties": {
-                "fixedTime": {
-                  "type": "integer",
-                  "serializationType": "optional",
-                  "optionalJsonSchema": {
-                    "type": "integer",
-                    "serializationType": "int32"
-                  }
-                },
-                "transitionMode": {
-                  "type": "integer",
-                  "serializationType": "optional",
-                  "optionalJsonSchema": {
-                    "type": "integer",
-                    "enum": [
-                      0,
-                      1
-                    ],
-                    "default": 0,
-                    "serializationType": "enum-int",
-                    "enumObject": {
-                      "0": "TM_FORWARD",
-                      "1": "TM_BACKWARD",
-                      "TM_FORWARD": 0,
-                      "TM_BACKWARD": 1
-                    }
-                  }
-                }
-              },
-              "serializationType": "map"
-            }
-          },
           "spawnPoints": {
             "type": "array",
             "serializationType": "optional",
@@ -4072,6 +4027,51 @@
               },
               "serializationType": "array"
             }
+          },
+          "skyboxConfig": {
+            "type": "object",
+            "serializationType": "optional",
+            "optionalJsonSchema": {
+              "type": "object",
+              "properties": {
+                "fixedTime": {
+                  "type": "integer",
+                  "serializationType": "optional",
+                  "optionalJsonSchema": {
+                    "type": "integer",
+                    "serializationType": "int32"
+                  }
+                },
+                "transitionMode": {
+                  "type": "integer",
+                  "serializationType": "optional",
+                  "optionalJsonSchema": {
+                    "type": "integer",
+                    "enum": [
+                      0,
+                      1
+                    ],
+                    "default": 0,
+                    "serializationType": "enum-int",
+                    "enumObject": {
+                      "0": "TM_FORWARD",
+                      "1": "TM_BACKWARD",
+                      "TM_FORWARD": 0,
+                      "TM_BACKWARD": 1
+                    }
+                  }
+                }
+              },
+              "serializationType": "map"
+            }
+          },
+          "creator": {
+            "type": "string",
+            "serializationType": "optional",
+            "optionalJsonSchema": {
+              "type": "string",
+              "serializationType": "utf8-string"
+            }
           }
         },
         "serializationType": "map"
@@ -4112,9 +4112,6 @@
             },
             "silenceVoiceChat": false,
             "disablePortableExperiences": false,
-            "skyboxConfig": {
-              "fixedTime": 46800
-            },
             "spawnPoints": [
               {
                 "name": "spawn1",
@@ -4148,7 +4145,11 @@
                   "z": 8
                 }
               }
-            ]
+            ],
+            "skyboxConfig": {
+              "fixedTime": 46800
+            },
+            "creator": ""
           }
         }
       }
