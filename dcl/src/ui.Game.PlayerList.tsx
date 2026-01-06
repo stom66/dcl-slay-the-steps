@@ -2,7 +2,7 @@ import ReactEcs, { Label, UiEntity } from '@dcl/sdk/react-ecs'
 import { getPlayer } from '@dcl/sdk/players'
 import { Color4 } from '@dcl/sdk/math'
 
-import { GetBackgroundTexture } from './utils'
+import { FetchUserAvatarUrl, GetBackgroundTexture } from './utils'
 import { GameManager } from './GameManager'
 
 
@@ -40,6 +40,7 @@ function BuildPlayerList() {
 	const userIds: string[] = GameManager.state.players.map(
 		(userId: string) => userId
 	)
+
 	console.log("ui.Game.PlayerList: BuildPlayerList(): adding", userIds.length, "elements for userIDs:")
 	userIds.forEach((userId: string) => {
 		console.log(userId)
@@ -93,7 +94,7 @@ function BuildPlayerList() {
 						margin: { right: 10 },
 					}}
 					uiBackground={{
-						avatarTexture: { userId: userId },
+						texture: { src: FetchUserAvatarUrl(userId) },
 						textureMode  : "stretch"
 					}}
 				/>
