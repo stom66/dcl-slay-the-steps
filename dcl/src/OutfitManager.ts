@@ -3,7 +3,7 @@ import * as utils from '@dcl-sdk/utils'
 import { Animator, AvatarEquippedData, AvatarShape, engine, Entity, GltfContainer, InputAction, pointerEventsSystem, Transform } from "@dcl/sdk/ecs"
 import { Color3, Quaternion, Vector3 } from "@dcl/sdk/math"
 import { Wearable } from "./shopSlotData"
-import { GetWearableData, LoadUserData } from "./utils"
+import { GetWearableData } from "./utils"
 import { MessageBus } from "@dcl/sdk/message-bus"
 import { MessageBusEvents } from "./_settings"
 
@@ -53,11 +53,11 @@ export namespace OutfitManager {
 		if (isWearableDataLoaded && !forceRefresh) return
 
 		try {
-			userData = await LoadUserData()
+			userData = getPlayer()
 
 			// Check if we got user data with wearables
 			if (!userData?.wearables?.length) {
-				console.log("OutfitManager: InitUserWearables: No wearables available after retries")
+				console.log("OutfitManager: InitUserWearables: No wearables available")
 				return
 			}
 
