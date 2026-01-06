@@ -1,8 +1,11 @@
 ### Things ToDo
 
 - [ ] Make a logo
-- [ ] Create scene thumbnail
 - [ ] Add UI "GameStatus" panel
+- [ ] Add a "theme" for each round
+- [ ] Add a ShopZone for "specials" - could replace outfits
+- [ ] Add
+- [x] Create scene thumbnail
 - [x] Add UI hint to encourage contestants to emote during their turn
 - [x] When a game is starting, host should broadcast it's status every second
 - [x] Revise the How To Play ui
@@ -26,15 +29,20 @@
 - [x] Add in-world UI "How to Play" above the NPCGameHost
 - 
 
+### Requested features
+
+- [ ] Page numbers for ShopZones
+
+
 ### Stretch
 
 - [ ] add a portrait of the player above the catwalk
-- [x] Allow gender-swapping avatar
 - [ ] Add a light which follows the player, offset above, clamped to the bounds of the circle in the lobby
+- [x] Allow gender-swapping avatar
 
 ### Bug list:
 
-- [ ] Teleport at round end not working? Seems to be the game crashing at the round end. Suspect Camera.
+- [x] Teleport at round end not working? Seems to be the game crashing at the round end. Suspect Camera.
 - [x] Ensure mannequin is hidden at start of round
 - [x] NPCs not getting cleaned up after a round
 - [x] Spawning an avatar with bodyShape: "BaseFemale" causes the wearables to not show up
@@ -43,6 +51,17 @@
 
 ### SDK bugs
 
+- [ ] Can we stop the avatar from running when they move?
 - [ ] AvatarTexture showing the same icon for every player/wrong player
 - [ ] fetch timeout property is ignored
 - [ ] OnTriggerExit doesn't fire reliably
+	- stil not reliable after updating dependencies
+
+## Playtest notes
+
+Results of the playtest withe Bay, Virgina and Ludmi:
+
+- [x] draw player attention to the navigation buttons - not noticed at first
+- [x] try updating the sdk verison to fix the issue with the trigger zones
+- [x] try moving the virtual camera back to the player before removing it
+- [x] still crashing 
