@@ -19,7 +19,7 @@ export type ShopZone = {
 
 
 export const shopZones: ShopZone[] = [
-	{ // Shoes
+	{ // MARK: Shoes
 		key             : "shoes",
 		title           : "Shoes",
 		currentPage     : -1,
@@ -49,7 +49,7 @@ export const shopZones: ShopZone[] = [
 		]
 	},
 	
-	{ // Outfits
+/* 	{ // MARK: Outfits
 		key             : "outfits",
 		title           : "Outfits",
 		currentPage     : -1,
@@ -65,9 +65,9 @@ export const shopZones: ShopZone[] = [
 			shopSlots["outfit_2"],
 			shopSlots["outfit_3"],
 		]
-	},
+	}, */
 	
-	{ // Upper body
+	{ // MARK: Upper body
 		key             : "upperBody",
 		title           : "Upper Body",
 		currentPage     : -1,
@@ -91,7 +91,7 @@ export const shopZones: ShopZone[] = [
 		]
 	},
 	
-	{ // Lower body
+	{ // MARK: Lower body
 		key             : "lowerBody",
 		title           : "Lower Body",
 		currentPage     : -1,
@@ -109,7 +109,7 @@ export const shopZones: ShopZone[] = [
 		]
 	},
 	
-	{ // Head (Helmets)
+	{ // MARK: Head (Helmets)
 		key             : "head",
 		title           : "Head",
 		currentPage     : -1,
@@ -128,7 +128,7 @@ export const shopZones: ShopZone[] = [
 		]
 	},
 	
-	{ // Earrings
+	{ // MARK: Earrings
 		key             : "earrings",
 		title           : "Earrings",
 		currentPage     : -1,
@@ -147,7 +147,7 @@ export const shopZones: ShopZone[] = [
 		]
 	},
 	
-	{ // Hair
+	{ // MARK: Hair
 		key             : "hair",
 		title           : "Hair",
 		currentPage     : -1,

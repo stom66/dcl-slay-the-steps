@@ -3,8 +3,8 @@ import { GameSettings } from "./_settings"
 import { getPlayer } from "@dcl/sdk/players"
 
 import * as utils from '@dcl-sdk/utils'
-import { Wearable } from "./shopSlotData"
-import { ShopZone, shopZones } from "./shopZoneData"
+import { Wearable } from "./data/shopSlotData"
+import { ShopZone, shopZones } from "./data/shopZoneData"
 
 
 

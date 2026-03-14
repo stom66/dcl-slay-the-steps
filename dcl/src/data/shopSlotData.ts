@@ -225,7 +225,7 @@ export const shopSlots: Record<string, ShopSlot> = {
 	//MARK: Outfits
 	// Layout: 0-3, left to right
 
-	"outfit_0": {
+/* 	"outfit_0": {
 		position       : Vector3.create(3, 0, 21.3),
 		rotation       : Quaternion.fromEulerDegrees(0, 90, 0),
 		defaultWearable: {
@@ -276,7 +276,7 @@ export const shopSlots: Record<string, ShopSlot> = {
 			urn            : "urn:decentraland:matic:collections-v2:0x477b341708ac7baa2739b5eb7fee34e8a0986abe:0",
 		},
 		scale          : Vector3.create(1.5, 1.5, 1.5)
-	},
+	}, */
 
 
 	//MARK: Upper-Bodys

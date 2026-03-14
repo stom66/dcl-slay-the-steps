@@ -3,10 +3,10 @@ import { Color3, Color4, Quaternion, Vector3 } from "@dcl/sdk/math"
 
 import * as utils from '@dcl-sdk/utils'
 
-import { ShopSlot, Wearable } from "./shopSlotData"
+import { ShopSlot, Wearable } from "./data/shopSlotData"
 import { OutfitManager } from "./OutfitManager"
-import { ShopZone, shopZones } from "./shopZoneData"
-import { blockedCreatorAddresses, blockedItemURNs, blockedKeywords } from "./shopBlockedItems"
+import { ShopZone, shopZones } from "./data/shopZoneData"
+import { blockedCreatorAddresses, blockedItemURNs, blockedKeywords } from "./data/shopBlockedItems"
 import { FetchZoneItems, hsvToColor3 } from "./utils"
 
 /**
@@ -351,7 +351,7 @@ export namespace ShopManager {
 			{ 
 				entity: entity, 
 				opts: { 
-					button     : InputAction.IA_PRIMARY,
+					button     : InputAction.IA_POINTER,
 					hoverText  : hoverText,
 					maxDistance: 10
 				} 
