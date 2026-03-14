@@ -76,7 +76,7 @@ class ColorPicker {
 			{ 
 				entity: wheelEntity, 
 				opts: {
-					button     : InputAction.IA_PRIMARY,
+					button     : InputAction.IA_POINTER,
 					hoverText  : "Choose " + this.title + " Color",
 					maxDistance: this.interactionDistance
 				} 
@@ -122,7 +122,7 @@ class ColorPicker {
 			{ 
 				entity: sliderEntity, 
 				opts: {
-					button     : InputAction.IA_PRIMARY,
+					button     : InputAction.IA_POINTER,
 					//hoverText  : "Choose Value",
 					maxDistance: this.interactionDistance
 				} 
@@ -164,7 +164,7 @@ class ColorPicker {
 				{ 
 					entity: buttonEntity, 
 					opts: { 
-						button     : InputAction.IA_PRIMARY,
+						button     : InputAction.IA_POINTER,
 						hoverText  : "Choose Color",
 						maxDistance: this.interactionDistance
 					} 

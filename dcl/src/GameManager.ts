@@ -193,7 +193,7 @@ export namespace GameManager {
 			{ 
 				entity: podium, 
 				opts: { 
-					button: InputAction.IA_PRIMARY,
+					button: InputAction.IA_POINTER,
 					hoverText: "Join/Start Game",
 					maxDistance: 10
 				} 
