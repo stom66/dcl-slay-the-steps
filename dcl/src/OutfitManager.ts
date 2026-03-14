@@ -2,7 +2,7 @@ import { getPlayer } from "@dcl/sdk/players"
 import * as utils from '@dcl-sdk/utils'
 import { Animator, AvatarEquippedData, AvatarShape, engine, Entity, GltfContainer, InputAction, pointerEventsSystem, Transform } from "@dcl/sdk/ecs"
 import { Color3, Quaternion, Vector3 } from "@dcl/sdk/math"
-import { Wearable } from "./shopSlotData"
+import { Wearable } from "./data/shopSlotData"
 import { GetWearableData } from "./utils"
 import { MessageBus } from "@dcl/sdk/message-bus"
 import { MessageBusEvents } from "./_settings"
@@ -45,6 +45,14 @@ export namespace OutfitManager {
 		engine.addSystem(System_UpdateMannequin)
 
 		InitUserWearables()
+
+		// Re-trigger InitUserWearables every time the user equips a new wearable
+		AvatarEquippedData.onChange(engine.PlayerEntity, (equipped) => {
+			if (!equipped) return
+			InitUserWearables(true)
+		})
+
+
 	}
 
 	// MARK: Init User Wearables
