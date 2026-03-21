@@ -2,8 +2,8 @@ import ReactEcs, { Label, UiEntity } from '@dcl/sdk/react-ecs'
 import { getPlayer } from '@dcl/sdk/players'
 import { Color4 } from '@dcl/sdk/math'
 
-import { FetchUserAvatarUrl, GetBackgroundTexture } from './utils'
-import { GameManager } from './GameManager'
+import { FetchUserAvatarUrl, GetBackgroundTexture } from '../utils'
+import { GameManager } from '../GameManager'
 
 
 // Placeholders for dynamic content

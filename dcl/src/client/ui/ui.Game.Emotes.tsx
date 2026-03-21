@@ -3,8 +3,8 @@ import { Color4 } from '@dcl/sdk/math'
 import * as utils from '@dcl-sdk/utils'
 
 
-import { GameManager } from './GameManager'
-import { GameSettings } from './_settings'
+import { GameManager } from '../GameManager'
+import { GameSettings } from '../../_settings'
 
 
 // Placeholders for dynamic content

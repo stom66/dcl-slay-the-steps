@@ -3,15 +3,15 @@ import { AvatarEmoteCommand, AvatarShape, EasingFunction, engine, Entity, PBAvat
 import { Color3, Quaternion, Vector3 } from '@dcl/sdk/math'
 import { getPlayer, onEnterScene } from '@dcl/sdk/players'
 
-import { GameSettings } from "./_settings"
+import { GameSettings } from "../_settings"
 import { CameraController } from './CameraController'
 import { SoundManager } from './SoundManager'
 import { Outfit } from './OutfitManager'
-import { SetCurrentPlayer } from './ui.Game.PlayerList'
-import { ShowYouAreNext } from './ui.Game.YouAreNext'
-import { ShowEmotesHint } from './ui.Game.Emotes'
-import { HideHowToPlay } from './ui.Game.HowToPlay'
-import { HideWarning } from './ui.Game.Warning'
+import { SetCurrentPlayer } from './ui/ui.Game.PlayerList'
+import { ShowYouAreNext } from './ui/ui.Game.YouAreNext'
+import { ShowEmotesHint } from './ui/ui.Game.Emotes'
+import { HideHowToPlay } from './ui/ui.Game.HowToPlay'
+import { HideWarning } from './ui/ui.Game.Warning'
 
 
 // Handles all Stage related stuff, such as spawning NPCs to represent the player

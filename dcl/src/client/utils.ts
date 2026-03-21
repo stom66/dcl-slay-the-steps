@@ -1,5 +1,5 @@
 import { Color3, Vector3 } from "@dcl/sdk/math"
-import { GameSettings } from "./_settings"
+import { GameSettings } from "../_settings"
 import { getPlayer } from "@dcl/sdk/players"
 
 import * as utils from '@dcl-sdk/utils'

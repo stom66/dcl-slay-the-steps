@@ -5,17 +5,17 @@ import { MessageBus } from "@dcl/sdk/message-bus"
 
 import * as utils from '@dcl-sdk/utils'
 
-import { GameSettings, MessageBusEvents } from "./_settings"
+import { GameSettings, MessageBusEvents } from "../_settings"
 import { StageController } from "./StageController"
 import { SeatManager } from "./SeatManager"
 import { CameraController } from "./CameraController"
 import { OutfitManager, Outfit } from "./OutfitManager"
 
-import { UpdatePlayerList } from "./ui.Game.PlayerList"
-import { ShowWarning } from "./ui.Game.Warning"
-import { HideCountdownTimer, ShowCountdownTimer } from "./ui.Game.CountdownTimer"
-import { HideVotingOptions, ShowVotingOptions } from "./ui.Game.VotingOptions"
-import { HideVotingResults, ShowVotingResults } from "./ui.Game.VotingResults"
+import { UpdatePlayerList } from "./ui/ui.Game.PlayerList"
+import { ShowWarning } from "./ui/ui.Game.Warning"
+import { HideCountdownTimer, ShowCountdownTimer } from "./ui/ui.Game.CountdownTimer"
+import { HideVotingOptions, ShowVotingOptions } from "./ui/ui.Game.VotingOptions"
+import { HideVotingResults, ShowVotingResults } from "./ui/ui.Game.VotingResults"
 
 
 export enum GameStatus {

@@ -3,8 +3,8 @@ import { MessageBus } from '@dcl/sdk/message-bus'
 import { getPlayer } from '@dcl/sdk/players';
 import { Color4 } from '@dcl/sdk/math'
 
-import { FetchUserAvatarUrl, GetBackgroundTexture } from './utils';
-import { GameManager } from './GameManager';
+import { FetchUserAvatarUrl, GetBackgroundTexture } from '../utils';
+import { GameManager } from '../GameManager';
 import { HideVotingOptions } from './ui.Game.VotingOptions';
 
 

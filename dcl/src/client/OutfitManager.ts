@@ -5,7 +5,7 @@ import { Color3, Quaternion, Vector3 } from "@dcl/sdk/math"
 import { Wearable } from "./data/shopSlotData"
 import { GetWearableData } from "./utils"
 import { MessageBus } from "@dcl/sdk/message-bus"
-import { MessageBusEvents } from "./_settings"
+import { MessageBusEvents } from "../_settings"
 
 const sceneMessageBus = new MessageBus()
 
@@ -37,6 +37,7 @@ export namespace OutfitManager {
 	export function init() {
 		console.log("OutfitManager init")	
 		
+		// Re-trigger InitUserWearables every time the user equips a new wearable
 		AvatarEquippedData.onChange(engine.PlayerEntity, (equipped) => {
 			if (!equipped) return
 			InitUserWearables(true)
@@ -45,14 +46,6 @@ export namespace OutfitManager {
 		engine.addSystem(System_UpdateMannequin)
 
 		InitUserWearables()
-
-		// Re-trigger InitUserWearables every time the user equips a new wearable
-		AvatarEquippedData.onChange(engine.PlayerEntity, (equipped) => {
-			if (!equipped) return
-			InitUserWearables(true)
-		})
-
-
 	}
 
 	// MARK: Init User Wearables
