@@ -3754,7 +3754,95 @@
       }
     },
     {
-      "name": "inspector::SceneMetadata-v2",
+      "name": "inspector::Nodes",
+      "jsonSchema": {
+        "type": "object",
+        "properties": {
+          "value": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "entity": {
+                  "type": "integer",
+                  "serializationType": "entity"
+                },
+                "open": {
+                  "type": "boolean",
+                  "serializationType": "optional",
+                  "optionalJsonSchema": {
+                    "type": "boolean",
+                    "serializationType": "boolean"
+                  }
+                },
+                "children": {
+                  "type": "array",
+                  "items": {
+                    "type": "integer",
+                    "serializationType": "entity"
+                  },
+                  "serializationType": "array"
+                }
+              },
+              "serializationType": "map"
+            },
+            "serializationType": "array"
+          }
+        },
+        "serializationType": "map"
+      },
+      "data": {
+        "0": {
+          "json": {
+            "value": [
+              {
+                "entity": 0,
+                "open": true,
+                "children": [
+                  513
+                ]
+              },
+              {
+                "entity": 1,
+                "children": []
+              },
+              {
+                "entity": 2,
+                "children": []
+              },
+              {
+                "entity": 513,
+                "children": []
+              }
+            ]
+          }
+        }
+      }
+    },
+    {
+      "name": "inspector::TransformConfig",
+      "jsonSchema": {
+        "type": "object",
+        "properties": {
+          "porportionalScaling": {
+            "type": "boolean",
+            "serializationType": "optional",
+            "optionalJsonSchema": {
+              "type": "boolean",
+              "serializationType": "boolean"
+            }
+          }
+        },
+        "serializationType": "map"
+      },
+      "data": {
+        "513": {
+          "json": {}
+        }
+      }
+    },
+    {
+      "name": "inspector::SceneMetadata-v3",
       "jsonSchema": {
         "type": "object",
         "properties": {
@@ -3947,14 +4035,14 @@
                         "type": "object",
                         "properties": {
                           "single": {
-                            "type": "integer",
-                            "serializationType": "int32"
+                            "type": "number",
+                            "serializationType": "float32"
                           },
                           "range": {
                             "type": "array",
                             "items": {
-                              "type": "integer",
-                              "serializationType": "int32"
+                              "type": "number",
+                              "serializationType": "float32"
                             },
                             "serializationType": "array"
                           }
@@ -3965,14 +4053,14 @@
                         "type": "object",
                         "properties": {
                           "single": {
-                            "type": "integer",
-                            "serializationType": "int32"
+                            "type": "number",
+                            "serializationType": "float32"
                           },
                           "range": {
                             "type": "array",
                             "items": {
-                              "type": "integer",
-                              "serializationType": "int32"
+                              "type": "number",
+                              "serializationType": "float32"
                             },
                             "serializationType": "array"
                           }
@@ -3983,14 +4071,14 @@
                         "type": "object",
                         "properties": {
                           "single": {
-                            "type": "integer",
-                            "serializationType": "int32"
+                            "type": "number",
+                            "serializationType": "float32"
                           },
                           "range": {
                             "type": "array",
                             "items": {
-                              "type": "integer",
-                              "serializationType": "int32"
+                              "type": "number",
+                              "serializationType": "float32"
                             },
                             "serializationType": "array"
                           }
@@ -4007,16 +4095,16 @@
                       "type": "object",
                       "properties": {
                         "x": {
-                          "type": "integer",
-                          "serializationType": "int32"
+                          "type": "number",
+                          "serializationType": "float32"
                         },
                         "y": {
-                          "type": "integer",
-                          "serializationType": "int32"
+                          "type": "number",
+                          "serializationType": "float32"
                         },
                         "z": {
-                          "type": "integer",
-                          "serializationType": "int32"
+                          "type": "number",
+                          "serializationType": "float32"
                         }
                       },
                       "serializationType": "map"
@@ -4155,72 +4243,6 @@
       }
     },
     {
-      "name": "inspector::Nodes",
-      "jsonSchema": {
-        "type": "object",
-        "properties": {
-          "value": {
-            "type": "array",
-            "items": {
-              "type": "object",
-              "properties": {
-                "entity": {
-                  "type": "integer",
-                  "serializationType": "entity"
-                },
-                "open": {
-                  "type": "boolean",
-                  "serializationType": "optional",
-                  "optionalJsonSchema": {
-                    "type": "boolean",
-                    "serializationType": "boolean"
-                  }
-                },
-                "children": {
-                  "type": "array",
-                  "items": {
-                    "type": "integer",
-                    "serializationType": "entity"
-                  },
-                  "serializationType": "array"
-                }
-              },
-              "serializationType": "map"
-            },
-            "serializationType": "array"
-          }
-        },
-        "serializationType": "map"
-      },
-      "data": {
-        "0": {
-          "json": {
-            "value": [
-              {
-                "entity": 0,
-                "open": true,
-                "children": [
-                  513
-                ]
-              },
-              {
-                "entity": 1,
-                "children": []
-              },
-              {
-                "entity": 2,
-                "children": []
-              },
-              {
-                "entity": 513,
-                "children": []
-              }
-            ]
-          }
-        }
-      }
-    },
-    {
       "name": "asset-packs::ActionTypes",
       "jsonSchema": {
         "type": "object",
@@ -4252,7 +4274,7 @@
             "value": [
               {
                 "type": "play_animation",
-                "jsonSchema": "{\"type\":\"object\",\"properties\":{\"animation\":{\"type\":\"string\",\"serializationType\":\"utf8-string\"},\"loop\":{\"type\":\"boolean\",\"serializationType\":\"optional\",\"optionalJsonSchema\":{\"type\":\"boolean\",\"serializationType\":\"boolean\"}}},\"serializationType\":\"map\"}"
+                "jsonSchema": "{\"type\":\"object\",\"properties\":{\"animation\":{\"type\":\"string\",\"serializationType\":\"utf8-string\"},\"loop\":{\"type\":\"boolean\",\"serializationType\":\"optional\",\"optionalJsonSchema\":{\"type\":\"boolean\",\"serializationType\":\"boolean\"}},\"shouldReset\":{\"type\":\"boolean\",\"serializationType\":\"optional\",\"optionalJsonSchema\":{\"type\":\"boolean\",\"serializationType\":\"boolean\"}}},\"serializationType\":\"map\"}"
               },
               {
                 "type": "stop_animation",
@@ -4316,7 +4338,7 @@
               },
               {
                 "type": "teleport_player",
-                "jsonSchema": "{\"type\":\"object\",\"properties\":{\"x\":{\"type\":\"integer\",\"serializationType\":\"int32\"},\"y\":{\"type\":\"integer\",\"serializationType\":\"int32\"}},\"serializationType\":\"map\"}"
+                "jsonSchema": "{\"type\":\"object\",\"properties\":{\"mode\":{\"type\":\"string\",\"enum\":[\"to_coordinates\",\"to_world\"],\"default\":\"to_coordinates\",\"serializationType\":\"enum-string\",\"enumObject\":{\"TO_COORDINATES\":\"to_coordinates\",\"TO_WORLD\":\"to_world\"}},\"x\":{\"type\":\"integer\",\"serializationType\":\"optional\",\"optionalJsonSchema\":{\"type\":\"integer\",\"serializationType\":\"int32\"}},\"y\":{\"type\":\"integer\",\"serializationType\":\"optional\",\"optionalJsonSchema\":{\"type\":\"integer\",\"serializationType\":\"int32\"}},\"realm\":{\"type\":\"string\",\"serializationType\":\"optional\",\"optionalJsonSchema\":{\"type\":\"string\",\"serializationType\":\"utf8-string\"}}},\"serializationType\":\"map\"}"
               },
               {
                 "type": "move_player",
@@ -4380,6 +4402,10 @@
               },
               {
                 "type": "move_player_here",
+                "jsonSchema": "{\"type\":\"object\",\"properties\":{},\"serializationType\":\"map\"}"
+              },
+              {
+                "type": "player_face_item",
                 "jsonSchema": "{\"type\":\"object\",\"properties\":{},\"serializationType\":\"map\"}"
               },
               {
@@ -4461,6 +4487,38 @@
               {
                 "type": "slide_texture",
                 "jsonSchema": "{\"type\":\"object\",\"properties\":{\"direction\":{\"type\":\"object\",\"properties\":{\"x\":{\"type\":\"number\",\"serializationType\":\"float32\"},\"y\":{\"type\":\"number\",\"serializationType\":\"float32\"}},\"serializationType\":\"map\"},\"speed\":{\"type\":\"number\",\"serializationType\":\"float32\"},\"movementType\":{\"type\":\"integer\",\"serializationType\":\"optional\",\"optionalJsonSchema\":{\"type\":\"integer\",\"enum\":[0,1],\"default\":0,\"serializationType\":\"enum-int\",\"enumObject\":{\"0\":\"TMT_OFFSET\",\"1\":\"TMT_TILING\",\"TMT_OFFSET\":0,\"TMT_TILING\":1}}},\"duration\":{\"type\":\"number\",\"serializationType\":\"optional\",\"optionalJsonSchema\":{\"type\":\"number\",\"serializationType\":\"float32\"}}},\"serializationType\":\"map\"}"
+              },
+              {
+                "type": "freeze_player",
+                "jsonSchema": "{\"type\":\"object\",\"properties\":{},\"serializationType\":\"map\"}"
+              },
+              {
+                "type": "unfreeze_player",
+                "jsonSchema": "{\"type\":\"object\",\"properties\":{},\"serializationType\":\"map\"}"
+              },
+              {
+                "type": "change_collisions",
+                "jsonSchema": "{\"type\":\"object\",\"properties\":{\"visibleCollisions\":{\"type\":\"integer\",\"serializationType\":\"optional\",\"optionalJsonSchema\":{\"type\":\"integer\",\"serializationType\":\"int32\"}},\"invisibleCollisions\":{\"type\":\"integer\",\"serializationType\":\"optional\",\"optionalJsonSchema\":{\"type\":\"integer\",\"serializationType\":\"int32\"}}},\"serializationType\":\"map\"}"
+              },
+              {
+                "type": "change_skybox",
+                "jsonSchema": "{\"type\":\"object\",\"properties\":{\"time\":{\"type\":\"integer\",\"serializationType\":\"int32\"},\"direction\":{\"type\":\"integer\",\"serializationType\":\"optional\",\"optionalJsonSchema\":{\"type\":\"integer\",\"serializationType\":\"int32\"}}},\"serializationType\":\"map\"}"
+              },
+              {
+                "type": "reset_skybox",
+                "jsonSchema": "{\"type\":\"object\",\"properties\":{},\"serializationType\":\"map\"}"
+              },
+              {
+                "type": "call_script_method",
+                "jsonSchema": "{\"type\":\"object\",\"properties\":{\"scriptPath\":{\"type\":\"string\",\"serializationType\":\"utf8-string\"},\"methodName\":{\"type\":\"string\",\"serializationType\":\"utf8-string\"},\"params\":{\"type\":\"object\",\"serializationType\":\"optional\",\"optionalJsonSchema\":{\"type\":\"object\",\"properties\":{},\"serializationType\":\"map\"}}},\"serializationType\":\"map\"}"
+              },
+              {
+                "type": "log_to_console",
+                "jsonSchema": "{\"type\":\"object\",\"properties\":{\"message\":{\"type\":\"string\",\"serializationType\":\"utf8-string\"}},\"serializationType\":\"map\"}"
+              },
+              {
+                "type": "delete",
+                "jsonSchema": "{\"type\":\"object\",\"properties\":{},\"serializationType\":\"map\"}"
               }
             ]
           }
@@ -4489,28 +4547,6 @@
             "id": 0,
             "value": 0
           }
-        }
-      }
-    },
-    {
-      "name": "inspector::TransformConfig",
-      "jsonSchema": {
-        "type": "object",
-        "properties": {
-          "porportionalScaling": {
-            "type": "boolean",
-            "serializationType": "optional",
-            "optionalJsonSchema": {
-              "type": "boolean",
-              "serializationType": "boolean"
-            }
-          }
-        },
-        "serializationType": "map"
-      },
-      "data": {
-        "513": {
-          "json": {}
         }
       }
     }
