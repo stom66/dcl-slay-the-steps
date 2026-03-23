@@ -1,69 +1,9 @@
 import { Color3, Vector3 } from "@dcl/sdk/math"
 import { GameSettings } from "../_settings"
-import { getPlayer } from "@dcl/sdk/players"
 
 import * as utils from '@dcl-sdk/utils'
 import { Wearable } from "./data/shopSlotData"
 import { ShopZone, shopZones } from "./data/shopZoneData"
-
-
-
-// MARK: FetchUserAvatarUrl
-
-const userDataAPICache: Record<string, string> = {}
-const userAvatarCache : Record<string, string> = {}
-const pendingFetches  : Set<string> = new Set()
-
-export function FetchUserAvatarUrl(userId: string): string {
-	// If userID, and present in cache, return the data
-	if (userId && userAvatarCache[userId]) {
-		console.log("FetchUserAvatarUrl:", userId, "url:", userAvatarCache[userId])
-		return userAvatarCache[userId]
-	}
-
-	// If not cached and not already fetching, trigger background fetch
-	if (userId && !pendingFetches.has(userId)) {
-		pendingFetches.add(userId)
-		// Fetch in background to populate cache for future calls
-		FetchUserDataFromAPI(userId).then(userData => {
-			// console.log("PlayerListData. userData : ", JSON.stringify(userData))
-			if (userData && userData.avatars && userData.avatars.length > 0) {
-				const avatarData = userData.avatars[0]
-				console.log("PlayerListData. avatarData:", JSON.stringify(avatarData))
-				userAvatarCache[userId] = avatarData.avatar.snapshots.face256
-			}
-			pendingFetches.delete(userId)
-		}).catch(err => {
-			console.error("Failed to fetch user avatar for", userId, err)
-			pendingFetches.delete(userId)
-		})
-	}
-
-	// Return empty string if not cached (will be populated on next call after fetch completes)
-	console.log("FetchUserAvatarUrl:", userId, "url: UNKNOWN", )
-	return ""
-}
-
-
-async function FetchUserDataFromAPI(userId: string) {
-	// If userID, and present in cache, return the data
-	if (userId && userDataAPICache[userId]) {
-		return userDataAPICache[userId]
-	}
-
-	const url = 'https://peer.decentraland.org/lambdas/profiles/' + userId
-    const response = await fetch(url)
-
-    if(!response.ok) {	
-		console.error("FetchUserDataFromAPI:, response not ok", response.statusText)
-		return null
-	}
-	
-    const data = await response.json()
-    userDataAPICache[userId] = data
-    return data
-}
-
 
 
 // MARK: GetUTCTimestampMillis

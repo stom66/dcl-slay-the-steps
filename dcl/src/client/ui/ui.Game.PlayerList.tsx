@@ -2,8 +2,9 @@ import ReactEcs, { Label, UiEntity } from '@dcl/sdk/react-ecs'
 import { getPlayer } from '@dcl/sdk/players'
 import { Color4 } from '@dcl/sdk/math'
 
-import { FetchUserAvatarUrl, GetBackgroundTexture } from '../utils'
-import { GameManager } from '../GameManager'
+import { getUserAvatarUrl } from '../userData'
+import { GetBackgroundTexture } from '../utils'
+import { GameManager } from '../gameManager'
 
 
 // Placeholders for dynamic content
@@ -94,7 +95,7 @@ function BuildPlayerList() {
 						margin: { right: 10 },
 					}}
 					uiBackground={{
-						texture: { src: FetchUserAvatarUrl(userId) },
+						texture: { src: getUserAvatarUrl(userId) },
 						textureMode  : "stretch"
 					}}
 				/>

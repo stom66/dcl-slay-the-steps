@@ -4,18 +4,13 @@ import { Animator, AvatarEquippedData, AvatarShape, engine, Entity, GltfContaine
 import { Color3, Quaternion, Vector3 } from "@dcl/sdk/math"
 import { Wearable } from "./data/shopSlotData"
 import { GetWearableData } from "./utils"
-import { MessageBus } from "@dcl/sdk/message-bus"
-import { MessageBusEvents } from "../_settings"
+import { Outfit } from "src/types/sharedTypes"
+//import { MessageBus } from "@dcl/sdk/message-bus"
+//import { MessageBusEvents } from "../_settings"
+import { MessageType, room } from "src/room"
+import { ClientStore, getClientStore } from "./clientStore"
 
-const sceneMessageBus = new MessageBus()
-
-export type Outfit = {
-	userId   : string,
-	wearables: Wearable[],
-	bodyShape: string,
-	hairColor: Color3,
-	skinColor: Color3
-}
+//const sceneMessageBus = new MessageBus()
 
 
 export namespace OutfitManager {
@@ -28,10 +23,12 @@ export namespace OutfitManager {
 	let npcBtnSwap          : undefined | Entity     = undefined
 
 	let playerWearables     : undefined | Wearable[] = undefined // What the player is currently wearing
-	let npcOutfit           : Outfit     = { userId: "", wearables: [], bodyShape: "", hairColor: Color3.Green(), skinColor: Color3.Green() }
+	let npcOutfit           : Outfit     = { userId: "", wearables: [], bodyShape: "", hairColor: "#00ff00", skinColor: "#00ff00" }
 
 	let isWearableDataLoaded: boolean                = false
 	let runUpdate           : boolean                = false
+
+	const clientStore: ClientStore = getClientStore()
 
 
 	export function init() {
@@ -253,8 +250,8 @@ export namespace OutfitManager {
 			bodyShape: npcOutfit?.bodyShape,
 			wearables: npcOutfit?.wearables?.map(w => w.urn) ?? [],
 			emotes   : [],
-			hairColor: npcOutfit.hairColor,
-			skinColor: npcOutfit.skinColor,
+			hairColor: Color3.fromHexString(npcOutfit.hairColor),
+			skinColor: Color3.fromHexString(npcOutfit.skinColor),
 		})
 	
 		// Attempt to stop walking animation on character but doesn't work
@@ -382,29 +379,44 @@ export namespace OutfitManager {
 	// MARK: Set Hair Color
 	export function SetHairColor(color: Color3) {
 		console.log("OutfitManager SetHairColor:", Color3.toHexString(color))
-		npcOutfit.hairColor = color
+		npcOutfit.hairColor = Color3.toHexString(color)
+		
 
 		// Update the mannequin with the new color
 		ShowNPCMannequin()
 
 		// Let the host know about the new outfit
-		NotifyOutfitChange()
+		//NotifyOutfitChange()
+		clientStore.setOutfit(npcOutfit)
+		room.send(MessageType.REQUEST_OUTFIT_UPDATE, npcOutfit)
 	}
 
 	// MARK: Set Skin Color
 	export function SetSkinColor(color: Color3) {
 		console.log("OutfitManager SetSkinColor:", Color3.toHexString(color))
-		npcOutfit.skinColor = color
+
+		npcOutfit.skinColor = Color3.toHexString(color)
+
+		// Update the client store with the new outfit ands end it to the server
+		clientStore.setOutfit(npcOutfit)
+		room.send(MessageType.REQUEST_OUTFIT_UPDATE, npcOutfit)
 
 		// Update the mannequin with the new color
 		ShowNPCMannequin()
 
 		// Let the host know about the new outfit
-		NotifyOutfitChange()
+		//NotifyOutfitChange()
 	}
 
+	// MARK: Notify Outfit Change
 	function NotifyOutfitChange() {
-		// Let the host know about the new outfit
-		sceneMessageBus.emit(MessageBusEvents.NOTIFY_SERVER_OUTFIT, npcOutfit)
+		// Let the server know about the new outfit
+		const outfit = {
+			wearables: npcOutfit.wearables.map(w => w.urn),
+			bodyShape: npcOutfit.bodyShape,
+			hairColor: npcOutfit.hairColor,
+			skinColor: npcOutfit.skinColor,
+		}
+		room.send(MessageType.REQUEST_OUTFIT_UPDATE, outfit)
 	}
 }

@@ -4,14 +4,14 @@ import { Color3, Quaternion, Vector3 } from '@dcl/sdk/math'
 import { getPlayer, onEnterScene } from '@dcl/sdk/players'
 
 import { GameSettings } from "../_settings"
-import { CameraController } from './CameraController'
-import { SoundManager } from './SoundManager'
-import { Outfit } from './OutfitManager'
-import { SetCurrentPlayer } from './ui/ui.Game.PlayerList'
-import { ShowYouAreNext } from './ui/ui.Game.YouAreNext'
-import { ShowEmotesHint } from './ui/ui.Game.Emotes'
-import { HideHowToPlay } from './ui/ui.Game.HowToPlay'
-import { HideWarning } from './ui/ui.Game.Warning'
+import { CameraController } from './cameraController'
+import { SoundManager } from './soundManager'
+import { SetCurrentPlayer } from './ui/ui.game.playerList'
+import { ShowYouAreNext } from './ui/ui.game.youAreNext'
+import { ShowEmotesHint } from './ui/ui.game.emotes'
+import { HideHowToPlay } from './ui/ui.game.howToPlay'
+import { HideWarning } from './ui/ui.game.warning'
+import { Outfit } from 'src/types/sharedTypes'
 
 
 // Handles all Stage related stuff, such as spawning NPCs to represent the player
@@ -278,8 +278,8 @@ export namespace StageController {
 			wearables: outfit.wearables.map((w) => w.urn) ?? [],
 			emotes   : userData.emotes,
 			eyeColor : userData.avatar!.eyesColor || Color3.create(0.5, 0.5, 0.5),
-			skinColor: outfit.skinColor,
-			hairColor: outfit.hairColor
+			skinColor: Color3.fromHexString(outfit.skinColor),
+			hairColor: Color3.fromHexString(outfit.hairColor)
 		})
 
 		// Position the Avatar

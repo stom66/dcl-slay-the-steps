@@ -4,7 +4,7 @@ import { Color3, Color4, Quaternion, Vector3 } from "@dcl/sdk/math"
 import * as utils from '@dcl-sdk/utils'
 
 import { ShopSlot, Wearable } from "./data/shopSlotData"
-import { OutfitManager } from "./OutfitManager"
+import { OutfitManager } from "./outfitManager"
 import { ShopZone, shopZones } from "./data/shopZoneData"
 import { blockedCreatorAddresses, blockedItemURNs, blockedKeywords } from "./data/shopBlockedItems"
 import { FetchZoneItems, hsvToColor3 } from "./utils"

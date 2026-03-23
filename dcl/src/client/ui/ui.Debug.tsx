@@ -2,9 +2,9 @@ import ReactEcs, { Button, Label, ReactEcsRenderer, UiEntity} from '@dcl/sdk/rea
 import { Color4 } from '@dcl/sdk/math'
 import { MessageBus } from '@dcl/sdk/message-bus'
 
-import { GameManager, localPlayer } from '../GameManager'
+import { GameManager, localPlayer } from '../gameManager'
 import { SeatManager } from '../SeatManager'
-import { ShowHowToPlay } from './ui.Game.HowToPlay'
+import { ShowHowToPlay } from './ui.game.howToPlay'
 
 const sceneMessageBus = new MessageBus()
 

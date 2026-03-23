@@ -1,15 +1,15 @@
 import { ReactEcsRenderer } from '@dcl/sdk/react-ecs'
 
-import { DebugUI } from './ui/ui.Debug'
+import { DebugUI } from './ui/ui.debug'
 
-import { CountdownTimerUI } from './ui/ui.Game.CountdownTimer'
-import { VotingOptionsUI } from './ui/ui.Game.VotingOptions'
-import { VotingResultsUI } from './ui/ui.Game.VotingResults'
-import { PlayerListUI } from './ui/ui.Game.PlayerList'
-import { WarningUI } from './ui/ui.Game.Warning'
-import { YouAreNextUI } from './ui/ui.Game.YouAreNext'
-import { HowToPlayUI } from './ui/ui.Game.HowToPlay'
-import { EmotesHintUI } from './ui/ui.Game.Emotes'
+import { CountdownTimerUI } from './ui/ui.game.countdownTimer'
+import { VotingOptionsUI } from './ui/ui.game.votingOptions'
+import { VotingResultsUI } from './ui/ui.game.votingResults'
+import { PlayerListUI } from './ui/ui.game.playerList'
+import { WarningUI } from './ui/ui.game.warning'
+import { YouAreNextUI } from './ui/ui.game.youAreNext'
+import { HowToPlayUI } from './ui/ui.game.howToPlay'
+import { EmotesHintUI } from './ui/ui.game.emotes'
 
 declare var process: {
 	env: {

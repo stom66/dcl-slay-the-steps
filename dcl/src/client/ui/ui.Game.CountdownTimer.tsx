@@ -1,7 +1,7 @@
 import ReactEcs, { UiEntity } from '@dcl/sdk/react-ecs'
 import { Color4 } from '@dcl/sdk/math'
 
-import { GameManager } from '../GameManager'
+import { GameManager } from '../gameManager'
 
 
 // Placeholders for dynamic content

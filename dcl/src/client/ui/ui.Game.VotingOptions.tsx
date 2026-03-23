@@ -3,9 +3,11 @@ import { Color4 } from '@dcl/sdk/math'
 import { MessageBus } from '@dcl/sdk/message-bus'
 import { getPlayer } from '@dcl/sdk/players'
 
-import { FetchUserAvatarUrl, GetBackgroundTexture } from '../utils'
-import { GameManager, localPlayer } from '../GameManager'
-import { MessageBusEvents } from '../../_settings'
+import { getUserAvatarUrl } from '../userData'
+import { GetBackgroundTexture } from '../utils'
+import { GameManager, localPlayer } from '../gameManager'
+import { MessageType, room } from 'src/room'
+// import { MessageBusEvents } from '../../_settings'
 
 const sceneMessageBus = new MessageBus()
 
@@ -32,16 +34,20 @@ function VoteForWinner(userId: string) {
 	// Allow player to remove their existing vote without voting for someone else
 	if (votedFor === userId) {
 		votedFor = ""
+		room.send(MessageType.REQUEST_REMOVE_VOTE, userId)
 	} else {
+		room.send(MessageType.REQUEST_ADD_VOTE, userId)
 		votedFor = userId
 	}
 
 	console.log("ui.Game.VotingOptions: VoteForWinner(): userId", userId)
 	UpdateVotingOptions()
-	sceneMessageBus.emit(MessageBusEvents.NOTIFY_SERVER_VOTE, {
-		voteFrom: localPlayer.userId,
-		voteFor : userId
-	})
+
+	//sceneMessageBus.emit(MessageBusEvents.NOTIFY_SERVER_VOTE, {
+	//	voteFrom: localPlayer.userId,
+	//	voteFor : userId
+	//})
+
 }
 
 
@@ -110,7 +116,7 @@ function BuildVotingOptions() {
 						margin: { right: 10 },
 					}}
 					uiBackground={{
-						texture: { src: FetchUserAvatarUrl(userId) },
+						texture: { src: getUserAvatarUrl(userId) },
 						textureMode  : "stretch"
 					}}
 				/>

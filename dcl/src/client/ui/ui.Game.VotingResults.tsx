@@ -3,9 +3,10 @@ import { MessageBus } from '@dcl/sdk/message-bus'
 import { getPlayer } from '@dcl/sdk/players';
 import { Color4 } from '@dcl/sdk/math'
 
-import { FetchUserAvatarUrl, GetBackgroundTexture } from '../utils';
-import { GameManager } from '../GameManager';
-import { HideVotingOptions } from './ui.Game.VotingOptions';
+import { getUserAvatarUrl } from '../userData'
+import { GetBackgroundTexture } from '../utils'
+import { GameManager } from '../gameManager';
+import { HideVotingOptions } from './ui.game.votingOptions';
 
 
 // Placeholders for dynamic content
@@ -142,7 +143,7 @@ function BuildVotingResults() {
 						margin: { right: 10 },
 					}}
 					uiBackground={{
-						texture: { src: FetchUserAvatarUrl(userId) },
+						texture: { src: getUserAvatarUrl(userId) },
 						textureMode  : "stretch"
 					}}
 				/>

@@ -5,17 +5,18 @@ import { MessageBus } from "@dcl/sdk/message-bus"
 
 import * as utils from '@dcl-sdk/utils'
 
-import { GameSettings, MessageBusEvents } from "../_settings"
-import { StageController } from "./StageController"
+import { GameSettings } from "../_settings"
+import { StageController } from "./stageController"
 import { SeatManager } from "./SeatManager"
-import { CameraController } from "./CameraController"
-import { OutfitManager, Outfit } from "./OutfitManager"
+import { CameraController } from "./cameraController"
+import { OutfitManager } from "./outfitManager"
 
-import { UpdatePlayerList } from "./ui/ui.Game.PlayerList"
-import { ShowWarning } from "./ui/ui.Game.Warning"
-import { HideCountdownTimer, ShowCountdownTimer } from "./ui/ui.Game.CountdownTimer"
-import { HideVotingOptions, ShowVotingOptions } from "./ui/ui.Game.VotingOptions"
-import { HideVotingResults, ShowVotingResults } from "./ui/ui.Game.VotingResults"
+import { UpdatePlayerList } from "./ui/ui.game.playerList"
+import { ShowWarning } from "./ui/ui.game.warning"
+import { HideCountdownTimer, ShowCountdownTimer } from "./ui/ui.game.countdownTimer"
+import { HideVotingOptions, ShowVotingOptions } from "./ui/ui.game.votingOptions"
+import { HideVotingResults, ShowVotingResults } from "./ui/ui.game.votingResults"
+import { Outfit } from "src/types/sharedTypes"
 
 
 export enum GameStatus {
@@ -176,7 +177,7 @@ export namespace GameManager {
 
 	// MARK: ---
 	// MARK: SpawnGameHostNPC
-	function SpawnGameHostNPC() {
+	/* function SpawnGameHostNPC() {
 		const position = Vector3.create(15.0718, 0.4, 28.95)
 
 		// Create the podium
@@ -233,7 +234,7 @@ export namespace GameManager {
 			emotes: []
 			
 		})
-	}
+	} */
 
 
 	// MARK: System_UpdateTimers

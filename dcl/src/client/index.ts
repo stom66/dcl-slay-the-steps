@@ -1,15 +1,16 @@
 import { SetupUI }  from './ui'
-import { ShowHowToPlay } from './ui/ui.Game.HowToPlay'
+import { ShowHowToPlay } from './ui/ui.game.howToPlay'
 
-import { CameraController } from './CameraController'
-import { GameManager } from './GameManager'
-import { OutfitManager } from './OutfitManager'
-import { ShopManager } from './ShopManager'
-import { SoundManager } from './SoundManager'
-import { StageController } from './StageController'
+import { CameraController } from './cameraController'
+import { GameManager } from './gameManager'
+import { OutfitManager } from './outfitManager'
+import { ShopManager } from './shopManager'
+import { SoundManager } from './soundManager'
+import { StageController } from './stageController'
 
-import { SetupLights } from './Lights'
-import { SetupColorPickers } from './ColorPickers'
+import { SetupLights } from './lights'
+import { SetupColorPickers } from './colorPickers'
+import { ClientHandlers } from './clientHandler'
 
 declare var process: {
 	env: {
@@ -18,7 +19,9 @@ declare var process: {
 }
 const DEBUG = process.env.NODE_ENV == "development"
 
-export function mainClient(): void {
+export function initClient(): void {
+	ClientHandlers.init()
+
 	CameraController.init()
 
 	GameManager.init()

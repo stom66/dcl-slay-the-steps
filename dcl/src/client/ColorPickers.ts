@@ -4,7 +4,7 @@ import { Color3, Color4, Quaternion, Vector3 } from "@dcl/sdk/math"
 import * as utils from '@dcl-sdk/utils'
 import { hsvToColor3 } from "./utils"
 
-import { OutfitManager } from "./OutfitManager"
+import { OutfitManager } from "./outfitManager"
 
 type ColorPickerConfig = {
 	callback       : (color:  Color3) => void,
