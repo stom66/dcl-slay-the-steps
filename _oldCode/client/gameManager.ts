@@ -5,7 +5,7 @@ import { MessageBus } from "@dcl/sdk/message-bus"
 
 import * as utils from '@dcl-sdk/utils'
 
-import { GameSettings } from "../_settings"
+import { GameSettings } from "../shared/settings"
 import { StageController } from "./stageController"
 import { SeatManager } from "./SeatManager"
 import { CameraController } from "./cameraController"
@@ -16,7 +16,7 @@ import { ShowWarning } from "./ui/ui.game.warning"
 import { HideCountdownTimer, ShowCountdownTimer } from "./ui/ui.game.countdownTimer"
 import { HideVotingOptions, ShowVotingOptions } from "./ui/ui.game.votingOptions"
 import { HideVotingResults, ShowVotingResults } from "./ui/ui.game.votingResults"
-import { Outfit } from "src/types/sharedTypes"
+import { Outfit } from "src/_oldCode/shared/types"
 
 
 export enum GameStatus {

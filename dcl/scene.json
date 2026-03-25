@@ -66,5 +66,6 @@
   "worldConfiguration": {
     "name": "stom.dcl.eth"
   },
-  "creator": ""
+  "creator": "",
+  "authoritativeMultiplayer": true
 }

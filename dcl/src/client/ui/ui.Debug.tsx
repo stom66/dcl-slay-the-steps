@@ -2,8 +2,8 @@ import ReactEcs, { Button, Label, ReactEcsRenderer, UiEntity} from '@dcl/sdk/rea
 import { Color4 } from '@dcl/sdk/math'
 import { MessageBus } from '@dcl/sdk/message-bus'
 
-import { GameManager, localPlayer } from '../gameManager'
-import { SeatManager } from '../SeatManager'
+//import { GameManager } from '../gameStateHandler'
+//import { SeatManager } from '../SeatManager'
 import { ShowHowToPlay } from './ui.game.howToPlay'
 
 const sceneMessageBus = new MessageBus()
@@ -26,7 +26,7 @@ export function DebugUI() {
 			uiBackground={{ color: Color4.fromHexString("#4C958133") }}
 		>
 
-			<Button
+			{/* <Button
 				key         = "btnMoveToLobby"
 				uiTransform = {{ width: 180, height: 40, margin: 8 }}
 				value       = 'moveTo: lobby'
@@ -35,10 +35,10 @@ export function DebugUI() {
 				onMouseDown = {() => {
 					SeatManager.MovePlayerToLobby()
 				}}
-			/>
+			/> */}
 
 
-			<Button
+			{/* <Button
 				key         = "btnMoveToLobby"
 				uiTransform = {{ width: 180, height: 40, margin: 8 }}
 				value       = 'moveTo: arena'
@@ -47,11 +47,11 @@ export function DebugUI() {
 				onMouseDown = {() => {
 					SeatManager.MovePlayerToSeat(Math.floor(Math.random() * 16))
 				}}
-			/>
+			/> */}
 
 
 			<Button
-				key         = "btnMoveToLobby"
+				key         = "btnShowHowToPlay"
 				uiTransform = {{ width: 180, height: 40, margin: 8 }}
 				value       = 'ShowHowToPlay'
 				variant     = 'primary'
@@ -76,7 +76,7 @@ export function DebugUI() {
 				textAlign      = "middle-left"
 			/>
 
-			<Label
+			{/* <Label
 				key            = "timestamp"
 				uiTransform    = {{
 					width         : 180, 
@@ -90,9 +90,9 @@ export function DebugUI() {
 				color          = {Color4.White()}
 				fontSize       = {14}
 				textAlign      = "middle-left"
-			/>
+			/> */}
 
-			<Label
+			{/* <Label
 				key            = "title"
 				uiTransform    = {{
 					width         : 180, 
@@ -106,9 +106,9 @@ export function DebugUI() {
 				color          = {Color4.White()}
 				fontSize       = {14}
 				textAlign      = "middle-left"
-			/>
+			/> */}
 
-			<Label
+			{/* <Label
 				key            = "amIHost"
 				uiTransform    = {{
 					width         : 180, 
@@ -122,9 +122,9 @@ export function DebugUI() {
 				color          = {Color4.White()}
 				fontSize       = {14}
 				textAlign      = "middle-left"
-			/>
+			/> */}
 
-			<Label
+			{/* <Label
 				key            = "amIInTheGame"
 				uiTransform    = {{
 					width         : 180, 
@@ -138,10 +138,10 @@ export function DebugUI() {
 				color          = {Color4.White()}
 				fontSize       = {14}
 				textAlign      = "middle-left"
-			/>
+			/> */}
 
 
-			<Label
+			{/* <Label
 				key            = "hostUserId"
 				uiTransform    = {{
 					width         : 180, height: 40, margin: 8,
@@ -153,7 +153,7 @@ export function DebugUI() {
 				color          = {Color4.White()}
 				fontSize       = {14}
 				textAlign      = "middle-left"
-			/>
+			/> */}
 
 
 		</UiEntity>

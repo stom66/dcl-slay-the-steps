@@ -3,10 +3,10 @@ import { Color4 } from '@dcl/sdk/math'
 import { MessageBus } from '@dcl/sdk/message-bus'
 import { getPlayer } from '@dcl/sdk/players'
 
-import { getUserAvatarUrl } from '../userData'
+import { getUserAvatarUrl } from '../../shared/userData'
 import { GetBackgroundTexture } from '../utils'
 import { GameManager, localPlayer } from '../gameManager'
-import { MessageType, room } from 'src/room'
+import { MessageType, room } from 'src/_oldCode/room'
 // import { MessageBusEvents } from '../../_settings'
 
 const sceneMessageBus = new MessageBus()

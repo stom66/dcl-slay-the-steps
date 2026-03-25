@@ -1,14 +1,15 @@
 import { getPlayer } from "@dcl/sdk/players"
 import * as utils from '@dcl-sdk/utils'
-import { Animator, AvatarEquippedData, AvatarShape, engine, Entity, GltfContainer, InputAction, pointerEventsSystem, Transform } from "@dcl/sdk/ecs"
+import { AvatarEquippedData, AvatarShape, engine, Entity, GltfContainer, InputAction, pointerEventsSystem, Transform } from "@dcl/sdk/ecs"
 import { Color3, Quaternion, Vector3 } from "@dcl/sdk/math"
+
 import { Wearable } from "./data/shopSlotData"
-import { GetWearableData } from "./utils"
-import { Outfit } from "src/types/sharedTypes"
+import { Outfit } from "../shared/types"
 //import { MessageBus } from "@dcl/sdk/message-bus"
 //import { MessageBusEvents } from "../_settings"
-import { MessageType, room } from "src/room"
-import { ClientStore, getClientStore } from "./clientStore"
+import { MessageType, room } from "../room"
+import { ClientStore } from "./clientStore"
+import { GetWearableData } from "./utils"
 
 //const sceneMessageBus = new MessageBus()
 
@@ -22,13 +23,10 @@ export namespace OutfitManager {
 	let npcBtnCopy          : undefined | Entity     = undefined
 	let npcBtnSwap          : undefined | Entity     = undefined
 
-	let playerWearables     : undefined | Wearable[] = undefined // What the player is currently wearing
-	let npcOutfit           : Outfit     = { userId: "", wearables: [], bodyShape: "", hairColor: "#00ff00", skinColor: "#00ff00" }
-
 	let isWearableDataLoaded: boolean                = false
 	let runUpdate           : boolean                = false
 
-	const clientStore: ClientStore = getClientStore()
+	const clientStore: ClientStore = ClientStore.getInstance()
 
 
 	export function init() {
@@ -59,8 +57,16 @@ export namespace OutfitManager {
 				return
 			}
 
+			// Set the default player and NPC properties
+			clientStore.setPlayerBodyShape(userData.avatar?.bodyShapeUrn || "urn:decentraland:off-chain:base-avatars:BaseMale")
+			clientStore.setPlayerSkinColor(userData.avatar?.skinColor || Color3.create(0.5, 0.5, 0.5))
+			clientStore.setPlayerHairColor(userData.avatar?.hairColor || Color3.create(0.5, 0.5, 0.5))
+			clientStore.setNPCBodyShape(userData.avatar?.bodyShapeUrn || "urn:decentraland:off-chain:base-avatars:BaseMale")
+			clientStore.setNPCSkinColor(userData.avatar?.skinColor || Color3.create(0.5, 0.5, 0.5))
+			clientStore.setNPCHairColor(userData.avatar?.hairColor || Color3.create(0.5, 0.5, 0.5))
+
 			// Fetch wearable data for each URN
-			playerWearables = []
+			let playerWearables: Wearable[] = []
 			const wearableUrns = userData.wearables
 			
 			for (const urn of wearableUrns) {
@@ -68,19 +74,9 @@ export namespace OutfitManager {
 				playerWearables.push(data)
 				//console.log("OutfitManager: InitUserWearables: got wearable data for", urn, ": ", JSON.stringify(data))
 			}
+			clientStore.setPlayerWearables(playerWearables)
+			clientStore.setNPCWearables(playerWearables)
 
-			// Update other avatar properties
-			//npcBodyShape = userData.avatar?.bodyShapeUrn || "urn:decentraland:off-chain:base-avatars:BaseMale"
-			//npcHairColor = userData.avatar?.hairColor || Color3.create(0.5, 0.5, 0.5)
-			//npcOutfit.wearables = playerWearables.map(w => ({ ...w }))
-
-			npcOutfit = {
-				userId   : userData.userId,
-				wearables: playerWearables.map(w => w),
-				bodyShape: userData.avatar?.bodyShapeUrn || "urn:decentraland:off-chain:base-avatars:BaseMale",
-				hairColor: userData.avatar?.hairColor || Color3.create(0.5, 0.5, 0.5),
-				skinColor: userData.avatar?.skinColor || Color3.create(0.5, 0.5, 0.5)
-			}
 			isWearableDataLoaded = true
 
 			console.log(
@@ -244,28 +240,18 @@ export namespace OutfitManager {
 			})
 		}
 
+		console.log("OutfitManager ShowNPCMannequin: Updating AvatarShape")
 		AvatarShape.createOrReplace(npcMannequin, {
 			id       : "npc_mannequin    ",
 			name     : "",
-			bodyShape: npcOutfit?.bodyShape,
-			wearables: npcOutfit?.wearables?.map(w => w.urn) ?? [],
+			bodyShape: clientStore.getNPCBodyShape(),
+			wearables: clientStore.getNPCWearables()?.map(w => w.urn) ?? [],
 			emotes   : [],
-			hairColor: Color3.fromHexString(npcOutfit.hairColor),
-			skinColor: Color3.fromHexString(npcOutfit.skinColor),
+			hairColor: clientStore.getNPCHairColor(),
+			skinColor: clientStore.getNPCSkinColor(),
 		})
-	
-		// Attempt to stop walking animation on character but doesn't work
-/* 		Animator.createOrReplace(npcMannequin, {
-			states: [
-			  {
-				clip: 'idle',
-				playing: true,
-				loop: true
-			  }
-			]
-		}) */
-		runUpdate = true
 
+		runUpdate = true
 	}
 
 	// MARK: Hide NPC Mannequin
@@ -298,14 +284,14 @@ export namespace OutfitManager {
 
 	function ResetOutfit() {
 		console.log("OutfitManager ResetOutfit")
-		npcOutfit.wearables = []
+		clientStore.setNPCWearables([])
 		//HideNPCMannequin()
 		ShowNPCMannequin()
 	}
 
 	function CopyMyOutfit() {
 		console.log("OutfitManager CopyMyOutfit")
-		npcOutfit.wearables = playerWearables?.map(w => w) ?? []
+		clientStore.setNPCWearables(clientStore.getPlayerWearables())
 		//HideNPCMannequin()
 		ShowNPCMannequin()
 	}
@@ -314,33 +300,17 @@ export namespace OutfitManager {
 		console.log("OutfitManager SwapGender")
 		// if the current npcBodyShape contains "Female" then set it to "BaseMale"
 		// otherwise set it to "BaseFemale"
-		if (npcOutfit?.bodyShape?.includes("Female")) {
-			npcOutfit.bodyShape = "urn:decentraland:off-chain:base-avatars:BaseMale"
+		const isMale = !clientStore.getNPCBodyShape().includes("Female")
+		if (isMale) {
+			clientStore.setNPCBodyShape("urn:decentraland:off-chain:base-avatars:BaseFemale")
 		} else {
-			npcOutfit.bodyShape = "urn:decentraland:off-chain:base-avatars:BaseFemale"
+			clientStore.setNPCBodyShape("urn:decentraland:off-chain:base-avatars:BaseMale")
 		}
 
 		runUpdate = false
 		ShowNPCMannequin()
 
 	}
-
-
-	// MARK: Util
-
-	export function GetCurrentOutfit(): Outfit {
-		return npcOutfit
-	}
-
-/* 	GetCurrentWearables(): Wearable[] {
-		return npcOutfit.wearables?.map(w => w) ?? []
-	}
-	GetCurrentBodyShape(): string {
-		return npcBodyShape ?? "urn:decentraland:off-chain:base-avatars:BaseMale"
-	}
-	GetCurrentHairColor(): Color3 {
-		return npcHairColor ?? Color3.create(0.5, 0.5, 0.5)
-	} */
 
 	// MARK: Equip Wearable
 	export async function EquipWearable(wearable: Wearable) {
@@ -352,54 +322,47 @@ export namespace OutfitManager {
 			return
 		}
 
-		// Make sure the npc wearables exist
-		if (!npcOutfit.wearables) {
-			console.error("OutfitManager EquipWearable: npcOutfit.wearables not found")
-			return
-		}
-
 		// Remove any existing wearables in the same category
-		for (const currentWearable of npcOutfit.wearables) {
+		let currentWearables = clientStore.getNPCWearables()
+		for (const currentWearable of currentWearables) {
 			if (currentWearable.category === wearable.category) {
-				npcOutfit.wearables.splice(npcOutfit.wearables.indexOf(currentWearable), 1)
+				currentWearables.splice(currentWearables.indexOf(currentWearable), 1)
 				break
 			}
 		}
 
 		// Add the new wearable to the npc wearables
-		npcOutfit.wearables.push(wearable)
+		currentWearables.push(wearable)
+		clientStore.setNPCWearables(currentWearables)
 
 		// Update the mannequin with the new wearables
 		ShowNPCMannequin()
 
 		// Let the host know about the new outfit
-		NotifyOutfitChange()
+		RequestOutfitChange()
 	}
 
 	// MARK: Set Hair Color
 	export function SetHairColor(color: Color3) {
 		console.log("OutfitManager SetHairColor:", Color3.toHexString(color))
-		npcOutfit.hairColor = Color3.toHexString(color)
+		clientStore.setNPCHairColor(color)
 		
-
 		// Update the mannequin with the new color
 		ShowNPCMannequin()
 
 		// Let the host know about the new outfit
 		//NotifyOutfitChange()
-		clientStore.setOutfit(npcOutfit)
-		room.send(MessageType.REQUEST_OUTFIT_UPDATE, npcOutfit)
+		RequestOutfitChange
 	}
 
 	// MARK: Set Skin Color
 	export function SetSkinColor(color: Color3) {
 		console.log("OutfitManager SetSkinColor:", Color3.toHexString(color))
 
-		npcOutfit.skinColor = Color3.toHexString(color)
+		clientStore.setNPCSkinColor(color)
 
 		// Update the client store with the new outfit ands end it to the server
-		clientStore.setOutfit(npcOutfit)
-		room.send(MessageType.REQUEST_OUTFIT_UPDATE, npcOutfit)
+		RequestOutfitChange()
 
 		// Update the mannequin with the new color
 		ShowNPCMannequin()
@@ -408,14 +371,15 @@ export namespace OutfitManager {
 		//NotifyOutfitChange()
 	}
 
-	// MARK: Notify Outfit Change
-	function NotifyOutfitChange() {
+	// MARK: Request Outfit Change
+	function RequestOutfitChange() {
 		// Let the server know about the new outfit
 		const outfit = {
-			wearables: npcOutfit.wearables.map(w => w.urn),
-			bodyShape: npcOutfit.bodyShape,
-			hairColor: npcOutfit.hairColor,
-			skinColor: npcOutfit.skinColor,
+			userId: clientStore.getUserId(),
+			wearables: clientStore.getNPCWearables().map(w => w.urn),
+			bodyShape: clientStore.getNPCBodyShape(),
+			hairColor: Color3.toHexString(clientStore.getNPCHairColor()),
+			skinColor: Color3.toHexString(clientStore.getNPCSkinColor()),
 		}
 		room.send(MessageType.REQUEST_OUTFIT_UPDATE, outfit)
 	}

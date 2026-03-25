@@ -1,7 +1,7 @@
 import { Vector3 } from "@dcl/sdk/math"
 import { movePlayerTo } from "~system/RestrictedActions"
 
-import { GameSettings } from "../_settings"
+import { GameSettings } from "../shared/settings"
 import { GetRandomPointInCircle } from "./utils"
 import { CameraController } from "./cameraController"
 import { engine, InputModifier, Transform } from "@dcl/sdk/ecs"

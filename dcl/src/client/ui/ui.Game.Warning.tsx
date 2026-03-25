@@ -1,6 +1,6 @@
 import { Color4 } from '@dcl/sdk/math'
 import ReactEcs, { Button, Label, UiEntity } from '@dcl/sdk/react-ecs'
-import { MessageType, room } from 'src/room'
+import { MessageType, room } from '../../room'
 
 
 // Placeholders for dynamic content

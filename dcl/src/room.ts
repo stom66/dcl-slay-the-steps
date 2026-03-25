@@ -1,21 +1,24 @@
 import { registerMessages } from '@dcl/sdk/network'
 import { Schemas } from '@dcl/sdk/ecs'
-import { GameStatus } from './utils/enums'
+import { GameStatus } from './shared/enums'
 
 // Message type enum
 export enum MessageType {
-	REQUEST_STATE         = 'requestState',        // Used by the clients, to request the current game state
-	REQUEST_JOIN_GAME     = 'requestJoinGame',     // Used by the clients, to request to join a game
-	REQUEST_OUTFIT_UPDATE = 'requestOutfitUpdate', // Used by the clients, to notify the server of an outfit update
-	REQUEST_ADD_VOTE      = 'requestAddVote',      // Used by the clients, to notify the server of a vote
-	REQUEST_REMOVE_VOTE   = 'requestRemoveVote',   // Used by the clients, to notify the server of a vote
-	REQUEST_EMOTE         = 'requestEmote',        // Used by the clients, to notify the server of an emote
+	REQUEST_STATE             = 'requestState',           // Used by the clients, to request the current game state
+	REQUEST_JOIN_GAME         = 'requestJoinGame',        // Used by the clients, to request to join a game
+	REQUEST_OUTFIT_UPDATE     = 'requestOutfitUpdate',    // Used by the clients, to notify the server of an outfit update
+	REQUEST_ADD_VOTE          = 'requestAddVote',         // Used by the clients, to notify the server of a vote
+	REQUEST_REMOVE_VOTE       = 'requestRemoveVote',      // Used by the clients, to notify the server of a vote
+	REQUEST_EMOTE             = 'requestEmote',           // Used by the clients, to notify the server of an emote
 
-	NOTIFY_STATE          = 'notifyState',         // Sent by server, to notify the clients of a game state update
-	NOTIFY_PLAYER_LIST    = 'notifyPlayers',       // Sent by server, to notify the clients of the current players in the game
-	NOTIFY_VOTE_RESULTS   = 'notifyVoteResults',   // Sent by server, to notify the clients of the vote results
-	NOTIFY_EMOTE          = 'notifyEmote',         // Sent by server, to notify the clients of an emote
-	NOTIFY_WARNING        = 'notifyWarning',       // Sent by server, to notify the clients of a warning
+	NOTIFY_STATE_LOBBY        = "notifyStateLobby",       // Sent by server, to notify the clients of the lobby state
+	NOTIFY_STATE_STARTING     = "notifyStateStarting",    // Sent by server, to notify the clients of the starting state
+	NOTIFY_STATE_ROUND_START  = "notifyStateRoundStart",  // Sent by server, to notify the clients of the round start state
+	NOTIFY_STATE_VOTE_START   = "notifyStateVoteStart",   // Sent by server, to notify the clients of the vote start state	
+	NOTIFY_STATE_VOTE_RESULTS = "notifyStateVoteResults", // Sent by server, to notify the clients of the vote results
+	NOTIFY_PLAYER_LIST        = "notifyPlayerList",       // Sent by server, to notify the clients of the player list
+	NOTIFY_EMOTE              = "notifyEmote",            // Sent by server, to notify the clients of an emote
+	NOTIFY_WARNING            = "notifyWarning",          // Sent by server, to notify the clients of a warning
 }
 
 // Message schemas
@@ -24,7 +27,6 @@ const Messages = {
 	[MessageType.REQUEST_STATE]        : Schemas.Map({}),
 	[MessageType.REQUEST_JOIN_GAME]    : Schemas.Map({
 		displayName: Schemas.String,
-		userId     : Schemas.String,
 		outfit     : Schemas.Map({
 			wearables: Schemas.Array(Schemas.String),
 			bodyShape: Schemas.String,
@@ -44,33 +46,41 @@ const Messages = {
 
 
 	// Sent by server
-	[MessageType.NOTIFY_STATE]         : Schemas.Map({
-		status: Schemas.String,
+	[MessageType.NOTIFY_STATE_LOBBY]: Schemas.Map({}),
+	[MessageType.NOTIFY_STATE_STARTING]: Schemas.Map({
 		gameStartTime: Schemas.Number,
-		outfits: Schemas.Array(Schemas.Map({
+	}),
+	
+	[MessageType.NOTIFY_STATE_ROUND_START]: Schemas.Map({
+		userId: Schemas.String,
+		displayName: Schemas.String,
+		outfit: Schemas.Map({
 			wearables: Schemas.Array(Schemas.String),
 			bodyShape: Schemas.String,
 			hairColor: Schemas.String,
 			skinColor: Schemas.String,
-		})),
+		}),
+	}),
+	
+	[MessageType.NOTIFY_STATE_VOTE_START]: Schemas.Map({
 		players: Schemas.Array(Schemas.Map({
 			userId: Schemas.String,
 			displayName: Schemas.String,
-		}))
+		})),
+	}),
+	[MessageType.NOTIFY_STATE_VOTE_RESULTS]: Schemas.Map({
+		voteResults: Schemas.Array(
+			Schemas.Array(Schemas.String)
+		)
 	}),
 
-	[MessageType.NOTIFY_PLAYER_LIST]   : Schemas.Map({
+	[MessageType.NOTIFY_PLAYER_LIST]: Schemas.Map({
 		players: Schemas.Array(
 			Schemas.Map({
 				userId: Schemas.String,
 				displayName: Schemas.String,
 			})
 		),
-	}),
-	[MessageType.NOTIFY_VOTE_RESULTS]  : Schemas.Map({
-		voteResults: Schemas.Array(
-			Schemas.Array(Schemas.String)
-		)
 	}),
 	[MessageType.NOTIFY_EMOTE]: Schemas.Map({
 		userId: Schemas.String,

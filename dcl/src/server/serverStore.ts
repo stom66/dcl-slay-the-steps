@@ -1,5 +1,5 @@
-import { GameStatus } from "src/utils/enums"
-import { Outfit, ServerState } from "src/types/sharedTypes"
+import { GameStatus } from "../shared/enums"
+import { Outfit, ServerState } from "../shared/types"
 
 export class ServerStore {
 	private static instance: ServerStore | undefined
@@ -7,13 +7,15 @@ export class ServerStore {
 	private readonly serverState: ServerState = {
 		status      : GameStatus.IDLE,
 		gameStartTime: 0,
-		outfits      : new Map(),
-		players      : new Map(),
+		outfits      : new Map<string, Outfit>(),
+		players      : new Map<string, string>(),
 		serverTime   : 0,
-		votes        : new Map(),
+		votes        : new Map<string, string>(),
 	}
 
-	private constructor() {}
+	private constructor() {
+		console.log('ServerStore: constructor')
+	}
 
 	static getInstance(): ServerStore {
 		if (!ServerStore.instance) ServerStore.instance = new ServerStore()

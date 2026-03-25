@@ -4,7 +4,7 @@ import * as utils from '@dcl-sdk/utils'
 
 
 import { GameManager } from '../gameManager'
-import { GameSettings } from '../../_settings'
+import { GameSettings } from '../../shared/settings'
 
 
 // Placeholders for dynamic content

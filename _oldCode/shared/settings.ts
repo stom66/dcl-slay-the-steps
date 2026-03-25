@@ -24,16 +24,9 @@ export class SceneSettings {
 		rotation: Quaternion.fromEulerDegrees(0, 0, 0),
 		scale:    Vector3.create(1, 1, 1)
 	}
-
-	static SCENE_TRANSFORM_180 = {
-		position: Vector3.create(0, 0, 0),
-		rotation: Quaternion.fromEulerDegrees(0, 180, 0),
-		scale:    Vector3.create(1, 1, 1)
-	}
 }
 
 export class GameSettings {
-	static URL_TIME_API               = 'https://timeapi.io/api/Time/current/zone?timeZone=UTC'
 	static URL_WEARABLE_DATA_API      = "https://marketplace-api.decentraland.org/v1/items"
 
 	static COUNTDOWN_DURATION         = IS_DEBUG ? 8 : 60
@@ -64,12 +57,3 @@ export class GameSettings {
 
 	static MAX_PLAYERS = 16
 }
-/* 
-export class MessageBusEvents {
-	static REQUEST_JOIN_GAME    = 'joinGameRequest' // Used by the clients, to request to join a game
-	static REQUEST_STATE        = 'stateRequest'    // Used by the clients, to request the current game state
-	static NOTIFY_CLIENT_STATE  = 'stateUpdate'     // Used by the server, to notify the clients of a game state update
-	static NOTIFY_SERVER_OUTFIT = 'outfitUpdate'    // Used by the clients, to notify the server of an outfit update
-	static NOTIFY_SERVER_VOTE   = 'requestVote'     // Used by the clients, to notify the server of a vote
-}
- */

@@ -2,7 +2,7 @@ import ReactEcs, { Label, UiEntity } from '@dcl/sdk/react-ecs'
 import { getPlayer } from '@dcl/sdk/players'
 import { Color4 } from '@dcl/sdk/math'
 
-import { getUserAvatarUrl } from '../userData'
+import { getUserAvatarUrl } from '../../shared/userData'
 import { GetBackgroundTexture } from '../utils'
 import { GameManager } from '../gameManager'
 

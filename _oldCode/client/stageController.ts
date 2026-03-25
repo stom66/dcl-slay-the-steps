@@ -3,7 +3,7 @@ import { AvatarEmoteCommand, AvatarShape, EasingFunction, engine, Entity, PBAvat
 import { Color3, Quaternion, Vector3 } from '@dcl/sdk/math'
 import { getPlayer, onEnterScene } from '@dcl/sdk/players'
 
-import { GameSettings } from "../_settings"
+import { GameSettings } from "../shared/settings"
 import { CameraController } from './cameraController'
 import { SoundManager } from './soundManager'
 import { SetCurrentPlayer } from './ui/ui.game.playerList'
@@ -11,7 +11,9 @@ import { ShowYouAreNext } from './ui/ui.game.youAreNext'
 import { ShowEmotesHint } from './ui/ui.game.emotes'
 import { HideHowToPlay } from './ui/ui.game.howToPlay'
 import { HideWarning } from './ui/ui.game.warning'
-import { Outfit } from 'src/types/sharedTypes'
+import { Outfit } from 'src/_oldCode/shared/types'
+import { MessageType } from 'src/_oldCode/room'
+import { eventBus } from 'src/_oldCode/utils/eventBus'
 
 
 // Handles all Stage related stuff, such as spawning NPCs to represent the player
@@ -56,7 +58,11 @@ export namespace StageController {
 	export function init() {
 		console.log("StageController: init()")
 
-		// Handle emotes from local player, players already in scene, and players who join
+		eventBus.on(MessageType.NOTIFY_EMOTE, ({player, emote}) => {
+			HandleEmotes(player, emote)
+		})
+		// Pretty sure we can just handle thjis by reacting to the event
+/* 		// Handle emotes from local player, players already in scene, and players who join
 		AvatarEmoteCommand.onChange(engine.PlayerEntity, (emote) => {
 			HandleEmotes(engine.PlayerEntity, emote)
 		})
@@ -78,7 +84,7 @@ export namespace StageController {
 			AvatarEmoteCommand.onChange(player.entity, (emote) => {
 				HandleEmotes(player.entity, emote)
 			})
-		})
+		}) */
 
 		// Ensure we have player data for local player
 		utils.timers.setTimeout(() => {

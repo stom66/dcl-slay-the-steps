@@ -1,6 +1,6 @@
 {
 	"asset":{
-		"generator":"Khronos glTF Blender I/O v4.5.49",
+		"generator":"Khronos glTF Blender I/O v4.5.51",
 		"version":"2.0"
 	},
 	"scene":0,
@@ -252,7 +252,7 @@
 		{
 			"bufferView":4,
 			"componentType":5126,
-			"count":560,
+			"count":558,
 			"max":[
 				0.8314109444618225,
 				0.8087223172187805,
@@ -268,19 +268,19 @@
 		{
 			"bufferView":5,
 			"componentType":5126,
-			"count":560,
+			"count":558,
 			"type":"VEC3"
 		},
 		{
 			"bufferView":6,
 			"componentType":5126,
-			"count":560,
+			"count":558,
 			"type":"VEC2"
 		},
 		{
 			"bufferView":7,
 			"componentType":5123,
-			"count":1620,
+			"count":1584,
 			"type":"SCALAR"
 		},
 		{
@@ -407,92 +407,92 @@
 		},
 		{
 			"buffer":0,
-			"byteLength":6720,
+			"byteLength":6696,
 			"byteOffset":10516,
 			"target":34962
 		},
 		{
 			"buffer":0,
-			"byteLength":6720,
-			"byteOffset":17236,
+			"byteLength":6696,
+			"byteOffset":17212,
 			"target":34962
 		},
 		{
 			"buffer":0,
-			"byteLength":4480,
-			"byteOffset":23956,
+			"byteLength":4464,
+			"byteOffset":23908,
 			"target":34962
 		},
 		{
 			"buffer":0,
-			"byteLength":3240,
-			"byteOffset":28436,
+			"byteLength":3168,
+			"byteOffset":28372,
 			"target":34963
 		},
 		{
 			"buffer":0,
 			"byteLength":408,
-			"byteOffset":31676,
+			"byteOffset":31540,
 			"target":34962
 		},
 		{
 			"buffer":0,
 			"byteLength":408,
-			"byteOffset":32084,
+			"byteOffset":31948,
 			"target":34962
 		},
 		{
 			"buffer":0,
 			"byteLength":272,
-			"byteOffset":32492,
+			"byteOffset":32356,
 			"target":34962
 		},
 		{
 			"buffer":0,
 			"byteLength":192,
-			"byteOffset":32764,
+			"byteOffset":32628,
 			"target":34963
 		},
 		{
 			"buffer":0,
 			"byteLength":816,
-			"byteOffset":32956,
+			"byteOffset":32820,
 			"target":34962
 		},
 		{
 			"buffer":0,
 			"byteLength":816,
-			"byteOffset":33772,
+			"byteOffset":33636,
 			"target":34962
 		},
 		{
 			"buffer":0,
 			"byteLength":544,
-			"byteOffset":34588,
+			"byteOffset":34452,
 			"target":34962
 		},
 		{
 			"buffer":0,
 			"byteLength":792,
-			"byteOffset":35132,
+			"byteOffset":34996,
 			"target":34963
 		},
 		{
 			"buffer":0,
 			"byteLength":408,
-			"byteOffset":35924,
+			"byteOffset":35788,
 			"target":34962
 		},
 		{
 			"buffer":0,
 			"byteLength":408,
-			"byteOffset":36332,
+			"byteOffset":36196,
 			"target":34962
 		},
 		{
 			"buffer":0,
 			"byteLength":272,
-			"byteOffset":36740,
+			"byteOffset":36604,
 			"target":34962
 		}
 	],
@@ -504,7 +504,7 @@
 	],
 	"buffers":[
 		{
-			"byteLength":37012,
+			"byteLength":36876,
 			"uri":"shopZoneColorPicker.bin"
 		}
 	]

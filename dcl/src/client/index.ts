@@ -1,40 +1,40 @@
-import { SetupUI }  from './ui'
-import { ShowHowToPlay } from './ui/ui.game.howToPlay'
-
-import { CameraController } from './cameraController'
-import { GameManager } from './gameManager'
-import { OutfitManager } from './outfitManager'
-import { ShopManager } from './shopManager'
-import { SoundManager } from './soundManager'
-import { StageController } from './stageController'
-
-import { SetupLights } from './lights'
-import { SetupColorPickers } from './colorPickers'
-import { ClientHandlers } from './clientHandler'
-
-declare var process: {
-	env: {
-		NODE_ENV: string
-	}
-}
-const DEBUG = process.env.NODE_ENV == "development"
+import { getPlayer } from "@dcl/sdk/players";
+import { ClientHandler } from "./clientHandler";
+import { ClientStore } from "./clientStore";
+import { SetupColorPickers } from "./colorPickers";
+import { gameStateHandler } from "./gameStateHandler";
+import { ShopManager } from "./shopManager";
+import { SetupUI } from "./ui";
 
 export function initClient(): void {
-	ClientHandlers.init()
-
-	CameraController.init()
-
-	GameManager.init()
-	ShopManager.init()
-	SoundManager.init()
-	StageController.init()
-	OutfitManager.init()
-
+	
 	SetupColorPickers()
-	SetupLights()
 	SetupUI()
 
-	if (!DEBUG) {
-		ShowHowToPlay()
+
+	let myPlayer = getPlayer()
+
+	if (myPlayer) {
+		console.log('Is Guest: ', myPlayer.isGuest)
+		console.log('Name : ', myPlayer.name)
+		console.log('UserId : ', myPlayer.userId)
+		console.log('Avatar shape : ', myPlayer.position)
+		console.log('Avatar shape : ', myPlayer.avatar?.bodyShapeUrn)
+		console.log('Avatar eyes color : ', myPlayer.avatar?.eyesColor)
+		console.log('Avatar hair color : ', myPlayer.avatar?.hairColor)
+		console.log('Wearables on : ', myPlayer.wearables)
+		console.log('Emotes available : ', myPlayer.emotes)
 	}
+
+	const store = ClientStore.getInstance()
+	void store.init().then(() => {
+		console.log('initClient: userId:', store.getUserId())
+
+		ClientHandler.init()
+		gameStateHandler.init()
+
+		ShopManager.init()
+	}).catch((err) => {
+		console.error('initClient: bootstrap failed', err)
+	})
 }

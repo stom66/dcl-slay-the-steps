@@ -1,9 +1,64 @@
-/**
- * Wire types for Decentraland catalyst lambdas profile JSON.
- * Matches GET /lambdas/profiles/{id} (and the legacy /profile/{id} alias).
- * OpenAPI describes `avatar` loosely as object; this types the fields commonly present.
- * @see https://docs.decentraland.org/apis/apis/lamb2/profiles
- */
+import { Wearable } from "src/client/data/shopSlotData"
+import { GameStatus } from "./enums"
+import { Color3 } from "@dcl/sdk/math"
+
+export type Outfit = {
+	userId: string
+	wearables: Wearable[]
+	bodyShape: string
+	hairColor: string
+	skinColor: string
+}
+
+export type ClientState = {
+	userId          : string
+	displayName     : string
+	//outfit          : Outfit
+	playerBodyShape : string
+	playerSkinColor : Color3
+	playerHairColor : Color3
+	playerWearables: Wearable[]
+
+	npcSkinColor    : Color3
+	npcHairColor    : Color3
+	npcBodyShape    : string
+	npcWearables    : Wearable[]
+}
+
+export type ServerState = {
+	gameStartTime: number,
+	outfits      : Map<string, Outfit>, // userId -> outfit
+	players      : Map<string, string>, // userId -> displayName
+	serverTime   : number,
+	status       : GameStatus,
+	votes        : Map<string, string>, // voteFrom -> voteFor
+}
+
+// room message payloads
+
+export type NotifyPlayerListPayload = {
+	players: {
+		userId: string
+		displayName: string
+	}[]
+}
+
+export type NotifyStatePayload = {
+	status: string
+	outfits?: {
+		userId: string
+		wearables: string[]
+		bodyShape: string
+		hairColor: string
+		skinColor: string
+	}[]
+	players: NotifyPlayerListPayload['players']
+}
+
+
+
+
+
 
 /** RGBA components 0–1 as returned on profile payloads */
 export type LambdasProfileColor = {

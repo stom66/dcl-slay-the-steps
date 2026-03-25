@@ -1,40 +1,8 @@
 import { Color3, Vector3 } from "@dcl/sdk/math"
-import { GameSettings } from "../_settings"
+import { GameSettings } from "../shared/settings"
 
-import * as utils from '@dcl-sdk/utils'
 import { Wearable } from "./data/shopSlotData"
-import { ShopZone, shopZones } from "./data/shopZoneData"
-
-
-// MARK: GetUTCTimestampMillis
-export async function GetUTCTimestampMillis() {
-	try {
-		const response = await fetch(GameSettings.URL_TIME_API, {
-			timeout: 1000
-		})
-	
-		if (!response.ok) {
-			throw new Error("Failed to fetch UTC time: " + response.statusText)
-		}
-	
-		const data = await response.json()
-	
-		if (!data.dateTime) {
-			console.error("Failed to get dateTime from response data:", data)
-			return Date.UTC(Date.now()) * 1000 as number
-		}
-	
-		// Convert ISO string to Unix timestamp in seconds
-		const unixTimestampMillis = Math.floor(new Date(data.dateTime).getTime()) as number
-	
-		console.log("GetUTCTimestampMillis:", unixTimestampMillis)
-		return unixTimestampMillis
-  
-	} catch (error) {
-		console.error('Error fetching UTC Time from API:', error)
-		return Date.UTC(Date.now()) * 1000 as number
-	}
-}
+import { ShopZone } from "./data/shopZoneData"
 
 
 

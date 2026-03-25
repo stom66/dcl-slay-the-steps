@@ -1,8 +1,9 @@
 import { AvatarShape, engine, GltfContainer, InputAction, pointerEventsSystem, Transform } from "@dcl/sdk/ecs"
 import { Color3, Quaternion, Vector3 } from "@dcl/sdk/math"
-import { MessageType, room } from "src/room"
+import { MessageType, room } from "src/_oldCode/room"
 import { OutfitManager } from "./outfitManager"
-import { fetchUserProfile } from './userData'
+import { fetchUserProfile } from '../shared/userData'
+import { ClientStore } from "./clientStore"
 
 export function SpawnGameHostNPC() {
 	const position = Vector3.create(15.0718, 0.4, 28.95)
@@ -27,20 +28,11 @@ export function SpawnGameHostNPC() {
 			} 
 		},
 		async () => {
-			const data = await fetchUserProfile()
-			if (!data) {
-				console.error('npcGameHost: fetchUserProfile: no data')
-				return
-			}
-			const record = data.avatars?.[0]
-			if (!record || !record.name || !record.userId) {
-				console.error('npcGameHost: fetchUserProfile: no record/name/userId')
-				return
-			}
+			const clientStore = ClientStore.getInstance()
+			const state = clientStore.getClientState()
 			room.send(MessageType.REQUEST_JOIN_GAME, {
-				displayName: record.name,
-				userId: record.userId,
-				outfit: OutfitManager.GetCurrentOutfit()
+				displayName: state.displayName,
+				outfit     : OutfitManager.GetCurrentOutfit()
 			})
 		}
 	)

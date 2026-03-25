@@ -1,9 +1,8 @@
-import { eventBus } from "src/utils/eventBus"
-import { getServerStore, ServerStore } from "./serverStore"
-import { GameStatus } from "src/utils/enums"
-import { MessageType, room } from "src/room"
-import { Outfit } from "src/types/sharedTypes"
-import { GameSettings } from "src/_settings"
+import { MessageType, room } from "../room"
+import { GameStatus } from "../shared/enums"
+import { GameSettings } from "../shared/settings"
+import { Outfit } from "../shared/types"
+import { ServerStore } from "./serverStore"
 import { sendStateUpdate, sendVotingResults } from "./messaging"
 
 class GameManager {
@@ -12,7 +11,7 @@ class GameManager {
 	store: ServerStore
 
 	constructor() {
-		this.store = getServerStore()
+		this.store = ServerStore.getInstance()
 	}
 
 	init() {
@@ -23,14 +22,14 @@ class GameManager {
 	}
 
 	// MARK: onPlayerRequestJoin
-	onPlayerRequestJoin(data: { displayName: string, outfit: Outfit, userId: string}) {
-		console.log(`GameManager: onPlayerRequestJoin: userId ${data.userId} requested to join the game`)
+	onPlayerRequestJoin(displayName: string, outfit: Outfit, userId: string) {
+		console.log(`GameManager: onPlayerRequestJoin: userId ${userId} requested to join the game`)
 		
 		const state = this.store.getState()
 
 		// Ignore them if they're already in the game
-		if (state.players.has(data.userId)) {
-			console.log(`GameManager: onPlayerRequestJoin: User ${data.userId} is already in the game, ignoring request to join`)
+		if (state.players.has(userId)) {
+			console.log(`GameManager: onPlayerRequestJoin: User ${userId} is already in the game, ignoring request to join`)
 			room.send(MessageType.NOTIFY_WARNING, `You are already in the game, please wait for it to start!`)
 			return
 		}
@@ -49,7 +48,7 @@ class GameManager {
 			return
 		}
 
-		this.store.addPlayer(data.userId, data.displayName, data.outfit)
+		this.store.addPlayer(userId, displayName, outfit)
 
 		// If the game needs to start, then start it
 		if (state.status === GameStatus.IDLE) {
@@ -66,7 +65,9 @@ class GameManager {
 
 		this.store.setState(GameStatus.STARTING)
 		this.store.setGameStartTime(Date.now() + GameSettings.COUNTDOWN_DURATION * 1000)
-		sendStateUpdate()
+		room.send(MessageType.NOTIFY_STATE_STARTING, { 
+			gameStartTime: this.store.getState().gameStartTime 
+		})
 
 		setTimeout(() => {
 			this.startGame()
@@ -75,8 +76,9 @@ class GameManager {
 
 	// MARK: startGame
 	startGame() {
+		// We cycle through all the players in the current round, and send out an update ROUND_START for each player with their outfit
 		this.store.setState(GameStatus.ROUND_ACTIVE)
-		sendStateUpdate()
+		//sendStateUpdate()
 
 		const playerCount = this.store.getState().players.size
 		
@@ -99,24 +101,24 @@ class GameManager {
 		}
 
 		this.store.setState(GameStatus.VOTING)
-		sendStateUpdate()
+		//sendStateUpdate()
 	}
 
 	// MARK: triggerVotingEnd
 	triggerVotingEnd() {
 		this.store.setState(GameStatus.GAME_ENDED)
-		sendVotingResults()
+		//sendVotingResults()
 	}
 
 	// MARK: triggerGameEnded
 	triggerGameEnded() {
 		this.store.setState(GameStatus.IDLE)
-		sendStateUpdate()
+		//sendStateUpdate()
 	}
 
 	abortGame() {
 		this.store.setState(GameStatus.IDLE)
-		sendStateUpdate()
+		//sendStateUpdate()
 		// TODO: send an alert?
 	}
 }
