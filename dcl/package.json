@@ -14,11 +14,12 @@
     "upgrade-sdk": "npm install --save-dev @dcl/sdk@latest",
     "upgrade-sdk:next": "npm install --save-dev @dcl/sdk@next",
     "fetch-wearables": "tsx scripts/fetch-wearable-data.ts",
-    "update-shop-data": "tsx scripts/update-shop-data.ts"
+    "update-shop-data": "tsx scripts/update-shop-data.ts",
+    "server-logs": "sdk-commands sdk-server-logs"
   },
   "devDependencies": {
-    "@dcl/js-runtime": "7.17.0",
-    "@dcl/sdk": "^7.21.1-22918726402.commit-ee210ee",
+    "@dcl/js-runtime": "https://sdk-team-cdn.decentraland.org/@dcl/js-sdk-toolchain/branch/auth-server/@dcl/js-runtime/dcl-js-runtime-7.21.1-22918727357.commit-24a15f6.tgz",
+    "@dcl/sdk": "https://sdk-team-cdn.decentraland.org/@dcl/js-sdk-toolchain/branch/auth-server/dcl-sdk-7.21.1-22918727357.commit-24a15f6.tgz",
     "@types/node-fetch": "^2.6.11",
     "node-fetch": "^2.7.0",
     "tsx": "^4.7.0"
