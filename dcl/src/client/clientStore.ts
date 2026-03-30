@@ -10,15 +10,16 @@ export class ClientStore {
 
 	// MARK: State
 	private clientState: ClientState = {
-		userId         : '',
-		displayName    : '',
+		userId         : "",
+		displayName    : "",
+		enrolledInGame : false,
 		
-		playerBodyShape: '',
+		playerBodyShape: "",
 		playerHairColor: Color3.Red(),
 		playerSkinColor: Color3.Red(),
 		playerWearables: [] as Wearable[],
 
-		npcBodyShape   : '',
+		npcBodyShape   : "",
 		npcHairColor   : Color3.Green(),
 		npcSkinColor   : Color3.Green(),
 		npcWearables   : [] as Wearable[]
@@ -66,6 +67,13 @@ export class ClientStore {
 		return this.clientState
 	}
 
+	setEnrolledInGame(enrolled: boolean): void {
+		this.clientState.enrolledInGame = enrolled
+	}
+		isEnrolledInGame(): boolean {
+			return this.clientState.enrolledInGame
+		}
+
 
 	setServerState(state: ServerState): void {
 		this.serverState = state
@@ -77,6 +85,10 @@ export class ClientStore {
 
 	getUserId(): string {
 		return this.clientState.userId
+	}
+
+	getDisplayName(): string {
+		return this.clientState.displayName
 	}
 
 	// MARK: Player Properties
