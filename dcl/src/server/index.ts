@@ -1,4 +1,4 @@
-import { MessageType, room } from "../room"
+import { MessageType, room } from "../shared/room"
 import { serverHandler } from "./serverHandler"
 import { _gameManager } from "./gameManager"
 

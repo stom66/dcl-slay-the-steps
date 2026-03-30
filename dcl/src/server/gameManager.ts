@@ -1,4 +1,4 @@
-import { MessageType, room } from "../room"
+import { MessageType, room } from "../shared/room"
 import { GameStatus } from "../shared/enums"
 import { GameSettings } from "../shared/settings"
 import { Outfit } from "../shared/types"

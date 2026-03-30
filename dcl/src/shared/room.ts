@@ -1,6 +1,6 @@
 import { registerMessages } from '@dcl/sdk/network'
 import { Schemas } from '@dcl/sdk/ecs'
-import { GameStatus } from './shared/enums'
+import { GameStatus } from './enums'
 
 // Message type enum
 export enum MessageType {
@@ -30,15 +30,15 @@ const Messages = {
 		outfit     : Schemas.Map({
 			wearables: Schemas.Array(Schemas.String),
 			bodyShape: Schemas.String,
-			hairColor: Schemas.String,
-			skinColor: Schemas.String,
+			hairColor: Schemas.Color3,
+			skinColor: Schemas.Color3,
 		}),
 	}),
 	[MessageType.REQUEST_OUTFIT_UPDATE]: Schemas.Map({
 		wearables: Schemas.Array(Schemas.String),
 		bodyShape: Schemas.String,
-		hairColor: Schemas.String,
-		skinColor: Schemas.String,
+		hairColor: Schemas.Color3,
+		skinColor: Schemas.Color3,
 	}),
 	[MessageType.REQUEST_ADD_VOTE]   : Schemas.String,
 	[MessageType.REQUEST_REMOVE_VOTE]: Schemas.String,
@@ -57,8 +57,8 @@ const Messages = {
 		outfit: Schemas.Map({
 			wearables: Schemas.Array(Schemas.String),
 			bodyShape: Schemas.String,
-			hairColor: Schemas.String,
-			skinColor: Schemas.String,
+			hairColor: Schemas.Color3,
+			skinColor: Schemas.Color3,
 		}),
 	}),
 	

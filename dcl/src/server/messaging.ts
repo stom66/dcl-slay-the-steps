@@ -1,4 +1,4 @@
-import { MessageType, room } from "../room"
+import { MessageType, room } from "../shared/room"
 import { ServerStore } from "./serverStore"
 
 
