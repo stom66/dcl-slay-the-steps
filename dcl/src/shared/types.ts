@@ -3,17 +3,17 @@ import { GameStatus } from "./enums"
 import { Color3 } from "@dcl/sdk/math"
 
 export type Outfit = {
-	userId: string
-	wearables: Wearable[]
+	wearables: string[]
 	bodyShape: string
-	hairColor: string
-	skinColor: string
+	hairColor: Color3
+	skinColor: Color3
 }
 
 export type ClientState = {
 	userId          : string
 	displayName     : string
-	//outfit          : Outfit
+	enrolledInGame  : boolean
+
 	playerBodyShape : string
 	playerSkinColor : Color3
 	playerHairColor : Color3
@@ -49,14 +49,11 @@ export type NotifyStatePayload = {
 		userId: string
 		wearables: string[]
 		bodyShape: string
-		hairColor: string
-		skinColor: string
+		hairColor: Color3
+		skinColor: Color3
 	}[]
 	players: NotifyPlayerListPayload['players']
 }
-
-
-
 
 
 
