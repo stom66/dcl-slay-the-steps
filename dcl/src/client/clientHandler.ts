@@ -1,9 +1,7 @@
 import { eventBus } from "../shared/utils/eventBus";
 import { MessageType, room } from "../shared/room";
 
-import { ShowWarning } from "./ui/ui.game.warning"
 import { NotifyPlayerListPayload, NotifyStatePayload } from "../shared/types";
-import { ClientStore } from "./clientStore";
 
 export namespace ClientHandler {
 	export function init() {

@@ -1,0 +1,4 @@
+// List of all client events used by the eventBus for inter-script communication
+export enum ClientEvents {
+	OUTFIT_CHANGED  = "outfitChanged",
+}
