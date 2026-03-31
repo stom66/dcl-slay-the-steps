@@ -62,16 +62,12 @@ export namespace ShopManager {
 			triggerAreaEventsSystem.onTriggerEnter(triggerEntity, (result) => {
 				if (result.trigger?.entity !== engine.PlayerEntity) return
 				console.log(`ShopManager: Player entered zone "${zone.key}"`)
-				//ShowUI(zone)
-				OutfitManager.ShowNPCMannequin()
 				ShowHighlight(zone)
 			})
 			
 			triggerAreaEventsSystem.onTriggerExit(triggerEntity, (result) => {
 				if (result.trigger?.entity !== engine.PlayerEntity) return
 				console.log(`ShopManager: Player exited zone "${zone.key}"`)
-				//HideUI(zone)
-				OutfitManager.HideNPCMannequin()
 			})
 		})
 	}
