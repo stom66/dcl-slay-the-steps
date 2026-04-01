@@ -121,9 +121,6 @@ export namespace OutfitManager {
 
 		// Let the host know about the new outfit
 		ClientMessaging.RequestOutfitChange()
-
-		// Fire the outfit changed event, which in turn updates the mannequin
-		eventBus.emit(ClientEvents.OUTFIT_CHANGED, {})
 	}
 
 	// MARK: Set Hair Color
@@ -146,9 +143,6 @@ export namespace OutfitManager {
 
 		// Update the client store with the new outfit ands end it to the server
 		ClientMessaging.RequestOutfitChange()
-
-		// Fire the outfit changed event, which in turn updates the mannequin
-		eventBus.emit(ClientEvents.OUTFIT_CHANGED, {})
 	}
 
 	
@@ -160,9 +154,6 @@ export namespace OutfitManager {
 
 		// Let the host know about the new outfit
 		ClientMessaging.RequestOutfitChange()
-
-		// Fire the outfit changed event, which in turn updates the mannequin
-		eventBus.emit(ClientEvents.OUTFIT_CHANGED, {})
 	}
 
 	// MARK: Remove Outfit
@@ -172,9 +163,6 @@ export namespace OutfitManager {
 
 		// Let the host know about the new outfit
 		ClientMessaging.RequestOutfitChange()
-
-		// Fire the outfit changed event, which in turn updates the mannequin
-		eventBus.emit(ClientEvents.OUTFIT_CHANGED, {})
 	}
 
 	// MARK: Swap Gender
@@ -190,8 +178,5 @@ export namespace OutfitManager {
 
 		// Let the host know about the new outfit
 		ClientMessaging.RequestOutfitChange()
-
-		// Fire the outfit changed event, which in turn updates the mannequin
-		eventBus.emit(ClientEvents.OUTFIT_CHANGED, {})
 	}
 }

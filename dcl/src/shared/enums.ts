@@ -1,5 +1,5 @@
 export enum GameStatus {
-	IDLE         = "IDLE",
+	LOBBY        = "LOBBY",
 	STARTING     = "STARTING",
 	ROUND_ACTIVE = "ROUND_ACTIVE",
 	VOTING       = "VOTING",

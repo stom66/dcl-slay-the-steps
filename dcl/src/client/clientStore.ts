@@ -3,12 +3,13 @@ import { userProfileCache } from '../shared/utils/userProfileCache'
 import { ClientState, ServerState, Outfit } from '../shared/types'
 import { GameStatus } from '../shared/enums'
 import { Wearable } from './data/shopSlotData'
+import { eventBus } from 'src/shared/utils/eventBus'
+import { ClientEvents } from './clientEvents'
 
+// MARK: ClientStore
 export class ClientStore {
-	// MARK: Singleton
 	private static instance: ClientStore | undefined
 
-	// MARK: State
 	private clientState: ClientState = {
 		userId         : "",
 		displayName    : "",
@@ -26,7 +27,7 @@ export class ClientStore {
 	}
 
 	private serverState: ServerState = {
-		status       : GameStatus.IDLE,
+		status       : GameStatus.LOBBY,
 		gameStartTime: 0,
 		outfits      : new Map<string, Outfit>(),
 		players      : new Map<string, string>(),
@@ -56,13 +57,13 @@ export class ClientStore {
 		console.log('ClientStore: fetchUserProfile: success. userId:', this.clientState.userId, 'displayName:', this.clientState.displayName)
 	}
 
-	// MARK: getInstance
+	// MARK: Instance
 	static getInstance(): ClientStore {
 		if (!ClientStore.instance) ClientStore.instance = new ClientStore()
 		return ClientStore.instance
 	}
 
-	// MARK: getState
+	// MARK: ClientState
 	getClientState(): ClientState {
 		return this.clientState
 	}
@@ -75,6 +76,7 @@ export class ClientStore {
 		}
 
 
+	// MARK: ServerState
 	setServerState(state: ServerState): void {
 		this.serverState = state
 	}
@@ -82,7 +84,26 @@ export class ClientStore {
 			return this.serverState
 		}
 
+	resetServerState(): void {
+		this.serverState = {
+			status       : GameStatus.LOBBY,
+			gameStartTime: 0,
+			outfits      : new Map<string, Outfit>(),
+			players      : new Map<string, string>(),
+			serverTime   : 0,
+			votes        : new Map<string, string>(),
+		}
+	}
 
+	setPlayers(players: Map<string, string>): void {
+		this.serverState.players = players
+		eventBus.emit(ClientEvents.PLAYERS_UPDATED, players)
+	}
+		getPlayers(): Map<string, string> {
+			return this.serverState.players
+		}
+
+	// MARK: User data
 	getUserId(): string {
 		return this.clientState.userId
 	}
@@ -91,7 +112,8 @@ export class ClientStore {
 		return this.clientState.displayName
 	}
 
-	// MARK: Player Properties
+
+	// MARK: Player Set/Getters
 	setPlayerSkinColor(color: Color3): void {
 		this.clientState.playerSkinColor = color
 	}
@@ -119,11 +141,20 @@ export class ClientStore {
 		getPlayerWearables(): Wearable[] {
 			return this.clientState.playerWearables
 		}
+	getPlayerOutfit(): Outfit {
+		return {
+			bodyShape: this.clientState.playerBodyShape,
+			hairColor: this.clientState.playerHairColor,
+			skinColor: this.clientState.playerSkinColor,
+			wearables: this.clientState.playerWearables.map(w => w.urn),
+		}
+	}
 	
 
-	// MARK: NPC Setters
+	// MARK: NPC Set/Getters
 	setNPCSkinColor(color: Color3): void {
 		this.clientState.npcSkinColor = color
+		eventBus.emit(ClientEvents.OUTFIT_CHANGED, {})
 	}
 		getNPCSkinColor(): Color3 {
 			return this.clientState.npcSkinColor
@@ -131,12 +162,14 @@ export class ClientStore {
 
 	setNPCHairColor(color: Color3): void {
 		this.clientState.npcHairColor = color
+		eventBus.emit(ClientEvents.OUTFIT_CHANGED, {})
 	}
 		getNPCHairColor(): Color3 {
 			return this.clientState.npcHairColor
 		}
 	setNPCBodyShape(shape: string): void {
 		this.clientState.npcBodyShape = shape
+		eventBus.emit(ClientEvents.OUTFIT_CHANGED, {})
 	}
 		getNPCBodyShape(): string {
 			return this.clientState.npcBodyShape
@@ -144,8 +177,18 @@ export class ClientStore {
 
 	setNPCWearables(wearables: Wearable[]): void {
 		this.clientState.npcWearables = wearables
+		eventBus.emit(ClientEvents.OUTFIT_CHANGED, {})
 	}
 		getNPCWearables(): Wearable[] {
 			return this.clientState.npcWearables
 		}
+
+	getNPCOutfit(): Outfit {
+		return {
+			bodyShape: this.clientState.npcBodyShape,
+			hairColor: this.clientState.npcHairColor,
+			skinColor: this.clientState.npcSkinColor,
+			wearables: this.clientState.npcWearables.map(w => w.urn),
+		}
+	}
 }

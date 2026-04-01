@@ -2,6 +2,7 @@ import { AvatarShape, Billboard, BillboardMode, engine, GltfContainer, InputActi
 import { Color3, Quaternion, Vector3 } from "@dcl/sdk/math"
 import { MessageType, room } from "../shared/room"
 import { ClientStore } from "./clientStore"
+import { ClientMessaging } from "./clientMessaging"
 
 export function SpawnGameHostNPC() {
 	const position = Vector3.create(16, 0.4, 16)
@@ -29,16 +30,7 @@ export function SpawnGameHostNPC() {
 			} 
 		},
 		() => {
-			const clientStore = ClientStore.getInstance()
-			room.send(MessageType.REQUEST_JOIN_GAME, {
-				displayName: clientStore.getDisplayName(),
-				outfit     : {
-					wearables: clientStore.getNPCWearables().map(w => w.urn),
-					bodyShape: clientStore.getNPCBodyShape(),
-					hairColor: clientStore.getNPCHairColor(),
-					skinColor: clientStore.getNPCSkinColor(),
-				}
-			})
+			ClientMessaging.RequestJoinGame()
 		}
 	)
 

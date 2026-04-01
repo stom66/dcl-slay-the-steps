@@ -23,4 +23,33 @@ export namespace ClientMessaging {
 		}
 		room.send(MessageType.REQUEST_OUTFIT_UPDATE, outfit)
 	}
+
+	// MARK: Request Join Game
+	export function RequestJoinGame() {
+		// Ignore if we're already enrolled in the game
+		//if (clientStore.isEnrolledInGame()) return
+
+		// Let the server know about the new outfit
+		room.send(MessageType.REQUEST_JOIN_GAME, {
+			displayName: clientStore.getDisplayName(),
+			outfit     : clientStore.getNPCOutfit(),
+		})
+	}
+
+	// MARK: Request Add Vote
+	export function RequestAddVote(userId: string) {
+		// Ignore if we're not enrolled in the game
+		if (!clientStore.isEnrolledInGame()) return
+
+		// Let the server know about the new vote
+		room.send(MessageType.REQUEST_ADD_VOTE, userId)
+	}
+
+	// MARK: Request Remove Vote
+	export function RequestRemoveVote(userId: string) {
+		// Ignore if we're not enrolled in the game
+		if (!clientStore.isEnrolledInGame()) return
+
+		room.send(MessageType.REQUEST_REMOVE_VOTE, userId)
+	}
 }

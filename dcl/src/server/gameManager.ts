@@ -30,40 +30,48 @@ class GameManager {
 		// Ignore them if they're already in the game
 		if (state.players.has(userId)) {
 			console.log(`GameManager: onPlayerRequestJoin: User ${userId} is already in the game, ignoring request to join`)
-			room.send(MessageType.NOTIFY_WARNING, `You are already in the game, please wait for it to start!`)
+			room.send(MessageType.NOTIFY_WARNING, `You are already in the game, please wait for it to start!`, { to: [userId] })
 			return
 		}
 
 		// Ensure the game hasn't already started
-		if (state.status !== GameStatus.IDLE && state.status !== GameStatus.STARTING) {
+		if (state.status !== GameStatus.LOBBY && state.status !== GameStatus.STARTING) {
 			console.log(`GameManager: onPlayerRequestJoin: Game is not in the IDLE or STARTING state, ignoring request to join`)
-			room.send(MessageType.NOTIFY_WARNING, `A Game is currently in progress, please wait for the next game!`)
+			room.send(MessageType.NOTIFY_WARNING, `A Game is currently in progress, please wait for the next game!`, { to: [userId] })
 			return
 		}
 
 		// Ensure we've not got too many players
 		if (state.players.size >= GameSettings.MAX_PLAYERS) {
 			console.log(`GameManager: onPlayerRequestJoin: Max players reached, ignoring request to join`)
-			room.send(MessageType.NOTIFY_WARNING, `The current game is full, please wait for the next game!`)
+			room.send(MessageType.NOTIFY_WARNING, `The current game is full, please wait for the next game!`, { to: [userId] })
 			return
 		}
 
 		this.store.addPlayer(userId, displayName, outfit)
+		room.send(MessageType.NOTIFY_PLAYER_LIST, { 
+			players: Array.from(state.players.entries()).map(([userId, displayName]) => ({
+				userId: userId,
+				displayName: displayName,
+			}))
+		})
 
 		// If the game needs to start, then start it
-		if (state.status === GameStatus.IDLE) {
+		if (state.status === GameStatus.LOBBY) {
 			this.startGameCountdown()
 		}
 	}
 
 	// MARK: startGameCountdown
 	startGameCountdown() {
-		if (this.store.getState().status !== GameStatus.IDLE) {
+		console.log(`GameManager: startGameCountdown`)
+
+		if (this.store.getState().status !== GameStatus.LOBBY) {
 			console.log(`GameManager: startGame: Game is not in the IDLE state, ignoring request to start`)
 			return
 		}
 
-		this.store.setState(GameStatus.STARTING)
+		this.store.setStatus(GameStatus.STARTING)
 		this.store.setGameStartTime(Date.now() + GameSettings.COUNTDOWN_DURATION * 1000)
 		room.send(MessageType.NOTIFY_STATE_STARTING, { 
 			gameStartTime: this.store.getState().gameStartTime 
@@ -76,8 +84,10 @@ class GameManager {
 
 	// MARK: startGame
 	startGame() {
+		console.log(`GameManager: startGame`)
+		
 		// We cycle through all the players in the current round, and send out an update ROUND_START for each player with their outfit
-		this.store.setState(GameStatus.ROUND_ACTIVE)
+		this.store.setStatus(GameStatus.ROUND_ACTIVE)
 		//sendStateUpdate()
 
 		const playerCount = this.store.getState().players.size
@@ -94,30 +104,37 @@ class GameManager {
 
 	// MARK: triggerVotingStart
 	triggerVotingStart() {
+		console.log(`GameManager: triggerVotingStart`)
+		
 		// Ensure the round hasn't been aborted
 		if (this.store.getState().status !== GameStatus.ROUND_ACTIVE) {
 			console.log(`GameManager: triggerVotingStart: Game is not in the ROUND_ACTIVE state, ignoring request to start voting`)
 			return
 		}
 
-		this.store.setState(GameStatus.VOTING)
+		this.store.setStatus(GameStatus.VOTING)
 		//sendStateUpdate()
 	}
 
 	// MARK: triggerVotingEnd
 	triggerVotingEnd() {
-		this.store.setState(GameStatus.GAME_ENDED)
+		console.log(`GameManager: triggerVotingEnd`)
+		
+		this.store.setStatus(GameStatus.GAME_ENDED)
 		//sendVotingResults()
 	}
 
-	// MARK: triggerGameEnded
-	triggerGameEnded() {
-		this.store.setState(GameStatus.IDLE)
+	// MARK: triggerLobby
+	triggerLobby() {
+		console.log(`GameManager: triggerLobby`)
+		this.store.resetState()
 		//sendStateUpdate()
 	}
 
 	abortGame() {
-		this.store.setState(GameStatus.IDLE)
+		console.log(`GameManager: abortGame`)
+		
+		this.store.resetState()
 		//sendStateUpdate()
 		// TODO: send an alert?
 	}

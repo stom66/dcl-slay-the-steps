@@ -5,7 +5,7 @@ export class ServerStore {
 	private static instance: ServerStore | undefined
 
 	private readonly serverState: ServerState = {
-		status      : GameStatus.IDLE,
+		status      : GameStatus.LOBBY,
 		gameStartTime: 0,
 		outfits      : new Map<string, Outfit>(),
 		players      : new Map<string, string>(),
@@ -26,7 +26,16 @@ export class ServerStore {
 		return this.serverState
 	}
 
-	setState(status: GameStatus): void {
+	resetState(): void {
+		this.serverState.status        = GameStatus.LOBBY
+		this.serverState.gameStartTime = 0
+		this.serverState.outfits       = new Map<string, Outfit>()
+		this.serverState.players       = new Map<string, string>()
+		this.serverState.serverTime    = 0
+		this.serverState.votes         = new Map<string, string>()
+	}
+
+	setStatus(status: GameStatus): void {
 		this.serverState.status = status
 	}
 
@@ -42,12 +51,9 @@ export class ServerStore {
 
 	// MARK: Players
 	addPlayer(userId: string, displayName: string, outfit: Outfit): void {
-		if (this.serverState.status === GameStatus.IDLE || this.serverState.status === GameStatus.STARTING) {
-			console.log(`addPlayer: adding userId ${userId} to players map.`)
-			this.serverState.players.set(userId, displayName)
-			this.setPlayerOutfit(userId, outfit)
-			return
-		}
+		console.log(`addPlayer: adding userId ${userId} to players map.`)
+		this.serverState.players.set(userId, displayName)
+		this.setPlayerOutfit(userId, outfit)
 	}
 
 	removePlayer(userId: string): boolean {
