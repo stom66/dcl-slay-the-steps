@@ -5,6 +5,7 @@ import { GameStatus } from '../shared/enums'
 import { Wearable } from './data/shopSlotData'
 import { eventBus } from 'src/shared/utils/eventBus'
 import { ClientEvents } from './clientEvents'
+import { ClientMessaging } from './clientMessaging'
 
 // MARK: ClientStore
 export class ClientStore {
@@ -63,6 +64,8 @@ export class ClientStore {
 		return ClientStore.instance
 	}
 
+
+
 	// MARK: ClientState
 	getClientState(): ClientState {
 		return this.clientState
@@ -76,12 +79,27 @@ export class ClientStore {
 		}
 
 
+
 	// MARK: ServerState
 	setServerState(state: ServerState): void {
 		this.serverState = state
 	}
 		getServerState(): ServerState {
 			return this.serverState
+		}
+
+	setGameStartTime(gameStartTime: number): void {
+		this.serverState.gameStartTime = gameStartTime
+	}
+		getGameStartTime(): number {
+			return this.serverState.gameStartTime
+		}
+
+	setServerTime(serverTime: number): void {
+		this.serverState.serverTime = serverTime
+	}
+		getServerTime(): number {
+			return this.serverState.serverTime
 		}
 
 	resetServerState(): void {
@@ -103,6 +121,8 @@ export class ClientStore {
 			return this.serverState.players
 		}
 
+
+
 	// MARK: User data
 	getUserId(): string {
 		return this.clientState.userId
@@ -111,6 +131,7 @@ export class ClientStore {
 	getDisplayName(): string {
 		return this.clientState.displayName
 	}
+
 
 
 	// MARK: Player Set/Getters
@@ -151,10 +172,12 @@ export class ClientStore {
 	}
 	
 
+
 	// MARK: NPC Set/Getters
 	setNPCSkinColor(color: Color3): void {
 		this.clientState.npcSkinColor = color
 		eventBus.emit(ClientEvents.OUTFIT_CHANGED, {})
+		ClientMessaging.RequestOutfitChange()
 	}
 		getNPCSkinColor(): Color3 {
 			return this.clientState.npcSkinColor
@@ -163,6 +186,7 @@ export class ClientStore {
 	setNPCHairColor(color: Color3): void {
 		this.clientState.npcHairColor = color
 		eventBus.emit(ClientEvents.OUTFIT_CHANGED, {})
+		ClientMessaging.RequestOutfitChange()
 	}
 		getNPCHairColor(): Color3 {
 			return this.clientState.npcHairColor
@@ -170,6 +194,7 @@ export class ClientStore {
 	setNPCBodyShape(shape: string): void {
 		this.clientState.npcBodyShape = shape
 		eventBus.emit(ClientEvents.OUTFIT_CHANGED, {})
+		ClientMessaging.RequestOutfitChange()
 	}
 		getNPCBodyShape(): string {
 			return this.clientState.npcBodyShape
@@ -178,6 +203,7 @@ export class ClientStore {
 	setNPCWearables(wearables: Wearable[]): void {
 		this.clientState.npcWearables = wearables
 		eventBus.emit(ClientEvents.OUTFIT_CHANGED, {})
+		ClientMessaging.RequestOutfitChange()
 	}
 		getNPCWearables(): Wearable[] {
 			return this.clientState.npcWearables
