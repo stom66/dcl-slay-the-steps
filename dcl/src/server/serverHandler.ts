@@ -3,7 +3,7 @@ import { ServerStore } from './serverStore'
 import { MessageType, room } from '../shared/room'
 import { eventBus } from '../shared/utils/eventBus'
 import { _gameManager } from './gameManager'
-import { sendStateUpdate } from './messaging'
+import { sendStateUpdate } from './serverMessaging'
 
 
 export namespace serverHandler {
