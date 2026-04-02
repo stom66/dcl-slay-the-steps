@@ -3,7 +3,8 @@ import { GameStatus } from "../shared/enums"
 import { GameSettings } from "../shared/settings"
 import { Outfit } from "../shared/types"
 import { ServerStore } from "./serverStore"
-import { sendStateUpdate, sendVotingResults } from "./messaging"
+import { sendStateUpdate, sendVotingResults } from "./serverMessaging"
+import * as utils from "@dcl-sdk/utils"
 
 class GameManager {
 	static instance: GameManager
@@ -67,17 +68,18 @@ class GameManager {
 		console.log(`GameManager: startGameCountdown`)
 
 		if (this.store.getState().status !== GameStatus.LOBBY) {
-			console.log(`GameManager: startGame: Game is not in the IDLE state, ignoring request to start`)
+			console.log(`GameManager: startGame: Game is not in the LOBBY state, ignoring request to start`)
 			return
 		}
 
 		this.store.setStatus(GameStatus.STARTING)
 		this.store.setGameStartTime(Date.now() + GameSettings.COUNTDOWN_DURATION * 1000)
 		room.send(MessageType.NOTIFY_STATE_STARTING, { 
-			gameStartTime: this.store.getState().gameStartTime 
+			gameStartTime: this.store.getState().gameStartTime,
+			serverTime: Date.now()
 		})
 
-		setTimeout(() => {
+		utils.timers.setTimeout(() => {
 			this.startGame()
 		}, GameSettings.COUNTDOWN_DURATION * 1000)
 	}
@@ -97,7 +99,7 @@ class GameManager {
 		gameDuration += GameSettings.ROUND_INTERVAL * (playerCount - 1)
 		gameDuration += GameSettings.ROUND_DURATION_PER_PLAYER * playerCount
 
-		setTimeout(() => {
+		utils.timers.setTimeout(() => {
 			this.triggerVotingStart()
 		}, gameDuration * 1000)
 	}
