@@ -109,7 +109,7 @@ const Messages = {
 		emote: Schemas.String,
 	}),
 	[MessageType.NOTIFY_WARNING]: Schemas.String,
-	[MessageType.NOTIFY_SERVER_TIME]: Schemas.Number,
+	[MessageType.NOTIFY_SERVER_TIME]: Schemas.Int64,
 }
 
 // Register messages and export room
