@@ -1,19 +1,11 @@
-import { getPlayer } from "@dcl/sdk/players"
-import * as utils from '@dcl-sdk/utils'
-import { AvatarEquippedData, AvatarShape, Billboard, BillboardMode, engine, Entity, GltfContainer, InputAction, pointerEventsSystem, Transform } from "@dcl/sdk/ecs"
-import { Color3, Quaternion, Vector3 } from "@dcl/sdk/math"
+import { AvatarShape, Billboard, BillboardMode, engine, Entity, GltfContainer, InputAction, pointerEventsSystem, Transform } from "@dcl/sdk/ecs"
+import { Quaternion, Vector3 } from "@dcl/sdk/math"
 
-import { Wearable } from "./data/shopSlotData"
-import { Outfit } from "../shared/types"
-import { MessageType, room } from "../shared/room"
-import { ClientStore } from "./clientStore"
-import { GetWearableData } from "./utils"
 import { eventBus } from "src/shared/utils/eventBus"
-import { ClientEvents } from "./clientEvents"
-import { ClientMessaging } from "./clientMessaging"
-import { OutfitManager } from "./outfitManager"
 
-//const sceneMessageBus = new MessageBus()
+import { ClientEvents } from "./clientEvents"
+import { ClientStore } from "./clientStore"
+import { OutfitManager } from "./outfitManager"
 
 
 export namespace MannequinManager {
