@@ -2,7 +2,7 @@ import { Outfit } from '../shared/types'
 import { ServerStore } from './serverStore'
 import { MessageType, room } from '../shared/room'
 import { eventBus } from '../shared/utils/eventBus'
-import { _gameManager } from './gameManager'
+import { gameManager } from './gameManager'
 import { sendStateUpdate } from './serverMessaging'
 
 
@@ -36,7 +36,7 @@ export namespace serverHandler {
 		const userId = getUserId(context)
 		console.log('handleRequestJoinGame: userId', userId, 'displayName', data.displayName, 'outfit', data.outfit)
 
-		_gameManager.onPlayerRequestJoin(data.displayName, data.outfit, userId)
+		gameManager.onPlayerRequestJoin(data.displayName, data.outfit, userId)
 	}
 	
 	// MARK: OutfitUpdate

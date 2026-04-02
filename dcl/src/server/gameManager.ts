@@ -3,7 +3,7 @@ import { GameStatus } from "../shared/enums"
 import { GameSettings } from "../shared/settings"
 import { Outfit } from "../shared/types"
 import { ServerStore } from "./serverStore"
-import { sendStateUpdate, sendVotingResults } from "./serverMessaging"
+import { sendStateUpdate } from "./serverMessaging"
 import * as utils from "@dcl-sdk/utils"
 
 class GameManager {
@@ -50,16 +50,18 @@ class GameManager {
 		}
 
 		this.store.addPlayer(userId, displayName, outfit)
-		room.send(MessageType.NOTIFY_PLAYER_LIST, { 
-			players: Array.from(state.players.entries()).map(([userId, displayName]) => ({
-				userId: userId,
-				displayName: displayName,
-			}))
-		})
 
 		// If the game needs to start, then start it
 		if (state.status === GameStatus.LOBBY) {
 			this.startGameCountdown()
+		} else {
+			room.send(MessageType.NOTIFY_PLAYER_LIST, {
+				sentAt: Date.now(),
+				players: Array.from(state.players.entries()).map(([userId, displayName]) => ({
+					userId: userId,
+					displayName: displayName,
+				}))
+			})
 		}
 	}
 
@@ -73,15 +75,20 @@ class GameManager {
 		}
 
 		this.store.setStatus(GameStatus.STARTING)
-		this.store.setGameStartTime(Date.now() + GameSettings.COUNTDOWN_DURATION * 1000)
-		room.send(MessageType.NOTIFY_STATE_STARTING, { 
-			gameStartTime: this.store.getState().gameStartTime,
-			serverTime: Date.now()
-		})
+
+		const gameStartTime = Date.now() + GameSettings.COUNTDOWN_DURATION
+		this.store.setGameStartTime(gameStartTime)
+
+		console.log(`GameManager: startGameCountdown: gameStartTime`, gameStartTime)
+		console.log(`GameManager: startGameCountdown: serverTime`, Date.now())
+		console.log(`GameManager: startGameCountdown: countdown duration (calc)`, gameStartTime - Date.now())
+		console.log(`GameManager: startGameCountdown: countdown duration (actual)`, GameSettings.COUNTDOWN_DURATION)
+
+		sendStateUpdate()
 
 		utils.timers.setTimeout(() => {
 			this.startGame()
-		}, GameSettings.COUNTDOWN_DURATION * 1000)
+		}, GameSettings.COUNTDOWN_DURATION)
 	}
 
 	// MARK: startGame
@@ -90,19 +97,21 @@ class GameManager {
 		
 		// We cycle through all the players in the current round, and send out an update ROUND_START for each player with their outfit
 		this.store.setStatus(GameStatus.ROUND_ACTIVE)
-		//sendStateUpdate()
 
-		const playerCount = this.store.getState().players.size
+		const playerCount = this.store.getPlayerCount()
+
+		sendStateUpdate()
 		
-		let gameDuration = 0
+		var gameDuration = 0
 		gameDuration += GameSettings.ROUND_START_DELAY
 		gameDuration += GameSettings.ROUND_INTERVAL * (playerCount - 1)
 		gameDuration += GameSettings.ROUND_DURATION_PER_PLAYER * playerCount
 
 		utils.timers.setTimeout(() => {
 			this.triggerVotingStart()
-		}, gameDuration * 1000)
+		}, gameDuration)
 	}
+
 
 	// MARK: triggerVotingStart
 	triggerVotingStart() {
@@ -115,31 +124,42 @@ class GameManager {
 		}
 
 		this.store.setStatus(GameStatus.VOTING)
-		//sendStateUpdate()
+		sendStateUpdate()
+
+		utils.timers.setTimeout(() => {
+			this.triggerVotingEnd()
+		}, GameSettings.VOTING_DURATION)
 	}
+
 
 	// MARK: triggerVotingEnd
 	triggerVotingEnd() {
 		console.log(`GameManager: triggerVotingEnd`)
 		
 		this.store.setStatus(GameStatus.GAME_ENDED)
-		//sendVotingResults()
+		sendStateUpdate()
+
+		utils.timers.setTimeout(() => {
+			this.triggerLobby()
+		}, GameSettings.GAME_ENDED_DURATION)
 	}
+
 
 	// MARK: triggerLobby
 	triggerLobby() {
 		console.log(`GameManager: triggerLobby`)
 		this.store.resetState()
-		//sendStateUpdate()
+		sendStateUpdate()
 	}
 
+	// MARK: abortGame
 	abortGame() {
 		console.log(`GameManager: abortGame`)
 		
 		this.store.resetState()
-		//sendStateUpdate()
+		sendStateUpdate()
 		// TODO: send an alert?
 	}
 }
 
-export const _gameManager = new GameManager()
+export const gameManager = new GameManager()

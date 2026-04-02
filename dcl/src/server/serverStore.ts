@@ -5,11 +5,10 @@ export class ServerStore {
 	private static instance: ServerStore | undefined
 
 	private readonly serverState: ServerState = {
-		status      : GameStatus.LOBBY,
 		gameStartTime: 0,
 		outfits      : new Map<string, Outfit>(),
 		players      : new Map<string, string>(),
-		serverTime   : 0,
+		status      : GameStatus.LOBBY,
 		votes        : new Map<string, string>(),
 	}
 
@@ -31,7 +30,6 @@ export class ServerStore {
 		this.serverState.gameStartTime = 0
 		this.serverState.outfits       = new Map<string, Outfit>()
 		this.serverState.players       = new Map<string, string>()
-		this.serverState.serverTime    = 0
 		this.serverState.votes         = new Map<string, string>()
 	}
 
@@ -43,7 +41,7 @@ export class ServerStore {
 	setPlayerOutfit(userId: string, outfit: Outfit): void {
 		// Check if the userId is present in the players array and the outfits map; fail gracefully if not
 		if (!this.serverState.players.has(userId)) {
-			console.log(`setPlayerOutfit: userId ${userId} is not present in players array.`)
+			console.log(`serverStore: setPlayerOutfit: userId ${userId} is not present in players array.`)
 			return
 		}
 		this.serverState.outfits.set(userId, { ...outfit })
@@ -51,14 +49,18 @@ export class ServerStore {
 
 	// MARK: Players
 	addPlayer(userId: string, displayName: string, outfit: Outfit): void {
-		console.log(`addPlayer: adding userId ${userId} to players map.`)
+		console.log(`serverStore: addPlayer: adding userId ${userId} to players map.`)
 		this.serverState.players.set(userId, displayName)
 		this.setPlayerOutfit(userId, outfit)
 	}
 
+	getPlayerCount(): number {
+		return this.serverState.players.size
+	}
+
 	removePlayer(userId: string): boolean {
 		if (!this.serverState.players.has(userId)) {
-			console.log(`removePlayer: userId ${userId} is not present in players map.`)
+			console.log(`serverStore: removePlayer: userId ${userId} is not present in players map.`)
 			return false
 		}
 		this.serverState.players.delete(userId)

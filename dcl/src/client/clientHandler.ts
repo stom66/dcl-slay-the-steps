@@ -1,55 +1,42 @@
 import { eventBus } from "../shared/utils/eventBus";
 import { MessageType, room } from "../shared/room";
+import { clockSync } from "../shared/utils/clockSync";
 
 import { NotifyPlayerListPayload, NotifyStatePayload, Outfit, ServerState } from "../shared/types";
+import { ClientEvents } from "./clientEvents";
 import { ClientStore } from "./clientStore";
 import { GameStatus } from "src/shared/enums";
-import { ClientEvents } from "./clientEvents";
 
 const clientStore = ClientStore.getInstance()
 
 export namespace ClientHandler {
 	export function init() {
-		room.onMessage(MessageType.NOTIFY_STATE_LOBBY, (data)        => { handleNotifyStateLobby(data) })
-		room.onMessage(MessageType.NOTIFY_STATE_STARTING, (data)     => { handleNotifyStateStarting(data) })
-		room.onMessage(MessageType.NOTIFY_STATE_ROUND_START, (data)  => { handleNotifyStateRoundStart(data) })
-		room.onMessage(MessageType.NOTIFY_STATE_VOTE_START, (data)   => { handleNotifyStateVoteStart(data) })
-		room.onMessage(MessageType.NOTIFY_STATE_VOTE_RESULTS, (data) => { handleNotifyStateVoteResults(data.voteResults) })
+		room.onMessage(MessageType.NOTIFY_STATE, (data)              => { handleNotifyState(data) })
 		room.onMessage(MessageType.NOTIFY_PLAYER_LIST, (data)        => { handleNotifyPlayerList(data) })
 		room.onMessage(MessageType.NOTIFY_EMOTE, (data)              => { handleNotifyEmote(data.userId, data.emote) })
 		room.onMessage(MessageType.NOTIFY_WARNING, (data)            => { handleNotifyWarning(data) })
+		room.onMessage(MessageType.NOTIFY_SERVER_TIME, (data)        => { handleNotifyServerTime(data) })
 	}
 	
 
-	// MARK: State: Lobby
-	function handleNotifyStateLobby(state: any) {
-		console.log('handleNotifyStateLobby: state', state)
-		clientStore.resetServerState()
+	// MARK: State
+	function handleNotifyState(state: NotifyStatePayload) {
+		console.log('handleNotifyState: state', state)
+
+		clockSync.updateOffset(state.serverTime)
+
+		clientStore.setServerState({
+			gameStartTime: clockSync.toLocalTime(state.gameStartTime),
+			outfits      : new Map(state.outfits.map(o => [o.userId, o])),
+			players      : new Map(state.players.map(p => [p.userId, p.displayName])),
+			status       : state.status as GameStatus,
+			votes        : new Map(state.votes.map(v => [v.userId, v.vote])),
+		})
+
+		eventBus.emit(ClientEvents.NOTIFY_STATE, clientStore.getServerState())
 	}
 
-	// MARK: State: Starting
-	function handleNotifyStateStarting(state: any) {
-		console.log('handleNotifyStateStarting: state', state)
-		//eventBus.emit(MessageType.NOTIFY_STATE_STARTING, state)
-	}
 
-	// MARK: State: Round Start
-	function handleNotifyStateRoundStart(state: any) {
-		console.log('handleNotifyStateRoundStart: state', state)
-		//eventBus.emit(MessageType.NOTIFY_STATE_ROUND_START, state)
-	}
-
-	// MARK: State: Vote Start
-	function handleNotifyStateVoteStart(state: any) {
-		console.log('handleNotifyStateVoteStart: state', state)
-		//eventBus.emit(MessageType.NOTIFY_STATE_VOTE_START, state)
-	}
-
-	// MARK: State:Vote Results
-	function handleNotifyStateVoteResults(voteResults: string[][]) {
-		console.log('handleNotifyStateVoteResults: voteResults', voteResults)
-		//eventBus.emit(MessageType.NOTIFY_STATE_VOTE_RESULTS, voteResults)
-	}
 
 	// MARK: Player List
 	function handleNotifyPlayerList(players: NotifyPlayerListPayload) {
@@ -67,7 +54,13 @@ export namespace ClientHandler {
 	// MARK: Warning
 	function handleNotifyWarning(warning: string) {
 		console.log('handleNotifyWarning: warning', warning)
-		eventBus.emit(MessageType.NOTIFY_WARNING, warning)
+		eventBus.emit(ClientEvents.NOTIFY_WARNING, warning)
+	}
+
+	// MARK: Server Time
+	function handleNotifyServerTime(serverTime: number) {
+		console.log('handleNotifyServerTime: serverTime', serverTime)
+		clockSync.updateOffset(serverTime)
 	}
 }
 

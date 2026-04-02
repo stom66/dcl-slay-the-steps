@@ -2,7 +2,7 @@ import { ReactEcsRenderer } from '@dcl/sdk/react-ecs'
 
 import { DebugUI } from './ui/ui.debug'
 
-//import { CountdownTimerUI } from './ui/ui.game.countdownTimer'
+import { GameStatusUI } from './ui/ui.game.gameStatus'
 //import { EmotesHintUI } from './ui/ui.game.emotes'
 import { HowToPlayUI } from './ui/ui.game.howToPlay'
 import { PlayerListUI } from './ui/ui.game.playerList'
@@ -20,7 +20,7 @@ const env = process.env.NODE_ENV
 const SHOW_DEBUG = env == "development"
 
 const uiComponent = () => [
-	//CountdownTimerUI(),
+	GameStatusUI(),
 	//VotingOptionsUI(),
 	//VotingResultsUI(),
 	PlayerListUI(),

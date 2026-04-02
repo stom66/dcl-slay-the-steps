@@ -1,20 +1,22 @@
-import { MessageType, room } from "../shared/room"
 import { serverHandler } from "./serverHandler"
-import { _gameManager } from "./gameManager"
+import { gameManager } from "./gameManager"
 import { sendServerTime } from "./serverMessaging"
 import { GameSettings } from "src/shared/settings"
 import * as utils from "@dcl-sdk/utils"
+import { ServerStore } from "./serverStore"
 
 export async function initServer(): Promise<void> {
 	console.log("Server: initServer()")
+
+	const store = ServerStore.getInstance()
 	
 	serverHandler.init()
-	_gameManager.init()
+	gameManager.init()
 
+	
+	// Periodically send the server time to the clients
 	sendServerTime()
-
 	utils.timers.setInterval(() => {
-		console.log('Server: sending server time')
 		sendServerTime()
 	}, GameSettings.SERVER_TIME_UPDATE_INTERVAL)
 	

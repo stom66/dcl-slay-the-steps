@@ -28,11 +28,10 @@ export class ClientStore {
 	}
 
 	private serverState: ServerState = {
-		status       : GameStatus.LOBBY,
 		gameStartTime: 0,
 		outfits      : new Map<string, Outfit>(),
 		players      : new Map<string, string>(),
-		serverTime   : 0,
+		status       : GameStatus.LOBBY,
 		votes        : new Map<string, string>(),
 	}
 	
@@ -87,6 +86,9 @@ export class ClientStore {
 		getServerState(): ServerState {
 			return this.serverState
 		}
+		getServerStatus(): GameStatus {
+			return this.serverState.status
+		}
 
 	setGameStartTime(gameStartTime: number): void {
 		this.serverState.gameStartTime = gameStartTime
@@ -95,20 +97,12 @@ export class ClientStore {
 			return this.serverState.gameStartTime
 		}
 
-	setServerTime(serverTime: number): void {
-		this.serverState.serverTime = serverTime
-	}
-		getServerTime(): number {
-			return this.serverState.serverTime
-		}
-
 	resetServerState(): void {
 		this.serverState = {
 			status       : GameStatus.LOBBY,
 			gameStartTime: 0,
 			outfits      : new Map<string, Outfit>(),
 			players      : new Map<string, string>(),
-			serverTime   : 0,
 			votes        : new Map<string, string>(),
 		}
 	}

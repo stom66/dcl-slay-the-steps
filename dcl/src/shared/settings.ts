@@ -30,16 +30,15 @@ export class SceneSettings {
 export class GameSettings {
 	static URL_WEARABLE_DATA_API      = "https://marketplace-api.decentraland.org/v1/items"
 
-	static SERVER_TIME_UPDATE_INTERVAL = 10000
+	static SERVER_TIME_UPDATE_INTERVAL = (IS_DEBUG ? 5 : 20) * 1000
 
-	static COUNTDOWN_DURATION         = IS_DEBUG ? 8 : 60
-	static ROUND_DURATION_PER_PLAYER  = IS_DEBUG ? 18: 20
-	static ROUND_START_DELAY          = IS_DEBUG ? 4 : 5   // Delay before the round starts
-	static ROUND_INTERVAL             = IS_DEBUG ? 2 : 2   // Interval between players, MUST be longer than the ROUND_START_DELAY
-	static VOTING_DURATION            = 10
-	static GAME_ENDED_DURATION        = 4
-	static UTC_UPDATE_INTERVAL        = IS_DEBUG ? 30: 300 // Set to five minutes now we're not using the external API any more
-	static YOU_ARE_NEXT_PREEMPT_TIME  = IS_DEBUG ? 3 : 4   // How far in advance of the players turn shoud we show the message letting them know they are next
+	static COUNTDOWN_DURATION         = (IS_DEBUG ? 8 : 60) * 1000
+	static ROUND_DURATION_PER_PLAYER  = (IS_DEBUG ? 18: 20) * 1000
+	static ROUND_START_DELAY          = (IS_DEBUG ? 4 : 5) * 1000   // Delay before the round starts
+	static ROUND_INTERVAL             = (IS_DEBUG ? 2 : 2) * 1000   // Interval between players, MUST be longer than the ROUND_START_DELAY
+	static VOTING_DURATION            = 10 * 1000
+	static GAME_ENDED_DURATION        = 4 * 1000
+	static YOU_ARE_NEXT_PREEMPT_TIME  = (IS_DEBUG ? 3 : 4) * 1000   // How far in advance of the players turn shoud we show the message letting them know they are next
 
 	static NPC_SPAWN_SCALE            = Vector3.create(1, 1, 1)
 	static NPC_SPAWN_ROTATION         = Quaternion.fromEulerDegrees(0, 180, 0)

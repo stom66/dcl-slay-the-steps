@@ -3,12 +3,12 @@ import { initServer } from "./server/index";
 
 import { isServer } from "@dcl/sdk/network";
 
-export function main(): void {
+export async function main(): Promise<void> {
 	if (isServer()) {
 		console.log("Initializing server")
-		initServer()
+		await initServer()
 	} else {
 		console.log("Initializing client")
-		initClient()
+		await initClient()
 	}
 }

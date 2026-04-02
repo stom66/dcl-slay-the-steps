@@ -49,25 +49,27 @@ const Messages = {
 
 	// Sent by server
 	[MessageType.NOTIFY_STATE]: Schemas.Map({
-		status: Schemas.String,
-		gameStartTime: Schemas.Number,
-		outfits: Schemas.Array(Schemas.Map({
-			userId: Schemas.String,
-			wearables: Schemas.Array(Schemas.String),
-			bodyShape: Schemas.String,
-			hairColor: Schemas.Color3,
-			skinColor: Schemas.Color3,
+		sentAt       : Schemas.Int64,
+		gameStartTime: Schemas.Int64,
+		outfits      : Schemas.Array(Schemas.Map({
+			userId      : Schemas.String,
+			wearables   : Schemas.Array(Schemas.String),
+			bodyShape   : Schemas.String,
+			hairColor   : Schemas.Color3,
+			skinColor   : Schemas.Color3,
 		})),
-		players: Schemas.Array(Schemas.Map({
-			userId: Schemas.String,
-			displayName: Schemas.String,
+		players      : Schemas.Array(Schemas.Map({
+			userId      : Schemas.String,
+			displayName : Schemas.String,
 		})),
-		votes: Schemas.Array(Schemas.Map({
-			userId: Schemas.String,
-			vote: Schemas.String,
+		status       : Schemas.String,
+		serverTime   : Schemas.Int64,
+		votes        : Schemas.Array(Schemas.Map({
+			userId      : Schemas.String,
+			vote        : Schemas.String,
 		})),
 	}),
-	[MessageType.NOTIFY_STATE_LOBBY]: Schemas.Map({}),
+	/* [MessageType.NOTIFY_STATE_LOBBY]: Schemas.Map({}),
 	[MessageType.NOTIFY_STATE_STARTING]: Schemas.Map({
 		gameStartTime: Schemas.Number,
 		serverTime: Schemas.Number,
@@ -95,8 +97,9 @@ const Messages = {
 			Schemas.Array(Schemas.String)
 		)
 	}),
-
+ */
 	[MessageType.NOTIFY_PLAYER_LIST]: Schemas.Map({
+		sentAt: Schemas.Int64,
 		players: Schemas.Array(
 			Schemas.Map({
 				userId: Schemas.String,
@@ -105,6 +108,7 @@ const Messages = {
 		),
 	}),
 	[MessageType.NOTIFY_EMOTE]: Schemas.Map({
+		sentAt: Schemas.Int64,
 		userId: Schemas.String,
 		emote: Schemas.String,
 	}),
