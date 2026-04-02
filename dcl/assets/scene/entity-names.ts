@@ -5,5 +5,6 @@
  * Object containing all entity names in the scene for autocomplete support.
  */
 export enum EntityNames {
+  portal_gltf = "portal.gltf",
   scene_gltf = "scene.gltf",
 } 
