@@ -10,26 +10,25 @@ export type Outfit = {
 }
 
 export type ClientState = {
-	userId          : string
-	displayName     : string
-	enrolledInGame  : boolean
+	userId         : string
+	displayName    : string
+	enrolledInGame : boolean
 
-	playerBodyShape : string
-	playerSkinColor : Color3
-	playerHairColor : Color3
+	playerBodyShape: string
+	playerSkinColor: Color3
+	playerHairColor: Color3
 	playerWearables: Wearable[]
 
-	npcSkinColor    : Color3
-	npcHairColor    : Color3
-	npcBodyShape    : string
-	npcWearables    : Wearable[]
+	npcSkinColor   : Color3
+	npcHairColor   : Color3
+	npcBodyShape   : string
+	npcWearables   : Wearable[]
 }
 
 export type ServerState = {
 	gameStartTime: number,
 	outfits      : Map<string, Outfit>, // userId -> outfit
-	players      : Map<string, string>, // userId -> displayName
-	serverTime   : number,
+	players      : Map<string, string>,   // userId -> displayName
 	status       : GameStatus,
 	votes        : Map<string, string>, // voteFrom -> voteFor
 }
@@ -37,6 +36,7 @@ export type ServerState = {
 // room message payloads
 
 export type NotifyPlayerListPayload = {
+	sentAt: number,
 	players: {
 		userId: string
 		displayName: string
@@ -44,15 +44,22 @@ export type NotifyPlayerListPayload = {
 }
 
 export type NotifyStatePayload = {
-	status: string
-	outfits?: {
-		userId: string
-		wearables: string[]
-		bodyShape: string
-		hairColor: Color3
-		skinColor: Color3
+	gameStartTime: number,
+	outfits     : {
+		userId      : string
+		wearables   : string[]
+		bodyShape   : string
+		hairColor   : Color3
+		skinColor   : Color3
 	}[]
-	players: NotifyPlayerListPayload['players']
+	players      : NotifyPlayerListPayload['players']
+	sentAt       : number,
+	serverTime   : number,
+	status       : string,
+	votes        : {
+		userId      : string
+		vote        : string
+	}[]
 }
 
 
