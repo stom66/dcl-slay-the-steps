@@ -18,15 +18,15 @@ import { OutfitManager } from "./outfitManager"
 
 export namespace MannequinManager {
 	
-	let npcRoot             : undefined | Entity     = undefined
-	let npcBillboard        : undefined | Entity     = undefined
-	let npcMannequin        : undefined | Entity     = undefined
-	let npcPodium           : undefined | Entity     = undefined
-	let npcBtnReset         : undefined | Entity     = undefined
-	let npcBtnCopy          : undefined | Entity     = undefined
-	let npcBtnSwap          : undefined | Entity     = undefined
+	var npcRoot             : undefined | Entity     = undefined
+	var npcBillboard        : undefined | Entity     = undefined
+	var npcMannequin        : undefined | Entity     = undefined
+	var npcPodium           : undefined | Entity     = undefined
+	var npcBtnReset         : undefined | Entity     = undefined
+	var npcBtnCopy          : undefined | Entity     = undefined
+	var npcBtnSwap          : undefined | Entity     = undefined
 
-	let isNPCMannequinVisible: boolean = true
+	var isNPCMannequinVisible: boolean = true
 
 	const clientStore: ClientStore = ClientStore.getInstance()
 

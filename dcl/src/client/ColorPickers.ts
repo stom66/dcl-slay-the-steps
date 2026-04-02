@@ -141,7 +141,7 @@ class ColorPicker {
 
 		const startZRot = 0
 		const rotStep   = -20
-		let index       = 0
+		var index       = 0
 
 		for (const hexCode of this.presetHexCodes) {
 			if (index == 5 ) index +=4 // skip over the bottom 2 slots
@@ -263,7 +263,7 @@ class ColorPicker {
 		const local = await this.GetLocalMousePosition(this.entityValueSlider)
 				
 		// Convert that local position to a value between 0 and 1, from left to right on the slider
-		let value = -local.x + this.sliderRange / 2
+		var value = -local.x + this.sliderRange / 2
 		value     = Math.min(Math.max(value, 0), this.sliderRange) / this.sliderRange
 		console.log("ColorPicker: SampleValueSlider(): value: ", value, local.x)
 
@@ -297,7 +297,7 @@ class ColorPicker {
 	private GetLocalMousePosition(entity: Entity): Promise<Vector3> {
 		return new Promise((resolve, reject) => {
 			const pointerInfo = PrimaryPointerInfo.getOrCreateMutable(engine.RootEntity)
-			let dir = pointerInfo.worldRayDirection
+			var dir = pointerInfo.worldRayDirection
 
 			raycastSystem.registerGlobalDirectionRaycast({
 				entity: engine.CameraEntity,
@@ -307,7 +307,7 @@ class ColorPicker {
 				},
 			}, 
 			(raycastResult) => {
-				let result = raycastResult.hits[0]
+				var result = raycastResult.hits[0]
 
 				if (result && result.position) {
 					// Work out where the cast hit the wheel

@@ -15,16 +15,16 @@ import { FetchZoneItems, hsvToColor3 } from "./utils"
  */
 export namespace ShopManager {
 	// Zone state: maps zone key to array of spawned item entities
-	let zoneItems: Record<string, Entity[]> = {}
+	var zoneItems: Record<string, Entity[]> = {}
 	
 	// UI entities: maps zone key to UI root entity
-	let zoneUIs: Record<string, Entity> = {}
+	var zoneUIs: Record<string, Entity> = {}
 	
 	// Navigation state: maps zone key to current page number
-	let zonePages: Record<string, number> = {}
+	var zonePages: Record<string, number> = {}
 	
 	// Trigger zone entities: maps zone key to trigger entity
-	let triggerZones: Record<string, Entity> = {}
+	var triggerZones: Record<string, Entity> = {}
 
 	export function init() {
 		console.log("ShopManager init")
@@ -259,7 +259,7 @@ export namespace ShopManager {
 		const entitiesToRemove = [...zone.entities]
 		zone.entities.length = 0
 		
-		let counter = 0
+		var counter = 0
 		entitiesToRemove.forEach((entity) => {
 			const transform = Transform.get(entity)
 			utils.tweens.startScaling(entity, transform.scale, Vector3.Zero(), 0.5, utils.InterpolationType.EASEINEXPO)
@@ -337,7 +337,7 @@ export namespace ShopManager {
 			utils.tweens.startScaling(entity, Vector3.Zero(),  slot.scale || Vector3.One(), 0.5, utils.InterpolationType.EASEOUTEXPO)
 		}, 500)
 
-		let hoverText = "Equip " + wearable.name
+		var hoverText = "Equip " + wearable.name
 		if (wearable.bodyShapes?.length && wearable.bodyShapes.length < 2) {
 			hoverText += wearable.bodyShapes[0] == "BaseMale" ? "\n(Male only)" : "\n(Female only)"
 		}

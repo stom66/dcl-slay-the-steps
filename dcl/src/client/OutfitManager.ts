@@ -1,6 +1,6 @@
 import { getPlayer } from "@dcl/sdk/players"
 import * as utils from '@dcl-sdk/utils'
-import { AvatarEquippedData, AvatarShape, Billboard, BillboardMode, engine, Entity, GltfContainer, InputAction, pointerEventsSystem, Transform } from "@dcl/sdk/ecs"
+import { AvatarBase, AvatarEquippedData, AvatarShape, Billboard, BillboardMode, engine, Entity, GltfContainer, InputAction, pointerEventsSystem, Transform } from "@dcl/sdk/ecs"
 import { Color3, Quaternion, Vector3 } from "@dcl/sdk/math"
 
 import { Wearable } from "./data/shopSlotData"
@@ -17,19 +17,19 @@ import { ClientMessaging } from "./clientMessaging"
 
 export namespace OutfitManager {
 	
-	let userData            : undefined | any        = undefined
-	let npcRoot             : undefined | Entity     = undefined
-	let npcBillboard        : undefined | Entity     = undefined
-	let npcMannequin        : undefined | Entity     = undefined
-	let npcPodium           : undefined | Entity     = undefined
-	let npcBtnReset         : undefined | Entity     = undefined
-	let npcBtnCopy          : undefined | Entity     = undefined
-	let npcBtnSwap          : undefined | Entity     = undefined
+	var userData            : undefined | any        = undefined
+	var npcRoot             : undefined | Entity     = undefined
+	var npcBillboard        : undefined | Entity     = undefined
+	var npcMannequin        : undefined | Entity     = undefined
+	var npcPodium           : undefined | Entity     = undefined
+	var npcBtnReset         : undefined | Entity     = undefined
+	var npcBtnCopy          : undefined | Entity     = undefined
+	var npcBtnSwap          : undefined | Entity     = undefined
 
-	let isWearableDataLoaded: boolean                = false
-	let runUpdate           : boolean                = false
+	var isWearableDataLoaded: boolean                = false
+	var runUpdate           : boolean                = false
 
-	let isNPCMannequinVisible: boolean = true
+	var isNPCMannequinVisible: boolean = true
 
 	const clientStore: ClientStore = ClientStore.getInstance()
 
@@ -42,6 +42,14 @@ export namespace OutfitManager {
 		AvatarEquippedData.onChange(engine.PlayerEntity, (equipped) => {
 			if (!equipped) return
 			InitUserWearables(true)
+		})
+
+	
+		AvatarBase.onChange(engine.PlayerEntity, (body) => {
+			if (!body) return
+			clientStore.setPlayerBodyShape(body.bodyShapeUrn || "urn:decentraland:off-chain:base-avatars:BaseMale")
+			clientStore.setPlayerSkinColor(body.skinColor || Color3.create(0.5, 0.5, 0.5))
+			clientStore.setPlayerHairColor(body.hairColor || Color3.create(0.5, 0.5, 0.5))
 		})
 	}
 
@@ -68,7 +76,7 @@ export namespace OutfitManager {
 			clientStore.setNPCHairColor(userData.avatar?.hairColor || Color3.create(0.5, 0.5, 0.5))
 
 			// Fetch wearable data for each URN
-			let playerWearables: Wearable[] = []
+			var playerWearables: Wearable[] = []
 			const wearableUrns = userData.wearables
 			
 			for (const urn of wearableUrns) {
@@ -100,14 +108,8 @@ export namespace OutfitManager {
 	export async function EquipWearable(wearable: Wearable) {
 		console.log("OutfitManager: EquipWearable: equipping wearable", wearable.name, wearable.category)
 
-		// Make sure the mannequin exists
-		if (!npcMannequin) {
-			console.error("OutfitManager EquipWearable: npc mannequin not found")
-			return
-		}
-
 		// Remove any existing wearables in the same category
-		let currentWearables = [...clientStore.getNPCWearables()]
+		var currentWearables = [...clientStore.getNPCWearables()]
 		for (const currentWearable of currentWearables) {
 			if (currentWearable.category === wearable.category) {
 				currentWearables.splice(currentWearables.indexOf(currentWearable), 1)
@@ -118,18 +120,12 @@ export namespace OutfitManager {
 		// Add the new wearable to the npc wearables
 		currentWearables.push(wearable)
 		clientStore.setNPCWearables([...currentWearables])
-
-		// Let the host know about the new outfit
-		ClientMessaging.RequestOutfitChange()
 	}
 
 	// MARK: Set Hair Color
 	export function SetHairColor(color: Color3) {
 		console.log("OutfitManager: SetHairColor:", Color3.toHexString(color))
 		clientStore.setNPCHairColor(color)
-
-		// Let the host know about the new outfit
-		ClientMessaging.RequestOutfitChange()
 		
 		// Fire the outfit changed event, which in turn updates the mannequin
 		eventBus.emit(ClientEvents.OUTFIT_CHANGED, {})
@@ -151,18 +147,12 @@ export namespace OutfitManager {
 	export function CopyMyOutfit() {
 		console.log("OutfitManager: CopyMyOutfit")
 		clientStore.setNPCWearables([...clientStore.getPlayerWearables()])
-
-		// Let the host know about the new outfit
-		ClientMessaging.RequestOutfitChange()
 	}
 
 	// MARK: Remove Outfit
 	export function RemoveOutfit() {
 		console.log("OutfitManager: RemoveOutfit")
 		clientStore.setNPCWearables([])
-
-		// Let the host know about the new outfit
-		ClientMessaging.RequestOutfitChange()
 	}
 
 	// MARK: Swap Gender
@@ -175,8 +165,5 @@ export namespace OutfitManager {
 		} else {
 			clientStore.setNPCBodyShape("urn:decentraland:off-chain:base-avatars:BaseMale")
 		}
-
-		// Let the host know about the new outfit
-		ClientMessaging.RequestOutfitChange()
 	}
 }
