@@ -1,14 +1,15 @@
 import { Color4 } from '@dcl/sdk/math'
 import ReactEcs, { Button, Label, UiEntity } from '@dcl/sdk/react-ecs'
-import { MessageType, room } from '../../shared/room'
+
 import { eventBus } from 'src/shared/utils/eventBus'
+import { ClientEvents } from '../clientEvents'
 
 
 // Placeholders for dynamic content
-let warningText  : string = ""
-var visibleWarning       : boolean = false
+var warningText   : string = ""
+var visibleWarning: boolean = false
 
-eventBus.on(MessageType.NOTIFY_WARNING, (text: string) => {
+eventBus.on(ClientEvents.NOTIFY_WARNING, (text: string) => {
 	ShowWarning(text)
 })
 

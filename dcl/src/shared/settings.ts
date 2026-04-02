@@ -19,6 +19,7 @@ const IS_DEBUG = env == "development"
 //
 
 export class SceneSettings {
+
 	static SCENE_TRANSFORM = {
 		position: Vector3.create(0, 0, 0),
 		rotation: Quaternion.fromEulerDegrees(0, 0, 0),
@@ -28,6 +29,8 @@ export class SceneSettings {
 
 export class GameSettings {
 	static URL_WEARABLE_DATA_API      = "https://marketplace-api.decentraland.org/v1/items"
+
+	static SERVER_TIME_UPDATE_INTERVAL = 10000
 
 	static COUNTDOWN_DURATION         = IS_DEBUG ? 8 : 60
 	static ROUND_DURATION_PER_PLAYER  = IS_DEBUG ? 18: 20
