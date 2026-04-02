@@ -3,8 +3,8 @@ import { Color4 } from '@dcl/sdk/math'
 
 import { userProfileCache } from '../../shared/utils/userProfileCache'
 import { GetBackgroundTexture } from '../utils'
-import { ClientStore } from '../clientStore'
 import { eventBus } from 'src/shared/utils/eventBus'
+import { ClientStore } from '../clientStore'
 import { ClientEvents } from '../clientEvents'
 
 
@@ -54,7 +54,7 @@ export function SetCurrentPlayer(userId?: string) {
 }
 
 // Event Binding
-eventBus.on(ClientEvents.PLAYERS_UPDATED, (data) => {
+eventBus.on(ClientEvents.NOTIFY_STATE, (data) => {
 	UpdatePlayerList()
 })
 
