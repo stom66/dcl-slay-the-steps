@@ -9,26 +9,25 @@ import { OutfitManager } from "./outfitManager";
 import { SpawnGameHostNPC } from "./npcGameHost";
 import { SetupLights } from "./lights";
 import { MannequinManager } from "./mannequinManager";
+import { SetupPortal } from "./portal";
 
-export function initClient(): void {
-	
-	SetupColorPickers()
-	SetupUI()
+export async function initClient() {
 
 	const store = ClientStore.getInstance()
-	void store.init().then(() => {
-		console.log('initClient: userId:', store.getUserId())
+	await store.init()
 
-		ClientHandler.init()
-		gameStateHandler.init()
+	ClientHandler.init()
+	gameStateHandler.init()
 
-		ShopManager.init()
-		OutfitManager.init()
-		MannequinManager.init()
-		
-		SpawnGameHostNPC()
-		SetupLights()
-	}).catch((err) => {
-		console.error('initClient: bootstrap failed', err)
-	})
+	ShopManager.init()
+	OutfitManager.init()
+	MannequinManager.init()
+
+	SetupPortal()
+	
+	SpawnGameHostNPC()
+	SetupLights()
+	SetupColorPickers()
+
+	SetupUI()
 }
