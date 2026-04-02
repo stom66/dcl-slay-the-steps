@@ -11,7 +11,8 @@
 		{
 			"name":"Scene",
 			"nodes":[
-				4
+				4,
+				5
 			]
 		}
 	],
@@ -68,6 +69,26 @@
 				3
 			],
 			"name":"armature.parent"
+		},
+		{
+			"mesh":1,
+			"name":"portal_collider",
+			"rotation":[
+				-0.7071068286895752,
+				0,
+				0,
+				0.7071068286895752
+			],
+			"scale":[
+				0.5137274861335754,
+				0.5137274861335754,
+				0.5137274861335754
+			],
+			"translation":[
+				15.999999046325684,
+				2.3159942626953125,
+				-0.25
+			]
 		}
 	],
 	"animations":[
@@ -119,34 +140,34 @@
 			"name":"Spin",
 			"samplers":[
 				{
-					"input":4,
+					"input":8,
 					"interpolation":"STEP",
-					"output":5
+					"output":9
 				},
 				{
-					"input":4,
+					"input":8,
 					"interpolation":"STEP",
-					"output":6
-				},
-				{
-					"input":4,
-					"interpolation":"STEP",
-					"output":7
-				},
-				{
-					"input":4,
-					"interpolation":"STEP",
-					"output":8
-				},
-				{
-					"input":9,
-					"interpolation":"LINEAR",
 					"output":10
 				},
 				{
-					"input":4,
+					"input":8,
 					"interpolation":"STEP",
-					"output":7
+					"output":11
+				},
+				{
+					"input":8,
+					"interpolation":"STEP",
+					"output":12
+				},
+				{
+					"input":13,
+					"interpolation":"LINEAR",
+					"output":14
+				},
+				{
+					"input":8,
+					"interpolation":"STEP",
+					"output":11
 				}
 			]
 		}
@@ -181,6 +202,19 @@
 					"material":0
 				}
 			]
+		},
+		{
+			"name":"Sphere.003",
+			"primitives":[
+				{
+					"attributes":{
+						"POSITION":4,
+						"NORMAL":5,
+						"TEXCOORD_0":6
+					},
+					"indices":7
+				}
+			]
 		}
 	],
 	"textures":[
@@ -198,7 +232,7 @@
 	],
 	"skins":[
 		{
-			"inverseBindMatrices":11,
+			"inverseBindMatrices":15,
 			"joints":[
 				0,
 				2
@@ -244,41 +278,75 @@
 		{
 			"bufferView":4,
 			"componentType":5126,
-			"count":2,
+			"count":128,
 			"max":[
-				9.983333333333333
+				3.9931116104125977,
+				0.190789595246315,
+				3.9931118488311768
 			],
 			"min":[
-				0
+				-3.9931092262268066,
+				-0.38931146264076233,
+				-3.9931118488311768
 			],
-			"type":"SCALAR"
+			"type":"VEC3"
 		},
 		{
 			"bufferView":5,
 			"componentType":5126,
-			"count":2,
+			"count":128,
 			"type":"VEC3"
 		},
 		{
 			"bufferView":6,
 			"componentType":5126,
-			"count":2,
-			"type":"VEC4"
+			"count":128,
+			"type":"VEC2"
 		},
 		{
 			"bufferView":7,
-			"componentType":5126,
-			"count":2,
-			"type":"VEC3"
+			"componentType":5123,
+			"count":372,
+			"type":"SCALAR"
 		},
 		{
 			"bufferView":8,
 			"componentType":5126,
 			"count":2,
-			"type":"VEC3"
+			"max":[
+				9.983333333333333
+			],
+			"min":[
+				0
+			],
+			"type":"SCALAR"
 		},
 		{
 			"bufferView":9,
+			"componentType":5126,
+			"count":2,
+			"type":"VEC3"
+		},
+		{
+			"bufferView":10,
+			"componentType":5126,
+			"count":2,
+			"type":"VEC4"
+		},
+		{
+			"bufferView":11,
+			"componentType":5126,
+			"count":2,
+			"type":"VEC3"
+		},
+		{
+			"bufferView":12,
+			"componentType":5126,
+			"count":2,
+			"type":"VEC3"
+		},
+		{
+			"bufferView":13,
 			"componentType":5126,
 			"count":600,
 			"max":[
@@ -290,13 +358,13 @@
 			"type":"SCALAR"
 		},
 		{
-			"bufferView":10,
+			"bufferView":14,
 			"componentType":5126,
 			"count":600,
 			"type":"VEC4"
 		},
 		{
-			"bufferView":11,
+			"bufferView":15,
 			"componentType":5126,
 			"count":2,
 			"type":"MAT4"
@@ -329,43 +397,67 @@
 		},
 		{
 			"buffer":0,
+			"byteLength":1536,
+			"byteOffset":1204,
+			"target":34962
+		},
+		{
+			"buffer":0,
+			"byteLength":1536,
+			"byteOffset":2740,
+			"target":34962
+		},
+		{
+			"buffer":0,
+			"byteLength":1024,
+			"byteOffset":4276,
+			"target":34962
+		},
+		{
+			"buffer":0,
+			"byteLength":744,
+			"byteOffset":5300,
+			"target":34963
+		},
+		{
+			"buffer":0,
 			"byteLength":8,
-			"byteOffset":1204
+			"byteOffset":6044
 		},
 		{
 			"buffer":0,
 			"byteLength":24,
-			"byteOffset":1212
+			"byteOffset":6052
 		},
 		{
 			"buffer":0,
 			"byteLength":32,
-			"byteOffset":1236
+			"byteOffset":6076
 		},
 		{
 			"buffer":0,
 			"byteLength":24,
-			"byteOffset":1268
+			"byteOffset":6108
 		},
 		{
 			"buffer":0,
 			"byteLength":24,
-			"byteOffset":1292
+			"byteOffset":6132
 		},
 		{
 			"buffer":0,
 			"byteLength":2400,
-			"byteOffset":1316
+			"byteOffset":6156
 		},
 		{
 			"buffer":0,
 			"byteLength":9600,
-			"byteOffset":3716
+			"byteOffset":8556
 		},
 		{
 			"buffer":0,
 			"byteLength":128,
-			"byteOffset":13316
+			"byteOffset":18156
 		}
 	],
 	"samplers":[
@@ -376,7 +468,7 @@
 	],
 	"buffers":[
 		{
-			"byteLength":13444,
+			"byteLength":18284,
 			"uri":"portal.bin"
 		}
 	]
