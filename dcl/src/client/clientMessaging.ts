@@ -4,13 +4,13 @@ import { Outfit } from "src/shared/types"
 import { ClientStore } from "./clientStore"
 import { MessageType, room } from "src/shared/room"
 
-const clientStore = ClientStore.getInstance()
-
 export namespace ClientMessaging {
 
 
 	// MARK: Request Outfit Change
 	export function RequestOutfitChange() {
+		const clientStore = ClientStore.getInstance()
+
 		// Ignore if we're not enrolled in the game
 		if (!clientStore.isEnrolledInGame()) return
 
@@ -26,6 +26,8 @@ export namespace ClientMessaging {
 
 	// MARK: Request Join Game
 	export function RequestJoinGame() {
+		const clientStore = ClientStore.getInstance()
+
 		// Ignore if we're already enrolled in the game
 		//if (clientStore.isEnrolledInGame()) return
 
@@ -38,6 +40,8 @@ export namespace ClientMessaging {
 
 	// MARK: Request Add Vote
 	export function RequestAddVote(userId: string) {
+		const clientStore = ClientStore.getInstance()
+
 		// Ignore if we're not enrolled in the game
 		if (!clientStore.isEnrolledInGame()) return
 
@@ -47,6 +51,8 @@ export namespace ClientMessaging {
 
 	// MARK: Request Remove Vote
 	export function RequestRemoveVote(userId: string) {
+		const clientStore = ClientStore.getInstance()
+
 		// Ignore if we're not enrolled in the game
 		if (!clientStore.isEnrolledInGame()) return
 
