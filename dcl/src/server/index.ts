@@ -1,8 +1,9 @@
+import * as utils from "@dcl-sdk/utils"
+
+import { GameSettings } from "src/shared/settings"
 import { serverHandler } from "./serverHandler"
 import { gameManager } from "./gameManager"
 import { sendServerTime } from "./serverMessaging"
-import { GameSettings } from "src/shared/settings"
-import * as utils from "@dcl-sdk/utils"
 import { ServerStore } from "./serverStore"
 
 export async function initServer(): Promise<void> {
