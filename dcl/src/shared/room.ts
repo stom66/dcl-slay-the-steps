@@ -11,6 +11,7 @@ export enum MessageType {
 	REQUEST_REMOVE_VOTE       = 'requestRemoveVote',      // Used by the clients, to notify the server of a vote
 	REQUEST_EMOTE             = 'requestEmote',           // Used by the clients, to notify the server of an emote
 
+	NOTIFY_STATE              = "notifyState",             // Sent by server, to notify the clients of the game state
 	NOTIFY_STATE_LOBBY        = "notifyStateLobby",       // Sent by server, to notify the clients of the lobby state
 	NOTIFY_STATE_STARTING     = "notifyStateStarting",    // Sent by server, to notify the clients of the starting state
 	NOTIFY_STATE_ROUND_START  = "notifyStateRoundStart",  // Sent by server, to notify the clients of the round start state
@@ -19,6 +20,7 @@ export enum MessageType {
 	NOTIFY_PLAYER_LIST        = "notifyPlayerList",       // Sent by server, to notify the clients of the player list
 	NOTIFY_EMOTE              = "notifyEmote",            // Sent by server, to notify the clients of an emote
 	NOTIFY_WARNING            = "notifyWarning",          // Sent by server, to notify the clients of a warning
+	NOTIFY_SERVER_TIME        = "notifyServerTime",       // Sent by server, to notify the clients of the server time
 }
 
 // Message schemas
@@ -46,9 +48,29 @@ const Messages = {
 
 
 	// Sent by server
+	[MessageType.NOTIFY_STATE]: Schemas.Map({
+		status: Schemas.String,
+		gameStartTime: Schemas.Number,
+		outfits: Schemas.Array(Schemas.Map({
+			userId: Schemas.String,
+			wearables: Schemas.Array(Schemas.String),
+			bodyShape: Schemas.String,
+			hairColor: Schemas.Color3,
+			skinColor: Schemas.Color3,
+		})),
+		players: Schemas.Array(Schemas.Map({
+			userId: Schemas.String,
+			displayName: Schemas.String,
+		})),
+		votes: Schemas.Array(Schemas.Map({
+			userId: Schemas.String,
+			vote: Schemas.String,
+		})),
+	}),
 	[MessageType.NOTIFY_STATE_LOBBY]: Schemas.Map({}),
 	[MessageType.NOTIFY_STATE_STARTING]: Schemas.Map({
 		gameStartTime: Schemas.Number,
+		serverTime: Schemas.Number,
 	}),
 	
 	[MessageType.NOTIFY_STATE_ROUND_START]: Schemas.Map({
@@ -87,6 +109,7 @@ const Messages = {
 		emote: Schemas.String,
 	}),
 	[MessageType.NOTIFY_WARNING]: Schemas.String,
+	[MessageType.NOTIFY_SERVER_TIME]: Schemas.Number,
 }
 
 // Register messages and export room
