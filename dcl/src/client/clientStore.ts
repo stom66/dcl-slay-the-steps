@@ -1,11 +1,13 @@
 import { Color3 } from '@dcl/sdk/math'
-import { userProfileCache } from '../shared/utils/userProfileCache'
-import { ClientState, ServerState, Outfit } from '../shared/types'
-import { GameStatus } from '../shared/enums'
-import { Wearable } from './data/shopSlotData'
+
+import { userProfileCache } from 'src/shared/utils/userProfileCache'
+import { ClientState, ServerState, Outfit } from 'src/shared/types'
+import { GameStatus } from 'src/shared/enums'
 import { eventBus } from 'src/shared/utils/eventBus'
-import { ClientEvents } from './clientEvents'
-import { ClientMessaging } from './clientMessaging'
+import { Wearable } from 'src/client/data/shopSlotData'
+
+import { ClientEvents } from 'src/client/clientEvents'
+import { ClientMessaging } from 'src/client/clientMessaging'
 
 // MARK: ClientStore
 export class ClientStore {
@@ -158,6 +160,7 @@ export class ClientStore {
 		}
 	getPlayerOutfit(): Outfit {
 		return {
+			userId   : this.clientState.userId,
 			bodyShape: this.clientState.playerBodyShape,
 			hairColor: this.clientState.playerHairColor,
 			skinColor: this.clientState.playerSkinColor,
@@ -205,6 +208,7 @@ export class ClientStore {
 
 	getNPCOutfit(): Outfit {
 		return {
+			userId   : this.clientState.userId,
 			bodyShape: this.clientState.npcBodyShape,
 			hairColor: this.clientState.npcHairColor,
 			skinColor: this.clientState.npcSkinColor,

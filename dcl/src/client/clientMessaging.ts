@@ -1,8 +1,8 @@
 // Handles messages sent from the client, to the server
 
-import { Outfit } from "src/shared/types"
-import { ClientStore } from "./clientStore"
-import { MessageType, room } from "src/shared/room"
+import { Outfit } from 'src/shared/types'
+import { ClientStore } from 'src/client/clientStore'
+import { MessageType, room } from 'src/shared/room'
 
 export namespace ClientMessaging {
 
@@ -16,6 +16,7 @@ export namespace ClientMessaging {
 
 		// Let the server know about the new outfit
 		const outfit: Outfit = {
+			userId   : clientStore.getUserId(),
 			wearables: clientStore.getNPCWearables().map(w => w.urn),
 			bodyShape: clientStore.getNPCBodyShape(),
 			hairColor: clientStore.getNPCHairColor(),

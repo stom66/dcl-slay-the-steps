@@ -1,33 +1,36 @@
-import { ClientStore } from "./clientStore";
+import { ClientStore } from "src/client/clientStore";
+import { ClientHandler } from "src/client/clientHandler";
+import { gameStateHandler } from "src/client/gameStateHandler";
 
-import { ClientHandler } from "./clientHandler";
-import { SetupColorPickers } from "./colorPickers";
-import { gameStateHandler } from "./gameStateHandler";
-import { ShopManager } from "./shopManager";
-import { SetupUI } from "./ui";
-import { OutfitManager } from "./outfitManager";
-import { SpawnGameHostNPC } from "./npcGameHost";
-import { SetupLights } from "./lights";
-import { MannequinManager } from "./mannequinManager";
-import { SetupPortal } from "./portal";
+import { CameraController } from "src/client/cameraController";
+import { MannequinManager } from "src/client/mannequinManager";
+import { OutfitManager } from "src/client/outfitManager";
+import { ShopManager } from "src/client/shopManager";
+import { SoundManager } from "src/client/soundManager";
+
+import { SetupColorPickers } from "src/client/colorPickers";
+import { SetupGameHostNPC } from "src/client/npcGameHost";
+import { SetupLights } from "src/client/lights";
+import { SetupPortal } from "src/client/portal";
+import { SetupUI } from "src/client/ui";
+
 
 export async function initClient() {
 
 	const store = ClientStore.getInstance()
 	await store.init()
-
 	ClientHandler.init()
 	gameStateHandler.init()
 
-	ShopManager.init()
-	OutfitManager.init()
+	CameraController.init()
 	MannequinManager.init()
+	OutfitManager.init()
+	SoundManager.init()
+	ShopManager.init()
 
-	SetupPortal()
-	
-	SpawnGameHostNPC()
-	SetupLights()
 	SetupColorPickers()
-
+	SetupGameHostNPC()
+	SetupLights()
+	SetupPortal()
 	SetupUI()
 }

@@ -1,35 +1,20 @@
 import { getPlayer } from "@dcl/sdk/players"
-import * as utils from '@dcl-sdk/utils'
-import { AvatarBase, AvatarEquippedData, AvatarShape, Billboard, BillboardMode, engine, Entity, GltfContainer, InputAction, pointerEventsSystem, Transform } from "@dcl/sdk/ecs"
-import { Color3, Quaternion, Vector3 } from "@dcl/sdk/math"
+import { AvatarBase, AvatarEquippedData, engine, Entity } from "@dcl/sdk/ecs"
+import { Color3 } from "@dcl/sdk/math"
 
-import { Wearable } from "./data/shopSlotData"
-import { Outfit } from "../shared/types"
-import { MessageType, room } from "../shared/room"
-import { ClientStore } from "./clientStore"
-import { GetWearableData } from "./utils"
 import { eventBus } from "src/shared/utils/eventBus"
-import { ClientEvents } from "./clientEvents"
-import { ClientMessaging } from "./clientMessaging"
-
-//const sceneMessageBus = new MessageBus()
+import { GetWearableData } from "src/client/utils"
+import { Wearable } from "src/client/data/shopSlotData"
+import { ClientStore } from "src/client/clientStore"
+import { ClientEvents } from "src/client/clientEvents"
+import { ClientMessaging } from "src/client/clientMessaging"
 
 
 export namespace OutfitManager {
 	
-	var userData            : undefined | any        = undefined
-	var npcRoot             : undefined | Entity     = undefined
-	var npcBillboard        : undefined | Entity     = undefined
-	var npcMannequin        : undefined | Entity     = undefined
-	var npcPodium           : undefined | Entity     = undefined
-	var npcBtnReset         : undefined | Entity     = undefined
-	var npcBtnCopy          : undefined | Entity     = undefined
-	var npcBtnSwap          : undefined | Entity     = undefined
-
-	var isWearableDataLoaded: boolean                = false
-	var runUpdate           : boolean                = false
-
-	var isNPCMannequinVisible: boolean = true
+	var userData             : undefined | any = undefined
+	var isWearableDataLoaded : boolean         = false
+	var isNPCMannequinVisible: boolean         = true
 
 	const clientStore: ClientStore = ClientStore.getInstance()
 
@@ -82,27 +67,21 @@ export namespace OutfitManager {
 			for (const urn of wearableUrns) {
 				const data = await GetWearableData(urn)
 				playerWearables.push(data)
-				//console.log("OutfitManager: InitUserWearables: got wearable data for", urn, ": ", JSON.stringify(data))
 			}
 			clientStore.setPlayerWearables([...playerWearables])
 			clientStore.setNPCWearables([...playerWearables])
 
 			isWearableDataLoaded = true
 
-			console.log(
-				"OutfitManager InitUserWearables: got",
-				playerWearables.length,
-				"wearables for the player"
-			)
-
 			if (isNPCMannequinVisible) {
 				eventBus.emit(ClientEvents.OUTFIT_CHANGED, {})
-			}
+			} // TODO: Redundandt? event gets triggers by the calls to clientStore above, so this might not be needed
+
+			console.log("OutfitManager InitUserWearables: got", playerWearables.length, "wearables for the player")
 		} catch (err) {
 			console.error("OutfitManager InitUserWearables: failed to load wearables", err)
 		}
 	}
-
 
 	// MARK: Equip Wearable
 	export async function EquipWearable(wearable: Wearable) {
@@ -140,8 +119,6 @@ export namespace OutfitManager {
 		// Update the client store with the new outfit ands end it to the server
 		ClientMessaging.RequestOutfitChange()
 	}
-
-	
 
 	// MARK: Copy Outfit
 	export function CopyMyOutfit() {

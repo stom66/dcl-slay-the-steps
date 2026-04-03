@@ -3,11 +3,11 @@ import { Color3, Color4, Quaternion, Vector3 } from "@dcl/sdk/math"
 
 import * as utils from '@dcl-sdk/utils'
 
-import { ShopSlot, Wearable } from "./data/shopSlotData"
-import { OutfitManager } from "./outfitManager"
-import { ShopZone, shopZones } from "./data/shopZoneData"
-import { blockedCreatorAddresses, blockedItemURNs, blockedKeywords } from "./data/shopBlockedItems"
-import { FetchZoneItems, hsvToColor3 } from "./utils"
+import { ShopSlot, Wearable } from "src/client/data/shopSlotData"
+import { OutfitManager } from "src/client/outfitManager"
+import { ShopZone, shopZones } from "src/client/data/shopZoneData"
+import { blockedCreatorAddresses, blockedItemURNs, blockedKeywords } from "src/client/data/shopBlockedItems"
+import { FetchZoneItems, hsvToColor3 } from "src/client/utils"
 
 /**
  * Manages shop zones, their items, and UI interactions.

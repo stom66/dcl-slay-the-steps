@@ -30,7 +30,7 @@ export class SceneSettings {
 export class GameSettings {
 	static URL_WEARABLE_DATA_API      = "https://marketplace-api.decentraland.org/v1/items"
 
-	static SERVER_TIME_UPDATE_INTERVAL = (IS_DEBUG ? 5 : 20) * 1000
+	static SERVER_TIME_UPDATE_INTERVAL = (IS_DEBUG ? 15 : 30) * 1000
 
 	static COUNTDOWN_DURATION         = (IS_DEBUG ? 8 : 60) * 1000
 	static ROUND_DURATION_PER_PLAYER  = (IS_DEBUG ? 18: 20) * 1000

@@ -2,10 +2,9 @@ import ReactEcs, { Button, Label, ReactEcsRenderer, UiEntity} from '@dcl/sdk/rea
 import { Color4 } from '@dcl/sdk/math'
 import { MessageBus } from '@dcl/sdk/message-bus'
 
-//import { GameManager } from '../gameStateHandler'
-//import { SeatManager } from '../SeatManager'
+import { ClientStore } from 'src/client/clientStore'
+import { SeatManager } from 'src/client/SeatManager'
 import { ShowHowToPlay } from './ui.game.howToPlay'
-import { ClientStore } from '../clientStore'
 
 const clientStore = ClientStore.getInstance()
 
@@ -15,7 +14,7 @@ export function DebugUI() {
 			key="ui_debug_root"
 			uiTransform={{
 				width         : 220,
-				height        : 400,
+				height        : 500,
 				flexDirection : 'column',
 				alignItems    : 'flex-start',
 				justifyContent: 'space-between',
@@ -74,6 +73,16 @@ export function DebugUI() {
 				fontSize    = {14}
 				onMouseDown = {() => {
 					ShowHowToPlay()
+				}}
+			/>
+			<Button
+				key         = "btnToLobby"
+				uiTransform = {{ width: 180, height: 40, margin: 8 }}
+				value       = 'MoveToLobby'
+				variant     = 'primary'
+				fontSize    = {14}
+				onMouseDown = {() => {
+					SeatManager.MovePlayerToLobby()
 				}}
 			/>
 

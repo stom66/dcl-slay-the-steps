@@ -3,6 +3,7 @@ import { GameStatus } from "./enums"
 import { Color3 } from "@dcl/sdk/math"
 
 export type Outfit = {
+	userId   : string
 	wearables: string[]
 	bodyShape: string
 	hairColor: Color3

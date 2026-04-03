@@ -1,5 +1,5 @@
 import { NotifyStatePayload, ServerState } from "src/shared/types"
-import { MessageType, room } from "../shared/room"
+import { MessageType, room } from "src/shared/room"
 import { ServerStore } from "./serverStore"
 
 

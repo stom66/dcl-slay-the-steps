@@ -1,7 +1,7 @@
 import ReactEcs, { UiEntity } from '@dcl/sdk/react-ecs'
 import { Color4 } from '@dcl/sdk/math'
 
-import { ClientStore } from '../clientStore'
+import { ClientStore } from 'src/client/clientStore'
 import { GameStatus } from 'src/shared/enums'
 const clientStore = ClientStore.getInstance()
 
@@ -26,9 +26,9 @@ function getStatusImage() {
 		case GameStatus.ROUND_ACTIVE:
 			return "assets/images/ui/text-game-in-progress.png"
 		case GameStatus.VOTING:
-			return "assets/images/ui/text-voting-in-progress.png"
+			return "assets/images/ui/text-voting.png"
 		case GameStatus.GAME_ENDED:
-			return "assets/images/ui/text-voting-finished.png"
+			return "assets/images/ui/text-vote-results.png"
 	}
 }
 

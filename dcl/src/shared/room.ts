@@ -1,6 +1,7 @@
 import { registerMessages } from '@dcl/sdk/network'
 import { Schemas } from '@dcl/sdk/ecs'
 import { GameStatus } from './enums'
+import { userProfileCache } from './utils/userProfileCache'
 
 // Message type enum
 export enum MessageType {
@@ -30,6 +31,7 @@ const Messages = {
 	[MessageType.REQUEST_JOIN_GAME]    : Schemas.Map({
 		displayName: Schemas.String,
 		outfit     : Schemas.Map({
+			userId   : Schemas.String,
 			wearables: Schemas.Array(Schemas.String),
 			bodyShape: Schemas.String,
 			hairColor: Schemas.Color3,
@@ -37,6 +39,7 @@ const Messages = {
 		}),
 	}),
 	[MessageType.REQUEST_OUTFIT_UPDATE]: Schemas.Map({
+		userId   : Schemas.String,
 		wearables: Schemas.Array(Schemas.String),
 		bodyShape: Schemas.String,
 		hairColor: Schemas.Color3,

@@ -1,10 +1,9 @@
 import { AvatarShape, Billboard, BillboardMode, engine, GltfContainer, InputAction, pointerEventsSystem, Transform } from "@dcl/sdk/ecs"
 import { Color3, Quaternion, Vector3 } from "@dcl/sdk/math"
-import { MessageType, room } from "../shared/room"
-import { ClientStore } from "./clientStore"
-import { ClientMessaging } from "./clientMessaging"
 
-export function SpawnGameHostNPC() {
+import { ClientMessaging } from "src/client/clientMessaging"
+
+export function SetupGameHostNPC() {
 	const position = Vector3.create(16, 0.4, 16)
 
 	// Create the podium
@@ -36,7 +35,6 @@ export function SpawnGameHostNPC() {
 
 
 	// Create the NPC, parented to the podium, which has a billboard component
-
 	const npcHost = engine.addEntity()
 	Transform.create(npcHost, {
 		parent: podium,

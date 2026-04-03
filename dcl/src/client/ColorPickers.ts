@@ -1,10 +1,10 @@
-import { EasingFunction, engine, Entity, GltfContainer, GltfNodeModifiers, InputAction, Material, MaterialTransparencyMode, MeshRenderer, PBMaterial_PbrMaterial, pointerEventsSystem, PrimaryPointerInfo, RaycastQueryType, raycastSystem, Transform, Tween } from "@dcl/sdk/ecs"
-import { Color3, Color4, Quaternion, Vector3 } from "@dcl/sdk/math"
+import { EasingFunction, engine, Entity, GltfContainer, GltfNodeModifiers, InputAction, Material, MaterialTransparencyMode, MeshRenderer, PBMaterial_PbrMaterial, pointerEventsSystem, PrimaryPointerInfo, RaycastQueryType, raycastSystem, Transform, Tween } from '@dcl/sdk/ecs'
+import { Color3, Color4, Quaternion, Vector3 } from '@dcl/sdk/math'
 
 import * as utils from '@dcl-sdk/utils'
-import { hsvToColor3 } from "./utils"
+import { hsvToColor3 } from 'src/client/utils'
 
-import { OutfitManager } from "./outfitManager"
+import { OutfitManager } from 'src/client/outfitManager'
 
 type ColorPickerConfig = {
 	callback       : (color:  Color3) => void,

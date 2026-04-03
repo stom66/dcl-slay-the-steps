@@ -1,4 +1,4 @@
-import { initClient } from "./client/index";
+import { initClient } from "src/client/client/index";
 import { initServer } from "./server/index";
 
 import { isServer } from "@dcl/sdk/network";

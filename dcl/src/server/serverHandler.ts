@@ -1,7 +1,7 @@
-import { Outfit } from '../shared/types'
+import { Outfit } from 'src/shared/types'
 import { ServerStore } from './serverStore'
-import { MessageType, room } from '../shared/room'
-import { eventBus } from '../shared/utils/eventBus'
+import { MessageType, room } from 'src/shared/room'
+import { eventBus } from 'src/shared/utils/eventBus'
 import { gameManager } from './gameManager'
 import { sendStateUpdate } from './serverMessaging'
 

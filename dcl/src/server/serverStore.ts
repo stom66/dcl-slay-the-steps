@@ -1,5 +1,5 @@
-import { GameStatus } from "../shared/enums"
-import { Outfit, ServerState } from "../shared/types"
+import { GameStatus } from "src/shared/enums"
+import { Outfit, ServerState } from "src/shared/types"
 
 export class ServerStore {
 	private static instance: ServerStore | undefined

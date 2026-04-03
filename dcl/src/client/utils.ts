@@ -1,8 +1,8 @@
 import { Color3, Vector3 } from "@dcl/sdk/math"
-import { GameSettings } from "../shared/settings"
+import { GameSettings } from "src/shared/settings"
 
-import { Wearable } from "./data/shopSlotData"
-import { ShopZone } from "./data/shopZoneData"
+import { Wearable } from "src/client/data/shopSlotData"
+import { ShopZone } from "src/client/data/shopZoneData"
 
 
 

@@ -1,15 +1,15 @@
 import { ReactEcsRenderer } from '@dcl/sdk/react-ecs'
 
-import { DebugUI } from './ui/ui.debug'
+import { DebugUI } from 'src/client/ui/ui.debug'
 
-import { GameStatusUI } from './ui/ui.game.gameStatus'
-//import { EmotesHintUI } from './ui/ui.game.emotes'
-import { HowToPlayUI } from './ui/ui.game.howToPlay'
-import { PlayerListUI } from './ui/ui.game.playerList'
-//import { VotingOptionsUI } from './ui/ui.game.votingOptions'
-//import { VotingResultsUI } from './ui/ui.game.votingResults'
-import { WarningUI } from './ui/ui.game.warning'
-//import { YouAreNextUI } from './ui/ui.game.youAreNext'
+import { GameStatusUI } from 'src/client/ui/ui.game.gameStatus'
+//import { EmotesHintUI } from 'src/client/ui/ui.game.emotes'
+import { HowToPlayUI } from 'src/client/ui/ui.game.howToPlay'
+import { PlayerListUI } from 'src/client/ui/ui.game.playerList'
+//import { VotingOptionsUI } from 'src/client/ui/ui.game.votingOptions'
+//import { VotingResultsUI } from 'src/client/ui/ui.game.votingResults'
+import { WarningUI } from 'src/client/ui/ui.game.warning'
+import { YouAreNextUI } from 'src/client/ui/ui.game.youAreNext'
 
 declare var process: {
 	env: {
@@ -25,7 +25,7 @@ const uiComponent = () => [
 	//VotingResultsUI(),
 	PlayerListUI(),
 	WarningUI(),
-	//YouAreNextUI(),
+	YouAreNextUI(),
 	HowToPlayUI(),
 	//EmotesHintUI(),
 	SHOW_DEBUG ? DebugUI() : null

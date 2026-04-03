@@ -1,11 +1,12 @@
 import ReactEcs, { Label, UiEntity } from '@dcl/sdk/react-ecs'
 import { Color4 } from '@dcl/sdk/math'
 
-import { userProfileCache } from '../../shared/utils/userProfileCache'
-import { GetBackgroundTexture } from '../utils'
 import { eventBus } from 'src/shared/utils/eventBus'
-import { ClientStore } from '../clientStore'
-import { ClientEvents } from '../clientEvents'
+import { userProfileCache } from 'src/shared/utils/userProfileCache'
+
+import { GetBackgroundTexture } from 'src/client/utils'
+import { ClientStore } from 'src/client/clientStore'
+import { ClientEvents } from 'src/client/clientEvents'
 
 
 // Placeholders for dynamic content

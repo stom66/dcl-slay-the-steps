@@ -3,9 +3,9 @@ import { Quaternion, Vector3 } from "@dcl/sdk/math"
 
 import { eventBus } from "src/shared/utils/eventBus"
 
-import { ClientEvents } from "./clientEvents"
-import { ClientStore } from "./clientStore"
-import { OutfitManager } from "./outfitManager"
+import { ClientEvents } from "src/client/clientEvents"
+import { ClientStore } from "src/client/clientStore"
+import { OutfitManager } from "src/client/outfitManager"
 
 
 export namespace MannequinManager {
@@ -35,7 +35,7 @@ export namespace MannequinManager {
 
 
 	// MARK: Show NPC Mannequin
-	function ShowNPCMannequin() {
+	export function ShowNPCMannequin() {
 		isNPCMannequinVisible = true
 
 		const position = Vector3.create(1.5, 0.25, 0)
@@ -168,7 +168,7 @@ export namespace MannequinManager {
 	}
 
 	// MARK: Hide NPC Mannequin
-	function HideNPCMannequin() {
+	export function HideNPCMannequin() {
 		isNPCMannequinVisible = false
 
 		if (npcMannequin) {

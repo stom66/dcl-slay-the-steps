@@ -2,7 +2,7 @@ import { Color4 } from '@dcl/sdk/math'
 import ReactEcs, { Button, Label, UiEntity } from '@dcl/sdk/react-ecs'
 
 import { eventBus } from 'src/shared/utils/eventBus'
-import { ClientEvents } from '../clientEvents'
+import { ClientEvents } from 'src/client/clientEvents'
 
 
 // Placeholders for dynamic content

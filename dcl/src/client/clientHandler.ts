@@ -1,11 +1,11 @@
-import { eventBus } from "../shared/utils/eventBus";
-import { MessageType, room } from "../shared/room";
-import { clockSync } from "../shared/utils/clockSync";
+import { eventBus } from 'src/shared/utils/eventBus';
+import { MessageType, room } from 'src/shared/room';
+import { clockSync } from 'src/shared/utils/clockSync';
 
-import { NotifyPlayerListPayload, NotifyStatePayload, Outfit, ServerState } from "../shared/types";
-import { ClientEvents } from "./clientEvents";
-import { ClientStore } from "./clientStore";
-import { GameStatus } from "src/shared/enums";
+import { NotifyPlayerListPayload, NotifyStatePayload, Outfit, ServerState } from 'src/shared/types';
+import { ClientEvents } from 'src/client/clientEvents';
+import { ClientStore } from 'src/client/clientStore';
+import { GameStatus } from 'src/shared/enums';
 
 const clientStore = ClientStore.getInstance()
 
