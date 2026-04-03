@@ -1,6 +1,14 @@
 import { AudioSource, engine, Entity, Transform } from "@dcl/sdk/ecs"
 import * as utils from '@dcl-sdk/utils'
 
+import { GameStatus } from 'src/shared/enums'
+import { NotifyStatePayload } from 'src/shared/types'
+import { eventBus } from 'src/shared/utils/eventBus'
+
+import { ClientEvents } from 'src/client/clientEvents'
+import { sfx } from 'src/client/data/sfx'
+
+
 export namespace SoundManager {
 	const bgm_src = "assets/sfx/bgm.mp3"
 	let bgm: Entity
@@ -10,6 +18,26 @@ export namespace SoundManager {
 	let fadingIn     = false
 	let fadeElapsed  = 0
 	let volume       = 0.5
+
+	var lastPlayedSfx: string | undefined = undefined
+	var sfxCache: Record<string, Entity> = {}	
+
+	// Start the music when the game starts
+	eventBus.on(ClientEvents.NOTIFY_STATE, (data: NotifyStatePayload) => {
+		if (data.status == GameStatus.STARTED) {
+			StartBGM()
+		}
+	})
+	// Stop the music when the game ends
+	eventBus.on(ClientEvents.NOTIFY_STATE, (data: NotifyStatePayload) => {
+		if (data.status == GameStatus.LOBBY) {
+			StopBGM()
+		}
+	})
+
+	eventBus.on(ClientEvents.NOTIFY_ABORT_GAME, (data) => {
+		StopBGM()
+	})
 	
 	
 	export function init() {
@@ -22,25 +50,70 @@ export namespace SoundManager {
 			global: true,
 			volume: 0.5,
 		})
+
+		preloadSfx()
 	}
 
-	export function PlaySound(sound: string) {
-		const soundEntity = engine.addEntity()
-		Transform.create(soundEntity, {})
-		AudioSource.create(soundEntity, {
-			audioClipUrl: sound,
-			playing: true,
-			global: true,
-			volume: 1.0,
-		})
+	function preloadSfx() {
+		for (const paths of Object.values(sfx)) {
+			for (const soundPath of paths) {
+				const soundEntity = engine.addEntity()
+				Transform.create(soundEntity, {})
+				AudioSource.create(soundEntity, {
+					audioClipUrl: soundPath,
+					playing: false,
+					global: true,
+					volume: 0.5,
+				})
+				sfxCache[soundPath] = soundEntity
+			}
+		}
+	}
 
-		utils.timers.setTimeout(() => {
-			engine.removeEntity(soundEntity)
-		}, 3000) // TODO: Make this dynamic based on the sound duration
+	export function PlaySound(sound: string | string[]) {
+		if (typeof sound === 'string') {
+			sound = [sound]
+		}
+
+		// Choose a random sound, but allow repeating if there's only one option
+		let randomSound: string;
+		if (sound.length === 1) {
+			randomSound = sound[0];
+		} else {
+			do {
+				randomSound = sound[Math.floor(Math.random() * sound.length)];
+			} while (randomSound === lastPlayedSfx && sound.length > 1);
+		}
+		lastPlayedSfx = randomSound;
+
+		console.log("SoundManager: PlaySound: playing sound", randomSound);
+		const soundEntity = sfxCache[randomSound];
+		if (!soundEntity) {
+			console.error("SoundManager: PlaySound: sound entity not found", randomSound);
+			return;
+		}
+		const audioSrc = AudioSource.getMutable(soundEntity);
+		if (!audioSrc) {
+			console.error("SoundManager: PlaySound: audio source not found", randomSound);
+			return;
+		}
+
+		// Always retrigger the sound by toggling `playing` off and on in the next tick
+		audioSrc.playing = false;
+		audioSrc.currentTime = 0;
+
+		// Use a small timeout to ensure the audio system resets (works around retrigger issues)
+		// Sometimes setting playing=false then =true immediately does not retrigger, so do it on next frame
+		setTimeout(() => {
+			const audio = AudioSource.getMutable(soundEntity);
+			if (audio) {
+				audio.playing = true;
+			}
+		}, 0);
 	}
 
 	
-	export function StartBGM() {
+	function StartBGM() {
 		if (!bgm) return
 
 		const audio = AudioSource.getMutableOrNull(bgm)
@@ -53,7 +126,7 @@ export namespace SoundManager {
 		audio.playing = true
 	}
 	
-	export function StopBGM() {
+	function StopBGM() {
 		if (!bgm) return
 		
 		const audio = AudioSource.getMutableOrNull(bgm)
