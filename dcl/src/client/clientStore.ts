@@ -1,37 +1,39 @@
 import { Color3 } from '@dcl/sdk/math'
 
 import { userProfileCache } from 'src/shared/utils/userProfileCache'
-import { ClientState, ServerState, Outfit } from 'src/shared/types'
+import { ClientState, ServerState, Outfit, NotifyStatePayload } from 'src/shared/types'
 import { GameStatus } from 'src/shared/enums'
 import { eventBus } from 'src/shared/utils/eventBus'
 import { Wearable } from 'src/client/data/shopSlotData'
 
 import { ClientEvents } from 'src/client/clientEvents'
 import { ClientMessaging } from 'src/client/clientMessaging'
+import { clockSync } from 'src/shared/utils/clockSync'
 
 // MARK: ClientStore
 export class ClientStore {
 	private static instance: ClientStore | undefined
 
 	private clientState: ClientState = {
-		userId         : "",
-		displayName    : "",
-		enrolledInGame : false,
+		userId           : "",
+		displayName      : "",
+		enrolledInGame   : false,
 		currentTurnUserId: "",
-		
-		playerBodyShape: "",
-		playerHairColor: Color3.Red(),
-		playerSkinColor: Color3.Red(),
-		playerWearables: [] as Wearable[],
 
-		npcBodyShape   : "",
-		npcHairColor   : Color3.Green(),
-		npcSkinColor   : Color3.Green(),
-		npcWearables   : [] as Wearable[],
+		playerBodyShape  : "",
+		playerHairColor  : Color3.Red(),
+		playerSkinColor  : Color3.Red(),
+		playerWearables  : [] as Wearable[],
 
-		gameStartTime: 0,
-		serverStatus : GameStatus.LOBBY,
-		playersInGame: new Map<string, string>(),
+		npcBodyShape     : "",
+		npcHairColor     : Color3.Green(),
+		npcSkinColor     : Color3.Green(),
+		npcWearables     : [] as Wearable[],
+
+		gameStartTime    : 0,
+		playersInGame    : new Map<string, string>(),
+		serverStatus     : GameStatus.LOBBY,
+		voteResults      : new Map<string, string>(),
 	}
 	
 	private constructor() {
@@ -65,10 +67,31 @@ export class ClientStore {
 
 
 	// MARK: ClientState
-	getClientState(): ClientState {
-		return this.clientState
+	setClientState(data: NotifyStatePayload): void {
+		this.setGameStartTime(clockSync.toLocalTime(data.gameStartTime))
+		this.setPlayers(new Map(data.players.map(p => [p.userId, p.displayName])))
+		this.setServerStatus(data.status as GameStatus)
+		this.setEnrolledInGame(data.players.some(p => p.userId === this.getUserId()))
+		this.setVoteResults(new Map(data.voteResults.map((p) => [p.userId, p.voteFor])))
+		this.setCurrentTurnUserId(undefined)
+	}
+		getClientState(): ClientState {
+			return this.clientState
+		}
+
+
+
+	// MARK: User data
+	getUserId(): string {
+		return this.clientState.userId
+	}
+	getDisplayName(): string {
+		return this.clientState.displayName
 	}
 
+
+
+	// MARK: Enrolled
 	setEnrolledInGame(enrolled: boolean): void {
 		this.clientState.enrolledInGame = enrolled
 	}
@@ -76,6 +99,9 @@ export class ClientStore {
 			return this.clientState.enrolledInGame
 		}
 
+
+
+	// MARK: Current Turn User ID
 	setCurrentTurnUserId(userId: string | undefined): void {
 		this.clientState.currentTurnUserId = userId
 	}
@@ -83,10 +109,16 @@ export class ClientStore {
 			return this.clientState.currentTurnUserId
 		}
 
+
+
+	// MARK: IsMyTurn
 	isMyTurn(): boolean {
 		return this.clientState.currentTurnUserId == this.clientState.userId
 	}
 
+
+
+	// MARK: Server Status
 	setServerStatus(status: GameStatus): void {
 		this.clientState.serverStatus = status
 	}
@@ -94,6 +126,9 @@ export class ClientStore {
 			return this.clientState.serverStatus
 		}
 
+
+
+	// MARK: Game Start Time
 	setGameStartTime(gameStartTime: number): void {
 		this.clientState.gameStartTime = gameStartTime
 	}
@@ -102,6 +137,7 @@ export class ClientStore {
 		}
 
 
+	// MARK: Players
 	setPlayers(players: Map<string, string>): void {
 		this.clientState.playersInGame = players
 		this.clientState.enrolledInGame = players.has(this.clientState.userId)
@@ -113,18 +149,17 @@ export class ClientStore {
 
 
 
-	// MARK: User data
-	getUserId(): string {
-		return this.clientState.userId
+	// MARK: Vote Results
+	setVoteResults(voteResults: Map<string, string>): void {
+		this.clientState.voteResults = voteResults
 	}
-
-	getDisplayName(): string {
-		return this.clientState.displayName
-	}
-
+		getVoteResults(): Map<string, string> {
+			return this.clientState.voteResults
+		}
 
 
-	// MARK: Player Set/Getters
+
+	// MARK: Player Outfit Set/Getters
 	setPlayerSkinColor(color: Color3): void {
 		this.clientState.playerSkinColor = color
 	}
