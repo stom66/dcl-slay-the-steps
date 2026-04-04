@@ -8,6 +8,8 @@ import { Wearable } from "src/client/data/shopSlotData"
 import { ClientStore } from "src/client/clientStore"
 import { ClientEvents } from "src/client/clientEvents"
 import { ClientMessaging } from "src/client/clientMessaging"
+import { SoundManager } from "./soundManager"
+import { sfx } from "./data/sfx"
 
 
 export namespace OutfitManager {
@@ -99,6 +101,8 @@ export namespace OutfitManager {
 		// Add the new wearable to the npc wearables
 		currentWearables.push(wearable)
 		clientStore.setNPCWearables([...currentWearables])
+
+		SoundManager.PlaySound(sfx.equipWearable)
 	}
 
 	// MARK: Set Hair Color

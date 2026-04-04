@@ -5,8 +5,9 @@ import { GameStatus } from 'src/shared/enums'
 import { ClientState, NotifyStatePayload } from 'src/shared/types'
 import { eventBus } from 'src/shared/utils/eventBus'
 
-import { ClientEvents } from 'src/client/clientEvents'
 import { sfx } from 'src/client/data/sfx'
+import { ClientEvents } from 'src/client/clientEvents'
+import { ClientStore } from "src/client/clientStore"
 
 
 export namespace SoundManager {
@@ -22,6 +23,8 @@ export namespace SoundManager {
 	var lastPlayedSfx: string | undefined = undefined
 	var sfxCache: Record<string, Entity> = {}	
 
+	const clientStore = ClientStore.getInstance()
+
 	// Start the music when the game starts
 	eventBus.on(ClientEvents.NOTIFY_STATE, (data: ClientState) => {
 		if (data.serverStatus == GameStatus.STARTED) {
@@ -29,6 +32,9 @@ export namespace SoundManager {
 		}
 		if (data.serverStatus == GameStatus.LOBBY) {
 			StopBGM()
+		}
+		if (data.serverStatus == GameStatus.STARTING) {
+			DoCountdown(data.gameStartTime)
 		}
 	})
 
@@ -109,7 +115,17 @@ export namespace SoundManager {
 		}, 0);
 	}
 
-	
+	function DoCountdown(gameStartTime: number) {
+		const COUNT_LAST_N_SECOND = 5
+		const timeNow = Date.now()
+		for (var i=1; i <= COUNT_LAST_N_SECOND; i++) {
+			const delay = gameStartTime - timeNow - (i * 1000)
+			utils.timers.setTimeout(() => {
+				PlaySound(sfx.countdown)
+			}, delay)
+		}
+	}
+
 	function StartBGM() {
 		if (!bgm) return
 

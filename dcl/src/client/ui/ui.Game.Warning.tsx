@@ -1,8 +1,13 @@
 import { Color4 } from '@dcl/sdk/math'
 import ReactEcs, { Button, Label, UiEntity } from '@dcl/sdk/react-ecs'
 
+import { GameStatus } from 'src/shared/enums'
+import { ClientState, NotifyStatePayload } from 'src/shared/types'
 import { eventBus } from 'src/shared/utils/eventBus'
+
 import { ClientEvents } from 'src/client/clientEvents'
+import { SoundManager } from '../soundManager'
+import { sfx } from '../data/sfx'
 
 
 // Placeholders for dynamic content
@@ -11,6 +16,13 @@ var visibleWarning: boolean = false
 
 eventBus.on(ClientEvents.NOTIFY_WARNING, (text: string) => {
 	ShowWarning(text)
+	SoundManager.PlaySound(sfx.warning)
+})
+
+eventBus.on(ClientEvents.NOTIFY_STATE, (data: ClientState) => {
+	if (data.serverStatus == GameStatus.ROUND_ACTIVE) {
+		HideWarning()
+	}
 })
 
 

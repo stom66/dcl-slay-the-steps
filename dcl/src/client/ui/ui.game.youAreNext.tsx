@@ -3,7 +3,16 @@ import * as utils from '@dcl-sdk/utils'
 
 
 import { GameSettings } from 'src/shared/settings'
+import { eventBus } from 'src/shared/utils/eventBus'
+import { sfx } from 'src/client/data/sfx'
+import { ClientEvents } from 'src/client/clientEvents'
+import { SoundManager } from 'src/client/soundManager'
 
+
+eventBus.on(ClientEvents.NOTIFY_TURN_STARTING_SOON, () => {
+	ShowYouAreNext()
+	SoundManager.PlaySound(sfx.turnStartsSoon)
+})
 
 // Placeholders for dynamic content
 export var visibleYouAreNext: boolean = false
@@ -15,7 +24,7 @@ export function ShowYouAreNext(ignoreInterval: boolean = false) {
 	let timeout = ignoreInterval ? GameSettings.YOU_ARE_NEXT_PREEMPT_TIME : GameSettings.YOU_ARE_NEXT_PREEMPT_TIME + GameSettings.ROUND_INTERVAL
 	utils.timers.setTimeout(() => {
 		HideYouAreNext()
-	}, timeout * 1000)
+	}, timeout)
 }
 
 export function HideYouAreNext() {
