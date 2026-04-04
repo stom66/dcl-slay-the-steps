@@ -23,14 +23,14 @@ export namespace SoundManager {
 	var lastPlayedSfx: string | undefined = undefined
 	var sfxCache: Record<string, Entity> = {}	
 
-	const clientStore = ClientStore.getInstance()
+	//const clientStore = ClientStore.getInstance()
 
 	// Start the music when the game starts
 	eventBus.on(ClientEvents.NOTIFY_STATE, (data: ClientState) => {
 		if (data.serverStatus == GameStatus.STARTED) {
 			StartBGM()
 		}
-		if (data.serverStatus == GameStatus.LOBBY) {
+		if (data.serverStatus == GameStatus.GAME_ENDED) {
 			StopBGM()
 		}
 		if (data.serverStatus == GameStatus.STARTING) {
