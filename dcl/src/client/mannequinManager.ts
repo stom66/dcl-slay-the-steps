@@ -1,25 +1,34 @@
 import { AvatarShape, Billboard, BillboardMode, engine, Entity, GltfContainer, InputAction, pointerEventsSystem, Transform } from "@dcl/sdk/ecs"
 import { Quaternion, Vector3 } from "@dcl/sdk/math"
+import * as utils from "@dcl-sdk/utils"
 
 import { eventBus } from "src/shared/utils/eventBus"
 
+import { sfx } from "src/client/data/sfx"
 import { ClientEvents } from "src/client/clientEvents"
 import { ClientStore } from "src/client/clientStore"
 import { OutfitManager } from "src/client/outfitManager"
+import { SoundManager } from "./soundManager"
 
 
 export namespace MannequinManager {
+	// MARK: Event bindings
+	eventBus.on(ClientEvents.OUTFIT_CHANGED, () => {
+		console.log("MannequinManager: OUTFIT_CHANGED event received")
+		ShowNPCMannequin()
+	})
+
 	
 	// MARK: Vars
-	var npcRoot             : undefined | Entity     = undefined
-	var npcBillboard        : undefined | Entity     = undefined
-	var npcMannequin        : undefined | Entity     = undefined
-	var npcPodium           : undefined | Entity     = undefined
-	var npcBtnReset         : undefined | Entity     = undefined
-	var npcBtnCopy          : undefined | Entity     = undefined
-	var npcBtnSwap          : undefined | Entity     = undefined
+	var npcRoot              : undefined | Entity = undefined
+	var npcBillboard         : undefined | Entity = undefined
+	var npcMannequin         : undefined | Entity = undefined
+	var npcPodium            : undefined | Entity = undefined
+	var npcBtnReset          : undefined | Entity = undefined
+	var npcBtnCopy           : undefined | Entity = undefined
+	var npcBtnSwap           : undefined | Entity = undefined
 
-	var isNPCMannequinVisible: boolean = true
+	var isNPCMannequinVisible: boolean            = true
 
 	const clientStore: ClientStore = ClientStore.getInstance()
 
@@ -27,23 +36,21 @@ export namespace MannequinManager {
 	// MARK: Init
 	export function init() {
 		console.log("MannequinManager: init")
-
-		eventBus.on(ClientEvents.OUTFIT_CHANGED, () => {
-			ShowNPCMannequin()
-		})
 		
-		ShowNPCMannequin()
+		//ShowNPCMannequin()
 	}
 
 
 	// MARK: Show NPC Mannequin
 	export function ShowNPCMannequin() {
+		console.log("MannequinManager: ShowNPCMannequin")
 		isNPCMannequinVisible = true
 
 		const position = Vector3.create(1.5, 0.25, 0)
 
 		// Create the root element for the NPC Mannequin
-		if (!npcRoot) {
+		if (!npcRoot || !Transform.getMutableOrNull(npcRoot)) {
+			console.log("MannequinManager: ShowNPCMannequin: creating missing npcRoot")
 			npcRoot = engine.addEntity()
 			Transform.createOrReplace(npcRoot, {
 				position: position,
@@ -54,7 +61,8 @@ export namespace MannequinManager {
 		}
 
 		// Create the mannequin
-		if (!npcMannequin) {
+		if (!npcMannequin || !Transform.getMutableOrNull(npcMannequin)) {
+			console.log("MannequinManager: ShowNPCMannequin: creating missing npcMannequin")
 			npcMannequin = engine.addEntity()
 
 			Transform.create(npcMannequin, {
@@ -63,10 +71,9 @@ export namespace MannequinManager {
 			})
 		}
 
-		console.log("MannequinManager: ShowNPCMannequin: Updating AvatarShape")
 		AvatarShape.createOrReplace(npcMannequin, {
 			id       : "npc_mannequin    ", // Trailing spaces are required to hide the nametag above the NPC
-			name     : "",
+			name     : "    ",
 			bodyShape: clientStore.getNPCBodyShape(),
 			wearables: clientStore.getNPCWearables()?.map(w => w.urn) ?? [],
 			emotes   : [],
@@ -75,7 +82,7 @@ export namespace MannequinManager {
 		})
 
 		// Creat the billboard entity - anything which should always rotate to face the player gets parented to this
-		if (!npcBillboard) {
+		if (!npcBillboard || !Transform.getMutableOrNull(npcBillboard)) {
 			npcBillboard = engine.addEntity()
 			Transform.create(npcBillboard, {
 				parent: npcRoot,
@@ -86,7 +93,7 @@ export namespace MannequinManager {
 		}
 
 		// Create the podium
-		if (!npcPodium) {
+		if (!npcPodium || !Transform.getMutableOrNull(npcPodium)) {
 			npcPodium = engine.addEntity()
 			Transform.createOrReplace(npcPodium, {
 				parent  : npcBillboard,
@@ -98,7 +105,7 @@ export namespace MannequinManager {
 
 		// MARK: Btn: Reset Outfit
 		// Create the reset button
-		if (!npcBtnReset) {
+		if (!npcBtnReset || !Transform.getMutableOrNull(npcBtnReset)) {
 			npcBtnReset = engine.addEntity()
 			Transform.create(npcBtnReset, {
 				parent  : npcBillboard,
@@ -116,13 +123,16 @@ export namespace MannequinManager {
 						maxDistance: 4,
 					}
 				}, 
-				() => { OutfitManager.RemoveOutfit() }
+				() => { 
+					OutfitManager.RemoveOutfit()
+					SoundManager.PlaySound(sfx.buttons)
+				}
 			)
 		}
 
 		// MARK: Btn: Copy Outfit
 		// Create the copy outfit button
-		if (!npcBtnCopy) {
+		if (!npcBtnCopy || !Transform.getMutableOrNull(npcBtnCopy)) {
 			npcBtnCopy = engine.addEntity()
 			Transform.create(npcBtnCopy, {
 				parent  : npcBillboard,
@@ -140,13 +150,16 @@ export namespace MannequinManager {
 						maxDistance: 4,
 					}
 				}, 
-				() => { OutfitManager.CopyMyOutfit() }
+				() => { 
+					OutfitManager.CopyMyOutfit()
+					SoundManager.PlaySound(sfx.buttons)
+				}
 			)
 		}
 
 		// MARK: Btn: Swap Gender
 		// Create the swap gender
-		if (!npcBtnSwap) {
+		if (!npcBtnSwap || !Transform.getMutableOrNull(npcBtnSwap)) {
 			npcBtnSwap = engine.addEntity()
 			Transform.create(npcBtnSwap, {
 				parent  : npcBillboard,
@@ -164,7 +177,10 @@ export namespace MannequinManager {
 						maxDistance: 4,
 					}
 				}, 
-				() => { OutfitManager.SwapGender() }
+				() => { 
+					OutfitManager.SwapGender()
+					SoundManager.PlaySound(sfx.buttons)
+				}
 			)
 		}
 	}
