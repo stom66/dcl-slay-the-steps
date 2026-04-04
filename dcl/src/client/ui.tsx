@@ -3,7 +3,7 @@ import { ReactEcsRenderer } from '@dcl/sdk/react-ecs'
 import { DebugUI } from 'src/client/ui/ui.debug'
 
 import { GameStatusUI } from 'src/client/ui/ui.game.gameStatus'
-//import { EmotesHintUI } from 'src/client/ui/ui.game.emotes'
+import { EmotesHintUI } from 'src/client/ui/ui.game.emotes'
 import { HowToPlayUI } from 'src/client/ui/ui.game.howToPlay'
 import { PlayerListUI } from 'src/client/ui/ui.game.playerList'
 //import { VotingOptionsUI } from 'src/client/ui/ui.game.votingOptions'
@@ -27,7 +27,7 @@ const uiComponent = () => [
 	WarningUI(),
 	YouAreNextUI(),
 	HowToPlayUI(),
-	//EmotesHintUI(),
+	EmotesHintUI(),
 	SHOW_DEBUG ? DebugUI() : null
 ]
 
