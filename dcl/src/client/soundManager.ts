@@ -2,7 +2,7 @@ import { AudioSource, engine, Entity, Transform } from "@dcl/sdk/ecs"
 import * as utils from '@dcl-sdk/utils'
 
 import { GameStatus } from 'src/shared/enums'
-import { NotifyStatePayload } from 'src/shared/types'
+import { ClientState, NotifyStatePayload } from 'src/shared/types'
 import { eventBus } from 'src/shared/utils/eventBus'
 
 import { ClientEvents } from 'src/client/clientEvents'
@@ -23,14 +23,11 @@ export namespace SoundManager {
 	var sfxCache: Record<string, Entity> = {}	
 
 	// Start the music when the game starts
-	eventBus.on(ClientEvents.NOTIFY_STATE, (data: NotifyStatePayload) => {
-		if (data.status == GameStatus.STARTED) {
+	eventBus.on(ClientEvents.NOTIFY_STATE, (data: ClientState) => {
+		if (data.serverStatus == GameStatus.STARTED) {
 			StartBGM()
 		}
-	})
-	// Stop the music when the game ends
-	eventBus.on(ClientEvents.NOTIFY_STATE, (data: NotifyStatePayload) => {
-		if (data.status == GameStatus.LOBBY) {
+		if (data.serverStatus == GameStatus.LOBBY) {
 			StopBGM()
 		}
 	})
