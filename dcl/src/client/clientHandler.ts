@@ -33,13 +33,7 @@ export namespace ClientHandler {
 		console.log('ClientHandler: handleNotifyState: state', data)
 
 		clockSync.updateOffset(data.sentAt)
-
-		clientStore.setGameStartTime(clockSync.toLocalTime(data.gameStartTime))
-		clientStore.setPlayers(new Map(data.players.map(p => [p.userId, p.displayName])))
-		clientStore.setServerStatus(data.status as GameStatus)
-		clientStore.setEnrolledInGame(data.players.some(p => p.userId === clientStore.getUserId()))
-		
-		clientStore.setCurrentTurnUserId(undefined)
+		clientStore.setClientState(data)
 
 		eventBus.emit(ClientEvents.NOTIFY_STATE, clientStore.getClientState())
 	}
@@ -56,6 +50,7 @@ export namespace ClientHandler {
 		console.log('ClientHandler: handleNotifyTurnStarting')
 		clockSync.updateOffset(data.sentAt)
 		clientStore.setCurrentTurnUserId(data.outfit.userId)
+		clientStore.setServerStatus(GameStatus.ROUND_ACTIVE)
 
 		eventBus.emit(ClientEvents.NOTIFY_TURN_STARTING, data)
 	}
