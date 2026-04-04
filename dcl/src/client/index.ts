@@ -7,6 +7,7 @@ import { MannequinManager } from "src/client/mannequinManager";
 import { OutfitManager } from "src/client/outfitManager";
 import { ShopManager } from "src/client/shopManager";
 import { SoundManager } from "src/client/soundManager";
+import { StageController } from "src/client/stageController";
 
 import { SetupColorPickers } from "src/client/colorPickers";
 import { SetupGameHostNPC } from "src/client/npcGameHost";
@@ -27,6 +28,7 @@ export async function initClient() {
 	OutfitManager.init()
 	SoundManager.init()
 	ShopManager.init()
+	StageController.init()
 
 	SetupColorPickers()
 	SetupGameHostNPC()

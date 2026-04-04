@@ -1,5 +1,5 @@
-import { initClient } from "src/client/client/index";
-import { initServer } from "./server/index";
+import { initClient } from "src/client/index";
+import { initServer } from "src/server/index";
 
 import { isServer } from "@dcl/sdk/network";
 

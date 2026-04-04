@@ -1,10 +1,15 @@
-import { engine, InputModifier } from "@dcl/sdk/ecs"
+import { engine, InputModifier, Transform } from "@dcl/sdk/ecs"
 import { Vector3 } from "@dcl/sdk/math"
 import { movePlayerTo } from "~system/RestrictedActions"
 
 import { GameSettings } from "src/shared/settings"
 import { GetRandomPointInCircle } from "src/client/utils"
 import { CameraController } from "src/client/cameraController"
+import { ClientStore } from "./clientStore"
+import { ClientEvents } from "./clientEvents"
+import { eventBus } from "src/shared/utils/eventBus"
+import { ClientState, NotifyStatePayload } from "src/shared/types"
+import { GameStatus } from "src/shared/enums"
 
 
 export namespace SeatManager {
@@ -27,6 +32,22 @@ export namespace SeatManager {
 		Vector3.create(26.276, 10, 17.115),
 		Vector3.create(24.005, 10, 14.844),
 	]
+
+	const clientStore = ClientStore.getInstance()
+
+	eventBus.on(ClientEvents.NOTIFY_ABORT_GAME, (data) => {
+		if (clientStore.isEnrolledInGame()) {
+			MovePlayerToLobby()
+		}
+	})
+
+	eventBus.on(ClientEvents.NOTIFY_STATE, (data: ClientState) => {
+		if (data.serverStatus == GameStatus.LOBBY) {
+			MovePlayerToLobby()
+		}
+	})
+
+	//MovePlayerToLobby()
 
 
 	export function MovePlayerToSeat(
@@ -55,13 +76,15 @@ export namespace SeatManager {
 
 	
 	export function MovePlayerToLobby() {
-		CameraController.ResetCamera()
+		if (!engine.PlayerEntity) return
+		const playerTransform = Transform.get(engine.PlayerEntity)
+		if (playerTransform.position.y < 5) {
+			return // Player is already in the lobby
+		}
 
 		const randomPoint = GetRandomPointInCircle(Vector3.create(16, 0, 16), 6)
 		console.log("SeatManager: MovePlayerToLobby(): randomPoint", randomPoint.x, randomPoint.y, randomPoint.z)
 
-		// const playerTransform = Transform.getMutable(engine.PlayerEntity) // despite what the docs say, this doesn't work. classic.
-		// playerTransform.position = randomPoint
  		movePlayerTo({
 			newRelativePosition:randomPoint,
 			cameraTarget: GameSettings.LOBBY_SPAWN_LOOK_AT_TARGET
@@ -78,5 +101,4 @@ export namespace SeatManager {
 			}),
 		})
 	}
-
 }

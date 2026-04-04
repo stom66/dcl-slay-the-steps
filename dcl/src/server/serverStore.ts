@@ -10,6 +10,7 @@ export class ServerStore {
 		players      : new Map<string, string>(),
 		status      : GameStatus.LOBBY,
 		votes        : new Map<string, string>(),
+		currentTurnUserId: "",
 	}
 
 	private constructor() {
@@ -80,4 +81,11 @@ export class ServerStore {
 	setGameStartTime(gameStartTime: number): void {
 		this.serverState.gameStartTime = gameStartTime
 	}
+
+	setCurrentTurnUserId(userId: string): void {
+		this.serverState.currentTurnUserId = userId
+	}
+		getCurrentTurnUserId(): string | undefined {
+			return this.serverState.currentTurnUserId
+		}
 }

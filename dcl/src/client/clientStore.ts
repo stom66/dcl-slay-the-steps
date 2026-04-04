@@ -17,6 +17,7 @@ export class ClientStore {
 		userId         : "",
 		displayName    : "",
 		enrolledInGame : false,
+		currentTurnUserId: "",
 		
 		playerBodyShape: "",
 		playerHairColor: Color3.Red(),
@@ -26,15 +27,11 @@ export class ClientStore {
 		npcBodyShape   : "",
 		npcHairColor   : Color3.Green(),
 		npcSkinColor   : Color3.Green(),
-		npcWearables   : [] as Wearable[]
-	}
+		npcWearables   : [] as Wearable[],
 
-	private serverState: ServerState = {
 		gameStartTime: 0,
-		outfits      : new Map<string, Outfit>(),
-		players      : new Map<string, string>(),
-		status       : GameStatus.LOBBY,
-		votes        : new Map<string, string>(),
+		serverStatus : GameStatus.LOBBY,
+		playersInGame: new Map<string, string>(),
 	}
 	
 	private constructor() {
@@ -79,42 +76,39 @@ export class ClientStore {
 			return this.clientState.enrolledInGame
 		}
 
-
-
-	// MARK: ServerState
-	setServerState(state: ServerState): void {
-		this.serverState = state
+	setCurrentTurnUserId(userId: string | undefined): void {
+		this.clientState.currentTurnUserId = userId
 	}
-		getServerState(): ServerState {
-			return this.serverState
+		getCurrentTurnUserId(): string | undefined {
+			return this.clientState.currentTurnUserId
 		}
+
+	isMyTurn(): boolean {
+		return this.clientState.currentTurnUserId == this.clientState.userId
+	}
+
+	setServerStatus(status: GameStatus): void {
+		this.clientState.serverStatus = status
+	}
 		getServerStatus(): GameStatus {
-			return this.serverState.status
+			return this.clientState.serverStatus
 		}
 
 	setGameStartTime(gameStartTime: number): void {
-		this.serverState.gameStartTime = gameStartTime
+		this.clientState.gameStartTime = gameStartTime
 	}
 		getGameStartTime(): number {
-			return this.serverState.gameStartTime
+			return this.clientState.gameStartTime
 		}
 
-	resetServerState(): void {
-		this.serverState = {
-			status       : GameStatus.LOBBY,
-			gameStartTime: 0,
-			outfits      : new Map<string, Outfit>(),
-			players      : new Map<string, string>(),
-			votes        : new Map<string, string>(),
-		}
-	}
 
 	setPlayers(players: Map<string, string>): void {
-		this.serverState.players = players
+		this.clientState.playersInGame = players
+		this.clientState.enrolledInGame = players.has(this.clientState.userId)
 		eventBus.emit(ClientEvents.PLAYERS_UPDATED, players)
 	}
 		getPlayers(): Map<string, string> {
-			return this.serverState.players
+			return this.clientState.playersInGame
 		}
 
 

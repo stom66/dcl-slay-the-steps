@@ -1,9 +1,10 @@
 import { Outfit } from 'src/shared/types'
-import { ServerStore } from './serverStore'
 import { MessageType, room } from 'src/shared/room'
 import { eventBus } from 'src/shared/utils/eventBus'
-import { gameManager } from './gameManager'
-import { sendStateUpdate } from './serverMessaging'
+
+import { ServerStore } from 'src/server/serverStore'
+import { sendStateUpdate } from 'src/server/serverMessaging'
+import { gameManager } from 'src/server/gameManager'
 
 
 export namespace serverHandler {
@@ -11,7 +12,6 @@ export namespace serverHandler {
 	const store = ServerStore.getInstance()
 
 	export function init() {
-		room.onMessage(MessageType.REQUEST_STATE, (data, context)         => handleRequestState(data, context))
 		room.onMessage(MessageType.REQUEST_JOIN_GAME, (data, context)     => handleRequestJoinGame(data, context))
 		room.onMessage(MessageType.REQUEST_OUTFIT_UPDATE, (data, context) => handleRequestOutfitUpdate(data, context))
 		room.onMessage(MessageType.REQUEST_ADD_VOTE, (data, context)      => handleRequestAddVote(data, context))
@@ -66,6 +66,8 @@ export namespace serverHandler {
 	export function handleRequestEmote(emote: string, context: any) {
 		const userId = getUserId(context)
 		console.log('handleRequestEmote: userId requested emote', userId, "for emote", emote)
+
+		gameManager.onPlayerRequestEmote(userId, emote)
 	}
 
 }

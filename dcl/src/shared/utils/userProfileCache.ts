@@ -3,7 +3,7 @@
  */
 
 import { getPlayer, onEnterScene } from '@dcl/sdk/players'
-import type { DecentralandProfile } from '../types'
+import type { DecentralandProfile } from 'src/shared/types'
 import { engine } from '@dcl/sdk/ecs'
 
 const PROFILE_URL = 'https://peer.decentraland.org/lambdas/profiles/'

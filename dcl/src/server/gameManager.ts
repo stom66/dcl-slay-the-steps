@@ -1,10 +1,12 @@
+import * as utils from "@dcl-sdk/utils"
+
 import { MessageType, room } from "src/shared/room"
 import { GameStatus } from "src/shared/enums"
 import { GameSettings } from "src/shared/settings"
 import { Outfit } from "src/shared/types"
-import { ServerStore } from "./serverStore"
-import { sendStateUpdate } from "./serverMessaging"
-import * as utils from "@dcl-sdk/utils"
+
+import { ServerStore } from "src/server/serverStore"
+import { sendStateUpdate } from "src/server/serverMessaging"
 
 class GameManager {
 	static instance: GameManager
@@ -74,16 +76,10 @@ class GameManager {
 			return
 		}
 
-		this.store.setStatus(GameStatus.STARTING)
-
 		const gameStartTime = Date.now() + GameSettings.COUNTDOWN_DURATION
 		this.store.setGameStartTime(gameStartTime)
-
-		console.log(`GameManager: startGameCountdown: gameStartTime`, gameStartTime)
-		console.log(`GameManager: startGameCountdown: serverTime`, Date.now())
-		console.log(`GameManager: startGameCountdown: countdown duration (calc)`, gameStartTime - Date.now())
-		console.log(`GameManager: startGameCountdown: countdown duration (actual)`, GameSettings.COUNTDOWN_DURATION)
-
+		this.store.setStatus(GameStatus.STARTING)
+		
 		sendStateUpdate()
 
 		utils.timers.setTimeout(() => {
@@ -95,13 +91,52 @@ class GameManager {
 	startGame() {
 		console.log(`GameManager: startGame`)
 		
-		// We cycle through all the players in the current round, and send out an update ROUND_START for each player with their outfit
-		this.store.setStatus(GameStatus.ROUND_ACTIVE)
-
-		const playerCount = this.store.getPlayerCount()
-
+		// Let all the clients know the game has started
+		this.store.setStatus(GameStatus.STARTED)
 		sendStateUpdate()
-		
+
+		// Work out the timings of the turns for each player
+		var playerTimings: { userId: string, startingSoonDelay: number, roundStartDelay: number }[] = []
+
+		const playerIds = [...this.store.getState().players.keys()]
+		playerIds.forEach(playerId => {
+			// Work out the delay before we send this player the "you are next" message
+			var StartingSoonDelay = GameSettings.ROUND_START_DELAY
+			StartingSoonDelay += GameSettings.ROUND_INTERVAL * playerIds.indexOf(playerId)
+			StartingSoonDelay += GameSettings.ROUND_DURATION_PER_PLAYER * playerIds.indexOf(playerId)
+			StartingSoonDelay -= GameSettings.YOU_ARE_NEXT_PREEMPT_TIME
+			
+			// Work out the delay before we trigger the round start for this player
+			var RoundStartDelay = GameSettings.ROUND_START_DELAY
+			RoundStartDelay += GameSettings.ROUND_INTERVAL * playerIds.indexOf(playerId)
+			RoundStartDelay += GameSettings.ROUND_DURATION_PER_PLAYER * playerIds.indexOf(playerId)
+
+			// Store the timings for this player
+			playerTimings.push({ 
+				userId           : playerId, 
+				startingSoonDelay: StartingSoonDelay, 
+				roundStartDelay  : RoundStartDelay 
+			})
+		})
+
+		console.log(`GameManager: startGame: playerTimings`, playerTimings)
+
+
+		playerTimings.forEach(playerTiming => {
+			// Send out the "you are next" message
+			utils.timers.setTimeout(() => {
+				room.send(MessageType.NOTIFY_TURN_STARTING_SOON, { to: [playerTiming.userId] })
+			}, playerTiming.startingSoonDelay)
+
+			// Trigger the round start for this player
+			utils.timers.setTimeout(() => {
+				this.triggerTurnStart(playerTiming.userId)
+			}, playerTiming.roundStartDelay)
+		})
+
+
+		// After the game duration, trigger the voting start
+		const playerCount = playerIds.length		
 		var gameDuration = 0
 		gameDuration += GameSettings.ROUND_START_DELAY
 		gameDuration += GameSettings.ROUND_INTERVAL * (playerCount - 1)
@@ -112,16 +147,41 @@ class GameManager {
 		}, gameDuration)
 	}
 
+	// MARK: triggerTurnStarting
+	triggerTurnStart(userId: string) {
+		console.log(`GameManager: triggerTurnStarting: userId ${userId}`)
+		this.store.setCurrentTurnUserId(userId)
+
+		const outfit = this.store.getState().outfits.get(userId)
+		if (!outfit) {
+			console.log(`GameManager: triggerTurnStart: User ${userId} has no outfit, ignoring request to start turn`)
+			return
+		}
+		room.send(MessageType.NOTIFY_TURN_STARTING, {
+			sentAt      : Date.now(),
+			outfit      : outfit,
+			userId      : userId,
+			displayName: this.store.getState().players.get(userId) ?? "",
+		})
+	}
+
+	// MARK: triggerEmote
+	onPlayerRequestEmote(userId: string, emote: string) {
+		console.log(`GameManager: triggerEmote: userId ${userId} requested to emote`, emote)
+		
+		if (userId == this.store.getCurrentTurnUserId()) {
+			room.send(MessageType.NOTIFY_EMOTE, {
+				sentAt: Date.now(),
+				userId: userId,
+				emote : emote,
+			})
+		}
+	}
+
 
 	// MARK: triggerVotingStart
 	triggerVotingStart() {
 		console.log(`GameManager: triggerVotingStart`)
-		
-		// Ensure the round hasn't been aborted
-		if (this.store.getState().status !== GameStatus.ROUND_ACTIVE) {
-			console.log(`GameManager: triggerVotingStart: Game is not in the ROUND_ACTIVE state, ignoring request to start voting`)
-			return
-		}
 
 		this.store.setStatus(GameStatus.VOTING)
 		sendStateUpdate()

@@ -1,7 +1,8 @@
 import { registerMessages } from '@dcl/sdk/network'
 import { Schemas } from '@dcl/sdk/ecs'
-import { GameStatus } from './enums'
-import { userProfileCache } from './utils/userProfileCache'
+
+import { GameStatus } from 'src/shared/enums'
+import { userProfileCache } from 'src/shared/utils/userProfileCache'
 
 // Message type enum
 export enum MessageType {
@@ -12,12 +13,10 @@ export enum MessageType {
 	REQUEST_REMOVE_VOTE       = 'requestRemoveVote',      // Used by the clients, to notify the server of a vote
 	REQUEST_EMOTE             = 'requestEmote',           // Used by the clients, to notify the server of an emote
 
-	NOTIFY_STATE              = "notifyState",             // Sent by server, to notify the clients of the game state
-	NOTIFY_STATE_LOBBY        = "notifyStateLobby",       // Sent by server, to notify the clients of the lobby state
-	NOTIFY_STATE_STARTING     = "notifyStateStarting",    // Sent by server, to notify the clients of the starting state
-	NOTIFY_STATE_ROUND_START  = "notifyStateRoundStart",  // Sent by server, to notify the clients of the round start state
-	NOTIFY_STATE_VOTE_START   = "notifyStateVoteStart",   // Sent by server, to notify the clients of the vote start state	
-	NOTIFY_STATE_VOTE_RESULTS = "notifyStateVoteResults", // Sent by server, to notify the clients of the vote results
+	NOTIFY_ABORT_GAME         = "notifyAbortGame",        // Sent by server, to notify the clients that the game has been aborted
+	NOTIFY_STATE              = "notifyState",            // Sent by server, to notify the clients of the game state
+	NOTIFY_TURN_STARTING      = "notifyTurnStarting",     // Sent by the server to notify all players that a turn is starting
+	NOTIFY_TURN_STARTING_SOON = "notifyTurnStartingSoon", // Sent by the server to specific players to let them know their turn is about to start
 	NOTIFY_PLAYER_LIST        = "notifyPlayerList",       // Sent by server, to notify the clients of the player list
 	NOTIFY_EMOTE              = "notifyEmote",            // Sent by server, to notify the clients of an emote
 	NOTIFY_WARNING            = "notifyWarning",          // Sent by server, to notify the clients of a warning
@@ -51,56 +50,31 @@ const Messages = {
 
 
 	// Sent by server
+	[MessageType.NOTIFY_ABORT_GAME]: Schemas.Map({}),
 	[MessageType.NOTIFY_STATE]: Schemas.Map({
 		sentAt       : Schemas.Int64,
 		gameStartTime: Schemas.Int64,
-		outfits      : Schemas.Array(Schemas.Map({
-			userId      : Schemas.String,
-			wearables   : Schemas.Array(Schemas.String),
-			bodyShape   : Schemas.String,
-			hairColor   : Schemas.Color3,
-			skinColor   : Schemas.Color3,
-		})),
 		players      : Schemas.Array(Schemas.Map({
 			userId      : Schemas.String,
 			displayName : Schemas.String,
 		})),
-		status       : Schemas.String,
-		serverTime   : Schemas.Int64,
-		votes        : Schemas.Array(Schemas.Map({
-			userId      : Schemas.String,
-			vote        : Schemas.String,
-		})),
+		status       : Schemas.String
 	}),
-	/* [MessageType.NOTIFY_STATE_LOBBY]: Schemas.Map({}),
-	[MessageType.NOTIFY_STATE_STARTING]: Schemas.Map({
-		gameStartTime: Schemas.Number,
-		serverTime: Schemas.Number,
-	}),
-	
-	[MessageType.NOTIFY_STATE_ROUND_START]: Schemas.Map({
-		userId: Schemas.String,
-		displayName: Schemas.String,
-		outfit: Schemas.Map({
-			wearables: Schemas.Array(Schemas.String),
-			bodyShape: Schemas.String,
-			hairColor: Schemas.Color3,
-			skinColor: Schemas.Color3,
+
+	[MessageType.NOTIFY_TURN_STARTING_SOON]: Schemas.Map({}),
+
+	[MessageType.NOTIFY_TURN_STARTING]: Schemas.Map({
+		sentAt     : Schemas.Int64,
+		outfit     : Schemas.Map({
+			userId    : Schemas.String,
+			wearables : Schemas.Array(Schemas.String),
+			bodyShape : Schemas.String,
+			hairColor : Schemas.Color3,
+			skinColor : Schemas.Color3,
 		}),
+		userId     : Schemas.String,
+		displayName: Schemas.String,
 	}),
-	
-	[MessageType.NOTIFY_STATE_VOTE_START]: Schemas.Map({
-		players: Schemas.Array(Schemas.Map({
-			userId: Schemas.String,
-			displayName: Schemas.String,
-		})),
-	}),
-	[MessageType.NOTIFY_STATE_VOTE_RESULTS]: Schemas.Map({
-		voteResults: Schemas.Array(
-			Schemas.Array(Schemas.String)
-		)
-	}),
- */
 	[MessageType.NOTIFY_PLAYER_LIST]: Schemas.Map({
 		sentAt: Schemas.Int64,
 		players: Schemas.Array(

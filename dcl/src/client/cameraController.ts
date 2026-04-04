@@ -2,6 +2,12 @@ import { getWorldPosition, timers } from '@dcl-sdk/utils'
 import { engine, Entity, MainCamera, Transform, VirtualCamera } from '@dcl/sdk/ecs'
 import { Vector3 } from '@dcl/sdk/math'
 
+import { GameStatus } from 'src/shared/enums'
+import { ClientState, NotifyStatePayload } from 'src/shared/types'
+import { eventBus } from 'src/shared/utils/eventBus'
+
+import { ClientEvents } from 'src/client/clientEvents'
+
 export namespace CameraController {
 	const transitionDuration: number             = 0.5                        // Time the camera takes to switch from main to virtual cameras
 
@@ -13,6 +19,15 @@ export namespace CameraController {
 	var maxCameraDistanceSq : number             = 0                          // gets worked out during init so don't worry about it
 	const cameraOffset      : Vector3            = Vector3.create(0, 1.75, 0) // relative to the player's position
 	const maxCameraDistance : number             = 6
+
+
+	
+	// Stop the music when the game ends
+	eventBus.on(ClientEvents.NOTIFY_STATE, (data: ClientState) => {
+		if (data.serverStatus == GameStatus.LOBBY) {
+			ResetCamera()
+		}
+	})
 
 
 	export function init() {

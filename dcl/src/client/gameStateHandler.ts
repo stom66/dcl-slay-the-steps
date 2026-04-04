@@ -1,5 +1,5 @@
 import { eventBus } from "src/shared/utils/eventBus"
-import { NotifyStatePayload } from "src/shared/types"
+import { ClientState } from "src/shared/types"
 import { GameStatus } from "src/shared/enums"
 
 import { ClientEvents } from "src/client/clientEvents"
@@ -9,20 +9,22 @@ import { MannequinManager } from "src/client/mannequinManager"
 
 
 export namespace gameStateHandler {
-	var status: GameStatus = GameStatus.LOBBY
+	var currentStatus: GameStatus = GameStatus.LOBBY
 	const clientStore = ClientStore.getInstance()
 
 	export function init() {
-		eventBus.on(ClientEvents.NOTIFY_STATE, (state) => {
-			// See if the state has actually changed
-			if (state.status !== status) {
-				status = state.status
-				switch (status) {
+		eventBus.on(ClientEvents.NOTIFY_STATE, (state: ClientState) => {
+			if (state.serverStatus !== currentStatus) {
+				currentStatus = state.serverStatus
+				switch (currentStatus) {
 					case GameStatus.LOBBY:
 						onStateLobby(state)
 						break
 					case GameStatus.STARTING:
 						onStateStarting(state)
+						break
+					case GameStatus.STARTED:
+						onStateStarted(state)
 						break
 					case GameStatus.ROUND_ACTIVE:
 						onStateRoundActive(state)
@@ -36,8 +38,7 @@ export namespace gameStateHandler {
 				}
 			}
 
-			// Check if the player is enrolled in the game
-			if (state.players.has(clientStore.getUserId())) {
+			if (state.playersInGame.has(clientStore.getUserId())) {
 				clientStore.setEnrolledInGame(true)
 			} else {
 				clientStore.setEnrolledInGame(false)
@@ -45,17 +46,17 @@ export namespace gameStateHandler {
 		})
 	}
 
-	function onStateLobby(state: NotifyStatePayload) {
+	function onStateLobby(state: ClientState) {
 
 	}
 
-	function onStateStarting(state: NotifyStatePayload) {
+	function onStateStarting(state: ClientState) {
 		console.log('gameStateHandler: onStateStarting: state', state)
 
 	}
 
-	function onStateRoundActive(state: NotifyStatePayload) {
-		console.log('gameStateHandler: onStateRoundActive: state', state)
+	function onStateStarted(state: ClientState) {
+		console.log('gameStateHandler: onStateStarted: state', state)
 		
 		if (!clientStore.isEnrolledInGame()) return
 		console.log('gameStateHandler: onStateStarting: client isEnrolled')
@@ -69,23 +70,23 @@ export namespace gameStateHandler {
 		} else {
 			console.error('gameStateHandler: onStateStarting: player not found')
 		}
+
 	}
 
-	function onStateVoteStart(state: NotifyStatePayload) {
+	function onStateRoundActive(state: ClientState) {
+		console.log('gameStateHandler: onStateRoundActive: state', state)
+	}
+
+	function onStateVoteStart(state: ClientState) {
 		console.log('gameStateHandler: onStateVoteStart: state', state)
 	}
 
-	function onStateVoteResults(state: NotifyStatePayload) {
+	function onStateVoteResults(state: ClientState) {
 		console.log('gameStateHandler: onStateVoteResults: state', state)
 	}
 
-	function onStateGameEnded(state: NotifyStatePayload) {
+	function onStateGameEnded(state: ClientState) {
 		console.log('gameStateHandler: onStateGameEnded: state', state)
-		clientStore.resetServerState()
-
-		if (!clientStore.isEnrolledInGame()) return
-
-		clientStore.setEnrolledInGame(false)
 		SeatManager.MovePlayerToLobby()
 		MannequinManager.ShowNPCMannequin()
 	}

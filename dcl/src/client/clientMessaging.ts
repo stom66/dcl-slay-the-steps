@@ -39,6 +39,16 @@ export namespace ClientMessaging {
 		})
 	}
 
+	export function RequestEmote(emote: string) {
+		const clientStore = ClientStore.getInstance()
+
+		// Ignore if we're not enrolled in the game
+		if (!clientStore.isEnrolledInGame()) return
+
+		// Let the server know about the new emote
+		room.send(MessageType.REQUEST_EMOTE, emote)
+	}
+
 	// MARK: Request Add Vote
 	export function RequestAddVote(userId: string) {
 		const clientStore = ClientStore.getInstance()
