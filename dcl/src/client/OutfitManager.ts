@@ -1,6 +1,7 @@
 import { getPlayer } from "@dcl/sdk/players"
 import { AvatarBase, AvatarEquippedData, engine, Entity } from "@dcl/sdk/ecs"
 import { Color3 } from "@dcl/sdk/math"
+import * as utils from '@dcl-sdk/utils'
 
 import { eventBus } from "src/shared/utils/eventBus"
 import { GetWearableData } from "src/client/utils"
@@ -48,9 +49,12 @@ export namespace OutfitManager {
 		try {
 			userData = getPlayer()
 
-			// Check if we got user data with wearables
-			if (!userData?.wearables?.length) {
-				console.log("OutfitManager: InitUserWearables: No wearables available")
+			// Retry until userData exists and wearables is present (empty [] is valid — no equipped wearables)
+			if (!userData || userData.wearables == null) {
+				console.log("OutfitManager: InitUserWearables: user data or wearables list not ready yet. userData:", JSON.stringify(userData))
+				utils.timers.setTimeout(() => {
+					InitUserWearables(true)
+				}, 1000)
 				return
 			}
 
