@@ -1,22 +1,24 @@
 import ReactEcs, { Label, UiEntity } from '@dcl/sdk/react-ecs'
 import { Color4 } from '@dcl/sdk/math'
 
+import { GameStatus } from 'src/shared/enums'
+import { ClientState, NotifyStatePayload } from 'src/shared/types'
 import { eventBus } from 'src/shared/utils/eventBus'
 import { userProfileCache } from 'src/shared/utils/userProfileCache'
 
 import { GetBackgroundTexture } from 'src/client/utils'
 import { ClientStore } from 'src/client/clientStore'
 import { ClientEvents } from 'src/client/clientEvents'
+import { NotifyTurnStartingPayload } from 'src/shared/types'
 
 
+const clientStore = ClientStore.getInstance()
 // Placeholders for dynamic content
 let currentPlayer    : undefined | string = ""   // userId of the currently active player to show the star icon during a round
 let playerList       : any[]              = []   // array of UIElements for each player
-var visiblePlayerList: boolean            = true
 
 const avatarUrlByUserId = new Map<string, string>()
 const avatarUrlRequestInFlight = new Set<string>()
-const clientStore = ClientStore.getInstance()
 
 function requestAvatarUrl(userId: string) {
 	if (avatarUrlRequestInFlight.has(userId)) return
@@ -40,14 +42,7 @@ function requestAvatarUrl(userId: string) {
 
 
 // Utility functions
-export function ShowPlayerList() {
-	console.log("ui.Game.PlayerList: ShowPlayerList()")
-	visiblePlayerList = true
-}
-export function HidePlayerList() {
-	console.log("ui.Game.PlayerList: HidePlayerList()")
-	visiblePlayerList = false
-}
+
 
 export function SetCurrentPlayer(userId?: string) {
 	currentPlayer = userId
@@ -55,8 +50,12 @@ export function SetCurrentPlayer(userId?: string) {
 }
 
 // Event Binding
-eventBus.on(ClientEvents.NOTIFY_STATE, (data) => {
+eventBus.on(ClientEvents.NOTIFY_STATE, (data: ClientState) => {
 	UpdatePlayerList()
+})
+
+eventBus.on(ClientEvents.NOTIFY_TURN_STARTING, (data: NotifyTurnStartingPayload) => {
+	SetCurrentPlayer(data.outfit.userId)
 })
 
 
@@ -204,7 +203,7 @@ export function PlayerListUI() {
 				flexDirection : 'column',
 				alignItems    : 'flex-start',
 				justifyContent: 'flex-start',
-				display       : visiblePlayerList ? 'flex': 'none',
+				display       : 'flex',
 				padding       : { left: 18, bottom: 22, right: 18, top: 0 }
 			}}
 			uiBackground={{
