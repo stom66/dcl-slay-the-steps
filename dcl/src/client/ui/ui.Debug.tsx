@@ -1,10 +1,10 @@
 import ReactEcs, { Button, Label, ReactEcsRenderer, UiEntity} from '@dcl/sdk/react-ecs'
 import { Color4 } from '@dcl/sdk/math'
-import { MessageBus } from '@dcl/sdk/message-bus'
 
 import { ClientStore } from 'src/client/clientStore'
-import { SeatManager } from 'src/client/SeatManager'
-import { ShowHowToPlay } from './ui.game.howToPlay'
+import { SeatManager } from 'src/client/seatManager'
+import { ShowHowToPlay } from 'src/client/ui/ui.game.howToPlay'
+import { Divider, InfoRow, SectionHeader } from './ui.components'
 
 const clientStore = ClientStore.getInstance()
 
@@ -13,7 +13,7 @@ export function DebugUI() {
 		<UiEntity
 			key="ui_debug_root"
 			uiTransform={{
-				width         : 220,
+				width         : 300,
 				height        : 500,
 				flexDirection : 'column',
 				alignItems    : 'flex-start',
@@ -23,48 +23,10 @@ export function DebugUI() {
 				position      : { left: 50, top: 350 },
 				positionType: "absolute"
 			}}
-			uiBackground={{ color: Color4.fromHexString("#4C958133") }}
+			uiBackground={{ color: Color4.fromHexString("#4C958166") }}
 		>
 
-			{/* <Button
-				key         = "btnMoveToLobby"
-				uiTransform = {{ width: 180, height: 40, margin: 8 }}
-				value       = 'moveTo: lobby'
-				variant     = 'primary'
-				fontSize    = {14}
-				onMouseDown = {() => {
-					SeatManager.MovePlayerToLobby()
-				}}
-			/> */}
-
-
-			{/* <Button
-				key         = "btnMoveToLobby"
-				uiTransform = {{ width: 180, height: 40, margin: 8 }}
-				value       = 'moveTo: arena'
-				variant     = 'primary'
-				fontSize    = {14}
-				onMouseDown = {() => {
-					SeatManager.MovePlayerToSeat(Math.floor(Math.random() * 16))
-				}}
-			/> */}
-
-
-			<Label
-				key            = "title"
-				uiTransform    = {{
-					width         : 180, 
-					height        : 40, 
-					margin        : 8,
-					flexDirection : 'column',
-					alignItems    : 'flex-start',
-					justifyContent: 'space-between'
-				}}
-				value          = 'DEBUG Menu'
-				color          = {Color4.White()}
-				fontSize       = {14}
-				textAlign      = "middle-left"
-			/>
+			<SectionHeader title="Debug Menu" />
 			<Button
 				key         = "btnShowHowToPlay"
 				uiTransform = {{ width: 180, height: 40, margin: 8 }}
@@ -86,152 +48,18 @@ export function DebugUI() {
 				}}
 			/>
 
+			<Divider />
 
 
+			<SectionHeader title="ClientState" />
 
-			<Label
-				key            = "title-client"
-				uiTransform    = {{
-					width         : 180, 
-					height        : 40, 
-					margin        : 8,
-					flexDirection : 'column',
-					alignItems    : 'flex-start',
-					justifyContent: 'space-between'
-				}}
-				value          = 'CLIENT:'
-				color          = {Color4.White()}
-				fontSize       = {14}
-				textAlign      = "middle-left"
-			/>
-			<Label
-				key            = "client-userid"
-				uiTransform    = {{
-					width         : 180, 
-					height        : 40, 
-					margin        : 8,
-					flexDirection : 'column',
-					alignItems    : 'flex-start',
-					justifyContent: 'space-between'
-				}}
-				value          = {`userId: ${clientStore.getUserId()}`}
-				color          = {Color4.White()}
-				fontSize       = {14}
-				textAlign      = "middle-left"
-			/>
-			<Label
-				key            = "client-displayName"
-				uiTransform    = {{
-					width         : 180, 
-					height        : 40, 
-					margin        : 8,
-					flexDirection : 'column',
-					alignItems    : 'flex-start',
-					justifyContent: 'space-between'
-				}}
-				value          = {`displayName: ${clientStore.getDisplayName()}`}
-				color          = {Color4.White()}
-				fontSize       = {14}
-				textAlign      = "middle-left"
-			/>
-			<Label
-				key            = "client-enrolled"
-				uiTransform    = {{
-					width         : 180, 
-					height        : 40, 
-					margin        : 8,
-					flexDirection : 'column',
-					alignItems    : 'flex-start',
-					justifyContent: 'space-between'
-				}}
-				value          = {`isEnrolledInGame: ${clientStore.isEnrolledInGame() ? "TRUE" : "FALSE"}`}
-				color          = {Color4.White()}
-				fontSize       = {14}
-				textAlign      = "middle-left"
-			/>
-
-
-
-
-			<Label
-				key            = "title-server"
-				uiTransform    = {{
-					width         : 180, 
-					height        : 40, 
-					margin        : 8,
-					flexDirection : 'column',
-					alignItems    : 'flex-start',
-					justifyContent: 'space-between'
-				}}
-				value          = 'SERVER:'
-				color          = {Color4.White()}
-				fontSize       = {14}
-				textAlign      = "middle-left"
-			/>
-			<Label
-				key            = "status"
-				uiTransform    = {{
-					width         : 180, 
-					height        : 40, 
-					margin        : 8,
-					flexDirection : 'column',
-					alignItems    : 'flex-start',
-					justifyContent: 'space-between'
-				}}
-				value          = {`status: ${clientStore.getServerStatus()}`}
-				color          = {Color4.White()}
-				fontSize       = {14}
-				textAlign      = "middle-left"
-			/>
-			
-			<Label
-				key            = "server-gamestart"
-				uiTransform    = {{
-					width         : 180, 
-					height        : 40, 
-					margin        : 8,
-					flexDirection : 'column',
-					alignItems    : 'flex-start',
-					justifyContent: 'space-between'
-				}}
-				value          = {`gameStartTime: ${clientStore.getGameStartTime()}`}
-				color          = {Color4.White()}
-				fontSize       = {14}
-				textAlign      = "middle-left"
-			/>
-			
-			<Label
-				key            = "server-players"
-				uiTransform    = {{
-					width         : 180, 
-					height        : 40, 
-					margin        : 8,
-					flexDirection : 'column',
-					alignItems    : 'flex-start',
-					justifyContent: 'space-between'
-				}}
-				value          = {`players: ${clientStore.getPlayers().size}`}
-				color          = {Color4.White()}
-				fontSize       = {14}
-				textAlign      = "middle-left"
-			/>
-			
-			
-			<Label
-				key            = "server-votes"
-				uiTransform    = {{
-					width         : 180, 
-					height        : 40, 
-					margin        : 8,
-					flexDirection : 'column',
-					alignItems    : 'flex-start',
-					justifyContent: 'space-between'
-				}}
-				value          = {`votes: ${clientStore.getServerState().votes.size}`}
-				color          = {Color4.White()}
-				fontSize       = {14}
-				textAlign      = "middle-left"
-			/>
+			<InfoRow label = "serverStatus"      value = {clientStore.getServerStatus()} />
+			<InfoRow label = "gameStartTime"     value = {clientStore.getGameStartTime().toString()} />
+			<InfoRow label = "playersInGame"     value = {clientStore.getPlayers().size.toString()} />
+			<InfoRow label = "displayName"       value = {clientStore.getDisplayName()} />
+			<InfoRow label = "enrolledInGame"    value = {clientStore.isEnrolledInGame().toString()} />
+			<InfoRow label = "userId"            value = {clientStore.getUserId()} />
+			<InfoRow label = "currentTurnUserId" value = {clientStore.getCurrentTurnUserId() ?? "NONE"} />
 
 
 		</UiEntity>
