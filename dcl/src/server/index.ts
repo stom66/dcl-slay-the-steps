@@ -24,8 +24,7 @@ export async function initServer(): Promise<void> {
 	}, GameSettings.SERVER_TIME_UPDATE_INTERVAL)
 
 
-	// Event bindings
-	
+	// MARK: Event bindings
 	onEnterScene((player) => {
 		sendStateUpdate([player.userId])
 	})

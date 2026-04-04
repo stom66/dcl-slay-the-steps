@@ -26,7 +26,8 @@ export namespace OutfitManager {
 
 	// MARK: Init
 	export function init() {
-		console.log("OutfitManager: init")	
+		console.log("OutfitManager: init")
+		
 		InitUserWearables()
 		
 		// Re-trigger InitUserWearables every time the user equips a new wearable
@@ -65,9 +66,10 @@ export namespace OutfitManager {
 			clientStore.setPlayerBodyShape(userData.avatar?.bodyShapeUrn || "urn:decentraland:off-chain:base-avatars:BaseMale")
 			clientStore.setPlayerSkinColor(userData.avatar?.skinColor || Color3.create(0.5, 0.5, 0.5))
 			clientStore.setPlayerHairColor(userData.avatar?.hairColor || Color3.create(0.5, 0.5, 0.5))
-			clientStore.setNPCBodyShape(userData.avatar?.bodyShapeUrn || "urn:decentraland:off-chain:base-avatars:BaseMale")
-			clientStore.setNPCSkinColor(userData.avatar?.skinColor || Color3.create(0.5, 0.5, 0.5))
-			clientStore.setNPCHairColor(userData.avatar?.hairColor || Color3.create(0.5, 0.5, 0.5))
+
+			clientStore.setNPCBodyShape(clientStore.getPlayerBodyShape(), true)
+			clientStore.setNPCSkinColor(clientStore.getPlayerSkinColor(), true)
+			clientStore.setNPCHairColor(clientStore.getPlayerHairColor(), true)
 
 			// Fetch wearable data for each URN
 			var playerWearables: Wearable[] = []
@@ -78,13 +80,13 @@ export namespace OutfitManager {
 				playerWearables.push(data)
 			}
 			clientStore.setPlayerWearables([...playerWearables])
-			clientStore.setNPCWearables([...playerWearables])
+			clientStore.setNPCWearables([...playerWearables], true)
 
 			isWearableDataLoaded = true
 
-			//if (isNPCMannequinVisible) {
-			//	eventBus.emit(ClientEvents.OUTFIT_CHANGED, {})
-			//} // TODO: Redundandt? event gets triggers by the calls to clientStore above, so this might not be needed
+			if (isNPCMannequinVisible) {
+				eventBus.emit(ClientEvents.OUTFIT_CHANGED, {})
+			}
 
 			console.log("OutfitManager InitUserWearables: got", playerWearables.length, "wearables for the player")
 		} catch (err) {

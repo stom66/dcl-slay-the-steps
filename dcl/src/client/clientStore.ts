@@ -182,7 +182,7 @@ export class ClientStore {
 		getPlayerWearables(): Wearable[] {
 			return this.clientState.playerWearables
 		}
-		
+
 	getPlayerOutfit(): Outfit {
 		return {
 			userId   : this.clientState.userId,
@@ -195,36 +195,36 @@ export class ClientStore {
 	
 
 	// MARK: NPC Set/Getters
-	setNPCSkinColor(color: Color3): void {
+	setNPCSkinColor(color: Color3, muteEvent: boolean = false): void {
 		this.clientState.npcSkinColor = color
-		eventBus.emit(ClientEvents.OUTFIT_CHANGED, {})
+		if (!muteEvent) eventBus.emit(ClientEvents.OUTFIT_CHANGED, {})
 		ClientMessaging.RequestOutfitChange()
 	}
 		getNPCSkinColor(): Color3 {
 			return this.clientState.npcSkinColor
 		}
 
-	setNPCHairColor(color: Color3): void {
+	setNPCHairColor(color: Color3, muteEvent: boolean = false): void {
 		this.clientState.npcHairColor = color
-		eventBus.emit(ClientEvents.OUTFIT_CHANGED, {})
+		if (!muteEvent) eventBus.emit(ClientEvents.OUTFIT_CHANGED, {})
 		ClientMessaging.RequestOutfitChange()
 	}
 		getNPCHairColor(): Color3 {
 			return this.clientState.npcHairColor
 		}
 
-	setNPCBodyShape(shape: string): void {
+	setNPCBodyShape(shape: string, muteEvent: boolean = false): void {
 		this.clientState.npcBodyShape = shape
-		eventBus.emit(ClientEvents.OUTFIT_CHANGED, {})
+		if (!muteEvent) eventBus.emit(ClientEvents.OUTFIT_CHANGED, {})
 		ClientMessaging.RequestOutfitChange()
 	}
 		getNPCBodyShape(): string {
 			return this.clientState.npcBodyShape
 		}
 
-	setNPCWearables(wearables: Wearable[]): void {
+	setNPCWearables(wearables: Wearable[], muteEvent: boolean = false): void {
 		this.clientState.npcWearables = wearables
-		eventBus.emit(ClientEvents.OUTFIT_CHANGED, {})
+		if (!muteEvent) eventBus.emit(ClientEvents.OUTFIT_CHANGED, {})
 		ClientMessaging.RequestOutfitChange()
 	}
 		getNPCWearables(): Wearable[] {

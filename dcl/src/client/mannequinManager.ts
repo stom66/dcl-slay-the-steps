@@ -169,7 +169,7 @@ export namespace MannequinManager {
 		}
 	}
 
-	
+
 	// MARK: Hide NPC Mannequin
 	export function HideNPCMannequin() {
 		isNPCMannequinVisible = false
