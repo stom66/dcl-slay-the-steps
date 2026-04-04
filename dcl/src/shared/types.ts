@@ -15,6 +15,7 @@ export type ClientState = {
 	displayName      : string
 	enrolledInGame   : boolean
 	currentTurnUserId: string | undefined
+	voteResults      : Map<string, string>
 
 	gameStartTime    : number
 	serverStatus     : GameStatus
@@ -55,6 +56,10 @@ export type NotifyStatePayload = {
 	players      : NotifyPlayerListPayload['players']
 	sentAt       : number
 	status       : string
+	voteResults  : {
+		userId    : string
+		voteFor   : string
+	}[]
 }
 
 export type NotifyTurnStartingPayload = {

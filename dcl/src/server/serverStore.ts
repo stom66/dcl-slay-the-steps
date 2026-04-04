@@ -5,12 +5,12 @@ export class ServerStore {
 	private static instance: ServerStore | undefined
 
 	private readonly serverState: ServerState = {
-		gameStartTime: 0,
-		outfits      : new Map<string, Outfit>(),
-		players      : new Map<string, string>(),
-		status      : GameStatus.LOBBY,
-		votes        : new Map<string, string>(),
 		currentTurnUserId: "",
+		gameStartTime    : 0,
+		outfits          : new Map<string, Outfit>(),
+		players          : new Map<string, string>(),
+		status           : GameStatus.LOBBY,
+		votes            : new Map<string, string>(),
 	}
 
 	private constructor() {
@@ -76,6 +76,17 @@ export class ServerStore {
 
 	removeVote(voteFrom: string): void {
 		this.serverState.votes.delete(voteFrom)
+	}
+
+	getVoteResults(): { userId: string, voteFor: string }[] {
+		return Array.from(this.serverState.votes.entries()).map(([userId, voteFor]) => ({
+			userId    : userId,
+			voteFor   : voteFor,
+		}))
+	}
+
+	resetVotes(): void {
+		this.serverState.votes = new Map<string, string>()
 	}
 
 	setGameStartTime(gameStartTime: number): void {

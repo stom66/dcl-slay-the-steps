@@ -1,9 +1,6 @@
 import { registerMessages } from '@dcl/sdk/network'
 import { Schemas } from '@dcl/sdk/ecs'
 
-import { GameStatus } from 'src/shared/enums'
-import { userProfileCache } from 'src/shared/utils/userProfileCache'
-
 // Message type enum
 export enum MessageType {
 	REQUEST_STATE             = 'requestState',           // Used by the clients, to request the current game state
@@ -58,7 +55,11 @@ const Messages = {
 			userId      : Schemas.String,
 			displayName : Schemas.String,
 		})),
-		status       : Schemas.String
+		status       : Schemas.String,
+		voteResults  : Schemas.Array(Schemas.Map({
+			userId: Schemas.String,
+			voteFor: Schemas.String
+		}))
 	}),
 
 	[MessageType.NOTIFY_TURN_STARTING_SOON]: Schemas.Map({}),
