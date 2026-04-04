@@ -7,16 +7,21 @@ import { eventBus } from 'src/shared/utils/eventBus'
 
 import { sfx } from 'src/client/data/sfx'
 import { ClientEvents } from 'src/client/clientEvents'
+import { ClientStore } from "src/client/clientStore"
 
+const clientStore = ClientStore.getInstance()
 
 export namespace SoundManager {
+
 
 	// MARK: event bindings
 	eventBus.on(ClientEvents.NOTIFY_STATE, (data: ClientState) => {
 		if (data.serverStatus == GameStatus.STARTED) {
+			if (!clientStore.isEnrolledInGame()) return
 			StartBGM()
 		}
 		if (data.serverStatus == GameStatus.GAME_ENDED) {
+			if (!clientStore.isEnrolledInGame()) return
 			StopBGM()
 		}
 		if (data.serverStatus == GameStatus.STARTING) {
@@ -26,6 +31,11 @@ export namespace SoundManager {
 
 	eventBus.on(ClientEvents.NOTIFY_ABORT_GAME, (data) => {
 		StopBGM()
+	})
+
+	eventBus.on(ClientEvents.NOTIFY_TURN_STARTING, (data) => {
+		if (!clientStore.isEnrolledInGame()) return
+		PlaySound(sfx.turnStart)
 	})
 
 

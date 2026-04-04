@@ -17,6 +17,13 @@ export const sfx = {
 		//"assets/sfx/confirm_style_3_002.wav",
 		"assets/sfx/turn-start-notify.wav",
 	],
+
+	turnStart: [
+		"assets/sfx/1775327982906.wav",
+		"assets/sfx/1775328004662.wav",
+		"assets/sfx/1775328166972.wav",
+		"assets/sfx/1775328171983.wav"
+	],
 	
 	warning: [
 		"assets/sfx/error_style_2_001.wav",
