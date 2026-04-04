@@ -1,86 +1,77 @@
 import ReactEcs, { Button, Label, UiEntity } from '@dcl/sdk/react-ecs'
 import { Color4 } from '@dcl/sdk/math'
-import { MessageBus } from '@dcl/sdk/message-bus'
-import { getPlayer } from '@dcl/sdk/players'
 
-import { getUserAvatarUrl } from '../../shared/userData'
+import { userProfileCache } from 'src/shared/utils/userProfileCache'
 import { GetBackgroundTexture } from '../utils'
-import { GameManager, localPlayer } from '../gameManager'
-import { MessageType, room } from 'src/_oldCode/room'
-// import { MessageBusEvents } from '../../_settings'
+import { ClientMessaging } from '../clientMessaging'
+import { ClientStore } from '../clientStore'
+import { eventBus } from 'src/shared/utils/eventBus'
+import { ClientEvents } from '../clientEvents'
+import { ClientState } from 'src/shared/types'
+import { GameStatus } from 'src/shared/enums'
 
-const sceneMessageBus = new MessageBus()
+
+const clientStore = ClientStore.getInstance()
 
 
 // Placeholders for dynamic content
 var visibleVoting: boolean = false // toggles root element visibility
 let votedFor     : string  = ""    // userId of the currently active player to show the star icon during a round
-let votingOptions: any[]   = []    // array of UIElements for each option
+let votingOptions: ReactEcs.JSX.Element[] = []
 
 
 // Utility functions
 export function ShowVotingOptions() {
 	visibleVoting = true
-	votingOptions = BuildVotingOptions()
+	UpdateVotingOptions()
 }
 export function HideVotingOptions() {
 	visibleVoting = false
 	votedFor      = ""
 }
 
+eventBus.on(ClientEvents.NOTIFY_STATE, (data: ClientState) => {
+	if (data.serverStatus === GameStatus.VOTING) {
+		ShowVotingOptions()
+	} else {
+		HideVotingOptions()
+	}
+})
 
 // Button function which triggers the actual vote
 function VoteForWinner(userId: string) {
 	// Allow player to remove their existing vote without voting for someone else
 	if (votedFor === userId) {
 		votedFor = ""
-		room.send(MessageType.REQUEST_REMOVE_VOTE, userId)
+		ClientMessaging.RequestRemoveVote(userId)
 	} else {
-		room.send(MessageType.REQUEST_ADD_VOTE, userId)
+		
+		ClientMessaging.RequestAddVote(userId)
 		votedFor = userId
 	}
 
 	console.log("ui.Game.VotingOptions: VoteForWinner(): userId", userId)
 	UpdateVotingOptions()
-
-	//sceneMessageBus.emit(MessageBusEvents.NOTIFY_SERVER_VOTE, {
-	//	voteFrom: localPlayer.userId,
-	//	voteFor : userId
-	//})
-
 }
 
-
 // MARK: BuildVotingOptions
-function BuildVotingOptions() {
-	
-	// Defensive check: ensure GameManager is initialized
-	if (!GameManager || !GameManager.state) {
-		return []
-	}
+function GetVotingOptions() {
 
 	// Debugging incorrect AvatarTextures showing up
-	const userIds: string[] = GameManager.state.players.map(
-		(userId: string) => userId
-	)
-	console.log("ui.Game.VotingOptions: BuildVotingOptions(): adding", userIds.length, "elements for userIDs:")
-	userIds.forEach((userId: string) => {
-		console.log(userId)
-	})
+	const playersMap = clientStore.getPlayers()
 	
-	let elements: any[] = []
+	let elements: ReactEcs.JSX.Element[] = []
 
 	// Build the "row" elements
-	userIds.forEach((userId: string) => {
-		// Fetch the player data, so we can get their name
-		const playerData = getPlayer({ userId: userId })
-		if (!playerData) {
-			console.error("ui.Game.VotingOptions: BuildVotingOptions(): Failed to get player data for user", userId)
-			return
-		}
+	playersMap.forEach((displayName: string, userId: string) => {
 
 		const isEven            = elements.length % 2 === 0
 		const backgroundTexture = GetBackgroundTexture(isEven)
+
+		const avatarTexture = userProfileCache.getCachedAvatarUrl(userId)
+		if (!avatarTexture) {
+			userProfileCache.whenAvatarUrlAvailable(userId, UpdateVotingOptions)
+		}
 
 		elements.push(
 			<UiEntity
@@ -116,7 +107,7 @@ function BuildVotingOptions() {
 						margin: { right: 10 },
 					}}
 					uiBackground={{
-						texture: { src: getUserAvatarUrl(userId) },
+						texture: { src: avatarTexture },
 						textureMode  : "stretch"
 					}}
 				/>
@@ -129,7 +120,7 @@ function BuildVotingOptions() {
 					fontSize  = {16}
 					font      = 'sans-serif'
 					color     = {Color4.White()}
-					value     = {playerData.name}
+					value     = {displayName}
 					textWrap  = 'nowrap'
 					textAlign = "middle-left"
 				/>
@@ -138,7 +129,7 @@ function BuildVotingOptions() {
 					uiTransform={{
 						width  : 92,
 						height : 36,
-						display: userId !== localPlayer.userId ? 'flex' : 'none',
+						display: userId !== clientStore.getUserId() ? 'flex' : 'none',
 					}}
 					value    = ""
 					fontSize = {16}
@@ -160,9 +151,11 @@ function BuildVotingOptions() {
 	return elements
 }
 
-export function UpdateVotingOptions() {
-	votingOptions = BuildVotingOptions()
+function UpdateVotingOptions() {
+	votingOptions = GetVotingOptions()
 }
+
+UpdateVotingOptions()
 
 
 // MARK: Main VotingOptionsUI

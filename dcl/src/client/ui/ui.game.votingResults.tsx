@@ -3,46 +3,48 @@ import { MessageBus } from '@dcl/sdk/message-bus'
 import { getPlayer } from '@dcl/sdk/players';
 import { Color4 } from '@dcl/sdk/math'
 
-import { getUserAvatarUrl } from '../../shared/userData'
+import { userProfileCache } from 'src/shared/utils/userProfileCache'
 import { GetBackgroundTexture } from '../utils'
-import { GameManager } from '../gameManager';
 import { HideVotingOptions } from './ui.game.votingOptions';
+import { eventBus } from 'src/shared/utils/eventBus';
+import { ClientEvents } from '../clientEvents';
+import { ClientState } from 'src/shared/types';
+import { GameStatus } from 'src/shared/enums';
+import { ClientStore } from '../clientStore';
 
 
 // Placeholders for dynamic content
-let votingResults: any[]  = [];
 var visibleVotingResults : boolean = false
-
+const clientStore = ClientStore.getInstance()
+let votingResults: ReactEcs.JSX.Element[] = []
 
 // Utility functions
 export function ShowVotingResults() {
-	HideVotingOptions()
-	UpdateVotingResults()
 	visibleVotingResults = true
+	UpdateVotingResults()
 }
 export function HideVotingResults() {
 	visibleVotingResults = false
 }
 
-export function UpdateVotingResults() {
-	votingResults = BuildVotingResults()
-}
-
+eventBus.on(ClientEvents.NOTIFY_STATE, (data: ClientState) => {
+	if (data.serverStatus === GameStatus.GAME_ENDED) {
+		ShowVotingResults()
+	} else {
+		HideVotingResults()
+	}
+})
 
 // MARK: BuildVotingResults
-function BuildVotingResults() {
-	// Defensive check: ensure GameManager is initialized
-	if (!GameManager || !GameManager.state) {
-		return []
-	}
+function GetVotingResults() {
 
-	const elements: any[]                  = [] // array of UIElements for each player
+	const elements: ReactEcs.JSX.Element[] = [] // array of UIElements for each player
 	const results : Record<string, number> = {} // dictionary of vote results
 	
-	console.log("ui.Game.VotingResults: BuildVotingResults(), votes.length:", GameManager.state.votes.length)
+	console.log("ui.Game.VotingResults: BuildVotingResults(), votes.length:", clientStore.getVoteResults().size.toString())
 
 	// Build the results, getting the count of votes for each player
-	Object.entries(GameManager.state.votes).forEach(([userId, votedFor]) => {
+	Object.entries(clientStore.getVoteResults()).forEach(([userId, votedFor]) => {
 		if (results[votedFor] === undefined) {
 			results[votedFor] = 1
 		} else {
@@ -109,6 +111,11 @@ function BuildVotingResults() {
 		const isEven            = elements.length % 2 === 0
 		const backgroundTexture = GetBackgroundTexture(isEven)
 
+		const avatarTexture = userProfileCache.getCachedAvatarUrl(userId)
+		if (!avatarTexture) {
+			userProfileCache.whenAvatarUrlAvailable(userId, UpdateVotingResults)
+		}
+
 		elements.push(
 			<UiEntity
 				key={`voting_result_${userId}`}
@@ -143,7 +150,7 @@ function BuildVotingResults() {
 						margin: { right: 10 },
 					}}
 					uiBackground={{
-						texture: { src: getUserAvatarUrl(userId) },
+						texture: { src: avatarTexture },
 						textureMode  : "stretch"
 					}}
 				/>
@@ -191,6 +198,12 @@ function BuildVotingResults() {
 	})
 	return elements
 }
+
+function UpdateVotingResults() {
+	votingResults = GetVotingResults()
+}
+
+UpdateVotingResults()
 
 
 // MARK: Main VotingResultsUI
