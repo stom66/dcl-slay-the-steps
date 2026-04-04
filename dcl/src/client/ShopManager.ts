@@ -7,7 +7,9 @@ import { ShopSlot, Wearable } from "src/client/data/shopSlotData"
 import { OutfitManager } from "src/client/outfitManager"
 import { ShopZone, shopZones } from "src/client/data/shopZoneData"
 import { blockedCreatorAddresses, blockedItemURNs, blockedKeywords } from "src/client/data/shopBlockedItems"
-import { FetchZoneItems, hsvToColor3 } from "src/client/utils"
+import { FetchZoneItems } from "src/client/utils"
+import { SoundManager } from "src/client/soundManager"
+import { sfx } from "src/client/data/sfx"
 
 /**
  * Manages shop zones, their items, and UI interactions.
@@ -119,6 +121,7 @@ export namespace ShopManager {
 				},
 				() => {
 					PreviousPage(zone)
+					SoundManager.PlaySound(sfx.buttons)
 				}
 			)
 
@@ -141,6 +144,7 @@ export namespace ShopManager {
 				},
 				() => {
 					NextPage(zone)
+					SoundManager.PlaySound(sfx.buttons)
 				}
 			)
 

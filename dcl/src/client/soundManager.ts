@@ -112,7 +112,7 @@ export namespace SoundManager {
 			if (audio) {
 				audio.playing = true;
 			}
-		}, 0);
+		}, 50);
 	}
 
 	function DoCountdown(gameStartTime: number) {

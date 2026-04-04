@@ -5,6 +5,8 @@ import * as utils from '@dcl-sdk/utils'
 import { hsvToColor3 } from 'src/client/utils'
 
 import { OutfitManager } from 'src/client/outfitManager'
+import { SoundManager } from './soundManager'
+import { sfx } from './data/sfx'
 
 type ColorPickerConfig = {
 	callback       : (color:  Color3) => void,
@@ -242,6 +244,9 @@ class ColorPicker {
 		Material.setPbrMaterial(markerEntity, {
 			albedoColor: Color4.fromColor3(this.currentColor)
 		})
+
+		// Trigger a soundeffect
+		SoundManager.PlaySound(sfx.colorPicker)
 
 		// Scale in and out the marker
 		const markerScale = 0.1
