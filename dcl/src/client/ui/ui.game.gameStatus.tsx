@@ -7,6 +7,7 @@ import { eventBus } from 'src/shared/utils/eventBus'
 import { ClientEvents } from '../clientEvents'
 import { NotifyTurnStartingPayload } from 'src/shared/types'
 import { clockSync } from 'src/shared/utils/clockSync'
+import { GameSettings } from 'src/shared/settings'
 const clientStore = ClientStore.getInstance()
 
 
@@ -36,7 +37,7 @@ function getTimeToGameStart() {
 }
 
 function getRoundTimeRemaing() {
-	const timeRemaining = Math.ceil((roundStartTime - Date.now()) / 1000)
+	const timeRemaining = Math.ceil((roundStartTime + GameSettings.ROUND_DURATION_PER_PLAYER - Date.now()) / 1000)
 	return timeRemaining > 0 ? timeRemaining : "~"
 }
 
@@ -68,8 +69,6 @@ export function GameStatusUI() {
 					flexDirection : 'row',
 					alignItems    : 'center',
 					justifyContent: 'flex-end',
-					
-					// justifyContent: clientStore.getServerStatus() == GameStatus.STARTING ? 'flex-end' : 'none'
 					margin        : { top: '35px' },
 					display       : visibleGameStatus ? 'flex' : 'none'
 				}}
