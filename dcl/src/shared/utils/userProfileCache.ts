@@ -12,10 +12,17 @@ const PROFILE_URL = 'https://peer.decentraland.org/lambdas/profiles/'
 class UserProfileCache {
 	private cache = new Map<string, DecentralandProfile>()
 	private inFlight = new Map<string, Promise<DecentralandProfile | null>>()
+	private avatarUrlUnavailable = new Set<string>()
+	private pendingAvatarCallbacks = new Map<string, Set<() => void>>()
 
 	private localUserId: string | undefined
 	private isInitialised = false
 	private initPromise: Promise<void> | null = null
+
+	private face256FromProfile(profile: DecentralandProfile | null | undefined): string {
+		const avatarUrl = profile?.avatars?.[0]?.avatar?.snapshots?.face256
+		return typeof avatarUrl === 'string' ? avatarUrl : ''
+	}
 
 	constructor() {}
 
@@ -101,13 +108,58 @@ class UserProfileCache {
 
 	}
 
+	/** Synchronous face256 URL from an already-cached profile; no network. */
+	getCachedAvatarUrl(userId?: string | null): string {
+		const id = userId ?? this.localUserId
+		if (!id) return ''
+
+		const profile = this.cache.get(id)
+		return profile ? this.face256FromProfile(profile) : ''
+	}
+
+	/**
+	 * Invokes onAvailable after a non-empty avatar URL is available, or when it is already cached.
+	 * Dedupes loads per userId; records failures/empty URLs so builds do not refetch every frame.
+	 */
+	whenAvatarUrlAvailable(userId: string, onAvailable: () => void): void {
+		if (!userId || this.avatarUrlUnavailable.has(userId)) return
+
+		const url = this.getCachedAvatarUrl(userId)
+		if (url) {
+			void Promise.resolve().then(() => onAvailable())
+			return
+		}
+
+		let listeners = this.pendingAvatarCallbacks.get(userId)
+		if (!listeners) {
+			listeners = new Set()
+			this.pendingAvatarCallbacks.set(userId, listeners)
+		}
+		listeners.add(onAvailable)
+
+		if (listeners.size !== 1) return
+
+		void this.getUserAvatarUrl(userId).then((newUrl) => {
+			const callbacks = this.pendingAvatarCallbacks.get(userId)
+			this.pendingAvatarCallbacks.delete(userId)
+			if (!newUrl) {
+				this.avatarUrlUnavailable.add(userId)
+				return
+			}
+			if (callbacks) {
+				for (const cb of callbacks) {
+					cb()
+				}
+			}
+		})
+	}
+
 	async getUserAvatarUrl(userId?: string | null): Promise<string> {
 		const id = userId ?? this.localUserId
 		if (!id) return ''
 
 		const profile = await this.getUserProfile(id)
-		const avatarUrl = profile?.avatars?.[0]?.avatar?.snapshots?.face256
-		return typeof avatarUrl === 'string' ? avatarUrl : ''
+		return this.face256FromProfile(profile)
 	}
 
 	private async fetchProfile(userId: string): Promise<DecentralandProfile | null> {

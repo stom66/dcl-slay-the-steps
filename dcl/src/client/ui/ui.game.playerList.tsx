@@ -17,29 +17,6 @@ const clientStore = ClientStore.getInstance()
 let currentPlayer    : undefined | string = ""   // userId of the currently active player to show the star icon during a round
 let playerList       : any[]              = []   // array of UIElements for each player
 
-const avatarUrlByUserId = new Map<string, string>()
-const avatarUrlRequestInFlight = new Set<string>()
-
-function requestAvatarUrl(userId: string) {
-	if (avatarUrlRequestInFlight.has(userId)) return
-
-	avatarUrlRequestInFlight.add(userId)
-	void userProfileCache.getUserAvatarUrl(userId)
-		.then((avatarUrl: string) => {
-			if (!avatarUrl) return
-			if (avatarUrlByUserId.get(userId) === avatarUrl) return
-
-			avatarUrlByUserId.set(userId, avatarUrl)
-			UpdatePlayerList()
-		})
-		.catch((error) => {
-			console.error("ui.Game.PlayerList: requestAvatarUrl(): Failed for user", userId, error)
-		})
-		.finally(() => {
-			avatarUrlRequestInFlight.delete(userId)
-		})
-}
-
 
 // Utility functions
 
@@ -79,9 +56,9 @@ function BuildPlayerList() {
 
 		const isEven    = elements.length % 2 === 0
 		const bgTexture = GetBackgroundTexture(isEven)
-		const avatarTexture = avatarUrlByUserId.get(userId) ?? ""
+		const avatarTexture = userProfileCache.getCachedAvatarUrl(userId)
 		if (!avatarTexture) {
-			requestAvatarUrl(userId)
+			userProfileCache.whenAvatarUrlAvailable(userId, UpdatePlayerList)
 		}
 
 		elements.push(
