@@ -1,11 +1,12 @@
 import { Color3, Vector3 } from "@dcl/sdk/math"
+
 import { GameSettings } from "src/shared/settings"
 
 import { Wearable } from "src/client/data/shopSlotData"
 import { ShopZone } from "src/client/data/shopZoneData"
 
 
-
+// MARK: GetRandomPointInCircle
 export function GetRandomPointInCircle(
 	center: Vector3, 
 	radius: number
@@ -19,13 +20,15 @@ export function GetRandomPointInCircle(
 }
 
 
-
+// MARK: GetBackgroundTexture
 export function GetBackgroundTexture(isEven: boolean) {
 	return isEven
 		? "assets/images/ui/bg-lighter.png"
 		: "assets/images/ui/bg-default.png";
 }
 
+
+// MARK: FetchZoneItems
 export async function FetchZoneItems( zone: ShopZone ) {
 	console.log(`ShopManager: FetchZoneItems: fetching items for zone "${zone.key}, page: ${zone.currentPage}, limit: ${zone.slots.length}"`)
 
@@ -75,10 +78,7 @@ export async function FetchZoneItems( zone: ShopZone ) {
 }
 
 
-
-/**
- * Build the API URL for fetching items for a specific zone
- */
+// MARK: BuildAPIUrl
 function buildAPIUrl(
 	zone : ShopZone,
 	skip : number = 0,
@@ -108,7 +108,7 @@ function buildAPIUrl(
 }
 
 
-
+// MARK: GetWearableData
 // Fetch a single wearable's metadata
 export async function GetWearableData(urn: string): Promise<Wearable> {
 	const defaultData = {
@@ -168,6 +168,8 @@ export async function GetWearableData(urn: string): Promise<Wearable> {
 	}
 }
 
+
+// MARK: HsvToColor3
 export function hsvToColor3(h: number, s: number, v: number): Color3 {
 	const i = Math.floor(h * 6)
 	const f = h * 6 - i

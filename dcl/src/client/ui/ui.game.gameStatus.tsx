@@ -1,27 +1,29 @@
 import ReactEcs, { UiEntity } from '@dcl/sdk/react-ecs'
 import { Color4 } from '@dcl/sdk/math'
 
-import { ClientStore } from 'src/client/clientStore'
 import { GameStatus } from 'src/shared/enums'
-import { eventBus } from 'src/shared/utils/eventBus'
-import { ClientEvents } from '../clientEvents'
-import { NotifyTurnStartingPayload } from 'src/shared/types'
-import { clockSync } from 'src/shared/utils/clockSync'
 import { GameSettings } from 'src/shared/settings'
+import { NotifyTurnStartingPayload } from 'src/shared/types'
+import { eventBus } from 'src/shared/utils/eventBus'
+import { clockSync } from 'src/shared/utils/clockSync'
+
+import { ClientStore } from 'src/client/clientStore'
+import { ClientEvents } from 'src/client/clientEvents'
+
+
+// MARK: Event Bindings
+eventBus.on(ClientEvents.NOTIFY_TURN_STARTING, (data: NotifyTurnStartingPayload) => {
+	playerName     = data.displayName
+	roundStartTime = clockSync.toLocalTime(data.sentAt)
+})
+
+
+// MARK: Vars
 const clientStore = ClientStore.getInstance()
 
-
-// Placeholders for dynamic content
-export var visibleGameStatus: boolean = true
 var playerName    : string = "Dave the Dapper"
 var roundStartTime: number = 0
 
-export function ShowGameStatus() {
-	visibleGameStatus = true
-}
-export function HideGameStatus() {
-	visibleGameStatus = false
-}
 
 function getStatusBackground() {
 	const status = clientStore.getServerStatus()
@@ -40,11 +42,6 @@ function getRoundTimeRemaing() {
 	const timeRemaining = Math.ceil((roundStartTime + GameSettings.ROUND_DURATION_PER_PLAYER - Date.now()) / 1000)
 	return timeRemaining > 0 ? timeRemaining : "~"
 }
-
-eventBus.on(ClientEvents.NOTIFY_TURN_STARTING, (data: NotifyTurnStartingPayload) => {
-	playerName     = data.displayName
-	roundStartTime = clockSync.toLocalTime(data.sentAt)
-})
 
 // MARK: Main GameUI
 export function GameStatusUI() {
@@ -70,7 +67,7 @@ export function GameStatusUI() {
 					alignItems    : 'center',
 					justifyContent: 'flex-end',
 					margin        : { top: '35px' },
-					display       : visibleGameStatus ? 'flex' : 'none'
+					display       : 'flex'
 				}}
 				uiBackground={{
 					texture: {

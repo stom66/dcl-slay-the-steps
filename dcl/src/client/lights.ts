@@ -1,4 +1,4 @@
-import { engine, LightSource, Material, MeshRenderer, Transform } from "@dcl/sdk/ecs"
+import { engine, LightSource, Material, Transform } from "@dcl/sdk/ecs"
 import { Color3, Quaternion, Vector3 } from "@dcl/sdk/math"
 
 export const SetupLights = () => {

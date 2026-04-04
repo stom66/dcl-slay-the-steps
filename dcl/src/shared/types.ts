@@ -1,7 +1,11 @@
-import { Wearable } from "src/client/data/shopSlotData"
-import { GameStatus } from "./enums"
 import { Color3 } from "@dcl/sdk/math"
 
+import { GameStatus } from "src/shared/enums"
+
+import { Wearable } from "src/client/data/shopSlotData"
+
+
+// MARK: Outfit
 export type Outfit = {
 	userId   : string
 	wearables: string[]
@@ -10,6 +14,8 @@ export type Outfit = {
 	skinColor: Color3
 }
 
+
+// MARK: ClientState
 export type ClientState = {
 	userId           : string
 	displayName      : string
@@ -32,6 +38,8 @@ export type ClientState = {
 	npcWearables     : Wearable[]
 }
 
+
+// MARK: ServerState
 export type ServerState = {
 	gameStartTime    : number,
 	outfits          : Map<string, Outfit> // userId -> outfit
@@ -41,8 +49,8 @@ export type ServerState = {
 	currentTurnUserId: string | undefined
 }
 
-// room message payloads
 
+// MARK: NotifyPlayerListPayload
 export type NotifyPlayerListPayload = {
 	sentAt: number
 	players: {
@@ -51,6 +59,8 @@ export type NotifyPlayerListPayload = {
 	}[]
 }
 
+
+// MARK: NotifyStatePayload
 export type NotifyStatePayload = {
 	gameStartTime: number
 	players      : NotifyPlayerListPayload['players']
@@ -62,6 +72,8 @@ export type NotifyStatePayload = {
 	}[]
 }
 
+
+// MARK: NotifyTurnStartingPayload
 export type NotifyTurnStartingPayload = {
 	displayName: string,
 	outfit     : Outfit,
@@ -69,6 +81,8 @@ export type NotifyTurnStartingPayload = {
 	userId     : string,
 }
 
+
+// MARK: LambdasProfileColor
 /** RGBA components 0–1 as returned on profile payloads */
 export type LambdasProfileColor = {
 	r: number
@@ -77,6 +91,8 @@ export type LambdasProfileColor = {
 	a: number
 }
 
+
+// MARK: LambdasProfileAvatarSnapshots
 /** Snapshot URLs when the catalyst has generated them; often `{}` until available. */
 export type LambdasProfileAvatarSnapshots = {
 	face256?: string
@@ -84,6 +100,8 @@ export type LambdasProfileAvatarSnapshots = {
 	body?   : string
 }
 
+
+// MARK: LambdasProfileAvatar
 export type LambdasProfileAvatar = {
 	bodyShape  : string
 	wearables  : string[]
@@ -95,6 +113,8 @@ export type LambdasProfileAvatar = {
 	snapshots? : LambdasProfileAvatarSnapshots
 }
 
+
+// MARK: LambdasProfileAvatarRecord
 /**
  * One element of the root `avatars` array: account-level fields plus nested `avatar` appearance.
  * Optional fields may be missing on older or sparse profiles.
@@ -128,6 +148,8 @@ export type LambdasProfileAvatarRecord = {
 	nameColor?         : LambdasProfileColor
 }
 
+
+// MARK: DecentralandProfile
 /** JSON body from GET https://peer.decentraland.org/lambdas/profiles/{address} */
 export type DecentralandProfile = {
 	/** Present on current catalyst responses; omit if using a minimal client. */

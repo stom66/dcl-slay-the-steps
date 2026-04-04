@@ -9,9 +9,9 @@ export const blockedItemURNs = [
 // An array of creator wallet addresses that will be blocked from showing
 // Useful for stopping buggy humans
 export const blockedCreatorAddresses = [
-	"0x447c9058be5c164e0c4aae380381e7a5215052d4", // Dhingia the transphobe
-	"0x84502852c6a9d2a526499521a67000fc39e84dda", // Dhingia fake "daughter"
-	"0x84f0daacbbaecbd9e67d261cdd5850e080466821", // Dhingias fake "wife"
+	"0x447c9058be5c164e0c4aae380381e7a5215052d4",
+	"0x84502852c6a9d2a526499521a67000fc39e84dda",
+	"0x84f0daacbbaecbd9e67d261cdd5850e080466821",
 ]
 
 // An array of blocked keywords - applies to item urn, title, and description

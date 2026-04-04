@@ -1,11 +1,10 @@
-// Handles messages sent from the client, to the server
-
-import { Outfit } from 'src/shared/types'
-import { ClientStore } from 'src/client/clientStore'
 import { MessageType, room } from 'src/shared/room'
+import { Outfit } from 'src/shared/types'
+
+import { ClientStore } from 'src/client/clientStore'
+
 
 export namespace ClientMessaging {
-
 
 	// MARK: Request Outfit Change
 	export function RequestOutfitChange() {
@@ -25,12 +24,10 @@ export namespace ClientMessaging {
 		room.send(MessageType.REQUEST_OUTFIT_UPDATE, outfit)
 	}
 
+
 	// MARK: Request Join Game
 	export function RequestJoinGame() {
 		const clientStore = ClientStore.getInstance()
-
-		// Ignore if we're already enrolled in the game
-		//if (clientStore.isEnrolledInGame()) return
 
 		// Let the server know about the new outfit
 		room.send(MessageType.REQUEST_JOIN_GAME, {
@@ -39,6 +36,8 @@ export namespace ClientMessaging {
 		})
 	}
 
+
+	// MARK: Request Emote
 	export function RequestEmote(emote: string) {
 		const clientStore = ClientStore.getInstance()
 
@@ -48,6 +47,7 @@ export namespace ClientMessaging {
 		// Let the server know about the new emote
 		room.send(MessageType.REQUEST_EMOTE, emote)
 	}
+
 
 	// MARK: Request Add Vote
 	export function RequestAddVote(userId: string) {
@@ -59,6 +59,7 @@ export namespace ClientMessaging {
 		// Let the server know about the new vote
 		room.send(MessageType.REQUEST_ADD_VOTE, userId)
 	}
+
 
 	// MARK: Request Remove Vote
 	export function RequestRemoveVote(userId: string) {

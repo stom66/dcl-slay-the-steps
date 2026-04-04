@@ -1,17 +1,21 @@
-import { eventBus } from "src/shared/utils/eventBus"
-import { ClientState } from "src/shared/types"
 import { GameStatus } from "src/shared/enums"
+import { ClientState } from "src/shared/types"
+import { eventBus } from "src/shared/utils/eventBus"
 
 import { ClientEvents } from "src/client/clientEvents"
 import { ClientStore } from "src/client/clientStore"
-import { SeatManager } from "src/client/seatManager"
 import { MannequinManager } from "src/client/mannequinManager"
+import { SeatManager } from "src/client/seatManager"
 
 
 export namespace gameStateHandler {
+
+	// MARK: Vars
 	var currentStatus: GameStatus = GameStatus.LOBBY
 	const clientStore = ClientStore.getInstance()
 
+
+	// MARK: Init
 	export function init() {
 		eventBus.on(ClientEvents.NOTIFY_STATE, (state: ClientState) => {
 			if (state.serverStatus !== currentStatus) {
@@ -46,15 +50,20 @@ export namespace gameStateHandler {
 		})
 	}
 
+	// MARK: Lobby
 	function onStateLobby(state: ClientState) {
 
 	}
 
+
+	// MARK: Starting
 	function onStateStarting(state: ClientState) {
 		console.log('gameStateHandler: onStateStarting: state', state)
 
 	}
 
+
+	// MARK: Started
 	function onStateStarted(state: ClientState) {
 		console.log('gameStateHandler: onStateStarted: state', state)
 		
@@ -73,18 +82,26 @@ export namespace gameStateHandler {
 
 	}
 
+
+	// MARK: Round Active
 	function onStateRoundActive(state: ClientState) {
 		console.log('gameStateHandler: onStateRoundActive: state', state)
 	}
 
+	
+	// MARK: Vote Start
 	function onStateVoteStart(state: ClientState) {
 		console.log('gameStateHandler: onStateVoteStart: state', state)
 	}
 
+
+	// MARK: Vote Results
 	function onStateVoteResults(state: ClientState) {
 		console.log('gameStateHandler: onStateVoteResults: state', state)
 	}
 
+
+	// MARK: Game Ended
 	function onStateGameEnded(state: ClientState) {
 		console.log('gameStateHandler: onStateGameEnded: state', state)
 		SeatManager.MovePlayerToLobby()

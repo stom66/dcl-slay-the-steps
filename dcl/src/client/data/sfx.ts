@@ -13,8 +13,9 @@ export const sfx = {
 	],
 
 	turnStartsSoon: [
-		"assets/sfx/confirm_style_3_001.wav",
-		"assets/sfx/confirm_style_3_002.wav",
+		//"assets/sfx/confirm_style_3_001.wav",
+		//"assets/sfx/confirm_style_3_002.wav",
+		"assets/sfx/turn-start-notify.wav",
 	],
 	
 	warning: [

@@ -2,30 +2,16 @@ import { AudioSource, engine, Entity, Transform } from "@dcl/sdk/ecs"
 import * as utils from '@dcl-sdk/utils'
 
 import { GameStatus } from 'src/shared/enums'
-import { ClientState, NotifyStatePayload } from 'src/shared/types'
+import { ClientState } from 'src/shared/types'
 import { eventBus } from 'src/shared/utils/eventBus'
 
 import { sfx } from 'src/client/data/sfx'
 import { ClientEvents } from 'src/client/clientEvents'
-import { ClientStore } from "src/client/clientStore"
 
 
 export namespace SoundManager {
-	const bgm_src = "assets/sfx/bgm.mp3"
-	let bgm: Entity
-	
-	const fadeDuration = 3.0
-	let fadingOut    = false
-	let fadingIn     = false
-	let fadeElapsed  = 0
-	let volume       = 0.5
 
-	var lastPlayedSfx: string | undefined = undefined
-	var sfxCache: Record<string, Entity> = {}	
-
-	//const clientStore = ClientStore.getInstance()
-
-	// Start the music when the game starts
+	// MARK: event bindings
 	eventBus.on(ClientEvents.NOTIFY_STATE, (data: ClientState) => {
 		if (data.serverStatus == GameStatus.STARTED) {
 			StartBGM()
@@ -41,8 +27,23 @@ export namespace SoundManager {
 	eventBus.on(ClientEvents.NOTIFY_ABORT_GAME, (data) => {
 		StopBGM()
 	})
+
+
+	// MARK: Vars
+	const bgm_src = "assets/sfx/bgm.mp3"
+	let bgm: Entity
 	
-	
+	const fadeDuration = 3.0
+	let fadingOut    = false
+	let fadingIn     = false
+	let fadeElapsed  = 0
+	let volume       = 0.5
+
+	var lastPlayedSfx: string | undefined = undefined
+	var sfxCache: Record<string, Entity> = {}	
+
+
+	// MARK: Init
 	export function init() {
 		engine.addSystem(System_UpdateSound)
 		bgm = engine.addEntity()
@@ -57,6 +58,8 @@ export namespace SoundManager {
 		preloadSfx()
 	}
 
+
+	// MARK: preloadSfx
 	function preloadSfx() {
 		for (const paths of Object.values(sfx)) {
 			for (const soundPath of paths) {
@@ -73,6 +76,8 @@ export namespace SoundManager {
 		}
 	}
 
+
+	// MARK: PlaySound
 	export function PlaySound(sound: string | string[]) {
 		if (typeof sound === 'string') {
 			sound = [sound]
@@ -115,6 +120,8 @@ export namespace SoundManager {
 		}, 50);
 	}
 
+
+	// MARK: DoCountdown
 	function DoCountdown(gameStartTime: number) {
 		const COUNT_LAST_N_SECOND = 5
 		const timeNow = Date.now()
@@ -126,6 +133,8 @@ export namespace SoundManager {
 		}
 	}
 
+
+	// MARK: StartBGM
 	function StartBGM() {
 		if (!bgm) return
 
@@ -139,6 +148,8 @@ export namespace SoundManager {
 		audio.playing = true
 	}
 	
+
+	// MARK: StopBGM
 	function StopBGM() {
 		if (!bgm) return
 		
@@ -151,6 +162,8 @@ export namespace SoundManager {
 		volume = audio.volume ?? 0.5
 	}
 	
+
+	// MARK: System_UpdateSound
 	const System_UpdateSound = (dt: number) => {
 		if (!(fadingOut || fadingIn) || !bgm) return
 		

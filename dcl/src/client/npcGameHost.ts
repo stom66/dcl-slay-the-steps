@@ -2,18 +2,29 @@ import { AvatarShape, Billboard, BillboardMode, engine, Entity, GltfContainer, I
 import { Color3, Quaternion, Vector3 } from "@dcl/sdk/math"
 import  * as utils from "@dcl-sdk/utils"
 
-import { ClientMessaging } from "src/client/clientMessaging"
 import { GameStatus } from "src/shared/enums"
-import { eventBus } from "src/shared/utils/eventBus"
-import { ClientEvents } from "./clientEvents"
 import { ClientState } from "src/shared/types"
-import { SoundManager } from "./soundManager"
-import { sfx } from "./data/sfx"
+import { eventBus } from "src/shared/utils/eventBus"
 
+import { sfx } from "src/client/data/sfx"
+import { ClientEvents } from "src/client/clientEvents"
+import { ClientMessaging } from "src/client/clientMessaging"
+import { SoundManager } from "src/client/soundManager"
+
+
+// MARK: Event Bindings
+eventBus.on(ClientEvents.NOTIFY_STATE, (data: ClientState) => {
+	updateGameHostNPC(data.serverStatus as GameStatus)
+})
+
+
+// MARK: Variables
 var podium: Entity | undefined = undefined
 var npcHost: Entity | undefined = undefined
 var hostID = "GH    "
 
+
+// MARK: GetHoverText
 function getHoverText(status: GameStatus) {
 	if (status == GameStatus.LOBBY) {
 		return "Start Game"
@@ -26,6 +37,7 @@ function getHoverText(status: GameStatus) {
 	}
 }
 
+// MARK: GetAvatarLabel
 function getAvatarLabel(status: GameStatus) {
 	if (status == GameStatus.LOBBY) {
 		return "Start a game 👇"
@@ -38,10 +50,7 @@ function getAvatarLabel(status: GameStatus) {
 	}
 }
 
-eventBus.on(ClientEvents.NOTIFY_STATE, (data: ClientState) => {
-	updateGameHostNPC(data.serverStatus as GameStatus)
-})
-
+// MARK: UpdateGameHostNPC
 function updateGameHostNPC(status: GameStatus) {
 	console.log("npcGameHost: updateGameHostNPC: status", status)
 	if (!podium || !npcHost) {
@@ -104,6 +113,7 @@ function updateGameHostNPC(status: GameStatus) {
 	}, 100)
 }
 
+// MARK: SetupGameHostNPC
 export function SetupGameHostNPC() {
 	const position = Vector3.create(16, 0.4, 16)
 

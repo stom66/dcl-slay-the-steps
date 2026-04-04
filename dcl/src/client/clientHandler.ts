@@ -1,13 +1,15 @@
-import { eventBus } from 'src/shared/utils/eventBus';
+import { GameStatus } from 'src/shared/enums';
 import { MessageType, room } from 'src/shared/room';
-import { clockSync } from 'src/shared/utils/clockSync';
-
 import { NotifyPlayerListPayload, NotifyStatePayload, NotifyTurnStartingPayload } from 'src/shared/types';
+import { clockSync } from 'src/shared/utils/clockSync';
+import { eventBus } from 'src/shared/utils/eventBus';
+
 import { ClientEvents } from 'src/client/clientEvents';
 import { ClientStore } from 'src/client/clientStore';
-import { GameStatus } from 'src/shared/enums';
+
 
 const clientStore = ClientStore.getInstance()
+
 
 export namespace ClientHandler {
 	export function init() {
@@ -28,6 +30,7 @@ export namespace ClientHandler {
 		eventBus.emit(ClientEvents.NOTIFY_ABORT_GAME, data)
 	}
 
+	
 	// MARK: State
 	function handleNotifyState(data: NotifyStatePayload) {
 		console.log('ClientHandler: handleNotifyState: state', data)
@@ -45,6 +48,7 @@ export namespace ClientHandler {
 		eventBus.emit(ClientEvents.NOTIFY_TURN_STARTING_SOON, {})
 	}
 
+
 	// MARK: Turn Starting
 	function handleNotifyTurnStarting(data: NotifyTurnStartingPayload) {
 		console.log('ClientHandler: handleNotifyTurnStarting')
@@ -55,6 +59,7 @@ export namespace ClientHandler {
 		eventBus.emit(ClientEvents.NOTIFY_TURN_STARTING, data)
 	}
 
+
 	// MARK: Player List
 	function handleNotifyPlayerList(data: NotifyPlayerListPayload) {
 		console.log('ClientHandler: handleNotifyPlayerList: players', data)
@@ -62,11 +67,13 @@ export namespace ClientHandler {
 		clientStore.setPlayers(playersMap)
 	}
 
+
 	// MARK: Emote
 	function handleNotifyEmote(userId: string, emote: string) {
 		console.log('ClientHandler: handleNotifyEmote: emote', emote)
 		//eventBus.emit(MessageType.NOTIFY_EMOTE, { userId: userId, emote: emote })
 	}
+
 
 	// MARK: Warning
 	function handleNotifyWarning(warning: string) {
@@ -74,12 +81,10 @@ export namespace ClientHandler {
 		eventBus.emit(ClientEvents.NOTIFY_WARNING, warning)
 	}
 
+
 	// MARK: Server Time
 	function handleNotifyServerTime(serverTime: number) {
 		//console.log('ClientHandler: handleNotifyServerTime: serverTime', serverTime)
 		clockSync.updateOffset(serverTime)
 	}
 }
-
-
-

@@ -1,10 +1,11 @@
-import ReactEcs, { Button, Label, ReactEcsRenderer, UiEntity} from '@dcl/sdk/react-ecs'
+import ReactEcs, { Button, UiEntity} from '@dcl/sdk/react-ecs'
 import { Color4 } from '@dcl/sdk/math'
 
 import { ClientStore } from 'src/client/clientStore'
 import { SeatManager } from 'src/client/seatManager'
+
+import { Divider, InfoRow, SectionHeader } from 'src/client/ui/ui.components'
 import { ShowHowToPlay } from 'src/client/ui/ui.game.howToPlay'
-import { Divider, InfoRow, SectionHeader } from './ui.components'
 
 const clientStore = ClientStore.getInstance()
 

@@ -3,30 +3,17 @@ import { MessageBus } from '@dcl/sdk/message-bus'
 import { getPlayer } from '@dcl/sdk/players';
 import { Color4 } from '@dcl/sdk/math'
 
-import { userProfileCache } from 'src/shared/utils/userProfileCache'
-import { GetBackgroundTexture } from '../utils'
-import { HideVotingOptions } from './ui.game.votingOptions';
-import { eventBus } from 'src/shared/utils/eventBus';
-import { ClientEvents } from '../clientEvents';
-import { ClientState } from 'src/shared/types';
 import { GameStatus } from 'src/shared/enums';
-import { ClientStore } from '../clientStore';
+import { ClientState } from 'src/shared/types';
+import { eventBus } from 'src/shared/utils/eventBus';
+import { userProfileCache } from 'src/shared/utils/userProfileCache'
+
+import { GetBackgroundTexture } from 'src/client/utils'
+import { ClientEvents } from 'src/client/clientEvents';
+import { ClientStore } from 'src/client/clientStore';
 
 
-// Placeholders for dynamic content
-var visibleVotingResults : boolean = false
-const clientStore = ClientStore.getInstance()
-let votingResults: ReactEcs.JSX.Element[] = []
-
-// Utility functions
-export function ShowVotingResults() {
-	visibleVotingResults = true
-	UpdateVotingResults()
-}
-export function HideVotingResults() {
-	visibleVotingResults = false
-}
-
+// MARK: Event Binding
 eventBus.on(ClientEvents.NOTIFY_STATE, (data: ClientState) => {
 	if (data.serverStatus === GameStatus.GAME_ENDED) {
 		ShowVotingResults()
@@ -34,6 +21,23 @@ eventBus.on(ClientEvents.NOTIFY_STATE, (data: ClientState) => {
 		HideVotingResults()
 	}
 })
+
+
+// MARK: Vars
+const clientStore = ClientStore.getInstance()
+var visibleVotingResults : boolean = false
+let votingResults: ReactEcs.JSX.Element[] = []
+
+
+// MARK: Utility functions
+function ShowVotingResults() {
+	visibleVotingResults = true
+	UpdateVotingResults()
+}
+function HideVotingResults() {
+	visibleVotingResults = false
+}
+
 
 // MARK: BuildVotingResults
 function GetVotingResults() {

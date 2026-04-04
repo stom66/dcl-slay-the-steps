@@ -2,14 +2,21 @@ import { Color4 } from '@dcl/sdk/math'
 import ReactEcs, { Button, UiEntity } from '@dcl/sdk/react-ecs'
 
 import { GameStatus } from 'src/shared/enums'
-import { ClientState, NotifyStatePayload } from 'src/shared/types'
+import { ClientState } from 'src/shared/types'
 import { eventBus } from 'src/shared/utils/eventBus'
 
 import { ClientEvents } from 'src/client/clientEvents'
-import { ClientStore } from '../clientStore'
 
 
-// Placeholders for dynamic content
+// MARK: Event Bindings
+eventBus.on(ClientEvents.NOTIFY_STATE, (data: ClientState) => {
+	if (data.serverStatus == GameStatus.STARTED && data.enrolledInGame) {
+		HideHowToPlay()
+	}
+})
+
+
+// MARK: Vars
 var visibleHowToPlay: boolean = false
 
 
@@ -21,12 +28,6 @@ export function HideHowToPlay() {
 	visibleHowToPlay = false
 }
 
-// Hide the UI when the round starts
-eventBus.on(ClientEvents.NOTIFY_STATE, (data: ClientState) => {
-	if (data.serverStatus == GameStatus.STARTED && data.enrolledInGame) {
-		HideHowToPlay()
-	}
-})
 
 // MARK: Main GameUI
 export function HowToPlayUI() {

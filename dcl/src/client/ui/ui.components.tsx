@@ -1,4 +1,4 @@
-import ReactEcs, { Button, Label, ReactEcsRenderer, UiEntity} from '@dcl/sdk/react-ecs'
+import ReactEcs, { UiEntity} from '@dcl/sdk/react-ecs'
 import { Color4 } from "@dcl/sdk/math"
 
 export const SectionHeader = ({ title }: { title: string }) => {

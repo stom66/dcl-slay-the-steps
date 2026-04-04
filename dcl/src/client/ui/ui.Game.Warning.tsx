@@ -2,39 +2,43 @@ import { Color4 } from '@dcl/sdk/math'
 import ReactEcs, { Button, Label, UiEntity } from '@dcl/sdk/react-ecs'
 
 import { GameStatus } from 'src/shared/enums'
-import { ClientState, NotifyStatePayload } from 'src/shared/types'
+import { ClientState } from 'src/shared/types'
 import { eventBus } from 'src/shared/utils/eventBus'
 
+import { sfx } from 'src/client/data/sfx'
 import { ClientEvents } from 'src/client/clientEvents'
-import { SoundManager } from '../soundManager'
-import { sfx } from '../data/sfx'
+import { SoundManager } from 'src/client/soundManager'
 
 
-// Placeholders for dynamic content
-var warningText   : string = ""
-var visibleWarning: boolean = false
-
+// MARK: Event Bindings
 eventBus.on(ClientEvents.NOTIFY_WARNING, (text: string) => {
 	ShowWarning(text)
 	SoundManager.PlaySound(sfx.warning)
 })
 
 eventBus.on(ClientEvents.NOTIFY_STATE, (data: ClientState) => {
-	if (data.serverStatus == GameStatus.ROUND_ACTIVE) {
+	if (data.serverStatus == GameStatus.STARTED) {
 		HideWarning()
 	}
 })
 
 
-export function ShowWarning(text: string) {
+// MARK: Vars
+var warningText   : string = ""
+var visibleWarning: boolean = false
+
+
+// MARK: Utility functions
+function ShowWarning(text: string) {
 	visibleWarning = true
 	warningText = text
 }
 
-export function HideWarning() {
+function HideWarning() {
 	visibleWarning = false
 	warningText = ""
 }
+
 
 // MARK: Main GameUI
 export function WarningUI() {

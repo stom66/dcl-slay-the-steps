@@ -1,23 +1,27 @@
 import ReactEcs, { UiEntity } from '@dcl/sdk/react-ecs'
 import * as utils from '@dcl-sdk/utils'
 
-
 import { GameSettings } from 'src/shared/settings'
 import { eventBus } from 'src/shared/utils/eventBus'
+
 import { sfx } from 'src/client/data/sfx'
 import { ClientEvents } from 'src/client/clientEvents'
 import { SoundManager } from 'src/client/soundManager'
 
 
+// MARK: Event Binding
 eventBus.on(ClientEvents.NOTIFY_TURN_STARTING_SOON, () => {
 	ShowYouAreNext()
 	SoundManager.PlaySound(sfx.turnStartsSoon)
 })
 
-// Placeholders for dynamic content
-export var visibleYouAreNext: boolean = false
 
-export function ShowYouAreNext(ignoreInterval: boolean = false) {
+// MARK: Vars
+var visibleYouAreNext: boolean = false
+
+
+// MARK: Utility functions
+function ShowYouAreNext(ignoreInterval: boolean = false) {
 	console.log("ui.Game.YouAreNext: ShowYouAreNext()")
 	visibleYouAreNext = true
 
@@ -27,7 +31,7 @@ export function ShowYouAreNext(ignoreInterval: boolean = false) {
 	}, timeout)
 }
 
-export function HideYouAreNext() {
+function HideYouAreNext() {
 	visibleYouAreNext = false
 }
 

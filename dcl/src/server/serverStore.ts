@@ -1,6 +1,12 @@
 import { GameStatus } from "src/shared/enums"
+import { GameSettings } from "src/shared/settings"
 import { Outfit, ServerState } from "src/shared/types"
 
+import { gameManager } from "src/server/gameManager"
+import { sendStateUpdate } from "src/server/serverMessaging"
+
+
+// MARK: ServerStore
 export class ServerStore {
 	private static instance: ServerStore | undefined
 
@@ -17,15 +23,21 @@ export class ServerStore {
 		console.log('ServerStore: constructor')
 	}
 
+	
+	// MARK: Instance
 	static getInstance(): ServerStore {
 		if (!ServerStore.instance) ServerStore.instance = new ServerStore()
 		return ServerStore.instance
 	}
 
+
+	// MARK: GetState
 	getState(): Readonly<ServerState> {
 		return this.serverState
 	}
 
+
+	// MARK: ResetState
 	resetState(): void {
 		this.serverState.status        = GameStatus.LOBBY
 		this.serverState.gameStartTime = 0
@@ -34,9 +46,15 @@ export class ServerStore {
 		this.serverState.votes         = new Map<string, string>()
 	}
 
+
+	// MARK: Status
 	setStatus(status: GameStatus): void {
 		this.serverState.status = status
 	}
+		getStatus(): GameStatus {
+			return this.serverState.status
+		}
+
 
 	// MARK: Outfits
 	setPlayerOutfit(userId: string, outfit: Outfit): void {
@@ -47,6 +65,7 @@ export class ServerStore {
 		}
 		this.serverState.outfits.set(userId, { ...outfit })
 	}
+
 
 	// MARK: Players
 	addPlayer(userId: string, displayName: string, outfit: Outfit): void {
@@ -59,15 +78,27 @@ export class ServerStore {
 		return this.serverState.players.size
 	}
 
-	removePlayer(userId: string): boolean {
+	getPlayerIDs(): string[] {
+		return Array.from(this.serverState.players.keys())
+	}
+
+	removePlayer(userId: string): void {
 		if (!this.serverState.players.has(userId)) {
 			console.log(`serverStore: removePlayer: userId ${userId} is not present in players map.`)
-			return false
 		}
 		this.serverState.players.delete(userId)
 		this.serverState.outfits.delete(userId)
-		return true
+
+		if (this.getPlayerCount() < 1) {
+			if (this.getStatus() !== GameStatus.STARTING) {
+				this.setStatus(GameStatus.LOBBY)
+				sendStateUpdate()
+			} else  {
+				gameManager.abortGame()
+			}
+		}
 	}
+
 
 	// MARK: Votes
 	addVote(voteFrom: string, voteFor: string): void {
@@ -89,10 +120,14 @@ export class ServerStore {
 		this.serverState.votes = new Map<string, string>()
 	}
 
+
+	// MARK: Game Start Time
 	setGameStartTime(gameStartTime: number): void {
 		this.serverState.gameStartTime = gameStartTime
 	}
 
+
+	// MARK: Current Turn User ID
 	setCurrentTurnUserId(userId: string): void {
 		this.serverState.currentTurnUserId = userId
 	}

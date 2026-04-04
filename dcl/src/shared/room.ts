@@ -1,7 +1,7 @@
 import { registerMessages } from '@dcl/sdk/network'
 import { Schemas } from '@dcl/sdk/ecs'
 
-// Message type enum
+// MARK: MessageType enum
 export enum MessageType {
 	REQUEST_STATE             = 'requestState',           // Used by the clients, to request the current game state
 	REQUEST_JOIN_GAME         = 'requestJoinGame',        // Used by the clients, to request to join a game
@@ -20,7 +20,7 @@ export enum MessageType {
 	NOTIFY_SERVER_TIME        = "notifyServerTime",       // Sent by server, to notify the clients of the server time
 }
 
-// Message schemas
+// MARK: Message schemas
 const Messages = {
 	// Sent by client
 	[MessageType.REQUEST_STATE]        : Schemas.Map({}),
@@ -94,5 +94,5 @@ const Messages = {
 	[MessageType.NOTIFY_SERVER_TIME]: Schemas.Int64,
 }
 
-// Register messages and export room
+// Export room
 export const room = registerMessages(Messages)

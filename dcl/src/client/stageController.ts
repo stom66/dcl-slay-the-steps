@@ -1,49 +1,26 @@
-import * as utils from '@dcl-sdk/utils'
 import { AvatarShape, EasingFunction, engine, Entity, PBAvatarEmoteCommand, Transform, Tween, TweenSequence, tweenSystem } from '@dcl/sdk/ecs'
 import { Color3, Quaternion, Vector3 } from '@dcl/sdk/math'
-import { getPlayer, onEnterScene } from '@dcl/sdk/players'
+import { getPlayer } from '@dcl/sdk/players'
+///import * as utils from '@dcl-sdk/utils'
 
 import { GameStatus } from 'src/shared/enums'
 import { GameSettings } from "src/shared/settings"
-import { ClientState, NotifyStatePayload, NotifyTurnStartingPayload, Outfit } from 'src/shared/types'
+import { ClientState, NotifyTurnStartingPayload, Outfit } from 'src/shared/types'
 import { eventBus } from 'src/shared/utils/eventBus'
 
 import { CameraController } from 'src/client/cameraController'
 import { ClientEvents } from 'src/client/clientEvents'
-import { SoundManager } from 'src/client/soundManager'
 import { ClientStore } from 'src/client/clientStore'
 
-import { SetCurrentPlayer } from 'src/client/ui/ui.game.playerList'
-import { ShowYouAreNext } from 'src/client/ui/ui.game.youAreNext'
-import { ShowEmotesHint } from 'src/client/ui/ui.game.emotes'
-import { HideHowToPlay } from 'src/client/ui/ui.game.howToPlay'
-import { HideWarning } from 'src/client/ui/ui.game.warning'
-
-
-// Handles all Stage related stuff, such as spawning NPCs to represent the player
-// Also handles player cameras
-
-let localPlayer: any
 
 export namespace StageController {
 
 	// MARK: Vars
-
 	const clientStore = ClientStore.getInstance()
 	var goLeft = true
-	
-	// Maps
-	let npcs: { userId: string, npc: Entity }[] = []
+	let npcs: { userId: string, npc: Entity }[] = [] // Maps userId to npc entity
 
-	// MARK: Waypoints
-	type waypoint = {
-		start?   : Vector3,
-		end?     : Vector3,
-		duration?: number,
-		distance?: number
-	}
-
-	
+	// Waypoint vars
 	const NPC_SPAWN_SCALE               = Vector3.create(1, 1, 1)
 	const NPC_SPAWN_ROTATION            = Quaternion.fromEulerDegrees(0, 180, 0)
 
@@ -62,6 +39,13 @@ export namespace StageController {
 	const NPC_PATH_EXIT_LEFT            = Vector3.create(3.76,  10.53, 12.07)
 	const NPC_PATH_EXIT_RIGHT           = Vector3.create(28.24, 10.53, 12.07)
 
+	// MARK: Waypoints
+	type waypoint = {
+		start?   : Vector3,
+		end?     : Vector3,
+		duration?: number,
+		distance?: number
+	}
 
 	function GetWaypointData(goLeft: boolean = true): waypoint[] {
 

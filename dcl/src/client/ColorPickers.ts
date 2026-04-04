@@ -1,13 +1,14 @@
 import { EasingFunction, engine, Entity, GltfContainer, GltfNodeModifiers, InputAction, Material, MaterialTransparencyMode, MeshRenderer, PBMaterial_PbrMaterial, pointerEventsSystem, PrimaryPointerInfo, RaycastQueryType, raycastSystem, Transform, Tween } from '@dcl/sdk/ecs'
 import { Color3, Color4, Quaternion, Vector3 } from '@dcl/sdk/math'
-
 import * as utils from '@dcl-sdk/utils'
+
+import { sfx } from 'src/client/data/sfx'
 import { hsvToColor3 } from 'src/client/utils'
-
 import { OutfitManager } from 'src/client/outfitManager'
-import { SoundManager } from './soundManager'
-import { sfx } from './data/sfx'
+import { SoundManager } from 'src/client/soundManager'
 
+
+// MARK: Type
 type ColorPickerConfig = {
 	callback       : (color:  Color3) => void,
 	position       : Vector3,
@@ -17,6 +18,7 @@ type ColorPickerConfig = {
 }
 
 
+// MARK: Class
 class ColorPicker {
 
 	// Constructor properties
@@ -138,7 +140,7 @@ class ColorPicker {
 	}
 
 
-	// MARK: Create Color presets
+	// MARK: CreateColorPresets
 	private CreatePresetButtons() {
 
 		const startZRot = 0

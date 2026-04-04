@@ -1,6 +1,7 @@
-import { Quaternion, Vector3 } from "@dcl/sdk/math";
-import { ShopSlot, shopSlots } from "./shopSlotData";
-import { Entity } from "@dcl/sdk/ecs";
+import { Quaternion, Vector3 } from "@dcl/sdk/math"
+import { Entity } from "@dcl/sdk/ecs"
+
+import { ShopSlot, shopSlots } from "src/client/data/shopSlotData"
 
 
 

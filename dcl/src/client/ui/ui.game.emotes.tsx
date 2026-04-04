@@ -1,34 +1,14 @@
 import ReactEcs, { Button, UiEntity } from '@dcl/sdk/react-ecs'
 import { Color4 } from '@dcl/sdk/math'
-import * as utils from '@dcl-sdk/utils'
 
-import { GameSettings } from 'src/shared/settings'
-import { ClientState, NotifyStatePayload, NotifyTurnStartingPayload } from 'src/shared/types'
+import { ClientState, NotifyTurnStartingPayload } from 'src/shared/types'
 import { eventBus } from 'src/shared/utils/eventBus'
 
 import { ClientEvents } from 'src/client/clientEvents'
 import { ClientStore } from 'src/client/clientStore'
-import { GameStatus } from 'src/shared/enums'
 
 
-const clientStore = ClientStore.getInstance()
-
-// Placeholders for dynamic content
-export var visibleEmotesHint: boolean = false
-
-export function ShowEmotesHint() {
-	console.log("ui.Game.Emotes: ShowEmotesHint()")
-	visibleEmotesHint = true
-	// Not needed - states will trigger it to close
-	//utils.timers.setTimeout(() => {
-	//	HideEmotesHint()
-	//}, GameSettings.ROUND_DURATION_PER_PLAYER)
-}
-
-export function HideEmotesHint() {
-	visibleEmotesHint = false
-}
-
+// MARK: Event Bindings
 eventBus.on(ClientEvents.NOTIFY_TURN_STARTING, (data: NotifyTurnStartingPayload) => {
 	if (clientStore.isMyTurn()) {
 		ShowEmotesHint()
@@ -43,6 +23,27 @@ eventBus.on(ClientEvents.NOTIFY_STATE, (data: ClientState) => {
 eventBus.on(ClientEvents.NOTIFY_ABORT_GAME, (data) => {
 	HideEmotesHint()
 })
+
+
+// MARK: Vars
+
+const clientStore = ClientStore.getInstance()
+export var visibleEmotesHint: boolean = false
+
+
+export function ShowEmotesHint() {
+	console.log("ui.Game.Emotes: ShowEmotesHint()")
+	visibleEmotesHint = true
+	// Not needed - states will trigger it to close
+	//utils.timers.setTimeout(() => {
+	//	HideEmotesHint()
+	//}, GameSettings.ROUND_DURATION_PER_PLAYER)
+}
+
+export function HideEmotesHint() {
+	visibleEmotesHint = false
+}
+
 
 
 // MARK: Main GameUI

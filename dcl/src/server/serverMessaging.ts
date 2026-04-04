@@ -1,6 +1,7 @@
-import { NotifyStatePayload, ServerState } from "src/shared/types"
 import { MessageType, room } from "src/shared/room"
-import { ServerStore } from "./serverStore"
+import { NotifyStatePayload, ServerState } from "src/shared/types"
+
+import { ServerStore } from "src/server/serverStore"
 
 
 export function sendStateUpdate(to?: string[]) {

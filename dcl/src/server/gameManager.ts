@@ -1,28 +1,26 @@
 import * as utils from "@dcl-sdk/utils"
 
-import { MessageType, room } from "src/shared/room"
 import { GameStatus } from "src/shared/enums"
+import { MessageType, room } from "src/shared/room"
 import { GameSettings } from "src/shared/settings"
 import { Outfit } from "src/shared/types"
 
-import { ServerStore } from "src/server/serverStore"
 import { sendStateUpdate } from "src/server/serverMessaging"
+import { ServerStore } from "src/server/serverStore"
+
 
 class GameManager {
 	static instance: GameManager
-
-	store: ServerStore
+	private readonly store: ServerStore
 
 	constructor() {
 		this.store = ServerStore.getInstance()
 	}
 
-	init() {
-		
-		//eventBus.on('player:joined', (userId: string) => {
-		//	this.onPlayerJoined(userId)
-		//})
-	}
+
+	// MARK: Init
+	init() { }
+
 
 	// MARK: onPlayerRequestJoin
 	onPlayerRequestJoin(displayName: string, outfit: Outfit, userId: string) {
@@ -67,6 +65,7 @@ class GameManager {
 		}
 	}
 
+
 	// MARK: startGameCountdown
 	startGameCountdown() {
 		console.log(`GameManager: startGameCountdown`)
@@ -86,6 +85,7 @@ class GameManager {
 			this.startGame()
 		}, GameSettings.COUNTDOWN_DURATION)
 	}
+
 
 	// MARK: startGame
 	startGame() {
@@ -147,10 +147,12 @@ class GameManager {
 		}, gameDuration)
 	}
 
+
 	// MARK: triggerTurnStarting
 	triggerTurnStart(userId: string) {
 		console.log(`GameManager: triggerTurnStarting: userId ${userId}`)
 		this.store.setCurrentTurnUserId(userId)
+		this.store.setStatus(GameStatus.ROUND_ACTIVE)
 
 		const outfit = this.store.getState().outfits.get(userId)
 		if (!outfit) {
@@ -164,6 +166,7 @@ class GameManager {
 			displayName: this.store.getState().players.get(userId) ?? "",
 		})
 	}
+
 
 	// MARK: triggerEmote
 	onPlayerRequestEmote(userId: string, emote: string) {
@@ -212,13 +215,14 @@ class GameManager {
 		sendStateUpdate()
 	}
 
+
 	// MARK: abortGame
 	abortGame() {
 		console.log(`GameManager: abortGame`)
 		
+		room.send(MessageType.NOTIFY_WARNING, `The game has been aborted!`, { to: this.store.getPlayerIDs() })
 		this.store.resetState()
 		sendStateUpdate()
-		// TODO: send an alert?
 	}
 }
 

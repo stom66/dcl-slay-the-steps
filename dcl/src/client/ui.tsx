@@ -11,6 +11,7 @@ import { VotingResultsUI } from 'src/client/ui/ui.game.votingResults'
 import { WarningUI } from 'src/client/ui/ui.game.warning'
 import { YouAreNextUI } from 'src/client/ui/ui.game.youAreNext'
 
+// MARK: Vars
 declare var process: {
 	env: {
 		NODE_ENV: string
@@ -19,6 +20,8 @@ declare var process: {
 const env = process.env.NODE_ENV
 const SHOW_DEBUG = env == "development"
 
+
+// MARK: Main
 const uiComponent = () => [
 	EmotesHintUI(),
 	GameStatusUI(),

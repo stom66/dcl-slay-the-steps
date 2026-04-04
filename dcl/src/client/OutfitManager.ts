@@ -1,27 +1,30 @@
-import { getPlayer } from "@dcl/sdk/players"
-import { AvatarBase, AvatarEquippedData, engine, Entity } from "@dcl/sdk/ecs"
+import { AvatarBase, AvatarEquippedData, engine } from "@dcl/sdk/ecs"
 import { Color3 } from "@dcl/sdk/math"
+import { getPlayer } from "@dcl/sdk/players"
 import * as utils from '@dcl-sdk/utils'
 
 import { eventBus } from "src/shared/utils/eventBus"
-import { GetWearableData } from "src/client/utils"
+
+import { sfx } from "src/client/data/sfx"
 import { Wearable } from "src/client/data/shopSlotData"
-import { ClientStore } from "src/client/clientStore"
 import { ClientEvents } from "src/client/clientEvents"
 import { ClientMessaging } from "src/client/clientMessaging"
-import { SoundManager } from "./soundManager"
-import { sfx } from "./data/sfx"
+import { ClientStore } from "src/client/clientStore"
+import { SoundManager } from "src/client/soundManager"
+import { GetWearableData } from "src/client/utils"
 
 
 export namespace OutfitManager {
 	
+	// MARK: Vars
+	const clientStore: ClientStore = ClientStore.getInstance()
+
 	var userData             : undefined | any = undefined
 	var isWearableDataLoaded : boolean         = false
 	var isNPCMannequinVisible: boolean         = true
 
-	const clientStore: ClientStore = ClientStore.getInstance()
 
-
+	// MARK: Init
 	export function init() {
 		console.log("OutfitManager: init")	
 		InitUserWearables()
@@ -41,8 +44,8 @@ export namespace OutfitManager {
 		})
 	}
 
+
 	// MARK: Init User Wearables
-	// Entry point: call once in main()
 	async function InitUserWearables(forceRefresh: boolean = false): Promise<void> {
 		if (isWearableDataLoaded && !forceRefresh) return
 
@@ -79,15 +82,16 @@ export namespace OutfitManager {
 
 			isWearableDataLoaded = true
 
-			if (isNPCMannequinVisible) {
-				eventBus.emit(ClientEvents.OUTFIT_CHANGED, {})
-			} // TODO: Redundandt? event gets triggers by the calls to clientStore above, so this might not be needed
+			//if (isNPCMannequinVisible) {
+			//	eventBus.emit(ClientEvents.OUTFIT_CHANGED, {})
+			//} // TODO: Redundandt? event gets triggers by the calls to clientStore above, so this might not be needed
 
 			console.log("OutfitManager InitUserWearables: got", playerWearables.length, "wearables for the player")
 		} catch (err) {
 			console.error("OutfitManager InitUserWearables: failed to load wearables", err)
 		}
 	}
+
 
 	// MARK: Equip Wearable
 	export async function EquipWearable(wearable: Wearable) {
@@ -109,6 +113,7 @@ export namespace OutfitManager {
 		SoundManager.PlaySound(sfx.equipWearable)
 	}
 
+
 	// MARK: Set Hair Color
 	export function SetHairColor(color: Color3) {
 		console.log("OutfitManager: SetHairColor:", Color3.toHexString(color))
@@ -117,6 +122,7 @@ export namespace OutfitManager {
 		// Fire the outfit changed event, which in turn updates the mannequin
 		eventBus.emit(ClientEvents.OUTFIT_CHANGED, {})
 	}
+
 
 	// MARK: Set Skin Color
 	export function SetSkinColor(color: Color3) {
@@ -128,17 +134,20 @@ export namespace OutfitManager {
 		ClientMessaging.RequestOutfitChange()
 	}
 
+
 	// MARK: Copy Outfit
 	export function CopyMyOutfit() {
 		console.log("OutfitManager: CopyMyOutfit")
 		clientStore.setNPCWearables([...clientStore.getPlayerWearables()])
 	}
 
+
 	// MARK: Remove Outfit
 	export function RemoveOutfit() {
 		console.log("OutfitManager: RemoveOutfit")
 		clientStore.setNPCWearables([])
 	}
+
 
 	// MARK: Swap Gender
 	export function SwapGender() {

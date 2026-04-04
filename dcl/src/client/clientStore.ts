@@ -1,14 +1,15 @@
 import { Color3 } from '@dcl/sdk/math'
 
-import { userProfileCache } from 'src/shared/utils/userProfileCache'
-import { ClientState, ServerState, Outfit, NotifyStatePayload } from 'src/shared/types'
 import { GameStatus } from 'src/shared/enums'
+import { ClientState, Outfit, NotifyStatePayload } from 'src/shared/types'
 import { eventBus } from 'src/shared/utils/eventBus'
-import { Wearable } from 'src/client/data/shopSlotData'
+import { userProfileCache } from 'src/shared/utils/userProfileCache'
 
+import { Wearable } from 'src/client/data/shopSlotData'
+import { clockSync } from 'src/shared/utils/clockSync'
 import { ClientEvents } from 'src/client/clientEvents'
 import { ClientMessaging } from 'src/client/clientMessaging'
-import { clockSync } from 'src/shared/utils/clockSync'
+
 
 // MARK: ClientStore
 export class ClientStore {
@@ -40,6 +41,8 @@ export class ClientStore {
 		console.log('ClientStore: constructor')
 	}
 
+
+	// MARK: Init
 	async init(): Promise<void> {
 		console.log('ClientStore: init')
 		const data = await userProfileCache.getUserProfile()
@@ -58,12 +61,12 @@ export class ClientStore {
 		console.log('ClientStore: fetchUserProfile: success. userId:', this.clientState.userId, 'displayName:', this.clientState.displayName)
 	}
 
+
 	// MARK: Instance
 	static getInstance(): ClientStore {
 		if (!ClientStore.instance) ClientStore.instance = new ClientStore()
 		return ClientStore.instance
 	}
-
 
 
 	// MARK: ClientState
@@ -80,7 +83,6 @@ export class ClientStore {
 		}
 
 
-
 	// MARK: User data
 	getUserId(): string {
 		return this.clientState.userId
@@ -88,7 +90,6 @@ export class ClientStore {
 	getDisplayName(): string {
 		return this.clientState.displayName
 	}
-
 
 
 	// MARK: Enrolled
@@ -100,7 +101,6 @@ export class ClientStore {
 		}
 
 
-
 	// MARK: Current Turn User ID
 	setCurrentTurnUserId(userId: string | undefined): void {
 		this.clientState.currentTurnUserId = userId
@@ -110,12 +110,10 @@ export class ClientStore {
 		}
 
 
-
 	// MARK: IsMyTurn
 	isMyTurn(): boolean {
 		return this.clientState.currentTurnUserId == this.clientState.userId
 	}
-
 
 
 	// MARK: Server Status
@@ -125,7 +123,6 @@ export class ClientStore {
 		getServerStatus(): GameStatus {
 			return this.clientState.serverStatus
 		}
-
 
 
 	// MARK: Game Start Time
@@ -148,7 +145,6 @@ export class ClientStore {
 		}
 
 
-
 	// MARK: Vote Results
 	setVoteResults(voteResults: Map<string, string>): void {
 		this.clientState.voteResults = voteResults
@@ -156,7 +152,6 @@ export class ClientStore {
 		getVoteResults(): Map<string, string> {
 			return this.clientState.voteResults
 		}
-
 
 
 	// MARK: Player Outfit Set/Getters
@@ -187,6 +182,7 @@ export class ClientStore {
 		getPlayerWearables(): Wearable[] {
 			return this.clientState.playerWearables
 		}
+		
 	getPlayerOutfit(): Outfit {
 		return {
 			userId   : this.clientState.userId,
@@ -197,7 +193,6 @@ export class ClientStore {
 		}
 	}
 	
-
 
 	// MARK: NPC Set/Getters
 	setNPCSkinColor(color: Color3): void {
@@ -217,6 +212,7 @@ export class ClientStore {
 		getNPCHairColor(): Color3 {
 			return this.clientState.npcHairColor
 		}
+
 	setNPCBodyShape(shape: string): void {
 		this.clientState.npcBodyShape = shape
 		eventBus.emit(ClientEvents.OUTFIT_CHANGED, {})

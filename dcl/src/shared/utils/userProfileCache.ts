@@ -2,22 +2,26 @@
  * Profile cache + lambdas fetch. Omit userId to use the local player once getPlayer() is valid.
  */
 
-import { getPlayer, onEnterScene } from '@dcl/sdk/players'
-import type { DecentralandProfile } from 'src/shared/types'
 import { engine } from '@dcl/sdk/ecs'
+import { getPlayer, onEnterScene } from '@dcl/sdk/players'
 
+import type { DecentralandProfile } from 'src/shared/types'
+
+
+// MARK: Vars
 const PROFILE_URL = 'https://peer.decentraland.org/lambdas/profiles/'
 
 
+// MARK: UserProfileCache
 class UserProfileCache {
-	private cache = new Map<string, DecentralandProfile>()
-	private inFlight = new Map<string, Promise<DecentralandProfile | null>>()
-	private avatarUrlUnavailable = new Set<string>()
+	private cache                  = new Map<string, DecentralandProfile>()
+	private inFlight               = new Map<string, Promise<DecentralandProfile | null>>()
+	private avatarUrlUnavailable   = new Set<string>()
 	private pendingAvatarCallbacks = new Map<string, Set<() => void>>()
 
-	private localUserId: string | undefined
-	private isInitialised = false
-	private initPromise: Promise<void> | null = null
+	private localUserId            : string | undefined
+	private isInitialised          = false
+	private initPromise            : Promise<void> | null   =  null
 
 	private face256FromProfile(profile: DecentralandProfile | null | undefined): string {
 		const avatarUrl = profile?.avatars?.[0]?.avatar?.snapshots?.face256
@@ -26,6 +30,8 @@ class UserProfileCache {
 
 	constructor() {}
 
+
+	// MARK: Init
 	async init(): Promise<void> {
 		if (this.isInitialised) return
 		if (this.initPromise) return this.initPromise
@@ -55,6 +61,8 @@ class UserProfileCache {
 		return this.initPromise
 	}
 
+
+	// MARK: waitForLocalPlayer
 	waitForLocalPlayer(): Promise<string> {
 		return new Promise((resolve) => {
 			const system = () => {
@@ -70,6 +78,8 @@ class UserProfileCache {
 		})
 	}
 
+
+	// MARK: getUserProfile
 	async getUserProfile(userId?: string | null): Promise<DecentralandProfile | null> {
 		if (!this.isInitialised) await this.init()
 
@@ -108,6 +118,7 @@ class UserProfileCache {
 
 	}
 
+	// MARK: getCachedAvatarUrl
 	/** Synchronous face256 URL from an already-cached profile; no network. */
 	getCachedAvatarUrl(userId?: string | null): string {
 		const id = userId ?? this.localUserId
@@ -117,6 +128,7 @@ class UserProfileCache {
 		return profile ? this.face256FromProfile(profile) : ''
 	}
 
+	// MARK: whenAvatarUrlAvailable
 	/**
 	 * Invokes onAvailable after a non-empty avatar URL is available, or when it is already cached.
 	 * Dedupes loads per userId; records failures/empty URLs so builds do not refetch every frame.
@@ -154,6 +166,8 @@ class UserProfileCache {
 		})
 	}
 
+
+	// MARK: getUserAvatarUrl
 	async getUserAvatarUrl(userId?: string | null): Promise<string> {
 		const id = userId ?? this.localUserId
 		if (!id) return ''
@@ -162,6 +176,8 @@ class UserProfileCache {
 		return this.face256FromProfile(profile)
 	}
 
+
+	// MARK: fetchProfile
 	private async fetchProfile(userId: string): Promise<DecentralandProfile | null> {
 		try {
 			const response = await fetch(PROFILE_URL + userId)

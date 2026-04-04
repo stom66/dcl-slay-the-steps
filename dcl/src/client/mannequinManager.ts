@@ -10,6 +10,7 @@ import { OutfitManager } from "src/client/outfitManager"
 
 export namespace MannequinManager {
 	
+	// MARK: Vars
 	var npcRoot             : undefined | Entity     = undefined
 	var npcBillboard        : undefined | Entity     = undefined
 	var npcMannequin        : undefined | Entity     = undefined
@@ -23,15 +24,16 @@ export namespace MannequinManager {
 	const clientStore: ClientStore = ClientStore.getInstance()
 
 
+	// MARK: Init
 	export function init() {
 		console.log("MannequinManager: init")
 
 		eventBus.on(ClientEvents.OUTFIT_CHANGED, () => {
 			ShowNPCMannequin()
 		})
+		
+		ShowNPCMannequin()
 	}
-
-
 
 
 	// MARK: Show NPC Mannequin
@@ -167,6 +169,7 @@ export namespace MannequinManager {
 		}
 	}
 
+	
 	// MARK: Hide NPC Mannequin
 	export function HideNPCMannequin() {
 		isNPCMannequinVisible = false

@@ -1,35 +1,19 @@
 import ReactEcs, { Button, Label, UiEntity } from '@dcl/sdk/react-ecs'
 import { Color4 } from '@dcl/sdk/math'
 
-import { userProfileCache } from 'src/shared/utils/userProfileCache'
-import { GetBackgroundTexture } from '../utils'
-import { ClientMessaging } from '../clientMessaging'
-import { ClientStore } from '../clientStore'
-import { eventBus } from 'src/shared/utils/eventBus'
-import { ClientEvents } from '../clientEvents'
-import { ClientState } from 'src/shared/types'
 import { GameStatus } from 'src/shared/enums'
+import { ClientState } from 'src/shared/types'
+import { eventBus } from 'src/shared/utils/eventBus'
+import { userProfileCache } from 'src/shared/utils/userProfileCache'
+
+import { GetBackgroundTexture } from 'src/client/utils'
+import { ClientEvents } from 'src/client/clientEvents'
+import { ClientMessaging } from 'src/client/clientMessaging'
+import { ClientStore } from 'src/client/clientStore'
 
 
-const clientStore = ClientStore.getInstance()
 
-
-// Placeholders for dynamic content
-var visibleVoting: boolean = false // toggles root element visibility
-let votedFor     : string  = ""    // userId of the currently active player to show the star icon during a round
-let votingOptions: ReactEcs.JSX.Element[] = []
-
-
-// Utility functions
-export function ShowVotingOptions() {
-	visibleVoting = true
-	UpdateVotingOptions()
-}
-export function HideVotingOptions() {
-	visibleVoting = false
-	votedFor      = ""
-}
-
+// MARK: Event Binding
 eventBus.on(ClientEvents.NOTIFY_STATE, (data: ClientState) => {
 	if (data.serverStatus === GameStatus.VOTING) {
 		ShowVotingOptions()
@@ -37,6 +21,25 @@ eventBus.on(ClientEvents.NOTIFY_STATE, (data: ClientState) => {
 		HideVotingOptions()
 	}
 })
+
+
+// MARK: Vars
+const clientStore = ClientStore.getInstance()
+var visibleVoting: boolean = false // toggles root element visibility
+let votedFor     : string  = ""    // userId of the currently active player to show the star icon during a round
+let votingOptions: ReactEcs.JSX.Element[] = []
+
+
+// MARK: Utility functions
+function ShowVotingOptions() {
+	visibleVoting = true
+	UpdateVotingOptions()
+}
+
+function HideVotingOptions() {
+	visibleVoting = false
+	votedFor      = ""
+}
 
 // Button function which triggers the actual vote
 function VoteForWinner(userId: string) {
@@ -53,6 +56,7 @@ function VoteForWinner(userId: string) {
 	console.log("ui.Game.VotingOptions: VoteForWinner(): userId", userId)
 	UpdateVotingOptions()
 }
+
 
 // MARK: BuildVotingOptions
 function GetVotingOptions() {

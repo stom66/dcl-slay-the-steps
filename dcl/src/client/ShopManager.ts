@@ -1,33 +1,27 @@
-import { Animator, AvatarShape, ColliderLayer, EasingFunction, engine, Entity, GltfContainer, InputAction, Material, MeshCollider, MeshRenderer, pointerEventsSystem, PrimaryPointerInfo, RaycastQueryType, raycastSystem, Transform, TriggerArea, triggerAreaEventsSystem } from "@dcl/sdk/ecs"
-import { Color3, Color4, Quaternion, Vector3 } from "@dcl/sdk/math"
-
+import { Animator, AvatarShape, ColliderLayer, engine, Entity, GltfContainer, InputAction, pointerEventsSystem, Transform, TriggerArea, triggerAreaEventsSystem } from "@dcl/sdk/ecs"
+import { Quaternion, Vector3 } from "@dcl/sdk/math"
 import * as utils from '@dcl-sdk/utils'
 
-import { ShopSlot, Wearable } from "src/client/data/shopSlotData"
-import { OutfitManager } from "src/client/outfitManager"
-import { ShopZone, shopZones } from "src/client/data/shopZoneData"
-import { blockedCreatorAddresses, blockedItemURNs, blockedKeywords } from "src/client/data/shopBlockedItems"
-import { FetchZoneItems } from "src/client/utils"
-import { SoundManager } from "src/client/soundManager"
 import { sfx } from "src/client/data/sfx"
+import { blockedCreatorAddresses, blockedItemURNs, blockedKeywords } from "src/client/data/shopBlockedItems"
+import { ShopSlot, Wearable } from "src/client/data/shopSlotData"
+import { ShopZone, shopZones } from "src/client/data/shopZoneData"
 
-/**
- * Manages shop zones, their items, and UI interactions.
- * Each zone can display items from the API and allow users to browse through pages.
- */
+import { OutfitManager } from "src/client/outfitManager"
+import { SoundManager } from "src/client/soundManager"
+import { FetchZoneItems } from "src/client/utils"
+
+
 export namespace ShopManager {
-	// Zone state: maps zone key to array of spawned item entities
-	var zoneItems: Record<string, Entity[]> = {}
-	
-	// UI entities: maps zone key to UI root entity
-	var zoneUIs: Record<string, Entity> = {}
-	
-	// Navigation state: maps zone key to current page number
-	var zonePages: Record<string, number> = {}
-	
-	// Trigger zone entities: maps zone key to trigger entity
-	var triggerZones: Record<string, Entity> = {}
 
+	// MARK: Vars
+	var zoneItems   : Record<string, Entity[]> = {} // Zone state           : maps zone key to array of spawned item entities
+	var zoneUIs     : Record<string, Entity>   = {} // UI entities          : maps zone key to UI root entity
+	var zonePages   : Record<string, number>   = {} // Navigation state     : maps zone key to current page number
+	var triggerZones: Record<string, Entity>   = {} // Trigger zone entities: maps zone key to trigger entity
+
+
+	// MARK: Init
 	export function init() {
 		console.log("ShopManager init")
 		initializeZones()
@@ -36,8 +30,8 @@ export namespace ShopManager {
 		SpawnAllZoneItems()
 	}
 
+
 	// MARK: - Zone Initialization
-	
 	// Initialize all zones with empty item arrays and page 0
 	function initializeZones() {
 		shopZones.forEach((zone) => {
@@ -46,8 +40,8 @@ export namespace ShopManager {
 		})
 	}
 
-	// MARK: - Trigger Zones
-	
+
+	// MARK: - Trigger Zones	
 	// Create trigger zones that detect when players enter/exit shop areas
 	function createTriggerZones() {
 		console.log("ShopManager: Creating trigger zones")
@@ -152,6 +146,7 @@ export namespace ShopManager {
 			zoneUIs[zone.key] = signEntity
 		})
 	}
+
 
 	// MARK: ShowHighlight
 	function ShowHighlight(zone: ShopZone) {
@@ -398,5 +393,3 @@ export namespace ShopManager {
 		return false
 	}
 }
-
-

@@ -1,6 +1,6 @@
-import { getWorldPosition, timers } from '@dcl-sdk/utils'
 import { engine, Entity, MainCamera, Transform, VirtualCamera } from '@dcl/sdk/ecs'
 import { Vector3 } from '@dcl/sdk/math'
+import { getWorldPosition, timers } from '@dcl-sdk/utils'
 
 import { GameStatus } from 'src/shared/enums'
 import { ClientState, NotifyStatePayload } from 'src/shared/types'
@@ -8,7 +8,19 @@ import { eventBus } from 'src/shared/utils/eventBus'
 
 import { ClientEvents } from 'src/client/clientEvents'
 
+
 export namespace CameraController {
+
+	// MARK: Event Binding
+	// Stop the music when the game ends
+	eventBus.on(ClientEvents.NOTIFY_STATE, (data: ClientState) => {
+		if (data.serverStatus == GameStatus.LOBBY) {
+			ResetCamera()
+		}
+	})
+
+
+	// MARK: Vars
 	const transitionDuration: number             = 0.5                        // Time the camera takes to switch from main to virtual cameras
 
 	var cameraActive        : boolean            = false
@@ -21,15 +33,7 @@ export namespace CameraController {
 	const maxCameraDistance : number             = 6
 
 
-	
-	// Stop the music when the game ends
-	eventBus.on(ClientEvents.NOTIFY_STATE, (data: ClientState) => {
-		if (data.serverStatus == GameStatus.LOBBY) {
-			ResetCamera()
-		}
-	})
-
-
+	// MARK: Init
 	export function init() {
 		console.log("CameraController: init()")
 		engine.addSystem(System_CameraPositionUpdate)
@@ -37,6 +41,8 @@ export namespace CameraController {
 		maxCameraDistanceSq = maxCameraDistance * maxCameraDistance
 	}
 	
+
+	// MARK: System
 	const System_CameraPositionUpdate = (dt: number) => {
 		if (!cameraActive || !currentCamera || !currentTarget) return
 
@@ -68,6 +74,8 @@ export namespace CameraController {
 		}
 	}
 
+
+	// MARK: TrackEntity
 	export function TrackEntity(entity: Entity) {
 		console.log("CameraController: TrackEntity(): ", entity.toString())
 
@@ -106,6 +114,8 @@ export namespace CameraController {
 		mainCamera.virtualCameraEntity = camera
 	}
 
+
+	// MARK: ResetCamera
 	export function ResetCamera() {
 		console.log("CameraController: ResetCamera()")
 		cameraActive = false

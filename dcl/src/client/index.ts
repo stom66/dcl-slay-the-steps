@@ -26,8 +26,8 @@ export async function initClient() {
 	CameraController.init()
 	MannequinManager.init()
 	OutfitManager.init()
-	SoundManager.init()
 	ShopManager.init()
+	SoundManager.init()
 	StageController.init()
 
 	SetupColorPickers()
