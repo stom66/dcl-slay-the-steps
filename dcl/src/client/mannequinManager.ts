@@ -73,7 +73,7 @@ export namespace MannequinManager {
 
 		AvatarShape.createOrReplace(npcMannequin, {
 			id       : "npc_mannequin    ", // Trailing spaces are required to hide the nametag above the NPC
-			name     : "    ",
+			name     : "",
 			bodyShape: clientStore.getNPCBodyShape(),
 			wearables: clientStore.getNPCWearables()?.map(w => w.urn) ?? [],
 			emotes   : [],
