@@ -4,6 +4,7 @@ import { NotifyStatePayload, ServerState } from "src/shared/types"
 import { ServerStore } from "src/server/serverStore"
 
 
+// MARK: sendStateUpdate
 export function sendStateUpdate(to?: string[]) {
 	const state       : ServerState = ServerStore.getInstance().getState()
 	const stateMessage: NotifyStatePayload = {
@@ -20,7 +21,6 @@ export function sendStateUpdate(to?: string[]) {
 		})),
 	}
 
-	
 	console.log('serverMessaging: sendStateUpdate, state:', stateMessage)
 
 	const recipients = to ? { to : to } : {}
@@ -28,6 +28,7 @@ export function sendStateUpdate(to?: string[]) {
 }
 
 
+// MARK: sendServerTime
 export function sendServerTime() {
 	room.send(MessageType.NOTIFY_SERVER_TIME, Date.now())
 }

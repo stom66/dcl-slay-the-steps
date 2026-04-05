@@ -32,3 +32,4 @@ export async function initServer(): Promise<void> {
 		serverStore.removePlayer(userId)
 	})
 }
+ 
