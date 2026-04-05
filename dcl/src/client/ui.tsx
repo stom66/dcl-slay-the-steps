@@ -23,14 +23,14 @@ const SHOW_DEBUG = env == "development"
 
 // MARK: Main
 const uiComponent = () => [
-	EmotesHintUI(),
+	YouAreNextUI(),
 	GameStatusUI(),
 	HowToPlayUI(),
+	EmotesHintUI(),
 	PlayerListUI(),
 	VotingOptionsUI(),
 	VotingResultsUI(),
 	WarningUI(),
-	YouAreNextUI(),
 	SHOW_DEBUG ? DebugUI() : null
 ]
 
