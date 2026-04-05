@@ -30,7 +30,7 @@ export namespace ClientHandler {
 		eventBus.emit(ClientEvents.NOTIFY_ABORT_GAME, data)
 	}
 
-	
+
 	// MARK: State
 	function handleNotifyState(data: NotifyStatePayload) {
 		console.log('ClientHandler: handleNotifyState: state', data)
@@ -65,13 +65,15 @@ export namespace ClientHandler {
 		console.log('ClientHandler: handleNotifyPlayerList: players', data)
 		const playersMap = new Map(data.players.map(p => [p.userId, p.displayName]))
 		clientStore.setPlayers(playersMap)
+
+		eventBus.emit(ClientEvents.PLAYERS_UPDATED, playersMap)
 	}
 
 
 	// MARK: Emote
 	function handleNotifyEmote(userId: string, emote: string) {
 		console.log('ClientHandler: handleNotifyEmote: emote', emote)
-		//eventBus.emit(MessageType.NOTIFY_EMOTE, { userId: userId, emote: emote })
+		eventBus.emit(MessageType.NOTIFY_EMOTE, { userId: userId, emote: emote })
 	}
 
 

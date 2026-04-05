@@ -6,9 +6,18 @@ import { ClientEvents } from "src/client/clientEvents"
 import { ClientStore } from "src/client/clientStore"
 import { MannequinManager } from "src/client/mannequinManager"
 import { SeatManager } from "src/client/seatManager"
+import { AvatarEmoteCommand, engine } from "@dcl/sdk/ecs"
+import { ClientMessaging } from "./clientMessaging"
 
 
 export namespace gameStateHandler {
+
+	// Event bindings
+	AvatarEmoteCommand.onChange(engine.PlayerEntity, (emote) => {
+		if (!emote) return
+		console.log('Emote played: ', emote.emoteUrn)
+		ClientMessaging.RequestEmote(emote.emoteUrn)
+	})
 
 	// MARK: Vars
 	var currentStatus: GameStatus = GameStatus.LOBBY
@@ -88,7 +97,7 @@ export namespace gameStateHandler {
 		console.log('gameStateHandler: onStateRoundActive: state', state)
 	}
 
-	
+
 	// MARK: Vote Start
 	function onStateVoteStart(state: ClientState) {
 		console.log('gameStateHandler: onStateVoteStart: state', state)

@@ -15,6 +15,11 @@ import { ClientStore } from 'src/client/clientStore'
 
 export namespace StageController {
 
+	// MARK: Event bindings
+	eventBus.on(ClientEvents.NOTIFY_EMOTE, ({ userId: userId, emote: emote }) => {
+		HandleEmotes(userId, emote)
+	})
+
 	// MARK: Vars
 	const clientStore = ClientStore.getInstance()
 	var goLeft = true
@@ -291,16 +296,17 @@ export namespace StageController {
 
 
 	// MARK: HandleEmotes
-	function HandleEmotes(userId: string, emote: PBAvatarEmoteCommand | undefined) {
+	function HandleEmotes(userId: string, emoteUrn: string | undefined) {
 		if (clientStore.getCurrentTurnUserId() !== userId) {
 			return
 		}
-		console.log("StageController: HandleEmotes(): userId", userId, "emote", emote)
+		
+		console.log("StageController: HandleEmotes(): userId", userId, "emote", emoteUrn)
 		const npc = npcs.find((npc: { userId: string, npc: Entity }) => npc.userId === userId)?.npc
 		if (npc) {
 			const avatarShape = AvatarShape.getMutableOrNull(npc)
 			if (avatarShape) {
-				avatarShape.expressionTriggerId = emote?.emoteUrn
+				avatarShape.expressionTriggerId = emoteUrn
 				avatarShape.expressionTriggerTimestamp = (avatarShape.expressionTriggerTimestamp ?? 0) + 1
 			}
 		}
