@@ -125,11 +125,13 @@ class GameManager {
 		playerTimings.forEach(playerTiming => {
 			// Send out the "you are next" message
 			utils.timers.setTimeout(() => {
-				room.send(MessageType.NOTIFY_TURN_STARTING_SOON, { to: [playerTiming.userId] })
+				console.log(`GameManager: startGame: sending "you are next" message to ${playerTiming.userId}`)
+				room.send(MessageType.NOTIFY_TURN_STARTING_SOON, {}, { to: [playerTiming.userId] })
 			}, playerTiming.startingSoonDelay)
 
 			// Trigger the round start for this player
 			utils.timers.setTimeout(() => {
+				console.log(`GameManager: startGame: triggering turn start for ${playerTiming.userId}`)
 				this.triggerTurnStart(playerTiming.userId)
 			}, playerTiming.roundStartDelay)
 		})
