@@ -14,7 +14,7 @@ export namespace CameraController {
 	// MARK: Event Binding
 	// Stop the music when the game ends
 	eventBus.on(ClientEvents.NOTIFY_STATE, (data: ClientState) => {
-		if (data.serverStatus == GameStatus.LOBBY) {
+		if (data.serverStatus == GameStatus.VOTING) {
 			ResetCamera()
 		}
 	})
