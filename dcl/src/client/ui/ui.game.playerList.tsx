@@ -15,6 +15,10 @@ eventBus.on(ClientEvents.NOTIFY_STATE, (data: ClientState) => {
 	UpdatePlayerList()
 })
 
+eventBus.on(ClientEvents.PLAYERS_UPDATED, (players: Map<string, string>) => {
+	UpdatePlayerList()
+})
+
 eventBus.on(ClientEvents.NOTIFY_TURN_STARTING, (data: NotifyTurnStartingPayload) => {
 	SetCurrentPlayer(data.outfit.userId)
 })
