@@ -16,12 +16,12 @@
   "tags": [],
   "scene": {
     "parcels": [
-      "-144,-147",
-      "-143,-147",
-      "-144,-146",
-      "-143,-146"
+      "0,0",
+      "1,0",
+      "0,1",
+      "1,1"
     ],
-    "base": "-144,-147"
+    "base": "0,0"
   },
   "spawnPoints": [
     {
@@ -64,7 +64,7 @@
     "projectId": "349d8e79-d765-476f-b871-021f89b71763"
   },
   "worldConfiguration": {
-    "name": "stom.dcl.eth"
+    "name": "slaythesteps.dcl.eth"
   },
   "creator": "",
   "authoritativeMultiplayer": true,
