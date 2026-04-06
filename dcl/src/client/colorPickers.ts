@@ -205,6 +205,9 @@ class ColorPicker {
 		// Get the local mouse position on the wheel
 		const local = await this.GetLocalMousePosition(this.entityColorWheel)
 		console.log("ColorPicker: SampleColorWheel(): local: ", local.toString())		
+
+		// Trigger a soundeffect
+		SoundManager.PlaySound(sfx.colorPicker)
 		
 		// Hue is based on the angle of the mouse position
 		const angle = Math.atan2(-local.x, local.y)
@@ -247,9 +250,6 @@ class ColorPicker {
 			albedoColor: Color4.fromColor3(this.currentColor)
 		})
 
-		// Trigger a soundeffect
-		SoundManager.PlaySound(sfx.colorPicker)
-
 		// Scale in and out the marker
 		const markerScale = 0.1
 		const markerLifespan = 250
@@ -273,6 +273,9 @@ class ColorPicker {
 		var value = -local.x + this.sliderRange / 2
 		value     = Math.min(Math.max(value, 0), this.sliderRange) / this.sliderRange
 		console.log("ColorPicker: SampleValueSlider(): value: ", value, local.x)
+
+		// Trigger a soundeffect
+		SoundManager.PlaySound(sfx.colorPicker)
 
 		this.SetValueSlider(value)
 	}

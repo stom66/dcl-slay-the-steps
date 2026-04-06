@@ -22,7 +22,7 @@ export const sfx = {
 		"assets/sfx/1775327982906.wav",
 		"assets/sfx/1775328004662.wav",
 		"assets/sfx/1775328166972.wav",
-		"assets/sfx/1775328171983.wav"
+		"assets/sfx/1775328171983.wav",
 	],
 	
 	warning: [
@@ -41,9 +41,16 @@ export const sfx = {
 	],
 
 	colorPicker: [
-		"assets/sfx/confirm_style_4_003.wav",
-		"assets/sfx/confirm_style_4_001.wav",
-		"assets/sfx/confirm_style_4_002.wav",
+		//"assets/sfx/confirm_style_4_003.wav",
+		//"assets/sfx/confirm_style_4_001.wav",
+		//"assets/sfx/confirm_style_4_002.wav",		
+		"assets/sfx/pop-1775419770213.wav",
+		//"assets/sfx/pop-775419572607.wav",
+		//"assets/sfx/pop-775419665212.wav",
+		//"assets/sfx/pop-1775419572607.wav",
+		"assets/sfx/pop-1775419611179.wav",
+		"assets/sfx/pop-1775419659559.wav",
+		"assets/sfx/pop-1775419754938.wav"
 	],
 }
 
