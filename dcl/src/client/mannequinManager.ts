@@ -1,4 +1,4 @@
-import { AvatarShape, Billboard, BillboardMode, engine, Entity, GltfContainer, InputAction, pointerEventsSystem, Transform } from "@dcl/sdk/ecs"
+import { Animator, AvatarShape, Billboard, BillboardMode, EasingFunction, engine, Entity, GltfContainer, InputAction, pointerEventsSystem, Transform, Tween } from "@dcl/sdk/ecs"
 import { Quaternion, Vector3 } from "@dcl/sdk/math"
 import * as utils from "@dcl-sdk/utils"
 
@@ -24,11 +24,16 @@ export namespace MannequinManager {
 	var npcBillboard         : undefined | Entity = undefined
 	var npcMannequin         : undefined | Entity = undefined
 	var npcPodium            : undefined | Entity = undefined
+	var npcHint		         : undefined | Entity = undefined
 	var npcBtnReset          : undefined | Entity = undefined
 	var npcBtnCopy           : undefined | Entity = undefined
 	var npcBtnSwap           : undefined | Entity = undefined
 
 	var isNPCMannequinVisible: boolean            = true
+	var showHint			 : boolean            = true
+
+	const showHintDelay: number = 2 * 1000
+	const showHintDuration: number = 10 * 1000
 
 	const clientStore: ClientStore = ClientStore.getInstance()
 
@@ -36,8 +41,6 @@ export namespace MannequinManager {
 	// MARK: Init
 	export function init() {
 		console.log("MannequinManager: init")
-		
-		//ShowNPCMannequin()
 	}
 
 
@@ -102,6 +105,39 @@ export namespace MannequinManager {
 				src: "assets/models/podiumnocollider.gltf",
 			})
 		}
+
+		// Create the hint
+		if (showHint) {
+			if (!npcHint || !Transform.getMutableOrNull(npcHint)) {
+				npcHint = engine.addEntity()
+				Transform.create(npcHint, {
+					parent  : npcPodium,
+					rotation: Quaternion.fromEulerDegrees(0, 180, 0),
+					scale   : Vector3.create(0, 0, 0),
+				})
+				GltfContainer.create(npcHint, {
+					src: "assets/models/dressThis.gltf",
+				})
+				Animator.create(npcHint, {
+					states: [
+						{
+							clip: "Idle",
+							playing: true,
+							loop: true,
+						}
+					]
+				})
+				utils.timers.setTimeout(() => {
+					Tween.setScale(npcHint!, Vector3.create(0,0,0), Vector3.create(1,1,1), 500)
+				}, showHintDelay)
+
+				utils.timers.setTimeout(() => {
+					showHint = false
+					Tween.setScale(npcHint!, Vector3.create(1, 1, 1), Vector3.create(0, 0, 0), 600, EasingFunction.EF_EASEINQUAD)
+				}, showHintDuration + showHintDelay)
+			}
+		}
+
 
 		// MARK: Btn: Reset Outfit
 		// Create the reset button
