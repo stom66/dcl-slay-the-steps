@@ -17,8 +17,6 @@ import { ClientStore } from 'src/client/clientStore';
 eventBus.on(ClientEvents.NOTIFY_STATE, (data: ClientState) => {
 	if (data.serverStatus === GameStatus.GAME_ENDED) {
 		ShowVotingResults()
-	} else {
-		HideVotingResults()
 	}
 })
 
@@ -43,18 +41,16 @@ function HideVotingResults() {
 function GetVotingResults() {
 
 	const elements: ReactEcs.JSX.Element[] = [] // array of UIElements for each player
-	const results : Record<string, number> = {} // dictionary of vote results
+	const results : Record<string, number> = {} // Count of votes per usedID
 	
-	console.log("ui.Game.VotingResults: BuildVotingResults(), votes.length:", clientStore.getVoteResults().size.toString())
-
-	// Build the results, getting the count of votes for each player
-	Object.entries(clientStore.getVoteResults()).forEach(([userId, votedFor]) => {
+	for (const [_, votedFor] of clientStore.getVoteResults()) {
 		if (results[votedFor] === undefined) {
 			results[votedFor] = 1
 		} else {
 			results[votedFor]++
 		}
-	})
+	}
+	console.log("ui.Game.VotingResults: BuildVotingResults(), results.length:", results.length)
 
 	// To sort voting results, we need an array, not an object. Let's get an array of [userId, count] and sort it.
 	const sortedResults = Object.entries(results).sort((a, b) => b[1] - a[1])
