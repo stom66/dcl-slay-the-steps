@@ -35,6 +35,14 @@ export namespace ClientMessaging {
 			outfit     : clientStore.getNPCOutfit(),
 		})
 	}
+	export function RequestJoinGameAsSpectator() {
+		const clientStore = ClientStore.getInstance()
+
+		// Let the server know about the new outfit
+		room.send(MessageType.REQUEST_SPECTATE_GAME, {
+			displayName: clientStore.getDisplayName()
+		})
+	}
 
 
 	// MARK: Request Emote

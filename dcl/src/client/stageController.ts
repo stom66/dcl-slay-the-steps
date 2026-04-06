@@ -20,6 +20,33 @@ export namespace StageController {
 		HandleEmotes(userId, emote)
 	})
 
+	/* eventBus.on(ClientEvents.NOTIFY_EMOTE, ({player, emote}) => {
+		HandleEmotes(player, emote)
+	}) */
+
+	eventBus.on(ClientEvents.NOTIFY_TURN_STARTING, (data: NotifyTurnStartingPayload) => {
+		console.log("StageController: NOTIFY_TURN_STARTING: data", data)
+		StartTurn(data)
+	})
+
+	eventBus.on(ClientEvents.JOIN_AS_SPECTATOR, (data) => {
+		console.log("StageController: JOIN_AS_SPECTATOR: data", data)
+		if (currentCameraTarget) {
+			CameraController.TrackEntity(currentCameraTarget)
+		}
+	})
+
+	eventBus.on(ClientEvents.NOTIFY_STATE, (data: ClientState) => {
+		if (data.serverStatus == GameStatus.GAME_ENDED) {
+			CleanupReset()
+		}
+	})
+
+	eventBus.on(ClientEvents.NOTIFY_ABORT_GAME, (data) => {
+		CleanupReset()
+	})
+
+
 	// MARK: Vars
 	const clientStore = ClientStore.getInstance()
 	var goLeft = true
@@ -43,6 +70,8 @@ export namespace StageController {
 
 	const NPC_PATH_EXIT_LEFT            = Vector3.create(3.76,  10.53, 12.07)
 	const NPC_PATH_EXIT_RIGHT           = Vector3.create(28.24, 10.53, 12.07)
+
+	let currentCameraTarget: Entity | undefined = undefined
 
 	// MARK: Waypoints
 	type waypoint = {
@@ -135,22 +164,6 @@ export namespace StageController {
 	// MARK: init
 	export function init() {
 		console.log("StageController: init()")
-
-		eventBus.on(ClientEvents.NOTIFY_EMOTE, ({player, emote}) => {
-			HandleEmotes(player, emote)
-		})
-		eventBus.on(ClientEvents.NOTIFY_TURN_STARTING, (data: NotifyTurnStartingPayload) => {
-			console.log("StageController: NOTIFY_TURN_STARTING: data", data)
-			StartTurn(data)
-		})
-		eventBus.on(ClientEvents.NOTIFY_STATE, (data: ClientState) => {
-			if (data.serverStatus == GameStatus.GAME_ENDED) {
-				CleanupReset()
-			}
-		})
-		eventBus.on(ClientEvents.NOTIFY_ABORT_GAME, (data) => {
-			CleanupReset()
-		})
 	}
 
 	// MARK: CleanupReset
@@ -166,6 +179,7 @@ export namespace StageController {
 		npcs = []
 
 		CameraController.ResetCamera()
+		currentCameraTarget = undefined
 	}
 
 
@@ -189,7 +203,11 @@ export namespace StageController {
 		})
 
 		// Track with the camera
-		CameraController.TrackEntity(npcCameraTarget)
+		currentCameraTarget = npcCameraTarget
+
+		if (clientStore.isEnrolledInGame() || clientStore.isSpectatorInGame()) {
+			CameraController.TrackEntity(npcCameraTarget)
+		}
 
 		// Trigger the NPC to walk
 		const waypoints = GetWaypointData(goLeft)

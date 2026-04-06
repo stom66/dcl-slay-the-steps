@@ -18,6 +18,7 @@ export namespace ClientHandler {
 		room.onMessage(MessageType.NOTIFY_TURN_STARTING, (data)      => { handleNotifyTurnStarting(data) })
 		room.onMessage(MessageType.NOTIFY_TURN_STARTING_SOON, (data) => { handleNotifyTurnStartingSoon() })
 		room.onMessage(MessageType.NOTIFY_PLAYER_LIST, (data)        => { handleNotifyPlayerList(data) })
+		room.onMessage(MessageType.NOTIFY_SPECTATOR_JOINED, (data)    => { handleNotifySpectatorJoined(data) })
 		room.onMessage(MessageType.NOTIFY_EMOTE, (data)              => { handleNotifyEmote(data.userId, data.emote) })
 		room.onMessage(MessageType.NOTIFY_WARNING, (data)            => { handleNotifyWarning(data) })
 		room.onMessage(MessageType.NOTIFY_SERVER_TIME, (data)        => { handleNotifyServerTime(data) })
@@ -67,6 +68,15 @@ export namespace ClientHandler {
 		clientStore.setPlayers(playersMap)
 
 		eventBus.emit(ClientEvents.PLAYERS_UPDATED, playersMap)
+	}
+
+
+	// MARK: Spectator Joined
+	function handleNotifySpectatorJoined(data: NotifyPlayerListPayload) {
+		console.log('ClientHandler: handleNotifySpectatorJoined: spectators', data)
+		const spectatorsMap = new Map(data.players.map(p => [p.userId, p.displayName]))
+
+		clientStore.setSpectators(spectatorsMap) // Handles the event bus emission, if the player has just joined
 	}
 
 

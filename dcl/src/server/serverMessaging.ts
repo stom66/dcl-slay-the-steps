@@ -13,6 +13,10 @@ export function sendStateUpdate(to?: string[]) {
 			displayName: displayName,
 			userId     : userId,
 		})),
+		spectators   : Array.from(state.spectators.entries()).map(([userId, displayName]) => ({
+			displayName: displayName,
+			userId     : userId,
+		})),
 		sentAt       : Date.now(),
 		status       : state.status,
 		voteResults  : Array.from(state.votes.entries()).map(([userId, voteFor]) => ({

@@ -15,6 +15,7 @@ export class ServerStore {
 		gameStartTime    : 0,
 		outfits          : new Map<string, Outfit>(),
 		players          : new Map<string, string>(),
+		spectators       : new Map<string, string>(),
 		status           : GameStatus.LOBBY,
 		votes            : new Map<string, string>(),
 	}
@@ -43,6 +44,7 @@ export class ServerStore {
 		this.serverState.gameStartTime = 0
 		this.serverState.outfits       = new Map<string, Outfit>()
 		this.serverState.players       = new Map<string, string>()
+		this.serverState.spectators    = new Map<string, string>()
 		this.serverState.votes         = new Map<string, string>()
 	}
 
@@ -72,6 +74,11 @@ export class ServerStore {
 		console.log(`serverStore: addPlayer: adding userId ${userId} to players map.`)
 		this.serverState.players.set(userId, displayName)
 		this.setPlayerOutfit(userId, outfit)
+	}
+
+	addSpectator(userId: string, displayName: string): void {
+		console.log(`serverStore: addSpectator: adding userId ${userId} to spectators map.`)
+		this.serverState.spectators.set(userId, displayName)
 	}
 
 	getPlayerCount(): number {

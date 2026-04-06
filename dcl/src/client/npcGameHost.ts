@@ -81,6 +81,7 @@ function updateGameHostNPC(status: GameStatus) {
 			} else if (status == GameStatus.STARTED || status == GameStatus.ROUND_ACTIVE) {
 				SoundManager.PlaySound(sfx.startGame)
 				//TODO: figure out spectate functionality
+				ClientMessaging.RequestJoinGameAsSpectator()
 			} else {
 				eventBus.emit(ClientEvents.NOTIFY_WARNING, "Please wait for the next game to start")
 			}

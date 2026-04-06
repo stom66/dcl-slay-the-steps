@@ -19,6 +19,7 @@ export class ClientStore {
 		userId           : "",
 		displayName      : "",
 		enrolledInGame   : false,
+		spectatorInGame  : false,
 		currentTurnUserId: "",
 
 		playerBodyShape  : "",
@@ -33,6 +34,7 @@ export class ClientStore {
 
 		gameStartTime    : 0,
 		playersInGame    : new Map<string, string>(),
+		spectatorsInGame : new Map<string, string>(),
 		serverStatus     : GameStatus.LOBBY,
 		voteResults      : new Map<string, string>(),
 	}
@@ -73,6 +75,7 @@ export class ClientStore {
 	setClientState(data: NotifyStatePayload): void {
 		this.setGameStartTime(clockSync.toLocalTime(data.gameStartTime))
 		this.setPlayers(new Map(data.players.map(p => [p.userId, p.displayName])))
+		this.setSpectators(new Map(data.spectators.map(p => [p.userId, p.displayName])))
 		this.setServerStatus(data.status as GameStatus)
 		this.setEnrolledInGame(data.players.some(p => p.userId === this.getUserId()))
 		this.setVoteResults(new Map(data.voteResults.map((p) => [p.userId, p.voteFor])))
@@ -98,6 +101,9 @@ export class ClientStore {
 	}
 		isEnrolledInGame(): boolean {
 			return this.clientState.enrolledInGame
+		}
+		isSpectatorInGame(): boolean {
+			return this.clientState.spectatorInGame
 		}
 
 
@@ -142,6 +148,22 @@ export class ClientStore {
 	}
 		getPlayers(): Map<string, string> {
 			return this.clientState.playersInGame
+		}
+
+	// MARK: Spectators
+	setSpectators(spectators: Map<string, string>): void {
+		const wasSpectatorInGame = this.clientState.spectatorInGame
+
+		this.clientState.spectatorsInGame = spectators
+		this.clientState.spectatorInGame = spectators.has(this.clientState.userId)
+
+		if (!wasSpectatorInGame && this.clientState.spectatorInGame) {
+			console.log('ClientStore: setSpectators: emitting JOIN_AS_SPECTATOR event')
+			eventBus.emit(ClientEvents.JOIN_AS_SPECTATOR, {})
+		}
+	}
+		getSpectators(): Map<string, string> {
+			return this.clientState.spectatorsInGame
 		}
 
 

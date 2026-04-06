@@ -27,6 +27,18 @@ export namespace SeatManager {
 		}
 	})
 
+	eventBus.on(ClientEvents.JOIN_AS_SPECTATOR, (data) => {
+		const spectatorIds = [...clientStore.getSpectators().keys()]
+		const spectatorIndex = spectatorIds.indexOf(clientStore.getUserId())
+
+		// Move them to a seat, but we go from the end of the seating array
+		if (spectatorIndex >= 0 && spectatorIndex < seatPositions.length) {
+			MovePlayerToSeat(seatPositions.length - spectatorIndex - 1)
+		} else {
+			console.error('SeatManager: JOIN_AS_SPECTATOR: spectator not found')
+		}
+	})
+
 
 	// MARK: Vars
 	const clientStore = ClientStore.getInstance()

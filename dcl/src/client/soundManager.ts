@@ -21,12 +21,15 @@ export namespace SoundManager {
 			StartBGM()
 		}
 		if (data.serverStatus == GameStatus.GAME_ENDED) {
-			if (!clientStore.isEnrolledInGame()) return
 			StopBGM()
 		}
 		if (data.serverStatus == GameStatus.STARTING) {
 			DoCountdown(data.gameStartTime)
 		}
+	})
+
+	eventBus.on(ClientEvents.JOIN_AS_SPECTATOR, (data) => {
+		StartBGM()
 	})
 
 	eventBus.on(ClientEvents.NOTIFY_ABORT_GAME, (data) => {

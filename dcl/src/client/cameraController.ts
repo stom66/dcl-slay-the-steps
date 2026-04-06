@@ -76,6 +76,7 @@ export namespace CameraController {
 
 
 	// MARK: TrackEntity
+	// Note this needs to be timeframe independent, so that a late-joining spectator gets the same view as the other players
 	export function TrackEntity(entity: Entity) {
 		console.log("CameraController: TrackEntity(): ", entity.toString())
 

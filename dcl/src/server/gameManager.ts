@@ -66,6 +66,36 @@ class GameManager {
 	}
 
 
+	// MARK: onPlayerRequestSpectate
+	onPlayerRequestSpectate(displayName: string, userId: string) {
+		console.log(`GameManager: onPlayerRequestSpectate: userId ${userId} requested to spectate the game`)
+		
+		const state = this.store.getState()
+		// Ensure the game is in progress, or starting
+		if (state.status !== GameStatus.STARTED && state.status !== GameStatus.ROUND_ACTIVE) {
+			console.log(`GameManager: onPlayerRequestSpectate: Game is not in the STARTED or ROUND_ACTIVE state, ignoring request to spectate`)
+			room.send(MessageType.NOTIFY_WARNING, `The game is not in progress, please wait for it to start!`, { to: [userId] })
+			return
+		}
+
+		// Ensure we've not got too many spectators
+		if (state.spectators.size + state.players.size >= GameSettings.MAX_PLAYERS) {
+			console.log(`GameManager: onPlayerRequestSpectate: Max spectators reached, ignoring request to spectate`)
+			room.send(MessageType.NOTIFY_WARNING, `The current game is full, please wait for the next game!`, { to: [userId] })
+			return
+		}
+
+		this.store.addSpectator(userId, displayName)
+
+		room.send(MessageType.NOTIFY_SPECTATOR_JOINED, {
+			sentAt: Date.now(),
+			players: Array.from(state.spectators.entries()).map(([userId, displayName]) => ({
+				userId: userId,
+				displayName: displayName,
+			})),
+		})
+	}
+
 	// MARK: startGameCountdown
 	startGameCountdown() {
 		console.log(`GameManager: startGameCountdown`)
@@ -150,7 +180,7 @@ class GameManager {
 	}
 
 
-	// MARK: triggerTurnStarting
+	// MARK: TurnStarting
 	triggerTurnStart(userId: string) {
 		console.log(`GameManager: triggerTurnStarting: userId ${userId}`)
 		this.store.setCurrentTurnUserId(userId)
@@ -170,7 +200,7 @@ class GameManager {
 	}
 
 
-	// MARK: triggerEmote
+	// MARK: Emote
 	onPlayerRequestEmote(userId: string, emote: string) {
 		console.log(`GameManager: triggerEmote: userId ${userId} requested to emote`, emote)
 		
@@ -184,7 +214,7 @@ class GameManager {
 	}
 
 
-	// MARK: triggerVotingStart
+	// MARK: VotingStart
 	triggerVotingStart() {
 		console.log(`GameManager: triggerVotingStart`)
 
@@ -197,7 +227,7 @@ class GameManager {
 	}
 
 
-	// MARK: triggerVotingEnd
+	// MARK: VotingEnd
 	triggerVotingEnd() {
 		console.log(`GameManager: triggerVotingEnd`)
 		
@@ -210,7 +240,7 @@ class GameManager {
 	}
 
 
-	// MARK: triggerLobby
+	// MARK: Lobby
 	triggerLobby() {
 		console.log(`GameManager: triggerLobby`)
 		this.store.resetState()

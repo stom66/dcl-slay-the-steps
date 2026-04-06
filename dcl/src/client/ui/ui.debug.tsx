@@ -57,6 +57,7 @@ export function DebugUI() {
 			<InfoRow label = "serverStatus"      value = {clientStore.getServerStatus()} />
 			<InfoRow label = "gameStartTime"     value = {clientStore.getGameStartTime().toString()} />
 			<InfoRow label = "playersInGame"     value = {clientStore.getPlayers().size.toString()} />
+			<InfoRow label = "spectatorsInGame"  value = {clientStore.getSpectators().size.toString()} />
 			<InfoRow label = "displayName"       value = {clientStore.getDisplayName()} />
 			<InfoRow label = "enrolledInGame"    value = {clientStore.isEnrolledInGame().toString()} />
 			<InfoRow label = "userId"            value = {clientStore.getUserId()} />

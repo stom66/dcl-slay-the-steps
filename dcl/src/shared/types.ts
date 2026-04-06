@@ -20,12 +20,14 @@ export type ClientState = {
 	userId           : string
 	displayName      : string
 	enrolledInGame   : boolean
+	spectatorInGame  : boolean
 	currentTurnUserId: string | undefined
 	voteResults      : Map<string, string>
 
 	gameStartTime    : number
 	serverStatus     : GameStatus
 	playersInGame    : Map<string, string>
+	spectatorsInGame : Map<string, string>
 
 	playerBodyShape  : string
 	playerSkinColor  : Color3
@@ -44,6 +46,7 @@ export type ServerState = {
 	gameStartTime    : number,
 	outfits          : Map<string, Outfit> // userId -> outfit
 	players          : Map<string, string> // userId -> displayName
+	spectators       : Map<string, string> // userId -> displayName
 	status           : GameStatus
 	votes            : Map<string, string> // voteFrom -> voteFor
 	currentTurnUserId: string | undefined
@@ -64,6 +67,7 @@ export type NotifyPlayerListPayload = {
 export type NotifyStatePayload = {
 	gameStartTime: number
 	players      : NotifyPlayerListPayload['players']
+	spectators   : NotifyPlayerListPayload['players']
 	sentAt       : number
 	status       : string
 	voteResults  : {
