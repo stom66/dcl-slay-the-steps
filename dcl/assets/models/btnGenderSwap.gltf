@@ -1,6 +1,6 @@
 {
 	"asset":{
-		"generator":"Khronos glTF Blender I/O v4.5.49",
+		"generator":"Khronos glTF Blender I/O v4.5.51",
 		"version":"2.0"
 	},
 	"scene":0,
@@ -58,6 +58,137 @@
 				0.6000000238418579,
 				0.6000000238418579,
 				0.6000000238418579
+			]
+		}
+	],
+	"animations":[
+		{
+			"channels":[
+				{
+					"sampler":0,
+					"target":{
+						"node":2,
+						"path":"translation"
+					}
+				},
+				{
+					"sampler":1,
+					"target":{
+						"node":2,
+						"path":"rotation"
+					}
+				},
+				{
+					"sampler":2,
+					"target":{
+						"node":2,
+						"path":"scale"
+					}
+				}
+			],
+			"name":"btn.Copy.001",
+			"samplers":[
+				{
+					"input":19,
+					"interpolation":"STEP",
+					"output":20
+				},
+				{
+					"input":19,
+					"interpolation":"STEP",
+					"output":21
+				},
+				{
+					"input":19,
+					"interpolation":"STEP",
+					"output":22
+				}
+			]
+		},
+		{
+			"channels":[
+				{
+					"sampler":0,
+					"target":{
+						"node":0,
+						"path":"translation"
+					}
+				},
+				{
+					"sampler":1,
+					"target":{
+						"node":0,
+						"path":"rotation"
+					}
+				},
+				{
+					"sampler":2,
+					"target":{
+						"node":0,
+						"path":"scale"
+					}
+				}
+			],
+			"name":"btn.Copy._collider_sphere.001",
+			"samplers":[
+				{
+					"input":19,
+					"interpolation":"STEP",
+					"output":23
+				},
+				{
+					"input":19,
+					"interpolation":"STEP",
+					"output":24
+				},
+				{
+					"input":19,
+					"interpolation":"STEP",
+					"output":25
+				}
+			]
+		},
+		{
+			"channels":[
+				{
+					"sampler":0,
+					"target":{
+						"node":1,
+						"path":"translation"
+					}
+				},
+				{
+					"sampler":1,
+					"target":{
+						"node":1,
+						"path":"rotation"
+					}
+				},
+				{
+					"sampler":2,
+					"target":{
+						"node":1,
+						"path":"scale"
+					}
+				}
+			],
+			"name":"mars-and-venus.svg",
+			"samplers":[
+				{
+					"input":19,
+					"interpolation":"STEP",
+					"output":26
+				},
+				{
+					"input":19,
+					"interpolation":"STEP",
+					"output":27
+				},
+				{
+					"input":19,
+					"interpolation":"STEP",
+					"output":28
+				}
 			]
 		}
 	],
@@ -349,6 +480,72 @@
 			"componentType":5123,
 			"count":192,
 			"type":"SCALAR"
+		},
+		{
+			"bufferView":19,
+			"componentType":5126,
+			"count":2,
+			"max":[
+				5
+			],
+			"min":[
+				0.016666666666666666
+			],
+			"type":"SCALAR"
+		},
+		{
+			"bufferView":20,
+			"componentType":5126,
+			"count":2,
+			"type":"VEC3"
+		},
+		{
+			"bufferView":21,
+			"componentType":5126,
+			"count":2,
+			"type":"VEC4"
+		},
+		{
+			"bufferView":22,
+			"componentType":5126,
+			"count":2,
+			"type":"VEC3"
+		},
+		{
+			"bufferView":23,
+			"componentType":5126,
+			"count":2,
+			"type":"VEC3"
+		},
+		{
+			"bufferView":24,
+			"componentType":5126,
+			"count":2,
+			"type":"VEC4"
+		},
+		{
+			"bufferView":25,
+			"componentType":5126,
+			"count":2,
+			"type":"VEC3"
+		},
+		{
+			"bufferView":26,
+			"componentType":5126,
+			"count":2,
+			"type":"VEC3"
+		},
+		{
+			"bufferView":27,
+			"componentType":5126,
+			"count":2,
+			"type":"VEC4"
+		},
+		{
+			"bufferView":28,
+			"componentType":5126,
+			"count":2,
+			"type":"VEC3"
 		}
 	],
 	"bufferViews":[
@@ -465,6 +662,56 @@
 			"byteLength":384,
 			"byteOffset":84696,
 			"target":34963
+		},
+		{
+			"buffer":0,
+			"byteLength":8,
+			"byteOffset":85080
+		},
+		{
+			"buffer":0,
+			"byteLength":24,
+			"byteOffset":85088
+		},
+		{
+			"buffer":0,
+			"byteLength":32,
+			"byteOffset":85112
+		},
+		{
+			"buffer":0,
+			"byteLength":24,
+			"byteOffset":85144
+		},
+		{
+			"buffer":0,
+			"byteLength":24,
+			"byteOffset":85168
+		},
+		{
+			"buffer":0,
+			"byteLength":32,
+			"byteOffset":85192
+		},
+		{
+			"buffer":0,
+			"byteLength":24,
+			"byteOffset":85224
+		},
+		{
+			"buffer":0,
+			"byteLength":24,
+			"byteOffset":85248
+		},
+		{
+			"buffer":0,
+			"byteLength":32,
+			"byteOffset":85272
+		},
+		{
+			"buffer":0,
+			"byteLength":24,
+			"byteOffset":85304
 		}
 	],
 	"samplers":[
@@ -475,7 +722,7 @@
 	],
 	"buffers":[
 		{
-			"byteLength":85080,
+			"byteLength":85328,
 			"uri":"btnGenderSwap.bin"
 		}
 	]

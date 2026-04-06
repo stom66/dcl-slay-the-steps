@@ -1,6 +1,6 @@
 {
 	"asset":{
-		"generator":"Khronos glTF Blender I/O v4.5.49",
+		"generator":"Khronos glTF Blender I/O v4.5.51",
 		"version":"2.0"
 	},
 	"scene":0,
@@ -30,6 +30,94 @@
 				0,
 				0.20000000298023224,
 				0
+			]
+		}
+	],
+	"animations":[
+		{
+			"channels":[
+				{
+					"sampler":0,
+					"target":{
+						"node":0,
+						"path":"translation"
+					}
+				},
+				{
+					"sampler":1,
+					"target":{
+						"node":0,
+						"path":"rotation"
+					}
+				},
+				{
+					"sampler":2,
+					"target":{
+						"node":0,
+						"path":"scale"
+					}
+				}
+			],
+			"name":"podium",
+			"samplers":[
+				{
+					"input":12,
+					"interpolation":"STEP",
+					"output":13
+				},
+				{
+					"input":12,
+					"interpolation":"STEP",
+					"output":14
+				},
+				{
+					"input":12,
+					"interpolation":"STEP",
+					"output":15
+				}
+			]
+		},
+		{
+			"channels":[
+				{
+					"sampler":0,
+					"target":{
+						"node":1,
+						"path":"translation"
+					}
+				},
+				{
+					"sampler":1,
+					"target":{
+						"node":1,
+						"path":"rotation"
+					}
+				},
+				{
+					"sampler":2,
+					"target":{
+						"node":1,
+						"path":"scale"
+					}
+				}
+			],
+			"name":"podium_collider",
+			"samplers":[
+				{
+					"input":12,
+					"interpolation":"STEP",
+					"output":16
+				},
+				{
+					"input":12,
+					"interpolation":"STEP",
+					"output":14
+				},
+				{
+					"input":12,
+					"interpolation":"STEP",
+					"output":17
+				}
 			]
 		}
 	],
@@ -206,6 +294,48 @@
 			"componentType":5123,
 			"count":372,
 			"type":"SCALAR"
+		},
+		{
+			"bufferView":12,
+			"componentType":5126,
+			"count":2,
+			"max":[
+				5
+			],
+			"min":[
+				0.016666666666666666
+			],
+			"type":"SCALAR"
+		},
+		{
+			"bufferView":13,
+			"componentType":5126,
+			"count":2,
+			"type":"VEC3"
+		},
+		{
+			"bufferView":14,
+			"componentType":5126,
+			"count":2,
+			"type":"VEC4"
+		},
+		{
+			"bufferView":15,
+			"componentType":5126,
+			"count":2,
+			"type":"VEC3"
+		},
+		{
+			"bufferView":16,
+			"componentType":5126,
+			"count":2,
+			"type":"VEC3"
+		},
+		{
+			"bufferView":17,
+			"componentType":5126,
+			"count":2,
+			"type":"VEC3"
 		}
 	],
 	"bufferViews":[
@@ -280,11 +410,41 @@
 			"byteLength":744,
 			"byteOffset":36020,
 			"target":34963
+		},
+		{
+			"buffer":0,
+			"byteLength":8,
+			"byteOffset":36764
+		},
+		{
+			"buffer":0,
+			"byteLength":24,
+			"byteOffset":36772
+		},
+		{
+			"buffer":0,
+			"byteLength":32,
+			"byteOffset":36796
+		},
+		{
+			"buffer":0,
+			"byteLength":24,
+			"byteOffset":36828
+		},
+		{
+			"buffer":0,
+			"byteLength":24,
+			"byteOffset":36852
+		},
+		{
+			"buffer":0,
+			"byteLength":24,
+			"byteOffset":36876
 		}
 	],
 	"buffers":[
 		{
-			"byteLength":36764,
+			"byteLength":36900,
 			"uri":"podium.bin"
 		}
 	]

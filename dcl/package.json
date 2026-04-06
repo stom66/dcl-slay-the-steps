@@ -14,15 +14,21 @@
     "upgrade-sdk": "npm install --save-dev @dcl/sdk@latest",
     "upgrade-sdk:next": "npm install --save-dev @dcl/sdk@next",
     "fetch-wearables": "tsx scripts/fetch-wearable-data.ts",
-    "update-shop-data": "tsx scripts/update-shop-data.ts"
+    "update-shop-data": "tsx scripts/update-shop-data.ts",
+    "server-logs": "sdk-commands sdk-server-logs"
   },
   "devDependencies": {
-    "@dcl/js-runtime": "7.17.0",
-    "@dcl/sdk": "7.17.0",
     "@types/node-fetch": "^2.6.11",
     "node-fetch": "^2.7.0",
     "tsx": "^4.7.0"
   },
+  "dependencies": {
+    "@dcl/sdk": "^7.21.1-22918726402.commit-ee210ee",
+    "@dcl/js-runtime": "7.21.1-22918726402.commit-ee210ee",
+    "@dcl-sdk/utils": "^1.3.2",
+    "dcl-npc-toolkit": "^1.5.1"
+  },
+  "bundleDependencies": [],
   "engines": {
     "node": ">=16.0.0",
     "npm": ">=6.0.0"
@@ -32,12 +38,5 @@
     "singleQuote": true,
     "printWidth": 120,
     "trailingComma": "none"
-  },
-  "dependencies": {
-    "@dcl-sdk/utils": "^1.3.2",
-    "dcl-npc-toolkit": "^1.5.1"
-  },
-  "bundleDependencies": [
-    "@dcl-sdk/utils"
-  ]
+  }
 }

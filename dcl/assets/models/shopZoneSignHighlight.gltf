@@ -1,6 +1,6 @@
 {
 	"asset":{
-		"generator":"Khronos glTF Blender I/O v4.5.49",
+		"generator":"Khronos glTF Blender I/O v4.5.51",
 		"version":"2.0"
 	},
 	"scene":0,
@@ -301,7 +301,7 @@
 		{
 			"bufferView":0,
 			"componentType":5126,
-			"count":192,
+			"count":384,
 			"max":[
 				0.420411616563797,
 				0.42041152715682983,
@@ -317,25 +317,25 @@
 		{
 			"bufferView":1,
 			"componentType":5126,
-			"count":192,
+			"count":384,
 			"type":"VEC3"
 		},
 		{
 			"bufferView":2,
 			"componentType":5126,
-			"count":192,
+			"count":384,
 			"type":"VEC2"
 		},
 		{
 			"bufferView":3,
 			"componentType":5123,
-			"count":960,
+			"count":1920,
 			"type":"SCALAR"
 		},
 		{
 			"bufferView":4,
 			"componentType":5126,
-			"count":192,
+			"count":384,
 			"max":[
 				0.4697592556476593,
 				0.4697595238685608,
@@ -351,13 +351,13 @@
 		{
 			"bufferView":5,
 			"componentType":5126,
-			"count":192,
+			"count":384,
 			"type":"VEC3"
 		},
 		{
 			"bufferView":6,
 			"componentType":5126,
-			"count":192,
+			"count":384,
 			"type":"VEC2"
 		},
 		{
@@ -442,100 +442,100 @@
 	"bufferViews":[
 		{
 			"buffer":0,
-			"byteLength":2304,
+			"byteLength":4608,
 			"byteOffset":0,
 			"target":34962
 		},
 		{
 			"buffer":0,
-			"byteLength":2304,
-			"byteOffset":2304,
-			"target":34962
-		},
-		{
-			"buffer":0,
-			"byteLength":1536,
+			"byteLength":4608,
 			"byteOffset":4608,
 			"target":34962
 		},
 		{
 			"buffer":0,
-			"byteLength":1920,
-			"byteOffset":6144,
+			"byteLength":3072,
+			"byteOffset":9216,
+			"target":34962
+		},
+		{
+			"buffer":0,
+			"byteLength":3840,
+			"byteOffset":12288,
 			"target":34963
 		},
 		{
 			"buffer":0,
-			"byteLength":2304,
-			"byteOffset":8064,
+			"byteLength":4608,
+			"byteOffset":16128,
 			"target":34962
 		},
 		{
 			"buffer":0,
-			"byteLength":2304,
-			"byteOffset":10368,
+			"byteLength":4608,
+			"byteOffset":20736,
 			"target":34962
 		},
 		{
 			"buffer":0,
-			"byteLength":1536,
-			"byteOffset":12672,
+			"byteLength":3072,
+			"byteOffset":25344,
 			"target":34962
 		},
 		{
 			"buffer":0,
 			"byteLength":8,
-			"byteOffset":14208
+			"byteOffset":28416
 		},
 		{
 			"buffer":0,
 			"byteLength":24,
-			"byteOffset":14216
+			"byteOffset":28424
 		},
 		{
 			"buffer":0,
 			"byteLength":32,
-			"byteOffset":14240
+			"byteOffset":28448
 		},
 		{
 			"buffer":0,
 			"byteLength":24,
-			"byteOffset":14272
+			"byteOffset":28480
 		},
 		{
 			"buffer":0,
 			"byteLength":24,
-			"byteOffset":14296
+			"byteOffset":28504
 		},
 		{
 			"buffer":0,
 			"byteLength":608,
-			"byteOffset":14320
+			"byteOffset":28528
 		},
 		{
 			"buffer":0,
 			"byteLength":2432,
-			"byteOffset":14928
+			"byteOffset":29136
 		},
 		{
 			"buffer":0,
 			"byteLength":1824,
-			"byteOffset":17360
+			"byteOffset":31568
 		},
 		{
 			"buffer":0,
 			"byteLength":24,
-			"byteOffset":19184
+			"byteOffset":33392
 		},
 		{
 			"buffer":0,
 			"byteLength":2432,
-			"byteOffset":19208
+			"byteOffset":33416
 		},
 		{
 			"buffer":0,
 			"byteLength":192,
-			"byteOffset":21640
+			"byteOffset":35848
 		}
 	],
 	"samplers":[
@@ -546,7 +546,7 @@
 	],
 	"buffers":[
 		{
-			"byteLength":21832,
+			"byteLength":36040,
 			"uri":"shopZoneSignHighlight.bin"
 		}
 	]

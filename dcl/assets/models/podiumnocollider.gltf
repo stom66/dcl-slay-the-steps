@@ -1,6 +1,6 @@
 {
 	"asset":{
-		"generator":"Khronos glTF Blender I/O v4.5.49",
+		"generator":"Khronos glTF Blender I/O v4.5.51",
 		"version":"2.0"
 	},
 	"scene":0,
@@ -16,6 +16,51 @@
 		{
 			"mesh":0,
 			"name":"podium.001"
+		}
+	],
+	"animations":[
+		{
+			"channels":[
+				{
+					"sampler":0,
+					"target":{
+						"node":0,
+						"path":"translation"
+					}
+				},
+				{
+					"sampler":1,
+					"target":{
+						"node":0,
+						"path":"rotation"
+					}
+				},
+				{
+					"sampler":2,
+					"target":{
+						"node":0,
+						"path":"scale"
+					}
+				}
+			],
+			"name":"podium.001",
+			"samplers":[
+				{
+					"input":8,
+					"interpolation":"STEP",
+					"output":9
+				},
+				{
+					"input":8,
+					"interpolation":"STEP",
+					"output":10
+				},
+				{
+					"input":8,
+					"interpolation":"STEP",
+					"output":11
+				}
+			]
 		}
 	],
 	"materials":[
@@ -144,6 +189,36 @@
 			"componentType":5123,
 			"count":192,
 			"type":"SCALAR"
+		},
+		{
+			"bufferView":8,
+			"componentType":5126,
+			"count":2,
+			"max":[
+				5
+			],
+			"min":[
+				0.016666666666666666
+			],
+			"type":"SCALAR"
+		},
+		{
+			"bufferView":9,
+			"componentType":5126,
+			"count":2,
+			"type":"VEC3"
+		},
+		{
+			"bufferView":10,
+			"componentType":5126,
+			"count":2,
+			"type":"VEC4"
+		},
+		{
+			"bufferView":11,
+			"componentType":5126,
+			"count":2,
+			"type":"VEC3"
 		}
 	],
 	"bufferViews":[
@@ -194,11 +269,31 @@
 			"byteLength":384,
 			"byteOffset":29492,
 			"target":34963
+		},
+		{
+			"buffer":0,
+			"byteLength":8,
+			"byteOffset":29876
+		},
+		{
+			"buffer":0,
+			"byteLength":24,
+			"byteOffset":29884
+		},
+		{
+			"buffer":0,
+			"byteLength":32,
+			"byteOffset":29908
+		},
+		{
+			"buffer":0,
+			"byteLength":24,
+			"byteOffset":29940
 		}
 	],
 	"buffers":[
 		{
-			"byteLength":29876,
+			"byteLength":29964,
 			"uri":"podiumnocollider.bin"
 		}
 	]
