@@ -31,22 +31,22 @@ export namespace SeatManager {
 	// MARK: Vars
 	const clientStore = ClientStore.getInstance()
 	const seatPositions = [
-		Vector3.create(5.719,  10, 5.659),
-		Vector3.create(7.99,   10, 7.98),
+		Vector3.create(26.276, 10, 5.659),
+		Vector3.create(24.005, 10, 14.844),
 		Vector3.create(10.261, 10, 5.659),
+		Vector3.create(7.99,   10, 14.844),
+		Vector3.create(21.734, 10, 5.659),
 		Vector3.create(7.99,   10, 3.387),
 		Vector3.create(5.719,  10, 17.115),
 		Vector3.create(7.99,   10, 19.437),
 		Vector3.create(10.261, 10, 17.115),
-		Vector3.create(7.99,   10, 14.844),
-		Vector3.create(21.734, 10, 5.659),
-		Vector3.create(24.005, 10, 7.98),
-		Vector3.create(26.276, 10, 5.659),
-		Vector3.create(24.005, 10, 3.387),
+		Vector3.create(7.99,   10, 7.98),
 		Vector3.create(21.734, 10, 17.115),
+		Vector3.create(24.005, 10, 7.98),
+		Vector3.create(24.005, 10, 3.387),
 		Vector3.create(24.005, 10, 19.437),
 		Vector3.create(26.276, 10, 17.115),
-		Vector3.create(24.005, 10, 14.844),
+		Vector3.create(5.719,  10, 5.659),
 	]
 
 
