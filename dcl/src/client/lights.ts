@@ -5,7 +5,7 @@ export const SetupLights = () => {
 	// Spawn some lights
 
 	// MARK: Downstairs Main
-	const lightDownstairs = engine.addEntity()
+/* 	const lightDownstairs = engine.addEntity()
 	Transform.create(lightDownstairs, {
 		position: Vector3.create(16, 3, 16),
 		rotation: Quaternion.fromEulerDegrees(0, 0, 0),
@@ -18,7 +18,7 @@ export const SetupLights = () => {
 		//color    : Color3.White(),
 		//active   : true,
 		shadowMaskTexture: Material.Texture.Common({src: "images/light-mask.png"})         
-	})
+	}) */
 
 	// MARK: Downstairs Booth
 	const lightDownstairsBooth = engine.addEntity()
@@ -32,21 +32,6 @@ export const SetupLights = () => {
 		intensity: 50000,
 		shadow   : false,
 		color    : Color3.Yellow(),
-		active   : true
-	})
-
-	// MARK: Downstairs Lamp1
-	const lightDownstairsLamp1 = engine.addEntity()
-	Transform.create(lightDownstairsLamp1, {
-		position: Vector3.create(7, 4.6, 21.415),
-		rotation: Quaternion.fromEulerDegrees(90, 0, 0),
-		scale: Vector3.create(1, 1, 1)
-	})
-	LightSource.create(lightDownstairsLamp1, {
-		type     : LightSource.Type.Spot({ innerAngle: 25, outerAngle: 30 }),
-		intensity: 1500000,
-		shadow   : false,
-		color    : Color3.Red(),
 		active   : true
 	})
 
