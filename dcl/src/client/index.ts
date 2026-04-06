@@ -24,15 +24,17 @@ export async function initClient() {
 	gameStateHandler.init()
 
 	CameraController.init()
-	OutfitManager.init()
-	MannequinManager.init() // needs to come after OutfitManager
-	ShopManager.init()
+	OutfitManager.init() // needs to come before MannequinManager
 	SoundManager.init()
 	StageController.init()
+	
+	ShopManager.init()
 
 	SetupColorPickers()
 	SetupGameHostNPC()
 	SetupLights()
 	SetupPortal()
 	SetupUI()
+	
+	MannequinManager.init() // needs to come after OutfitManager
 }
