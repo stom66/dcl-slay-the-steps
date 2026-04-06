@@ -24,7 +24,7 @@
   },
   "dependencies": {
 	  "@dcl/js-runtime": "7.21.1-22918726402.commit-ee210ee",
-	  "@dcl/sdk": "^7.21.1-22918726402.commit-ee210ee",
+	  "@dcl/sdk": "7.21.1-22918726402.commit-ee210ee",
 	  "@dcl-sdk/utils": "^1.4.0"
   },
   "bundleDependencies": [],
