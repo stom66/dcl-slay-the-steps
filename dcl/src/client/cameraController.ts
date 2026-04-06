@@ -53,7 +53,7 @@ export namespace CameraController {
 
 		if (!camera || !player || !target) return
 
-		// If the target is parented, use its world position by adding the parent's position.
+		// Target is parented, use its world position
 		let targetWorldPosition = getWorldPosition(currentTarget)
 	
 		// Compute the vector from player to target in world space
