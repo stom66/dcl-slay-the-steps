@@ -10,6 +10,7 @@ import { ShopZone, shopZones } from "src/client/data/shopZoneData"
 import { OutfitManager } from "src/client/outfitManager"
 import { SoundManager } from "src/client/soundManager"
 import { FetchZoneItems } from "src/client/utils"
+import { avatarManager } from "./avatarManager"
 
 
 export namespace ShopManager {
@@ -320,21 +321,22 @@ export namespace ShopManager {
 
 			const bodyShape = "urn:decentraland:off-chain:base-avatars:" + (wearable.bodyShapes?.[0] || "BaseMale")
 
-			AvatarShape.create(entity, {
-				id               : '    ',
-				emotes           : [],
-				bodyShape        : bodyShape,
-				wearables        : [wearable.urn],
+			avatarManager.SpawnAvatar(entity, {
+				id       : '    ',
+				emotes   : [],
+				bodyShape: bodyShape,
+				wearables: [wearable.urn],
 				showOnlyWearables: slot.showAvatar ? false : true,
 				eyeColor         : slot.eyeColor || undefined,
 				skinColor        : slot.skinColor || undefined,
 				hairColor        : slot.hairColor || undefined
+			}, undefined, () => {		
+				utils.timers.setTimeout(() => {
+					utils.tweens.startScaling(entity, Vector3.Zero(),  slot.scale || Vector3.One(), 0.5, utils.InterpolationType.EASEOUTEXPO)
+				}, 1000)
 			})
 		}
 		
-		utils.timers.setTimeout(() => {
-			utils.tweens.startScaling(entity, Vector3.Zero(),  slot.scale || Vector3.One(), 0.5, utils.InterpolationType.EASEOUTEXPO)
-		}, 500)
 
 		var hoverText = "Equip " + wearable.name
 		if (wearable.bodyShapes?.length && wearable.bodyShapes.length < 2) {

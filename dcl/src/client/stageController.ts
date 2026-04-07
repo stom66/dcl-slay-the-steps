@@ -11,6 +11,7 @@ import { eventBus } from 'src/shared/utils/eventBus'
 import { CameraController } from 'src/client/cameraController'
 import { ClientEvents } from 'src/client/clientEvents'
 import { ClientStore } from 'src/client/clientStore'
+import { avatarManager } from './avatarManager'
 
 
 export namespace StageController {
@@ -29,6 +30,7 @@ export namespace StageController {
 		StartTurn(data)
 	})
 
+	// If a player joins as spectator, and there's a camera target, track it
 	eventBus.on(ClientEvents.JOIN_AS_SPECTATOR, (data) => {
 		console.log("StageController: JOIN_AS_SPECTATOR: data", data)
 		if (currentCameraTarget) {
@@ -233,7 +235,7 @@ export namespace StageController {
 		const npc = engine.addEntity()
 
 		// the avatars wearables are in the outfit array, so we need to get the wearables from the outfit
-		AvatarShape.create(npc, {
+		avatarManager.SpawnAvatar(npc, {
 			id       : "npc_" + outfit.userId + "    ",
 			name     : displayName,
 			bodyShape: outfit.bodyShape,

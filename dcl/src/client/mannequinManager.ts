@@ -1,5 +1,5 @@
-import { Animator, AvatarShape, Billboard, BillboardMode, EasingFunction, engine, Entity, GltfContainer, InputAction, pointerEventsSystem, Transform, Tween } from "@dcl/sdk/ecs"
-import { Quaternion, Vector3 } from "@dcl/sdk/math"
+import { Animator, AvatarShape, Billboard, BillboardMode, ColliderLayer, EasingFunction, engine, Entity, GltfContainer, InputAction, Material, MeshRenderer, pointerEventsSystem, RaycastQueryType, raycastSystem, Transform, Tween } from "@dcl/sdk/ecs"
+import { Color4, Quaternion, Vector3 } from "@dcl/sdk/math"
 import * as utils from "@dcl-sdk/utils"
 
 import { eventBus } from "src/shared/utils/eventBus"
@@ -9,6 +9,7 @@ import { ClientEvents } from "src/client/clientEvents"
 import { ClientStore } from "src/client/clientStore"
 import { OutfitManager } from "src/client/outfitManager"
 import { SoundManager } from "./soundManager"
+import { avatarManager } from "./avatarManager"
 
 
 export namespace MannequinManager {
@@ -21,6 +22,8 @@ export namespace MannequinManager {
 	
 	// MARK: Vars
 	var npcRoot              : undefined | Entity = undefined
+	var npcFront             : undefined | Entity = undefined // used for raycast detection of mannequin
+	var npcBack              : undefined | Entity = undefined // used for raycast detection of mannequin
 	var npcBillboard         : undefined | Entity = undefined
 	var npcMannequin         : undefined | Entity = undefined
 	var npcPodium            : undefined | Entity = undefined
@@ -43,7 +46,6 @@ export namespace MannequinManager {
 		console.log("MannequinManager: init")
 	}
 
-
 	// MARK: Show NPC Mannequin
 	export function ShowNPCMannequin() {
 		console.log("MannequinManager: ShowNPCMannequin")
@@ -63,6 +65,30 @@ export namespace MannequinManager {
 			})
 		}
 
+			// Create the front raycast entity
+			if (!npcFront || !Transform.getMutableOrNull(npcFront)) {
+				console.log("MannequinManager: ShowNPCMannequin: creating missing npcFront")
+				npcFront = engine.addEntity()
+				Transform.create(npcFront, {
+					parent: npcRoot,
+					scale: Vector3.create(0.25, 0.25, 0.25),
+					position: Vector3.create(0, 1.25, 1),
+				})
+				//MeshRenderer.setSphere(npcFront)
+			}
+
+			// Create the back raycast entity
+			if (!npcBack || !Transform.getMutableOrNull(npcBack)) {
+				console.log("MannequinManager: ShowNPCMannequin: creating missing npcBack")
+				npcBack = engine.addEntity()
+				Transform.create(npcBack, {
+					parent: npcRoot,
+					scale: Vector3.create(0.25, 0.25, 0.25),
+					position: Vector3.create(0, 1.25, -1),
+				})
+				//MeshRenderer.setSphere(npcBack)
+			}
+
 		// Create the mannequin
 		if (!npcMannequin || !Transform.getMutableOrNull(npcMannequin)) {
 			console.log("MannequinManager: ShowNPCMannequin: creating missing npcMannequin")
@@ -74,15 +100,17 @@ export namespace MannequinManager {
 			})
 		}
 
-		AvatarShape.createOrReplace(npcMannequin, {
-			id       : "npc_mannequin    ", // Trailing spaces are required to hide the nametag above the NPC
-			name     : "",
-			bodyShape: clientStore.getNPCBodyShape(),
-			wearables: clientStore.getNPCWearables()?.map(w => w.urn) ?? [],
-			emotes   : [],
-			hairColor: clientStore.getNPCHairColor(),
-			skinColor: clientStore.getNPCSkinColor(),
-		})
+		if (!AvatarShape.getOrNull(npcMannequin)) {
+			avatarManager.SpawnAvatar(npcMannequin, {
+				id       : "npc_mannequin    ", // Trailing spaces are required to hide the nametag above the NPC
+				name     : "",
+				bodyShape: clientStore.getNPCBodyShape(),
+				wearables: clientStore.getNPCWearables()?.map(w => w.urn) ?? [],
+				emotes   : [],
+				hairColor: clientStore.getNPCHairColor(),
+				skinColor: clientStore.getNPCSkinColor(),
+			}, 1000)
+		}
 
 		// Creat the billboard entity - anything which should always rotate to face the player gets parented to this
 		if (!npcBillboard || !Transform.getMutableOrNull(npcBillboard)) {
