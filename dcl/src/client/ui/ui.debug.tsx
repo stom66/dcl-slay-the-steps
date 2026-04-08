@@ -4,8 +4,9 @@ import { Color4 } from '@dcl/sdk/math'
 import { ClientStore } from 'src/client/clientStore'
 import { SeatManager } from 'src/client/seatManager'
 
-import { Divider, InfoRow, SectionHeader } from 'src/client/ui/ui.components'
+import { ButtonAction, Divider, InfoRow, SectionHeader } from 'src/client/ui/ui.components'
 import { ShowHowToPlay } from 'src/client/ui/ui.game.howToPlay'
+import { DestroyPaparazzi, SpawnPaparazzi } from '../parparazzi'
 
 const clientStore = ClientStore.getInstance()
 
@@ -28,26 +29,13 @@ export function DebugUI() {
 		>
 
 			<SectionHeader title="Debug Menu" />
-			<Button
-				key         = "btnShowHowToPlay"
-				uiTransform = {{ width: 180, height: 40, margin: 8 }}
-				value       = 'ShowHowToPlay'
-				variant     = 'primary'
-				fontSize    = {14}
-				onMouseDown = {() => {
-					ShowHowToPlay()
-				}}
-			/>
-			<Button
-				key         = "btnToLobby"
-				uiTransform = {{ width: 180, height: 40, margin: 8 }}
-				value       = 'MoveToLobby'
-				variant     = 'primary'
-				fontSize    = {14}
-				onMouseDown = {() => {
-					SeatManager.MovePlayerToLobby()
-				}}
-			/>
+
+			<ButtonAction textLabel="ShowHowToPlay" callback={ShowHowToPlay} />
+			<ButtonAction textLabel="MoveToLobby" callback={SeatManager.MovePlayerToLobby} />
+			<ButtonAction textLabel="MoveToSeat(1)" callback={() => SeatManager.MovePlayerToSeat(1)} />
+			<ButtonAction textLabel="SpawnPaparazzi" callback={() => SpawnPaparazzi()} />
+			<ButtonAction textLabel="DestroyPaparazzi" callback={() => DestroyPaparazzi()} />
+			
 
 			<Divider />
 
