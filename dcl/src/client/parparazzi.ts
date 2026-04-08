@@ -2,18 +2,39 @@ import * as utils from "@dcl-sdk/utils";
 import { EasingFunction, engine, Entity, GltfContainer, Transform, Tween } from "@dcl/sdk/ecs";
 import { Quaternion, Vector3 } from "@dcl/sdk/math";
 
+import { GameStatus } from "src/shared/enums";
+import { eventBus } from "src/shared/utils/eventBus";
+import { ClientEvents } from "src/client/clientEvents";
+
+
+// MARK: Event bindings
+eventBus.on(ClientEvents.NOTIFY_ABORT_GAME, (data) => {
+	DestroyPaparazzi()
+})
+
+eventBus.on(ClientEvents.NOTIFY_STATE, (data) => {
+	if (data.serverStatus == GameStatus.GAME_ENDED) {
+		DestroyPaparazzi()
+	}
+})
+
+
+// MARK: Vars
+const defaultScale = Vector3.create(0.7, 0.7, 0.7)
 const positions = [
 	
 	// Top Floor
 	{
-		papIndex: 3,
-		position: Vector3.create(13.386, 16.209, 28.885),
-		rotation: Quaternion.fromEulerDegrees(0, -90, 0)
+		papIndex: 2,
+		position: Vector3.create(13.41, 16.22, 27.73),
+		rotation: Quaternion.fromEulerDegrees(0, -110, 0),
+		scale: Vector3.create(0.65, 0.65, 0.65)
 	},
 	{
-		papIndex: 4,
-		position: Vector3.create(18.613, 16.209, 28.885),
-		rotation: Quaternion.fromEulerDegrees(0, 90, 0)
+		papIndex: 1,
+		position: Vector3.create(18.59, 16.22, 27.73),
+		rotation: Quaternion.fromEulerDegrees(0, 110, 0),
+		scale: Vector3.create(0.65, 0.65, 0.65)
 	},
 
 
@@ -25,7 +46,7 @@ const positions = [
 	},
 	{
 		papIndex: 2,
-		position: Vector3.create(20.885, 13.412, 24.461),
+		position: Vector3.create(21.5, 13.412, 24.461),
 		rotation: Quaternion.fromEulerDegrees(0, 90, 0)
 	},
 	{
@@ -45,7 +66,7 @@ const positions = [
 	},
 	{
 		papIndex: 4,
-		position: Vector3.create(19.716, 13.412, 24.909),
+		position: Vector3.create(19.9, 13.412, 24.909),
 		rotation: Quaternion.fromEulerDegrees(0, 90, 0)
 	},
 
@@ -90,12 +111,21 @@ const positions = [
 
 const entities: Entity[] = []
 
-export function SpawnPaparazzi(indexes?: number[]) {
-	console.log("SpawnPaparazzi")
-	var delay = 0
+
+// MARK: SpawnPaparazzi
+export function SpawnPaparazzi(
+	indexes : number[] = [...Array(positions.length).keys()], 
+	delay   : number   = 0, 
+	interval: number   = 150,
+	duration: number   = 400
+) {
+	//console.log("SpawnPaparazzi")
+	var cumulativeDelay = interval
 	for (const [index, spot] of positions.entries()) {
 		if (indexes && !indexes.includes(index)) continue
-		console.log("SpawnPaparazzi: Spawning paparazzi at position", index, spot.position.x, spot.position.y, spot.position.z)
+
+		//console.log("SpawnPaparazzi: Spawning paparazzi at position", index, spot.position.x, spot.position.y, spot.position.z)
+		// Spawn them in at scale.Zero()
 		const entity = engine.addEntity()
 		Transform.create(entity, {
 			position: spot.position,
@@ -107,23 +137,40 @@ export function SpawnPaparazzi(indexes?: number[]) {
 		})
 		entities.push(entity)
 
-		// Spawn them after a short delay
+		// Scaltween up to Scale.One() after a short delay
 		utils.timers.setTimeout(() => {
-			Tween.setScale(entity, Vector3.Zero(), Vector3.One(), 400, EasingFunction.EF_EASEBACK)
-		}, 150 + (delay))
-		delay += 150
+			Tween.setScale(entity, Vector3.Zero(), spot.scale || defaultScale, duration, EasingFunction.EF_EASEBACK)
+		}, cumulativeDelay - delay)
+		cumulativeDelay += interval
 	}
 }
 
-export function DestroyPaparazzi() {
+
+// MARK: DestroyPaparazzi
+
+// Note: We can't selectively de-spawn entities.
+// Despawn will remove all entities
+// So we can't, spawn a group, then a second group, and selectively remove the first group
+// Not a problem for the current setup, but might need fixing later
+export function DestroyPaparazzi(
+	interval: number = 150, 
+	duration: number = 400
+) {
 	for (const [index, entity] of entities.entries()) {
 		
-		// Spawn them after a short delay
+		// Tween to scale.Zero() and remove the entity after a short delay
 		utils.timers.setTimeout(() => {
+			// Ensure the entity still exists
+			const t = Transform.getOrNull(entity)
+			if (!t) return
+			Tween.setScale(entity, t.scale, Vector3.Zero(), duration, EasingFunction.EF_EASEBACK)
+
 			utils.timers.setTimeout(() => {
+				// Ensure the entity still exists
+				const t = Transform.getOrNull(entity)
+				if (!t) return
 				engine.removeEntity(entity)
-			}, 1000)
-			Tween.setScale(entity, Vector3.One(), Vector3.Zero(), 400, EasingFunction.EF_EASEBACK)
-		}, (index * 150))
+			}, duration + 500)
+		}, (index * interval))
 	}
 }

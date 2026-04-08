@@ -16,7 +16,7 @@ export function DebugUI() {
 			key="ui_debug_root"
 			uiTransform={{
 				width         : 300,
-				height        : 500,
+				height        : 720,
 				flexDirection : 'column',
 				alignItems    : 'flex-start',
 				justifyContent: 'space-between',
