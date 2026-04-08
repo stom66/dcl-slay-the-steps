@@ -7,12 +7,12 @@ const positions = [
 	// Top Floor
 	{
 		papIndex: 3,
-		position: Vector3.create(13.386, 16.209, 28.963),
+		position: Vector3.create(13.386, 16.209, 28.885),
 		rotation: Quaternion.fromEulerDegrees(0, -90, 0)
 	},
 	{
 		papIndex: 4,
-		position: Vector3.create(18.613, 16.209, 28.963),
+		position: Vector3.create(18.613, 16.209, 28.885),
 		rotation: Quaternion.fromEulerDegrees(0, 90, 0)
 	},
 
@@ -55,22 +55,22 @@ const positions = [
 	{
 		papIndex: 1,
 		position: Vector3.create(12.209, 10, 19.884),
-		rotation: Quaternion.fromEulerDegrees(0, -90, 0)
+		rotation: Quaternion.fromEulerDegrees(0, -60, 0)
 	},
 	{
 		papIndex: 2,
 		position: Vector3.create(19.791, 10, 19.884),
-		rotation: Quaternion.fromEulerDegrees(0, 90, 0)
+		rotation: Quaternion.fromEulerDegrees(0, 60, 0)
 	},
 	{
 		papIndex: 3,
 		position: Vector3.create(11.612, 10, 18.456),
-		rotation: Quaternion.fromEulerDegrees(0, -90, 0)
+		rotation: Quaternion.fromEulerDegrees(0, -80, 0)
 	},
 	{
 		papIndex: 4,
 		position: Vector3.create(20.388, 10, 18.456),
-		rotation: Quaternion.fromEulerDegrees(0, 90, 0)
+		rotation: Quaternion.fromEulerDegrees(0, 80, 0)
 	},
 
 
@@ -78,12 +78,12 @@ const positions = [
 	{
 		papIndex: 2,
 		position: Vector3.create(11.612, 10, 14),
-		rotation: Quaternion.fromEulerDegrees(0, -135, 0)
+		rotation: Quaternion.fromEulerDegrees(0, -60, 0)
 	},
 	{
 		papIndex: 1,
 		position: Vector3.create(20.388, 10, 14),
-		rotation: Quaternion.fromEulerDegrees(0, 135, 0)
+		rotation: Quaternion.fromEulerDegrees(0, 60, 0)
 	},
 	
 ]
@@ -92,6 +92,7 @@ const entities: Entity[] = []
 
 export function SpawnPaparazzi(indexes?: number[]) {
 	console.log("SpawnPaparazzi")
+	var delay = 0
 	for (const [index, spot] of positions.entries()) {
 		if (indexes && !indexes.includes(index)) continue
 		console.log("SpawnPaparazzi: Spawning paparazzi at position", index, spot.position.x, spot.position.y, spot.position.z)
@@ -109,7 +110,8 @@ export function SpawnPaparazzi(indexes?: number[]) {
 		// Spawn them after a short delay
 		utils.timers.setTimeout(() => {
 			Tween.setScale(entity, Vector3.Zero(), Vector3.One(), 400, EasingFunction.EF_EASEBACK)
-		}, 150 + (index * 150))
+		}, 150 + (delay))
+		delay += 150
 	}
 }
 
