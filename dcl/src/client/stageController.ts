@@ -1,8 +1,7 @@
 import { AvatarShape, EasingFunction, engine, Entity, PBAvatarEmoteCommand, Transform, Tween, TweenSequence, tweenSystem } from '@dcl/sdk/ecs'
 import { Color3, Quaternion, Vector3 } from '@dcl/sdk/math'
 import { getPlayer } from '@dcl/sdk/players'
-///import * as utils from '@dcl-sdk/utils'
-
+import * as utils from '@dcl-sdk/utils'
 import { GameStatus } from 'src/shared/enums'
 import { GameSettings } from "src/shared/settings"
 import { ClientState, NotifyTurnStartingPayload, Outfit } from 'src/shared/types'
@@ -12,7 +11,7 @@ import { CameraController } from 'src/client/cameraController'
 import { ClientEvents } from 'src/client/clientEvents'
 import { ClientStore } from 'src/client/clientStore'
 import { avatarManager } from './avatarManager'
-
+import { DestroyPaparazzi, SpawnPaparazzi } from './parparazzi'
 
 export namespace StageController {
 
@@ -73,6 +72,8 @@ export namespace StageController {
 	const NPC_PATH_EXIT_LEFT            = Vector3.create(3.76,  10.53, 12.07)
 	const NPC_PATH_EXIT_RIGHT           = Vector3.create(28.24, 10.53, 12.07)
 
+	const waypointCallbackTimeOffest = -150
+
 	let currentCameraTarget: Entity | undefined = undefined
 
 	// MARK: Waypoints
@@ -80,7 +81,9 @@ export namespace StageController {
 		start?   : Vector3,
 		end?     : Vector3,
 		duration?: number,
-		distance?: number
+		distance?: number,
+		onStartCallback?: () => void | undefined
+		onEndCallback?: () => void | undefined
 	}
 
 	function GetWaypointData(goLeft: boolean = true): waypoint[] {
@@ -91,9 +94,15 @@ export namespace StageController {
 			{ // Spawn at the spawn position and walk to top balcony
 				start: NPC_SPAWN_POSITION,
 				end: NPC_PATH_TOP_PAUSE,
+				onStartCallback: () => {
+					SpawnPaparazzi([0, 1])
+				},
 			},
 			{ // Pause at the top of the stairs
 				duration: 2500,
+				onEndCallback: () => {
+					DestroyPaparazzi()
+				},
 			},
 			{ // Walk to the top of the stairs
 				end: NPC_PATH_TOP_STAIRS_TOP,
@@ -106,6 +115,12 @@ export namespace StageController {
 			},
 			{ // Pause at MID_PAUSE
 				duration: 2500,
+				onStartCallback: () => {
+					SpawnPaparazzi([2, 3, 4, 5, 6, 7])
+				},
+				onEndCallback: () => {
+					DestroyPaparazzi()
+				},
 			},
 			{ // Walk to top of bottom stairs
 				end: NPC_PATH_BOTTOM_STAIRS_TOP
@@ -118,12 +133,24 @@ export namespace StageController {
 			},
 			{ // Pause at catwalk mid
 				duration: 2500,
+				onStartCallback: () => {
+					SpawnPaparazzi([8, 9, 10, 11])
+				},
+				onEndCallback: () => {
+					DestroyPaparazzi()
+				},
 			},
 			{ // Walk to catwalk junction
 				end: NPC_PATH_CATWALK_JUNCTION
 			},
 			{ // Pause at catwalk junction
 				duration: 2500,
+				onStartCallback: () => {
+					SpawnPaparazzi([12, 13])
+				},
+				onEndCallback: () => {
+					DestroyPaparazzi()
+				},
 			},
 			{ // Walk to exit
 				end: goLeft ? NPC_PATH_EXIT_LEFT : NPC_PATH_EXIT_RIGHT
@@ -244,7 +271,7 @@ export namespace StageController {
 			eyeColor : userData.avatar!.eyesColor || Color3.create(0.5, 0.5, 0.5),
 			skinColor: outfit.skinColor,
 			hairColor: outfit.hairColor
-		})
+		}, 1000)
 
 		// Position the Avatar
 		Transform.create(npc, {
@@ -277,6 +304,24 @@ export namespace StageController {
 	) {
 		console.log("StageController: AnimateNPC(): npc", npc)
 
+		// Setup the callbacks
+		var callbackDelay = 0
+		waypoints.forEach((w) => {
+			if (w.onStartCallback) {
+				utils.timers.setTimeout(() => {
+					console.log("StageController: AnimateNPC(): firing onStartCallback for waypoint", w)
+					w.onStartCallback!()
+				}, Math.max(0, callbackDelay + waypointCallbackTimeOffest))
+			}
+			callbackDelay += w.duration!
+			if (w.onEndCallback) {
+				utils.timers.setTimeout(() => {
+					console.log("StageController: AnimateNPC(): firing onEndCallback for waypoint", w)
+					w.onEndCallback!()
+				}, Math.max(0, callbackDelay + waypointCallbackTimeOffest))
+			}
+		})
+
 		const sequence = waypoints.map((w) => {
 			return {
 				duration: w.duration!,
@@ -307,7 +352,7 @@ export namespace StageController {
 				console.log("StageController: AnimateNPC(): tween completed for npc", npc)
 				const tween = Tween.getMutable(npc)
 				if (tween) {
-					tween.playing = false	
+					tween.playing = false
 					Tween.deleteFrom(npc)
 				}
 			}
