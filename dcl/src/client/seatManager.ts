@@ -16,9 +16,7 @@ export namespace SeatManager {
 
 	//MARK: Event bindings
 	eventBus.on(ClientEvents.NOTIFY_ABORT_GAME, (data) => {
-		if (clientStore.isEnrolledInGame()) {
-			MovePlayerToLobby()
-		}
+		MovePlayerToLobby()
 	})
 
 	eventBus.on(ClientEvents.NOTIFY_STATE, (data: ClientState) => {
@@ -43,28 +41,28 @@ export namespace SeatManager {
 	// MARK: Vars
 	const clientStore = ClientStore.getInstance()
 	const seatPositions = [
-		Vector3.create(26.276, 10, 5.659),
-		Vector3.create(24.005, 10, 14.844),
-		Vector3.create(10.261, 10, 5.659),
-		Vector3.create(7.99,   10, 14.844),
-		Vector3.create(21.734, 10, 5.659),
-		Vector3.create(7.99,   10, 3.387),
-		Vector3.create(5.719,  10, 17.115),
-		Vector3.create(7.99,   10, 19.437),
-		Vector3.create(10.261, 10, 17.115),
-		Vector3.create(7.99,   10, 7.98),
-		Vector3.create(21.734, 10, 17.115),
-		Vector3.create(24.005, 10, 7.98),
-		Vector3.create(24.005, 10, 3.387),
-		Vector3.create(24.005, 10, 19.437),
-		Vector3.create(26.276, 10, 17.115),
-		Vector3.create(5.719,  10, 5.659),
+		Vector3.create(10.261, 10.001, 17.115), // SeatinB.a 
+		Vector3.create(21.734, 10.009, 17.115), // SeatinB.b 
+		Vector3.create(10.261, 9.998, 5.659),   // SeatinB.c 
+		Vector3.create(21.734, 10.001, 5.659),  // SeatinB.d 
+		Vector3.create(7.99, 10.001, 14.844),   // SeatinB.e 
+		Vector3.create(24.005, 10.001, 14.844), // SeatinB.f 
+		Vector3.create(7.99, 9.998, 3.387),     // SeatinB.g 
+		Vector3.create(24.005, 9.981, 3.387),   // SeatinB.h 
+		Vector3.create(7.99, 9.998, 7.98),      // SeatinB.i 
+		Vector3.create(24.005, 9.981, 7.98),    // SeatinB.j 
+		Vector3.create(7.99, 10.001, 19.437),   // SeatinB.k 
+		Vector3.create(24.005, 10.001, 19.437), // SeatinB.l 
+		Vector3.create(5.719, 10.001, 5.659),   // SeatinB.m 
+		Vector3.create(26.276, 9.981, 5.659),   // SeatinB.n 
+		Vector3.create(5.719, 9.998, 17.115),   // SeatinB.o 
+		Vector3.create(26.276, 10.001, 17.115) // SeatinB.p
 	]
-
 
 	// MARK: MovePlayerToSeat
 	export function MovePlayerToSeat(
-		seatIndex: number
+		seatIndex: number,
+		dontLockInputs: boolean = false
 	) {
 		console.log("SeatManager: MovePlayerToSeat(): seatIndex", seatIndex.toString())
 		
@@ -75,16 +73,18 @@ export namespace SeatManager {
 		})
 
 		// Also freeze their inputs
-		InputModifier.createOrReplace(engine.PlayerEntity, {
-			mode: InputModifier.Mode.Standard({
-				disableAll  : false,
-				disableEmote: false,
-				disableJog  : true,
-				disableJump : true,
-				disableRun  : true,
-				disableWalk : true,
-			}),
-		})
+		if (!dontLockInputs) {
+			InputModifier.createOrReplace(engine.PlayerEntity, {
+				mode: InputModifier.Mode.Standard({
+					disableAll  : false,
+					disableEmote: false,
+					disableJog  : true,
+					disableJump : true,
+					disableRun  : true,
+					disableWalk : true,
+				}),
+			})
+		}
 	}
 
 	

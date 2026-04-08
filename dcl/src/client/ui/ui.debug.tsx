@@ -7,6 +7,7 @@ import { SeatManager } from 'src/client/seatManager'
 import { ButtonAction, Divider, InfoRow, SectionHeader } from 'src/client/ui/ui.components'
 import { ShowHowToPlay } from 'src/client/ui/ui.game.howToPlay'
 import { DestroyPaparazzi, SpawnPaparazzi } from '../parparazzi'
+import { MannequinManager } from '../mannequinManager'
 
 const clientStore = ClientStore.getInstance()
 
@@ -30,11 +31,13 @@ export function DebugUI() {
 
 			<SectionHeader title="Debug Menu" />
 
-			<ButtonAction textLabel="ShowHowToPlay" callback={ShowHowToPlay} />
-			<ButtonAction textLabel="MoveToLobby" callback={SeatManager.MovePlayerToLobby} />
-			<ButtonAction textLabel="MoveToSeat(1)" callback={() => SeatManager.MovePlayerToSeat(1)} />
+			<ButtonAction textLabel="MoveToLobby" callback={() => SeatManager.MovePlayerToLobby()} />
+			<ButtonAction textLabel="MoveToSeat(1)" callback={() => SeatManager.MovePlayerToSeat(1, true)} />
 			<ButtonAction textLabel="SpawnPaparazzi" callback={() => SpawnPaparazzi()} />
 			<ButtonAction textLabel="DestroyPaparazzi" callback={() => DestroyPaparazzi()} />
+
+			<ButtonAction textLabel="ShowMannequin" callback={() => MannequinManager.ShowNPCMannequin()} />
+			<ButtonAction textLabel="HideMannequin" callback={() => MannequinManager.HideNPCMannequin()} />
 			
 
 			<Divider />
