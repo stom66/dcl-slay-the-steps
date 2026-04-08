@@ -77,13 +77,16 @@ function updateGameHostNPC(status: GameStatus) {
 		},
 		() => {
 			if (status == GameStatus.LOBBY || status == GameStatus.STARTING) {
+				console.log("npcGameHost: updateGameHostNPC: Requesting to join game")
 				ClientMessaging.RequestJoinGame()
 				SoundManager.PlaySound(sfx.startGame)
 			} else if (status == GameStatus.STARTED || status == GameStatus.ROUND_ACTIVE) {
+				console.log("npcGameHost: updateGameHostNPC: Requesting to spectate game")
 				SoundManager.PlaySound(sfx.startGame)
 				//TODO: figure out spectate functionality
 				ClientMessaging.RequestJoinGameAsSpectator()
 			} else {
+				console.log("npcGameHost: updateGameHostNPC: Status not LOBBY/STARTING/STARTED/ROUND_ACTIVE")
 				eventBus.emit(ClientEvents.NOTIFY_WARNING, "Please wait for the next game to start")
 			}
 		}
