@@ -20,18 +20,14 @@ export namespace StageController {
 		HandleEmotes(userId, emote)
 	})
 
-	/* eventBus.on(ClientEvents.NOTIFY_EMOTE, ({player, emote}) => {
-		HandleEmotes(player, emote)
-	}) */
-
 	eventBus.on(ClientEvents.NOTIFY_TURN_STARTING, (data: NotifyTurnStartingPayload) => {
 		console.log("StageController: NOTIFY_TURN_STARTING: data", data)
 		StartTurn(data)
 	})
 
-	// If a player joins as spectator, and there's a camera target, track it
 	eventBus.on(ClientEvents.JOIN_AS_SPECTATOR, (data) => {
 		console.log("StageController: JOIN_AS_SPECTATOR: data", data)
+		// If a player joins as spectator, and there's a camera target, track it
 		if (currentCameraTarget) {
 			CameraController.TrackEntity(currentCameraTarget)
 		}
@@ -46,6 +42,18 @@ export namespace StageController {
 	eventBus.on(ClientEvents.NOTIFY_ABORT_GAME, (data) => {
 		CleanupReset()
 	})
+
+
+	// MARK: Types
+	type waypoint = {
+		start?   : Vector3,
+		end?     : Vector3,
+		duration?: number,
+		distance?: number,
+		beforeStartCallback?: () => void | undefined
+		onStartCallback?: () => void | undefined
+		onEndCallback?: () => void | undefined
+	}
 
 
 	// MARK: Vars
@@ -72,90 +80,85 @@ export namespace StageController {
 	const NPC_PATH_EXIT_LEFT            = Vector3.create(3.76,  10.53, 12.07)
 	const NPC_PATH_EXIT_RIGHT           = Vector3.create(28.24, 10.53, 12.07)
 
-	const waypointCallbackTimeOffest = -150
+	const beforeStartCallbackTimeOffest = -300
 
 	let currentCameraTarget: Entity | undefined = undefined
 
-	// MARK: Waypoints
-	type waypoint = {
-		start?   : Vector3,
-		end?     : Vector3,
-		duration?: number,
-		distance?: number,
-		onStartCallback?: () => void | undefined
-		onEndCallback?: () => void | undefined
-	}
+
+	// MARK: Vars:Waypoints
+	const waypoints: waypoint[] = [
+		{ // Spawn at the spawn position and walk to top balcony
+			start: NPC_SPAWN_POSITION,
+			end: NPC_PATH_TOP_PAUSE,
+			beforeStartCallback: () => {
+				SpawnPaparazzi([0, 1], beforeStartCallbackTimeOffest)
+			},
+		},
+		{ // Pause at the top of the stairs
+			duration: 2500,
+			onEndCallback: () => {
+				DestroyPaparazzi()
+			},
+		},
+		{ // Walk to the top of the stairs
+			end: NPC_PATH_TOP_STAIRS_TOP,
+		},
+		{ // Walk down the stairs to the MID_PAUSE
+			end: NPC_PATH_TOP_STAIRS_BOTTOM,
+		},
+		{ // Walk to MID_PAUSE
+			end: NPC_PATH_STAIRS_MID_PAUSE
+		},
+		{ // Pause at MID_PAUSE
+			duration: 2500,
+			beforeStartCallback: () => {
+				SpawnPaparazzi([2, 3, 4, 5, 6, 7], beforeStartCallbackTimeOffest)
+			},
+			onEndCallback: () => {
+				DestroyPaparazzi()
+			},
+		},
+		{ // Walk to top of bottom stairs
+			end: NPC_PATH_BOTTOM_STAIRS_TOP
+		},
+		{ // Walk to bottom of bottom stairs
+			end: NPC_PATH_BOTTOM_STAIRS_BOTTOM
+		},
+		{ // Walk to catwalk mid
+			end: NPC_PATH_CATWALK_MIDPOINT
+		},
+		{ // Pause at catwalk mid
+			duration: 2500,
+			beforeStartCallback: () => {
+				SpawnPaparazzi([8, 9, 10, 11], beforeStartCallbackTimeOffest)
+			},
+			onEndCallback: () => {
+				DestroyPaparazzi()
+			},
+		},
+		{ // Walk to catwalk junction
+			end: NPC_PATH_CATWALK_JUNCTION
+		},
+		{ // Pause at catwalk junction
+			duration: 2500,
+			beforeStartCallback: () => {
+				SpawnPaparazzi([12, 13], beforeStartCallbackTimeOffest)
+			},
+			onEndCallback: () => {
+				DestroyPaparazzi()
+			},
+		},
+		{ // Walk to exit
+			end: goLeft ? NPC_PATH_EXIT_LEFT : NPC_PATH_EXIT_RIGHT
+		}
+	]
+
 
 	function GetWaypointData(goLeft: boolean = true): waypoint[] {
 
 		const startTime = Date.now()
 		
-		var waypoints: waypoint[] = [
-			{ // Spawn at the spawn position and walk to top balcony
-				start: NPC_SPAWN_POSITION,
-				end: NPC_PATH_TOP_PAUSE,
-				onStartCallback: () => {
-					SpawnPaparazzi([0, 1])
-				},
-			},
-			{ // Pause at the top of the stairs
-				duration: 2500,
-				onEndCallback: () => {
-					DestroyPaparazzi()
-				},
-			},
-			{ // Walk to the top of the stairs
-				end: NPC_PATH_TOP_STAIRS_TOP,
-			},
-			{ // Walk down the stairs to the MID_PAUSE
-				end: NPC_PATH_TOP_STAIRS_BOTTOM,
-			},
-			{ // Walk to MID_PAUSE
-				end: NPC_PATH_STAIRS_MID_PAUSE
-			},
-			{ // Pause at MID_PAUSE
-				duration: 2500,
-				onStartCallback: () => {
-					SpawnPaparazzi([2, 3, 4, 5, 6, 7])
-				},
-				onEndCallback: () => {
-					DestroyPaparazzi()
-				},
-			},
-			{ // Walk to top of bottom stairs
-				end: NPC_PATH_BOTTOM_STAIRS_TOP
-			},
-			{ // Walk to bottom of bottom stairs
-				end: NPC_PATH_BOTTOM_STAIRS_BOTTOM
-			},
-			{ // Walk to catwalk mid
-				end: NPC_PATH_CATWALK_MIDPOINT
-			},
-			{ // Pause at catwalk mid
-				duration: 2500,
-				onStartCallback: () => {
-					SpawnPaparazzi([8, 9, 10, 11])
-				},
-				onEndCallback: () => {
-					DestroyPaparazzi()
-				},
-			},
-			{ // Walk to catwalk junction
-				end: NPC_PATH_CATWALK_JUNCTION
-			},
-			{ // Pause at catwalk junction
-				duration: 2500,
-				onStartCallback: () => {
-					SpawnPaparazzi([12, 13])
-				},
-				onEndCallback: () => {
-					DestroyPaparazzi()
-				},
-			},
-			{ // Walk to exit
-				end: goLeft ? NPC_PATH_EXIT_LEFT : NPC_PATH_EXIT_RIGHT
-			}
-		]
+		
 
 		// Get the total value of specified durations
 		const totalSetDurations = waypoints.reduce((acc, w) => acc + (w.duration ?? 0), 0)
@@ -238,8 +241,13 @@ export namespace StageController {
 			CameraController.TrackEntity(npcCameraTarget)
 		}
 
-		// Trigger the NPC to walk
+		// Get the waypoint data
 		const waypoints = GetWaypointData(goLeft)
+
+		// Trigger the waypoint callbacks
+		TriggerWaypointCallbacks(waypoints)
+
+		// Trigger the NPC to walk
 		AnimateNPC(npc, waypoints)
 
 
@@ -297,30 +305,48 @@ export namespace StageController {
 	}
 
 
+	// MARK: TriggerWaypointCallbacks
+	function TriggerWaypointCallbacks(waypoints: waypoint[]) {
+		console.log("StageController: TriggerWaypointCallbacks(): waypoints", waypoints)
+
+		// Setup the callbacks
+		var callbackDelay = 0
+		waypoints.forEach((w) => {
+			// beforeStart
+			if (w.beforeStartCallback) {
+				utils.timers.setTimeout(() => {
+					console.log("StageController: AnimateNPC(): firing beforeStartCallback for waypoint", w)
+					w.beforeStartCallback!()
+				}, Math.max(0, callbackDelay + beforeStartCallbackTimeOffest))
+			}
+
+			// onStart
+			if (w.onStartCallback) {
+				utils.timers.setTimeout(() => {
+					console.log("StageController: AnimateNPC(): firing onStartCallback for waypoint", w)
+					w.onStartCallback!()
+				}, Math.max(0, callbackDelay))
+			}
+
+
+			callbackDelay += w.duration!
+			// onEnd
+			if (w.onEndCallback) {
+				utils.timers.setTimeout(() => {
+					console.log("StageController: AnimateNPC(): firing onEndCallback for waypoint", w)
+					w.onEndCallback!()
+				}, Math.max(0, callbackDelay))
+			}
+		})
+	}
+
+
 	// MARK: AnimateNPC
 	function AnimateNPC(
 		npc: Entity, 
 		waypoints: waypoint[]
 	) {
 		console.log("StageController: AnimateNPC(): npc", npc)
-
-		// Setup the callbacks
-		var callbackDelay = 0
-		waypoints.forEach((w) => {
-			if (w.onStartCallback) {
-				utils.timers.setTimeout(() => {
-					console.log("StageController: AnimateNPC(): firing onStartCallback for waypoint", w)
-					w.onStartCallback!()
-				}, Math.max(0, callbackDelay + waypointCallbackTimeOffest))
-			}
-			callbackDelay += w.duration!
-			if (w.onEndCallback) {
-				utils.timers.setTimeout(() => {
-					console.log("StageController: AnimateNPC(): firing onEndCallback for waypoint", w)
-					w.onEndCallback!()
-				}, Math.max(0, callbackDelay + waypointCallbackTimeOffest))
-			}
-		})
 
 		const sequence = waypoints.map((w) => {
 			return {
