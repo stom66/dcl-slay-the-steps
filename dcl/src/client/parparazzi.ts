@@ -1,5 +1,5 @@
 import * as utils from "@dcl-sdk/utils";
-import { EasingFunction, engine, Entity, GltfContainer, Transform, Tween } from "@dcl/sdk/ecs";
+import { EasingFunction, engine, Entity, GltfContainer, Tags, Transform, Tween } from "@dcl/sdk/ecs";
 import { Quaternion, Vector3 } from "@dcl/sdk/math";
 
 import { GameStatus } from "src/shared/enums";
@@ -109,7 +109,7 @@ const positions = [
 	
 ]
 
-const entities: Entity[] = []
+var timeouts  : utils.TimerId[] = []
 
 
 // MARK: SpawnPaparazzi
@@ -119,7 +119,7 @@ export function SpawnPaparazzi(
 	interval: number   = 150,
 	duration: number   = 400
 ) {
-	//console.log("SpawnPaparazzi")
+	console.log("SpawnPaparazzi")
 	var cumulativeDelay = interval
 	for (const [index, spot] of positions.entries()) {
 		if (indexes && !indexes.includes(index)) continue
@@ -127,6 +127,7 @@ export function SpawnPaparazzi(
 		//console.log("SpawnPaparazzi: Spawning paparazzi at position", index, spot.position.x, spot.position.y, spot.position.z)
 		// Spawn them in at scale.Zero()
 		const entity = engine.addEntity()
+		Tags.add(entity, "paparazzi")
 		Transform.create(entity, {
 			position: spot.position,
 			rotation: spot.rotation,
@@ -135,12 +136,11 @@ export function SpawnPaparazzi(
 		GltfContainer.create(entity, {
 			src: `assets/models/pap/paparazzi0${spot.papIndex}.gltf`,
 		})
-		entities.push(entity)
 
 		// Scaltween up to Scale.One() after a short delay
-		utils.timers.setTimeout(() => {
+		timeouts.push(utils.timers.setTimeout(() => {
 			Tween.setScale(entity, Vector3.Zero(), spot.scale || defaultScale, duration, EasingFunction.EF_EASEBACK)
-		}, cumulativeDelay - delay)
+		}, cumulativeDelay - delay))
 		cumulativeDelay += interval
 	}
 }
@@ -156,21 +156,32 @@ export function DestroyPaparazzi(
 	interval: number = 150, 
 	duration: number = 400
 ) {
-	for (const [index, entity] of entities.entries()) {
-		
+	console.log("DestroyPaparazzi")
+
+	// Clear any existing timeouts
+	for (const timeout of timeouts) {
+		utils.timers.clearTimeout(timeout)
+	}
+	timeouts = []
+
+	// copy the array of entities and clear the original
+	const toDestroy = engine.getEntitiesByTag("paparazzi")
+	let index = 0
+	for (const entity of toDestroy) {
 		// Tween to scale.Zero() and remove the entity after a short delay
-		utils.timers.setTimeout(() => {
+		timeouts.push(utils.timers.setTimeout(() => {
 			// Ensure the entity still exists
 			const t = Transform.getOrNull(entity)
 			if (!t) return
 			Tween.setScale(entity, t.scale, Vector3.Zero(), duration, EasingFunction.EF_EASEBACK)
 
-			utils.timers.setTimeout(() => {
+			timeouts.push(utils.timers.setTimeout(() => {
 				// Ensure the entity still exists
 				const t = Transform.getOrNull(entity)
 				if (!t) return
 				engine.removeEntity(entity)
-			}, duration + 500)
-		}, (index * interval))
+			}, duration + 500))
+		}, (index * interval)))
+		index += 1
 	}
 }
