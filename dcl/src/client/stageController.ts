@@ -151,6 +151,9 @@ export namespace StageController {
 
 
 	function GetWaypointData(goLeft: boolean = true): waypoint[] {
+		// Set the exit direction based on the goLeft flag
+		waypoints[waypoints.length - 1].end = goLeft ? NPC_PATH_EXIT_LEFT : NPC_PATH_EXIT_RIGHT
+
 		// Get the total duration of specified durations
 		const totalSetDurations = waypoints.reduce((acc, w) => acc + (w.duration ?? 0), 0)
 		//console.log("StageController: BuildWaypointData(): totalSetDurations", totalSetDurations)
