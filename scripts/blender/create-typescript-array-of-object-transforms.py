@@ -36,12 +36,20 @@ for obj in selected_objects:
     rx = round(math.degrees(rotation.x), 3)
     ry = round(math.degrees(rotation.y), 3)
     rz = round(math.degrees(rotation.z), 3)
+    
+    # Get he object dimensions
+    dims = obj.dimensions
+    dx = round(dims.x, 3)
+    dy = round(dims.y, 3)
+    dz = round(dims.z, 3)
+    
 
     # Log the position and rotation in the Blender console and the log file
     LOG_TXT.write(f"    // {obj.name}\n")
     LOG_TXT.write(f"    {{\n")
     LOG_TXT.write(f"        position: Vector3.create({x}, {z}, {y}),\n")
-    LOG_TXT.write(f"        rotation: Quaternion.fromAngles({rx}, {rz}, {ry})\n")
+    LOG_TXT.write(f"        rotation: Quaternion.fromEulerDegrees({rx}, {rz}, {ry}),\n")
+    LOG_TXT.write(f"        scale: Vector3.create({dx}, {dz}, {dy})\n")
     LOG_TXT.write(f"    }},\n")
 
 
