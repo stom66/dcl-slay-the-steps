@@ -20,9 +20,6 @@ eventBus.on(ClientEvents.NOTIFY_TURN_STARTING, (data: NotifyTurnStartingPayload)
 eventBus.on(ClientEvents.NOTIFY_STATE, (data: ClientState) => {
 	HideEmotesHint()
 })
-eventBus.on(ClientEvents.NOTIFY_ABORT_GAME, (data) => {
-	HideEmotesHint()
-})
 
 
 // MARK: Vars
