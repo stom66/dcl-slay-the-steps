@@ -40,7 +40,7 @@ export const ButtonAction = ({ textLabel, callback }: { textLabel: string; callb
 			uiTransform={{
 				width: "100%",
 				height: 40,
-				margin: 8
+				margin: 4
 			}}
 			value={textLabel}
 			variant="primary"
@@ -69,7 +69,7 @@ export const InfoRow = ({ label, value }: { label: string; value: string }) => {
 		}}
 		uiText={{
 			value: label,
-			fontSize: 16,
+			fontSize: 14,
 			color: Color4.create(0.7, 0.7, 0.7, 1),
 			textAlign: 'middle-left'
 		}}
@@ -81,7 +81,7 @@ export const InfoRow = ({ label, value }: { label: string; value: string }) => {
 		}}
 		uiText={{
 			value: value,
-			fontSize: 16,
+			fontSize: 14,
 			color: Color4.White(),
 			textAlign: 'middle-left'
 		}}
