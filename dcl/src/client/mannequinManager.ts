@@ -1,4 +1,4 @@
-import { Animator, AvatarShape, Billboard, BillboardMode, ColliderLayer, EasingFunction, engine, Entity, GltfContainer, InputAction, Material, MeshRenderer, pointerEventsSystem, RaycastQueryType, raycastSystem, Transform, Tween } from "@dcl/sdk/ecs"
+import { Animator, AvatarShape, Billboard, BillboardMode, ColliderLayer, EasingFunction, engine, Entity, GltfContainer, InputAction, Material, MeshRenderer, PlayerIdentityData, pointerEventsSystem, RaycastQueryType, raycastSystem, Transform, Tween } from "@dcl/sdk/ecs"
 import { Color4, Quaternion, Vector3 } from "@dcl/sdk/math"
 import * as utils from "@dcl-sdk/utils"
 
@@ -10,6 +10,9 @@ import { ClientStore } from "src/client/clientStore"
 import { OutfitManager } from "src/client/outfitManager"
 import { SoundManager } from "./soundManager"
 import { avatarManager } from "./avatarManager"
+import { GameStatus } from "src/shared/enums"
+import { ClientState } from "src/shared/types"
+import { userProfileCache } from "src/shared/utils/userProfileCache"
 
 
 export namespace MannequinManager {
@@ -17,6 +20,17 @@ export namespace MannequinManager {
 	eventBus.on(ClientEvents.OUTFIT_CHANGED, () => {
 		console.log("MannequinManager: OUTFIT_CHANGED event received")
 		ShowNPCMannequin()
+	})
+
+	eventBus.on(ClientEvents.NOTIFY_STATE, (data: ClientState) => {
+		if (data.serverStatus == GameStatus.GAME_ENDED) {
+			const sortedResults = clientStore.getSortedVoteResults()
+			const winnerId = sortedResults[0][0]
+			const playerEntity = userProfileCache.getPlayerEntity(winnerId)
+			if (playerEntity) {
+				ShowWinnerLabel(playerEntity)
+			}
+		}
 	})
 
 	
@@ -247,6 +261,28 @@ export namespace MannequinManager {
 				}
 			)
 		}
+	}
+
+
+	// MARK: Show Winner Label
+	export function ShowWinnerLabel(playerEntity: Entity) {
+		console.log("MannequinManager: ShowWinnerLabel")
+
+		const entity = engine.addEntity()
+		Transform.create(entity, {
+			parent: playerEntity,
+			rotation: Quaternion.fromEulerDegrees(0, 180, 0),
+		})
+		GltfContainer.create(entity, {
+			src: "assets/models/winner.gltf",
+		})
+		Billboard.create(entity, {
+			billboardMode: BillboardMode.BM_Y,
+		})
+
+		utils.timers.setTimeout(() => {
+			engine.removeEntity(entity)
+		}, 10 * 1000)
 	}
 
 

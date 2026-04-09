@@ -2,7 +2,7 @@
  * Profile cache + lambdas fetch. Omit userId to use the local player once getPlayer() is valid.
  */
 
-import { engine } from '@dcl/sdk/ecs'
+import { engine, Entity } from '@dcl/sdk/ecs'
 import { getPlayer, onEnterScene } from '@dcl/sdk/players'
 
 import type { DecentralandProfile } from 'src/shared/types'
@@ -76,6 +76,16 @@ class UserProfileCache {
 		
 			engine.addSystem(system)
 		})
+	}
+
+
+	// MARK: getPlayerEntity
+	/** Returns the ECS entity for a player in the scene, or `undefined` if not found. */
+	getPlayerEntity(userId?: string | null): Entity | undefined {
+		const id = userId ?? this.localUserId
+		if (!id) return undefined
+
+		return getPlayer({ userId: id })?.entity
 	}
 
 
