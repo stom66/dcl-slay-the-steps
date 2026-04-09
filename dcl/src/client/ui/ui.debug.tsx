@@ -8,16 +8,19 @@ import { ButtonAction, Divider, InfoRow, SectionHeader } from 'src/client/ui/ui.
 import { ShowHowToPlay } from 'src/client/ui/ui.game.howToPlay'
 import { DestroyPaparazzi, SpawnPaparazzi } from '../parparazzi'
 import { MannequinManager } from '../mannequinManager'
+import { StageController } from '../stageController'
 
 const clientStore = ClientStore.getInstance()
+
+var seatIndex: number = 1
 
 export function DebugUI() {
 	return (
 		<UiEntity
 			key="ui_debug_root"
 			uiTransform={{
-				width         : 300,
-				height        : 720,
+				width         : 250,
+				height        : 640,
 				flexDirection : 'column',
 				alignItems    : 'flex-start',
 				justifyContent: 'space-between',
@@ -26,33 +29,36 @@ export function DebugUI() {
 				position      : { left: 50, top: 350 },
 				positionType: "absolute"
 			}}
-			uiBackground={{ color: Color4.fromHexString("#4C958166") }}
+			uiBackground={{ color: Color4.fromHexString("#4C958166"),   }}
+
 		>
 
-			<SectionHeader title="Debug Menu" />
+			<UiEntity uiTransform={{ width: '100%', flexDirection: 'column' }}>
+				<SectionHeader title="Debug Menu" />
 
-			<ButtonAction textLabel="MoveToLobby" callback={() => SeatManager.MovePlayerToLobby()} />
-			<ButtonAction textLabel="MoveToSeat(1)" callback={() => SeatManager.MovePlayerToSeat(1, true)} />
-			<ButtonAction textLabel="SpawnPaparazzi" callback={() => SpawnPaparazzi()} />
-			<ButtonAction textLabel="DestroyPaparazzi" callback={() => DestroyPaparazzi()} />
-
-			<ButtonAction textLabel="ShowMannequin" callback={() => MannequinManager.ShowNPCMannequin()} />
-			<ButtonAction textLabel="HideMannequin" callback={() => MannequinManager.HideNPCMannequin()} />
-			
+				<ButtonAction textLabel="MoveToLobby" callback={() => SeatManager.MovePlayerToLobby()} />
+				<ButtonAction textLabel={`MoveToSeat(${seatIndex})`} callback={() => {SeatManager.MovePlayerToSeat(seatIndex, true); seatIndex++; seatIndex = seatIndex % 16;} }/>
+				<ButtonAction textLabel="SpawnPaparazzi" callback={() => SpawnPaparazzi()} />
+				<ButtonAction textLabel="DestroyPaparazzi" callback={() => DestroyPaparazzi()} />
+				<ButtonAction textLabel="ShowMannequin" callback={() => MannequinManager.ShowNPCMannequin()} />
+				<ButtonAction textLabel="HideMannequin" callback={() => MannequinManager.HideNPCMannequin()} />
+			</UiEntity>
 
 			<Divider />
 
+			<UiEntity uiTransform={{ width: '100%', flexDirection: 'column' }}>
+				<SectionHeader title="ClientState" />
 
-			<SectionHeader title="ClientState" />
-
-			<InfoRow label = "serverStatus"      value = {clientStore.getServerStatus()} />
-			<InfoRow label = "gameStartTime"     value = {clientStore.getGameStartTime().toString()} />
-			<InfoRow label = "playersInGame"     value = {clientStore.getPlayers().size.toString()} />
-			<InfoRow label = "spectatorsInGame"  value = {clientStore.getSpectators().size.toString()} />
-			<InfoRow label = "displayName"       value = {clientStore.getDisplayName()} />
-			<InfoRow label = "enrolledInGame"    value = {clientStore.isEnrolledInGame().toString()} />
-			<InfoRow label = "userId"            value = {clientStore.getUserId()} />
-			<InfoRow label = "currentTurnUserId" value = {clientStore.getCurrentTurnUserId() ?? "NONE"} />
+				<InfoRow label = "serverStatus"      value = {clientStore.getServerStatus()} />
+				<InfoRow label = "gameStartTime"     value = {clientStore.getGameStartTime().toString()} />
+				<InfoRow label = "playersInGame"     value = {clientStore.getPlayers().size.toString()} />
+				<InfoRow label = "spectatorsInGame"  value = {clientStore.getSpectators().size.toString()} />
+				<InfoRow label = "displayName"       value = {clientStore.getDisplayName()} />
+				<InfoRow label = "enrolledInGame"    value = {clientStore.isEnrolledInGame().toString()} />
+				<InfoRow label = "userId"            value = {clientStore.getUserId()} />
+				<InfoRow label = "currentTurnUserId" value = {clientStore.getCurrentTurnUserId() ?? "NONE"} />
+				<InfoRow label = "NPC Count"         value = {StageController.npcs.length.toString()} />
+			</UiEntity>
 
 
 		</UiEntity>
