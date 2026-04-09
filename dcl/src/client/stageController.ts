@@ -1,8 +1,8 @@
-import { AvatarShape, EasingFunction, engine, Entity, PBAvatarEmoteCommand, Transform, Tween, TweenSequence, tweenSystem } from '@dcl/sdk/ecs'
+import { AvatarShape, EasingFunction, engine, Entity, LightSource, Material, PBAvatarEmoteCommand, Tags, Transform, Tween, TweenSequence, tweenSystem } from '@dcl/sdk/ecs'
 import { Color3, Quaternion, Vector3 } from '@dcl/sdk/math'
 import { getPlayer } from '@dcl/sdk/players'
 import * as utils from '@dcl-sdk/utils'
-import { GameStatus } from 'src/shared/enums'
+import { GameStatus, TAGS } from 'src/shared/enums'
 import { GameSettings } from "src/shared/settings"
 import { ClientState, NotifyTurnStartingPayload, Outfit } from 'src/shared/types'
 import { eventBus } from 'src/shared/utils/eventBus'
@@ -55,6 +55,7 @@ export namespace StageController {
 	// MARK: Vars
 	const clientStore = ClientStore.getInstance()
 	var goLeft = true
+	var npcLightSystemRegistered = false
 	export var npcs: { userId: string, npc: Entity }[] = [] // Maps userId to npc entity
 
 	// Waypoint vars
@@ -151,11 +152,13 @@ export namespace StageController {
 
 
 	function GetWaypointData(goLeft: boolean = true): waypoint[] {
+		const data = [...waypoints]
+
 		// Set the exit direction based on the goLeft flag
-		waypoints[waypoints.length - 1].end = goLeft ? NPC_PATH_EXIT_LEFT : NPC_PATH_EXIT_RIGHT
+		data[data.length - 1].end = goLeft ? NPC_PATH_EXIT_LEFT : NPC_PATH_EXIT_RIGHT
 
 		// Get the total duration of specified durations
-		const totalSetDurations = waypoints.reduce((acc, w) => acc + (w.duration ?? 0), 0)
+		const totalSetDurations = data.reduce((acc, w) => acc + (w.duration ?? 0), 0)
 		//console.log("StageController: BuildWaypointData(): totalSetDurations", totalSetDurations)
 
 		// Work out how much duration we have to distribute to the waypoints
@@ -164,23 +167,23 @@ export namespace StageController {
 
 		// Fill in the start and end positions, calculate their distances
 		var lastPosition: Vector3 = Vector3.Zero()
-		for (let w of waypoints) {
+		for (let w of data) {
 			if (!w.start) w.start = lastPosition
 			if (!w.end) w.end = w.start
 			if (!w.distance) w.distance = Vector3.distance(w.start, w.end)
 			lastPosition = w.end!
 		}
 
-		const totalDistance = waypoints.reduce((acc, w) => acc + (w.distance ?? 0), 0)
+		const totalDistance = data.reduce((acc, w) => acc + (w.distance ?? 0), 0)
 		//console.log("StageController: BuildWaypointData(): totalDistance", totalDistance)
 
-		for (let w of waypoints) {
+		for (let w of data) {
 			if (!w.duration) {
 				w.duration = remainingDuration * w.distance! / totalDistance
 			}
 			console.log("StageController: BuildWaypointData(): w.duration", w.duration)
 		}
-		return waypoints
+		return data
 	}
 
 
@@ -195,14 +198,18 @@ export namespace StageController {
 		console.log("StageController: CleanupReset()")
 
 		// Remove all the NPC entities
-/* 		npcs.forEach((npc: { userId: string, npc: Entity }) => {
+		npcs.forEach((npc: { userId: string, npc: Entity }) => {
 			console.log("StageController: OnShowEnd(): destroying npc:", npc.toString())
+			if (!npc.npc) return
 			DestroyNPC(npc.npc)
 		})
-		npcs = [] */
+		npcs = []
 
 		CameraController.ResetCamera()
 		currentCameraTarget = undefined
+
+		engine.removeSystem(System_AnimateNPCLight)
+		npcLightSystemRegistered = false
 	}
 
 
@@ -232,8 +239,11 @@ export namespace StageController {
 			CameraController.TrackEntity(npcCameraTarget)
 		}
 
+		// Add the light
+		CreateNPCLight(npc)
+
 		// Get the waypoint data
-		const waypoints = GetWaypointData(goLeft)
+		const waypoints = [...GetWaypointData(goLeft)]
 
 		// Trigger the waypoint callbacks
 		const timeouts = TriggerWaypointCallbacks(waypoints)
@@ -244,11 +254,11 @@ export namespace StageController {
 		// Flip the flag
 		goLeft = !goLeft
 
-		// Trigger the EndTurn callback
-		//timeouts.push(utils.timers.setTimeout(() => {
-		//	console.log("StageController: StartTurn(): firing endTurnCallback")
-		//	EndTurn(npc, timeouts)
-		//}, GameSettings.ROUND_DURATION_PER_PLAYER))
+		// Trigger the endTurn
+		utils.timers.setTimeout(() => {
+			console.log("StageController: StartTurn(): firing endTurnCallback")
+			EndTurn(npc, timeouts)
+		}, GameSettings.ROUND_DURATION_PER_PLAYER)
 	}
 
 
@@ -260,13 +270,44 @@ export namespace StageController {
 		for (const timeout of timeouts) {
 			utils.timers.clearTimeout(timeout)
 		}
-		timeouts.length = 0
+
+		// Reset the camera
+		CameraController.ResetCamera()
 
 		// Destroy the npc and remove it from the list
 		DestroyNPC(thisNpc)
+
 		// Remove the npc from the npcs array
 		npcs = npcs.filter((npc: { userId: string, npc: Entity }) => npc.npc !== thisNpc)
 	}
+
+
+	// MARK: CreateNPCLight
+	function CreateNPCLight(parent: Entity) {
+		const light = engine.addEntity()
+		Tags.add(light, TAGS.NPC_LIGHT)
+		Transform.create(light, {
+			position: Vector3.create(0, 4, 0.25),
+			rotation: Quaternion.fromEulerDegrees(90, 0, 0),
+			parent: parent
+		})
+		LightSource.create(light, {
+			type: LightSource.Type.Spot({
+				innerAngle: 35,
+				outerAngle: 55,
+			}),
+			color: Color3.Yellow(),
+			shadow: true,
+			intensity: 200000,
+			shadowMaskTexture: Material.Texture.Common({src: "assets/images/shadow-mask-leather.png"})         
+		})
+
+		if (!npcLightSystemRegistered) {
+			engine.addSystem(System_AnimateNPCLight)
+			npcLightSystemRegistered = true
+		}
+	}
+
 
 
 	// MARK: CreateNPC
@@ -386,17 +427,19 @@ export namespace StageController {
 			sequence: sequence,
 		})
 
-		engine.addSystem(() => {
+		const systemName = `AnimateNPC_${npc}`
+		engine.addSystem(function tweenCleanup(dt) {
 			const tweenCompleted = tweenSystem.tweenCompleted(npc)
 			if (tweenCompleted) {
 				console.log("StageController: AnimateNPC(): tween completed for npc", npc)
-				const tween = Tween.getMutable(npc)
+				const tween = Tween.getMutableOrNull(npc)
 				if (tween) {
 					tween.playing = false
 					Tween.deleteFrom(npc)
 				}
+				engine.removeSystem(systemName)
 			}
-		})
+		}, undefined, systemName)
 	}
 
 
@@ -414,6 +457,16 @@ export namespace StageController {
 				avatarShape.expressionTriggerId = emoteUrn
 				avatarShape.expressionTriggerTimestamp = (avatarShape.expressionTriggerTimestamp ?? 0) + 1
 			}
+		}
+	}
+
+
+	function System_AnimateNPCLight(dt: number) {
+		const lights = engine.getEntitiesByTag(TAGS.NPC_LIGHT)
+		for (const light of lights) {
+			const t = Transform.getMutable(light)
+			if (!t) continue
+			t.rotation = Quaternion.fromEulerDegrees(90, Quaternion.toEulerAngles(t.rotation).y + dt * 30, 0)
 		}
 	}
 }

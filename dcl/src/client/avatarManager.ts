@@ -69,22 +69,29 @@ class AvatarManager {
 
 		// pop first item from queue
 		const item: SpawnQueueItem | undefined = this.spawnQueue.shift()
-		if (!item) return
+		if (!item) {
+			this.processQueue = false
+			return
+		}
 
-		AvatarShape.createOrReplace(item.parent, {
-			id       : item.properties.id,
-			name     : item.properties.name,
-			bodyShape: item.properties.bodyShape,
-			wearables: item.properties.wearables,
-			emotes   : item.properties.emotes,
-			eyeColor : item.properties.eyeColor,
-			skinColor: item.properties.skinColor,
-			hairColor: item.properties.hairColor,
-			showOnlyWearables: item.properties.showOnlyWearables
-		})	
-	
-		if (item.callback) {
-			item.callback()
+		try {
+			AvatarShape.createOrReplace(item.parent, {
+				id       : item.properties.id,
+				name     : item.properties.name,
+				bodyShape: item.properties.bodyShape,
+				wearables: item.properties.wearables,
+				emotes   : item.properties.emotes,
+				eyeColor : item.properties.eyeColor,
+				skinColor: item.properties.skinColor,
+				hairColor: item.properties.hairColor,
+				showOnlyWearables: item.properties.showOnlyWearables
+			})	
+		
+			if (item.callback) {
+				item.callback()
+			}
+		} catch (e) {
+			console.error(`AvatarManager: ProcessQueue: Failed to spawn avatar for entity ${item.parent}:`, e)
 		}
 
 		this.lastSpawnTime = Date.now()
