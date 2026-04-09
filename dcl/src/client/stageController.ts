@@ -34,13 +34,9 @@ export namespace StageController {
 	})
 
 	eventBus.on(ClientEvents.NOTIFY_STATE, (data: ClientState) => {
-		if (data.serverStatus == GameStatus.GAME_ENDED) {
+		if (data.serverStatus == GameStatus.GAME_ENDED || data.serverStatus == GameStatus.LOBBY) {
 			CleanupReset()
 		}
-	})
-
-	eventBus.on(ClientEvents.NOTIFY_ABORT_GAME, (data) => {
-		CleanupReset()
 	})
 
 
@@ -59,7 +55,7 @@ export namespace StageController {
 	// MARK: Vars
 	const clientStore = ClientStore.getInstance()
 	var goLeft = true
-	let npcs: { userId: string, npc: Entity }[] = [] // Maps userId to npc entity
+	export var npcs: { userId: string, npc: Entity }[] = [] // Maps userId to npc entity
 
 	// Waypoint vars
 	const NPC_SPAWN_SCALE               = Vector3.create(1, 1, 1)
@@ -80,7 +76,7 @@ export namespace StageController {
 	const NPC_PATH_EXIT_LEFT            = Vector3.create(3.76,  10.53, 12.07)
 	const NPC_PATH_EXIT_RIGHT           = Vector3.create(28.24, 10.53, 12.07)
 
-	const beforeStartCallbackTimeOffest = -300
+	const beforeStartCallbackTimeOffest = 300
 
 	let currentCameraTarget: Entity | undefined = undefined
 
@@ -91,7 +87,7 @@ export namespace StageController {
 			start: NPC_SPAWN_POSITION,
 			end: NPC_PATH_TOP_PAUSE,
 			beforeStartCallback: () => {
-				SpawnPaparazzi([0, 1], beforeStartCallbackTimeOffest)
+				SpawnPaparazzi([0, 1])
 			},
 		},
 		{ // Pause at the top of the stairs
@@ -112,7 +108,7 @@ export namespace StageController {
 		{ // Pause at MID_PAUSE
 			duration: 2500,
 			beforeStartCallback: () => {
-				SpawnPaparazzi([2, 3, 4, 5, 6, 7], beforeStartCallbackTimeOffest)
+				SpawnPaparazzi([2, 3, 4, 5, 6, 7])
 			},
 			onEndCallback: () => {
 				DestroyPaparazzi()
@@ -130,7 +126,7 @@ export namespace StageController {
 		{ // Pause at catwalk mid
 			duration: 2500,
 			beforeStartCallback: () => {
-				SpawnPaparazzi([8, 9, 10, 11], beforeStartCallbackTimeOffest)
+				SpawnPaparazzi([8, 9, 10, 11])
 			},
 			onEndCallback: () => {
 				DestroyPaparazzi()
@@ -142,7 +138,7 @@ export namespace StageController {
 		{ // Pause at catwalk junction
 			duration: 2500,
 			beforeStartCallback: () => {
-				SpawnPaparazzi([12, 13], beforeStartCallbackTimeOffest)
+				SpawnPaparazzi([12, 13])
 			},
 			onEndCallback: () => {
 				DestroyPaparazzi()
@@ -155,18 +151,13 @@ export namespace StageController {
 
 
 	function GetWaypointData(goLeft: boolean = true): waypoint[] {
-
-		const startTime = Date.now()
-		
-		
-
-		// Get the total value of specified durations
+		// Get the total duration of specified durations
 		const totalSetDurations = waypoints.reduce((acc, w) => acc + (w.duration ?? 0), 0)
-		console.log("StageController: BuildWaypointData(): totalSetDurations", totalSetDurations)
+		//console.log("StageController: BuildWaypointData(): totalSetDurations", totalSetDurations)
 
 		// Work out how much duration we have to distribute to the waypoints
 		const remainingDuration = GameSettings.ROUND_DURATION_PER_PLAYER - totalSetDurations
-		console.log("StageController: BuildWaypointData(): remainingDuration", remainingDuration)
+		//console.log("StageController: BuildWaypointData(): remainingDuration", remainingDuration)
 
 		// Fill in the start and end positions, calculate their distances
 		var lastPosition: Vector3 = Vector3.Zero()
@@ -178,7 +169,7 @@ export namespace StageController {
 		}
 
 		const totalDistance = waypoints.reduce((acc, w) => acc + (w.distance ?? 0), 0)
-		console.log("StageController: BuildWaypointData(): totalDistance", totalDistance)
+		//console.log("StageController: BuildWaypointData(): totalDistance", totalDistance)
 
 		for (let w of waypoints) {
 			if (!w.duration) {
@@ -186,9 +177,6 @@ export namespace StageController {
 			}
 			console.log("StageController: BuildWaypointData(): w.duration", w.duration)
 		}
-
-		const endTime = Date.now()
-		console.log("StageController: BuildWaypointData(): Time Taken to build waypoints: ", endTime - startTime, "ms")
 		return waypoints
 	}
 
@@ -198,17 +186,17 @@ export namespace StageController {
 		console.log("StageController: init()")
 	}
 
+
 	// MARK: CleanupReset
 	function CleanupReset() {
 		console.log("StageController: CleanupReset()")
 
 		// Remove all the NPC entities
-		npcs.forEach((npc: { userId: string, npc: Entity }) => {
+/* 		npcs.forEach((npc: { userId: string, npc: Entity }) => {
 			console.log("StageController: OnShowEnd(): destroying npc:", npc.toString())
 			DestroyNPC(npc.npc)
 		})
-
-		npcs = []
+		npcs = [] */
 
 		CameraController.ResetCamera()
 		currentCameraTarget = undefined
@@ -245,14 +233,36 @@ export namespace StageController {
 		const waypoints = GetWaypointData(goLeft)
 
 		// Trigger the waypoint callbacks
-		TriggerWaypointCallbacks(waypoints)
+		const timeouts = TriggerWaypointCallbacks(waypoints)
 
 		// Trigger the NPC to walk
 		AnimateNPC(npc, waypoints)
 
-
 		// Flip the flag
 		goLeft = !goLeft
+
+		// Trigger the EndTurn callback
+		//timeouts.push(utils.timers.setTimeout(() => {
+		//	console.log("StageController: StartTurn(): firing endTurnCallback")
+		//	EndTurn(npc, timeouts)
+		//}, GameSettings.ROUND_DURATION_PER_PLAYER))
+	}
+
+
+	// MARK: EndTurn
+	function EndTurn(thisNpc: Entity, timeouts: utils.TimerId[]) {
+		console.log("StageController: EndTurn()")
+
+		// Cleanup old timers
+		for (const timeout of timeouts) {
+			utils.timers.clearTimeout(timeout)
+		}
+		timeouts.length = 0
+
+		// Destroy the npc and remove it from the list
+		DestroyNPC(thisNpc)
+		// Remove the npc from the npcs array
+		npcs = npcs.filter((npc: { userId: string, npc: Entity }) => npc.npc !== thisNpc)
 	}
 
 
@@ -309,35 +319,36 @@ export namespace StageController {
 	function TriggerWaypointCallbacks(waypoints: waypoint[]) {
 		console.log("StageController: TriggerWaypointCallbacks(): waypoints", waypoints)
 
+		const timeouts: utils.TimerId[] = []
 		// Setup the callbacks
 		var callbackDelay = 0
 		waypoints.forEach((w) => {
 			// beforeStart
 			if (w.beforeStartCallback) {
-				utils.timers.setTimeout(() => {
+				timeouts.push(utils.timers.setTimeout(() => {
 					console.log("StageController: AnimateNPC(): firing beforeStartCallback for waypoint", w)
 					w.beforeStartCallback!()
-				}, Math.max(0, callbackDelay + beforeStartCallbackTimeOffest))
+				}, Math.max(0, callbackDelay - beforeStartCallbackTimeOffest)))
 			}
 
 			// onStart
 			if (w.onStartCallback) {
-				utils.timers.setTimeout(() => {
+				timeouts.push(utils.timers.setTimeout(() => {
 					console.log("StageController: AnimateNPC(): firing onStartCallback for waypoint", w)
 					w.onStartCallback!()
-				}, Math.max(0, callbackDelay))
+				}, Math.max(0, callbackDelay)))
 			}
-
 
 			callbackDelay += w.duration!
 			// onEnd
 			if (w.onEndCallback) {
-				utils.timers.setTimeout(() => {
+				timeouts.push(utils.timers.setTimeout(() => {
 					console.log("StageController: AnimateNPC(): firing onEndCallback for waypoint", w)
 					w.onEndCallback!()
-				}, Math.max(0, callbackDelay))
+				}, Math.max(0, callbackDelay)))
 			}
 		})
+		return timeouts
 	}
 
 
