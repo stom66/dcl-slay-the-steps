@@ -29,7 +29,7 @@ export class GameSettings {
 	static SERVER_TIME_UPDATE_INTERVAL = (IS_DEBUG ? 15: 30) * 1000
 
 	static COUNTDOWN_DURATION          = (IS_DEBUG ? 8 : 60) * 1000
-	static ROUND_DURATION_PER_PLAYER   = 25 * 1000
+	static ROUND_DURATION_PER_PLAYER   = (IS_DEBUG ? 15: 30) * 1000
 	static ROUND_START_DELAY           = (IS_DEBUG ? 5 : 6) * 1000 // Delay before the round starts
 	static ROUND_INTERVAL              = (IS_DEBUG ? 2 : 2) * 1000 // Interval between players, MUST be longer than the ROUND_START_DELAY
 	static VOTING_DURATION             = 10 * 1000

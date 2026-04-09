@@ -91,7 +91,7 @@ export namespace StageController {
 			},
 		},
 		{ // Pause at the top of the stairs
-			duration: 2500,
+			duration: 3000,
 			onEndCallback: () => {
 				DestroyPaparazzi()
 			},
@@ -106,7 +106,7 @@ export namespace StageController {
 			end: NPC_PATH_STAIRS_MID_PAUSE
 		},
 		{ // Pause at MID_PAUSE
-			duration: 2500,
+			duration: 3000,
 			beforeStartCallback: () => {
 				SpawnPaparazzi([2, 3, 4, 5, 6, 7])
 			},
