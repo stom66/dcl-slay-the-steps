@@ -1,5 +1,5 @@
 import * as utils from "@dcl-sdk/utils";
-import { EasingFunction, engine, Entity, GltfContainer, Tags, Transform, Tween } from "@dcl/sdk/ecs";
+import { EasingFunction, engine, Entity, GltfContainer, GltfContainerLoadingState, LoadingState, Tags, Transform, Tween } from "@dcl/sdk/ecs";
 import { Quaternion, Vector3 } from "@dcl/sdk/math";
 
 import { GameStatus } from "src/shared/enums";
@@ -8,12 +8,9 @@ import { ClientEvents } from "src/client/clientEvents";
 
 
 // MARK: Event bindings
-eventBus.on(ClientEvents.NOTIFY_ABORT_GAME, (data) => {
-	DestroyPaparazzi()
-})
 
 eventBus.on(ClientEvents.NOTIFY_STATE, (data) => {
-	if (data.serverStatus == GameStatus.GAME_ENDED) {
+	if (data.serverStatus == GameStatus.GAME_ENDED || data.serverStatus == GameStatus.LOBBY) {
 		DestroyPaparazzi()
 	}
 })
@@ -137,10 +134,15 @@ export function SpawnPaparazzi(
 			src: `assets/models/pap/paparazzi0${spot.papIndex}.gltf`,
 		})
 
-		// Scaltween up to Scale.One() after a short delay
-		timeouts.push(utils.timers.setTimeout(() => {
-			Tween.setScale(entity, Vector3.Zero(), spot.scale || defaultScale, duration, EasingFunction.EF_EASEBACK)
-		}, cumulativeDelay - delay))
+		const thisDelay = cumulativeDelay - delay
+		GltfContainerLoadingState.onChange(entity, (state) => {
+			if (state?.currentState === LoadingState.FINISHED) {
+				timeouts.push(utils.timers.setTimeout(() => {
+					Tween.setScale(entity, Vector3.Zero(), spot.scale || defaultScale, duration, EasingFunction.EF_EASEBACK)
+				}, thisDelay))
+			}
+		})
+
 		cumulativeDelay += interval
 	}
 }
