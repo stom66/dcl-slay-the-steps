@@ -101,8 +101,12 @@ export class ServerStore {
 	removePlayer(userId: string): void {
 		if (!this.serverState.players.has(userId)) {
 			console.log(`serverStore: removePlayer: userId ${userId} is not present in players map.`)
+			if (!this.serverState.spectators.has(userId)) {
+				console.log(`serverStore: removePlayer: userId ${userId} is not present in spectators map.`)
+			}
 		}
 		this.serverState.players.delete(userId)
+		this.serverState.spectators.delete(userId)
 		this.serverState.outfits.delete(userId)
 
 		if (this.getPlayerCount() < 1) {
