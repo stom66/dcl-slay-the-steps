@@ -11,12 +11,22 @@ import { userProfileCache } from 'src/shared/utils/userProfileCache'
 import { GetBackgroundTexture } from 'src/client/utils'
 import { ClientEvents } from 'src/client/clientEvents';
 import { ClientStore } from 'src/client/clientStore';
+import { GameSettings } from 'src/shared/settings';
+import { SoundManager } from '../soundManager';
+import { sfx } from '../data/sfx';
 
 
 // MARK: Event Binding
 eventBus.on(ClientEvents.NOTIFY_STATE, (data: ClientState) => {
 	if (data.serverStatus === GameStatus.GAME_ENDED) {
-		ShowVotingResults()
+		const isInvolvedInGame = 
+			clientStore.isEnrolledInGame() || 
+			(GameSettings.CAN_SPECTATORS_VOTE && clientStore.isSpectatorInGame())
+
+		if (isInvolvedInGame || GameSettings.SHOW_RESULTS_TO_UNINVOLVED) {
+			ShowVotingResults()
+			SoundManager.PlaySound(sfx.voteResults)
+		}
 	}
 })
 
@@ -41,19 +51,8 @@ function HideVotingResults() {
 function GetVotingResults() {
 
 	const elements: ReactEcs.JSX.Element[] = [] // array of UIElements for each player
-	const results : Record<string, number> = {} // Count of votes per usedID
 	
-	for (const [_, votedFor] of clientStore.getVoteResults()) {
-		if (results[votedFor] === undefined) {
-			results[votedFor] = 1
-		} else {
-			results[votedFor]++
-		}
-	}
-	console.log("ui.Game.VotingResults: BuildVotingResults(), results.length:", results.length)
-
-	// To sort voting results, we need an array, not an object. Let's get an array of [userId, count] and sort it.
-	const sortedResults = Object.entries(results).sort((a, b) => b[1] - a[1])
+	const sortedResults = clientStore.getSortedVoteResults()
 
 	// If there are no votes, show a message
 	if (sortedResults.length === 0) {

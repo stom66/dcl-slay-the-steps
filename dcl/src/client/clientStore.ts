@@ -174,6 +174,23 @@ export class ClientStore {
 		getVoteResults(): Map<string, string> {
 			return this.clientState.voteResults
 		}
+		getSortedVoteResults(): [string, number][] {
+			const results : Record<string, number> = {} // Count of votes per usedID
+			
+			for (const [_, votedFor] of this.getVoteResults()) {
+				if (results[votedFor] === undefined) {
+					results[votedFor] = 1
+				} else {
+					results[votedFor]++
+				}
+			}
+			console.log("ui.Game.VotingResults: BuildVotingResults(), results.length:", results.length)
+		
+			// To sort voting results, we need an array, not an object. Let's get an array of [userId, count] and sort it.
+			const sortedResults = Object.entries(results).sort((a, b) => b[1] - a[1])
+		
+			return sortedResults
+		}
 
 
 	// MARK: Player Outfit Set/Getters
