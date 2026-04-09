@@ -20,7 +20,7 @@ export namespace SoundManager {
 			if (!clientStore.isEnrolledInGame()) return
 			StartBGM()
 		}
-		if (data.serverStatus == GameStatus.GAME_ENDED) {
+		if (data.serverStatus == GameStatus.GAME_ENDED || data.serverStatus == GameStatus.LOBBY) {
 			StopBGM()
 		}
 		if (data.serverStatus == GameStatus.STARTING) {
@@ -32,10 +32,6 @@ export namespace SoundManager {
 		StartBGM()
 	})
 
-	eventBus.on(ClientEvents.NOTIFY_ABORT_GAME, (data) => {
-		StopBGM()
-	})
-
 	eventBus.on(ClientEvents.NOTIFY_TURN_STARTING, (data) => {
 		if (!clientStore.isEnrolledInGame()) return
 		PlaySound(sfx.turnStart)
@@ -43,7 +39,6 @@ export namespace SoundManager {
 
 
 	// MARK: Vars
-	const bgm_src = "assets/sfx/bgm.mp3"
 	let bgm: Entity
 	
 	const fadeDuration = 3.0
@@ -62,7 +57,7 @@ export namespace SoundManager {
 		bgm = engine.addEntity()
 		Transform.create(bgm, {})
 		AudioSource.create(bgm, {
-			audioClipUrl: bgm_src,
+			audioClipUrl: sfx.music[Math.floor(Math.random() * sfx.music.length)],
 			playing: false,
 			global: true,
 			volume: 0.5,
@@ -157,6 +152,7 @@ export namespace SoundManager {
 
 		fadingIn = true
 		fadeElapsed = 0
+		audio.audioClipUrl = sfx.music[Math.floor(Math.random() * sfx.music.length)]
 		audio.volume = 0
 		audio.playing = true
 	}
