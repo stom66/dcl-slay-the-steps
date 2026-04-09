@@ -4,6 +4,7 @@ import { Outfit, ServerState } from "src/shared/types"
 
 import { gameManager } from "src/server/gameManager"
 import { sendStateUpdate } from "src/server/serverMessaging"
+import { onLeaveScene } from "@dcl/sdk/players"
 
 
 // MARK: ServerStore
@@ -22,6 +23,11 @@ export class ServerStore {
 
 	private constructor() {
 		console.log('ServerStore: constructor')
+
+		
+		onLeaveScene((userId) => {
+			this.removePlayer(userId)
+		})
 	}
 
 	
@@ -88,6 +94,9 @@ export class ServerStore {
 	getPlayerIDs(): string[] {
 		return Array.from(this.serverState.players.keys())
 	}
+	getSpectatorIDs(): string[] {
+		return Array.from(this.serverState.spectators.keys())
+	}
 
 	removePlayer(userId: string): void {
 		if (!this.serverState.players.has(userId)) {
@@ -97,9 +106,12 @@ export class ServerStore {
 		this.serverState.outfits.delete(userId)
 
 		if (this.getPlayerCount() < 1) {
-			if (this.getStatus() !== GameStatus.STARTING) {
+			// If we're in the Lobby, or the countdown, then we just go back to the lobby
+			if (this.getStatus() == GameStatus.STARTING || this.getStatus() == GameStatus.LOBBY) {
 				this.setStatus(GameStatus.LOBBY)
 				sendStateUpdate()
+
+			// If we're in an actual game, then run the abort
 			} else  {
 				gameManager.abortGame()
 			}
