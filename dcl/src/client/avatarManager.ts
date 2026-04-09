@@ -71,7 +71,7 @@ class AvatarManager {
 		const item: SpawnQueueItem | undefined = this.spawnQueue.shift()
 		if (!item) return
 
-		AvatarShape.create(item.parent, {
+		AvatarShape.createOrReplace(item.parent, {
 			id       : item.properties.id,
 			name     : item.properties.name,
 			bodyShape: item.properties.bodyShape,
@@ -81,8 +81,8 @@ class AvatarManager {
 			skinColor: item.properties.skinColor,
 			hairColor: item.properties.hairColor,
 			showOnlyWearables: item.properties.showOnlyWearables
-		})
-
+		})	
+	
 		if (item.callback) {
 			item.callback()
 		}

@@ -114,17 +114,15 @@ export namespace MannequinManager {
 			})
 		}
 
-		if (!AvatarShape.getOrNull(npcMannequin)) {
-			avatarManager.SpawnAvatar(npcMannequin, {
-				id       : "npc_mannequin    ", // Trailing spaces are required to hide the nametag above the NPC
-				name     : "",
-				bodyShape: clientStore.getNPCBodyShape(),
-				wearables: clientStore.getNPCWearables()?.map(w => w.urn) ?? [],
-				emotes   : [],
-				hairColor: clientStore.getNPCHairColor(),
-				skinColor: clientStore.getNPCSkinColor(),
-			}, 1000)
-		}
+		avatarManager.SpawnAvatar(npcMannequin, {
+			id       : "npc_mannequin    ", // Trailing spaces are required to hide the nametag above the NPC
+			name     : "",
+			bodyShape: clientStore.getNPCBodyShape(),
+			wearables: clientStore.getNPCWearables()?.map(w => w.urn) ?? [],
+			emotes   : [],
+			hairColor: clientStore.getNPCHairColor(),
+			skinColor: clientStore.getNPCSkinColor(),
+		}, 1000)
 
 		// Creat the billboard entity - anything which should always rotate to face the player gets parented to this
 		if (!npcBillboard || !Transform.getMutableOrNull(npcBillboard)) {
