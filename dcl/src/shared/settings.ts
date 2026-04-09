@@ -42,4 +42,7 @@ export class GameSettings {
 	static ARENA_SPAWN_LOOK_AT_TARGET  = Vector3.create(16, 13.5, 26)
 
 	static MAX_PLAYERS = 16
+
+	static CAN_SPECTATORS_VOTE = false
+	static SHOW_RESULTS_TO_UNINVOLVED = false
 }

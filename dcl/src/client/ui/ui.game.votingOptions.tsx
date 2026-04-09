@@ -10,13 +10,21 @@ import { GetBackgroundTexture } from 'src/client/utils'
 import { ClientEvents } from 'src/client/clientEvents'
 import { ClientMessaging } from 'src/client/clientMessaging'
 import { ClientStore } from 'src/client/clientStore'
+import { GameSettings } from 'src/shared/settings'
 
 
 
 // MARK: Event Binding
 eventBus.on(ClientEvents.NOTIFY_STATE, (data: ClientState) => {
 	if (data.serverStatus === GameStatus.VOTING) {
-		ShowVotingOptions()
+		// Check we have the right to vote
+		const canVote = 
+			clientStore.isEnrolledInGame() ||
+			(GameSettings.CAN_SPECTATORS_VOTE && clientStore.isSpectatorInGame())
+
+		if (canVote) {
+			ShowVotingOptions()
+		}
 	} else {
 		HideVotingOptions()
 	}
