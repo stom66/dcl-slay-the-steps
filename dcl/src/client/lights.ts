@@ -30,7 +30,7 @@ export const SetupLights = () => {
 	LightSource.create(lightDownstairsBooth, {
 		type     : LightSource.Type.Point({}),
 		intensity: 50000,
-		shadow   : false,
+		shadow   : true,
 		color    : Color3.Yellow(),
 		active   : true
 	})
@@ -52,6 +52,7 @@ export const SetupLights = () => {
 		active   : true
 	})
 
+
 	// Spotlight at top of stairs
 	const lightStairsTop = engine.addEntity()
 	Transform.create(lightStairsTop, {
@@ -62,40 +63,28 @@ export const SetupLights = () => {
 	LightSource.create(lightStairsTop, {
 		type     : LightSource.Type.Spot({ innerAngle: 25, outerAngle: 45 }),
 		intensity: 150000,
-		shadow   : false,
-		color    : Color3.White(),
+		shadow   : true,
+		color    : Color3.Yellow(),
 		active   : true
 	})
+
 
 	// Spotlight above GameHost
 	const spotlightGameHost = engine.addEntity()
 	Transform.create(spotlightGameHost, {
-		position: Vector3.create(15.0718,4, 28.95),
+		position: Vector3.create(16, 9, 16),
 		rotation: Quaternion.fromEulerDegrees(90, 0, 0),
 		scale: Vector3.create(1, 1, 1)
 	})
 	LightSource.create(spotlightGameHost, {
-		type     : LightSource.Type.Spot({ innerAngle: 25, outerAngle: 45 }),
-		intensity: 160000,
-		shadow   : false,
-		color    : Color3.White(),
+		type     : LightSource.Type.Spot({ innerAngle: 25, outerAngle: 65 }),
+		intensity: 500000,
+		shadow   : true,
+		color    : Color3.fromHexString('#ACBB68'),
 		active   : true
 	})
 
-	// Point light in ringLight
-/* 	const ringLightGlow = engine.addEntity()
-	Transform.create(ringLightGlow, {
-		position: Vector3.create(14, 5.5, 30.4),
-		rotation: Quaternion.fromEulerDegrees(0, 0, 0),
-		scale: Vector3.create(1, 1, 1)
-	})
-	LightSource.create(ringLightGlow, {
-		type     : LightSource.Type.Point({ innerAngle: 25, outerAngle: 45 }),
-		intensity: 10000,
-		shadow   : false,
-		color    : Color3.fromHexString('#F1AF13'),
-		active   : true
-	}) */
+
 	
 
 }
