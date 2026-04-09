@@ -13,24 +13,16 @@ const clientStore = ClientStore.getInstance()
 
 export namespace ClientHandler {
 	export function init() {
-		room.onMessage(MessageType.NOTIFY_ABORT_GAME, (data)         => { handleNotifyAbortGame(data) })
 		room.onMessage(MessageType.NOTIFY_STATE, (data)              => { handleNotifyState(data) })
 		room.onMessage(MessageType.NOTIFY_TURN_STARTING, (data)      => { handleNotifyTurnStarting(data) })
 		room.onMessage(MessageType.NOTIFY_TURN_STARTING_SOON, (data) => { handleNotifyTurnStartingSoon() })
 		room.onMessage(MessageType.NOTIFY_PLAYER_LIST, (data)        => { handleNotifyPlayerList(data) })
-		room.onMessage(MessageType.NOTIFY_SPECTATOR_JOINED, (data)    => { handleNotifySpectatorJoined(data) })
+		room.onMessage(MessageType.NOTIFY_SPECTATOR_JOINED, (data)   => { handleNotifySpectatorJoined(data) })
 		room.onMessage(MessageType.NOTIFY_EMOTE, (data)              => { handleNotifyEmote(data.userId, data.emote) })
 		room.onMessage(MessageType.NOTIFY_WARNING, (data)            => { handleNotifyWarning(data) })
 		room.onMessage(MessageType.NOTIFY_SERVER_TIME, (data)        => { handleNotifyServerTime(data) })
 	}
 	
-
-	// MARK: Abort Game
-	function handleNotifyAbortGame(data: any) {
-		console.log('ClientHandler: handleNotifyAbortGame: data', data)
-		eventBus.emit(ClientEvents.NOTIFY_ABORT_GAME, data)
-	}
-
 
 	// MARK: State
 	function handleNotifyState(data: NotifyStatePayload) {
