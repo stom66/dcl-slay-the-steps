@@ -38,7 +38,7 @@ export const SetupLights = () => {
 
 
 	// MARK: Upstairs Main
-	const lightUpstairs = engine.addEntity()
+/* 	const lightUpstairs = engine.addEntity()
 	Transform.create(lightUpstairs, {
 		position: Vector3.create(16, 18, 16),
 		rotation: Quaternion.fromEulerDegrees(0, 0, 0),
@@ -50,7 +50,7 @@ export const SetupLights = () => {
 		shadow   : false,
 		color    : Color3.White(),
 		active   : true
-	})
+	}) */
 
 
 	// Spotlight at top of stairs
