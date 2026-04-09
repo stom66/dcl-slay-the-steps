@@ -1,0 +1,90 @@
+@startuml
+title Script Interaction Diagram
+left to right direction
+skinparam packageStyle rectangle
+skinparam shadowing false
+
+rectangle "Server Side" as SERVER_SIDE {
+  rectangle "Server Messaging" as SERVER_MSG {
+    rectangle "sendStateUpdate() (legacy/commented)" as SM1
+    rectangle "sendVotingResults()" as SM2
+  }
+
+  rectangle "Server Handler" as SERVER {
+    rectangle "getUserId()" as S2
+    rectangle "handleRequestState()" as S3
+    rectangle "handleRequestJoinGame()" as S4
+    rectangle "handleRequestOutfitUpdate()" as S5
+    rectangle "handleRequestAddVote()" as S6
+    rectangle "handleRequestRemoveVote()" as S7
+    rectangle "handleRequestEmote()" as S8
+  }
+}
+
+rectangle "Room Messages" as ROOM {
+  rectangle "REQUEST_STATE" as R1
+  rectangle "REQUEST_JOIN_GAME" as R2
+  rectangle "REQUEST_OUTFIT_UPDATE" as R3
+  rectangle "REQUEST_ADD_VOTE" as R4
+  rectangle "REQUEST_REMOVE_VOTE" as R5
+  rectangle "REQUEST_EMOTE" as R6
+  rectangle "NOTIFY_STATE_LOBBY" as R7
+  rectangle "NOTIFY_STATE_STARTING" as R8
+  rectangle "NOTIFY_STATE_ROUND_START" as R9
+  rectangle "NOTIFY_STATE_VOTE_START" as R10
+  rectangle "NOTIFY_STATE_VOTE_RESULTS" as R11
+  rectangle "NOTIFY_PLAYER_LIST" as R12
+  rectangle "NOTIFY_EMOTE" as R13
+  rectangle "NOTIFY_WARNING" as R14
+}
+
+rectangle "Client Side" as CLIENT_SIDE {
+
+  rectangle "NPCGameHost" as CLIENT_NPC {
+    rectangle "SpawnGameHostNPC()" as CN1
+  }
+
+  rectangle "ClientMessaging" as CLIENT_MSG {
+    rectangle "RequestOutfitChange()" as CM1
+  }
+
+  rectangle "ClientHandler" as CLIENT {
+    rectangle "handleNotifyStateLobby()" as C2
+    rectangle "handleNotifyStateStarting()" as C3
+    rectangle "handleNotifyStateRoundStart()" as C4
+    rectangle "handleNotifyStateVoteStart()" as C5
+    rectangle "handleNotifyStateVoteResults()" as C6
+    rectangle "handleNotifyPlayerList()" as C7
+    rectangle "handleNotifyEmote()" as C8
+    rectangle "handleNotifyWarning()" as C9
+  }
+}
+
+' Keep columns stable: SERVER_SIDE | ROOM | CLIENT_SIDE
+SERVER_SIDE -[hidden]-> ROOM
+ROOM -[hidden]-> CLIENT_SIDE
+
+' Room -> Server mappings (requests)
+R1 -left-> S3
+R2 -left-> S4
+R3 -left-> S5
+R4 -left-> S6
+R5 -left-> S7
+R6 -left-> S8
+
+' Room -> Client mappings (notifies)
+R7 -right-> C2
+R8 -right-> C3
+R9 -right-> C4
+R10 -right-> C5
+R11 -right-> C6
+R12 -right-> C7
+R13 -right-> C8
+R14 -right-> C9
+
+' Server/Client messaging -> Room mappings
+SM2 -right-> R11
+CM1 -left-> R3
+CN1 -left-> R2
+
+@enduml

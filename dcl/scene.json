@@ -15,13 +15,13 @@
   "main": "bin/index.js",
   "tags": [],
   "scene": {
+    "base": "0,0",
     "parcels": [
       "0,0",
       "1,0",
       "0,1",
       "1,1"
-    ],
-    "base": "0,0"
+    ]
   },
   "spawnPoints": [
     {
