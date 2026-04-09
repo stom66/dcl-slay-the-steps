@@ -7,6 +7,7 @@ import { Outfit } from "src/shared/types"
 
 import { sendStateUpdate } from "src/server/serverMessaging"
 import { ServerStore } from "src/server/serverStore"
+import { onLeaveScene } from "@dcl/sdk/players"
 
 
 class GameManager {
@@ -252,7 +253,7 @@ class GameManager {
 	abortGame() {
 		console.log(`GameManager: abortGame`)
 		
-		room.send(MessageType.NOTIFY_WARNING, `The game has been aborted!`, { to: this.store.getPlayerIDs() })
+		room.send(MessageType.NOTIFY_WARNING, `The game has been aborted!`, { to: [...this.store.getPlayerIDs(), ...this.store.getSpectatorIDs()] })
 		this.store.resetState()
 		sendStateUpdate()
 	}
