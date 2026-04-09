@@ -9,16 +9,16 @@ export function VersionUI() {
 		<UiEntity
 			key={`ui_Version`}
 			uiTransform={{
-				width         : '100',
-				height        : '40',
+				width         : '250',
+				height        : '50',
 				positionType  : "absolute",
-				position      : { bottom: 10, right: 10 },
+				position      : { bottom: 3, right: 3 },
 			}}
 			uiText={{
-				value: VERSION,
-				fontSize: 12,
-				color: Color4.White(),
-				textAlign: 'middle-center',
+				value    : VERSION,
+				fontSize : 10,
+				color    : Color4.fromHexString('#88888888'),
+				textAlign: 'bottom-right',
 			}}
 		/>
 	)
