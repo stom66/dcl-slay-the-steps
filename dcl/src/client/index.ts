@@ -14,6 +14,7 @@ import { SetupGameHostNPC } from "src/client/npcGameHost";
 import { SetupLights } from "src/client/lights";
 import { SetupPortal } from "src/client/portal";
 import { SetupUI } from "src/client/ui";
+import { SpawnBirds } from "src/client/birds";
 
 
 export async function initClient() {
@@ -35,6 +36,7 @@ export async function initClient() {
 	SetupLights()
 	SetupPortal()
 	SetupUI()
+	SpawnBirds()
 	
 	MannequinManager.init() // needs to come after OutfitManager
 }
