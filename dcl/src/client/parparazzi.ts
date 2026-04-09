@@ -2,7 +2,7 @@ import * as utils from "@dcl-sdk/utils";
 import { EasingFunction, engine, Entity, GltfContainer, GltfContainerLoadingState, LoadingState, Tags, Transform, Tween } from "@dcl/sdk/ecs";
 import { Quaternion, Vector3 } from "@dcl/sdk/math";
 
-import { GameStatus } from "src/shared/enums";
+import { GameStatus, TAGS } from "src/shared/enums";
 import { eventBus } from "src/shared/utils/eventBus";
 import { ClientEvents } from "src/client/clientEvents";
 
@@ -124,7 +124,7 @@ export function SpawnPaparazzi(
 		//console.log("SpawnPaparazzi: Spawning paparazzi at position", index, spot.position.x, spot.position.y, spot.position.z)
 		// Spawn them in at scale.Zero()
 		const entity = engine.addEntity()
-		Tags.add(entity, "paparazzi")
+		Tags.add(entity, TAGS.PAPARAZZI)
 		Transform.create(entity, {
 			position: spot.position,
 			rotation: spot.rotation,
@@ -167,7 +167,7 @@ export function DestroyPaparazzi(
 	timeouts = []
 
 	// copy the array of entities and clear the original
-	const toDestroy = engine.getEntitiesByTag("paparazzi")
+	const toDestroy = engine.getEntitiesByTag(TAGS.PAPARAZZI)
 	let index = 0
 	for (const entity of toDestroy) {
 		// Tween to scale.Zero() and remove the entity after a short delay
