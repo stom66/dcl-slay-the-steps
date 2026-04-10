@@ -43,6 +43,6 @@ export class GameSettings {
 
 	static MAX_PLAYERS = 16
 
-	static CAN_SPECTATORS_VOTE = false
+	static CAN_SPECTATORS_VOTE = true
 	static SHOW_RESULTS_TO_UNINVOLVED = false
 }
