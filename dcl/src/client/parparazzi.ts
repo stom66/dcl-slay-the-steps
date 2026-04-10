@@ -17,7 +17,7 @@ eventBus.on(ClientEvents.NOTIFY_STATE, (data) => {
 
 
 // MARK: Vars
-const defaultScale = Vector3.create(0.7, 0.7, 0.7)
+const defaultScale = Vector3.create(0.85, 0.85, 0.85)
 const positions = [
 	
 	// Top Floor
