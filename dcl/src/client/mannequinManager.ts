@@ -36,8 +36,8 @@ export namespace MannequinManager {
 	
 	// MARK: Vars
 	var npcRoot              : undefined | Entity = undefined
-	var npcFront             : undefined | Entity = undefined // used for raycast detection of mannequin
-	var npcBack              : undefined | Entity = undefined // used for raycast detection of mannequin
+	//var npcFront             : undefined | Entity = undefined // used for raycast detection of mannequin
+	//var npcBack              : undefined | Entity = undefined // used for raycast detection of mannequin
 	var npcBillboard         : undefined | Entity = undefined
 	var npcMannequin         : undefined | Entity = undefined
 	var npcPodium            : undefined | Entity = undefined
@@ -78,7 +78,7 @@ export namespace MannequinManager {
 				parent  : engine.PlayerEntity,
 			})
 		}
-
+/* 
 			// Create the front raycast entity
 			if (!npcFront || !Transform.getMutableOrNull(npcFront)) {
 				console.log("MannequinManager: ShowNPCMannequin: creating missing npcFront")
@@ -101,7 +101,7 @@ export namespace MannequinManager {
 					position: Vector3.create(0, 1.25, -1),
 				})
 				//MeshRenderer.setSphere(npcBack)
-			}
+			} */
 
 		// Create the mannequin
 		if (!npcMannequin || !Transform.getMutableOrNull(npcMannequin)) {
