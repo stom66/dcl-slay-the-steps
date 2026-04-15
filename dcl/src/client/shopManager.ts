@@ -11,9 +11,25 @@ import { OutfitManager } from "src/client/outfitManager"
 import { SoundManager } from "src/client/soundManager"
 import { FetchZoneItems } from "src/client/utils"
 import { avatarManager } from "./avatarManager"
+import { eventBus } from "src/shared/utils/eventBus"
+import { ClientEvents } from "./clientEvents"
+import { ClientState } from "src/shared/types"
+import { GameStatus } from "src/shared/enums"
+import { GameSettings } from "src/shared/settings"
+import { ClientStore } from "./clientStore"
 
+
+const clientStore = ClientStore.getInstance()
 
 export namespace ShopManager {
+
+	// MARK: Events
+	eventBus.on(ClientEvents.NOTIFY_STATE, (data: ClientState) => {
+		if (data.serverStatus == GameStatus.VOTING && clientStore.isEnrolledInGame()) {
+			// Randomise the shop contents when the game ends
+			RandomiseZones()
+		}
+	})
 
 	// MARK: Vars
 	var zoneItems   : Record<string, Entity[]> = {} // Zone state           : maps zone key to array of spawned item entities
@@ -212,11 +228,29 @@ export namespace ShopManager {
 	}
 
 
+	// Mark: Randomise Zones
+	export function RandomiseZones() {
+		console.log("ShopManager: Randomising zones")
+		for (const zone of shopZones) {
+			RandomPage(zone)
+		}
+	}
+
+	function RandomPage(zone: ShopZone) {
+		const randomPage = Math.floor(Math.random() * GameSettings.STORE_MAX_PAGES)
+		console.log(`ShopManager: RandomPage: showing random page ${randomPage} for zone "${zone.key}"`)
+		zone.currentPage = randomPage
+		updateZoneItems(zone)
+	}
+
 	// MARK: Navigation	
 	// Navigate to the next page of items for a zone
 	function NextPage(zone: ShopZone) {
 		console.log(`ShopManager: NextPage: showing page ${zone.currentPage + 1} for zone "${zone.key}"`)
 		zone.currentPage++
+		if (zone.currentPage > GameSettings.STORE_MAX_PAGES) {
+			zone.currentPage = -1
+		}
 		updateZoneItems(zone)
 	}
 
@@ -224,10 +258,11 @@ export namespace ShopManager {
 	// Navigate to the previous page of items for a zone
 	function PreviousPage(zone: ShopZone) {
 		console.log(`ShopManager: Previous: showing page ${zone.currentPage -1} for zone "${zone.key}"`)
-		if (zone.currentPage > -1) {
-			zone.currentPage--
-			updateZoneItems(zone)
+		zone.currentPage--
+		if (zone.currentPage < -1) {
+			zone.currentPage = GameSettings.STORE_MAX_PAGES
 		}
+		updateZoneItems(zone)
 	}
 
 

@@ -45,4 +45,6 @@ export class GameSettings {
 
 	static CAN_SPECTATORS_VOTE = true
 	static SHOW_RESULTS_TO_UNINVOLVED = false
+
+	static STORE_MAX_PAGES = 80
 }
