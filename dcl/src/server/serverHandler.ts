@@ -22,7 +22,7 @@ export namespace serverHandler {
 	export function init() {
 		room.onMessage(MessageType.REQUEST_JOIN_GAME, (data, context)     => handleRequestJoinGame(data, context))
 		room.onMessage(MessageType.REQUEST_SPECTATE_GAME, (data, context) => handleRequestSpectateGame(data, context))
-		room.onMessage(MessageType.REQUEST_OUTFIT_UPDATE, (data, context) => handleRequestOutfitUpdate(data, context))
+		room.onMessage(MessageType.REQUEST_OUTFIT_UPDATE, (data, context) => handleRequestOutfitUpdate(data.outfit, context))
 		room.onMessage(MessageType.REQUEST_ADD_VOTE, (data, context)      => handleRequestAddVote(data, context))
 		room.onMessage(MessageType.REQUEST_REMOVE_VOTE, (data, context)   => handleRequestRemoveVote(data, context))
 		room.onMessage(MessageType.REQUEST_EMOTE, (data, context)         => handleRequestEmote(data, context))

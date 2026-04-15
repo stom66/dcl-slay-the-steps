@@ -23,6 +23,7 @@ export function sendStateUpdate(to?: string[]) {
 			userId    : userId,
 			voteFor   : voteFor,
 		})),
+		lastWinner   : state.lastWinner
 	}
 
 	console.log('serverMessaging: sendStateUpdate, state:', stateMessage)

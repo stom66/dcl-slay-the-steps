@@ -21,29 +21,27 @@ export enum MessageType {
 	NOTIFY_SERVER_TIME        = "notifyServerTime",       // Sent by server, to notify the clients of the server time
 }
 
+const outfitSchema = Schemas.Map({
+	userId   : Schemas.String,
+	wearables: Schemas.Array(Schemas.String),
+	bodyShape: Schemas.String,
+	hairColor: Schemas.Color3,
+	skinColor: Schemas.Color3,
+})
+
 // MARK: Message schemas
 const Messages = {
 	// Sent by client
 	[MessageType.REQUEST_STATE]        : Schemas.Map({}),
 	[MessageType.REQUEST_JOIN_GAME]    : Schemas.Map({
 		displayName: Schemas.String,
-		outfit     : Schemas.Map({
-			userId   : Schemas.String,
-			wearables: Schemas.Array(Schemas.String),
-			bodyShape: Schemas.String,
-			hairColor: Schemas.Color3,
-			skinColor: Schemas.Color3,
-		}),
+		outfit     : outfitSchema,
 	}),
 	[MessageType.REQUEST_SPECTATE_GAME]    : Schemas.Map({
 		displayName: Schemas.String,
 	}),
 	[MessageType.REQUEST_OUTFIT_UPDATE]: Schemas.Map({
-		userId   : Schemas.String,
-		wearables: Schemas.Array(Schemas.String),
-		bodyShape: Schemas.String,
-		hairColor: Schemas.Color3,
-		skinColor: Schemas.Color3,
+		outfit: outfitSchema,
 	}),
 	[MessageType.REQUEST_ADD_VOTE]   : Schemas.String,
 	[MessageType.REQUEST_REMOVE_VOTE]: Schemas.String,
@@ -66,6 +64,11 @@ const Messages = {
 		voteResults  : Schemas.Array(Schemas.Map({
 			userId: Schemas.String,
 			voteFor: Schemas.String
+		})),
+		lastWinner: Schemas.Optional(Schemas.Map({
+			userId: Schemas.String,
+			displayName: Schemas.String,
+			outfit: outfitSchema,
 		}))
 	}),
 
@@ -73,13 +76,7 @@ const Messages = {
 
 	[MessageType.NOTIFY_TURN_STARTING]: Schemas.Map({
 		sentAt     : Schemas.Int64,
-		outfit     : Schemas.Map({
-			userId    : Schemas.String,
-			wearables : Schemas.Array(Schemas.String),
-			bodyShape : Schemas.String,
-			hairColor : Schemas.Color3,
-			skinColor : Schemas.Color3,
-		}),
+		outfit     : outfitSchema,
 		userId     : Schemas.String,
 		displayName: Schemas.String,
 	}),

@@ -37,6 +37,7 @@ export class ClientStore {
 		spectatorsInGame : new Map<string, string>(),
 		serverStatus     : GameStatus.LOBBY,
 		voteResults      : new Map<string, string>(),
+		lastWinner       : undefined,
 	}
 	
 	private constructor() {
@@ -80,6 +81,7 @@ export class ClientStore {
 		this.setEnrolledInGame(data.players.some(p => p.userId === this.getUserId()))
 		this.setVoteResults(new Map(data.voteResults.map((p) => [p.userId, p.voteFor])))
 		this.setCurrentTurnUserId(undefined)
+		this.setLastWinner(data.lastWinner)
 	}
 		getClientState(): ClientState {
 			return this.clientState
@@ -150,6 +152,25 @@ export class ClientStore {
 			return this.clientState.playersInGame
 		}
 
+
+	// MARK: Last Winner
+	setLastWinner(lastWinner: {
+		userId     : string
+		displayName: string
+		outfit     : Outfit
+	} | undefined): void {
+		this.clientState.lastWinner = lastWinner
+	}
+		getLastWinner(): {
+			userId     : string
+			displayName: string
+			outfit     : Outfit
+		} | undefined {
+			return this.clientState.lastWinner
+		}
+
+
+
 	// MARK: Spectators
 	setSpectators(spectators: Map<string, string>): void {
 		const wasSpectatorInGame = this.clientState.spectatorInGame
@@ -184,7 +205,7 @@ export class ClientStore {
 					results[votedFor]++
 				}
 			}
-			console.log("ui.Game.VotingResults: BuildVotingResults(), results.length:", results.length)
+			console.log("clientStore: getSortedVoteResults(), results.length:", results.length)
 		
 			// To sort voting results, we need an array, not an object. Let's get an array of [userId, count] and sort it.
 			const sortedResults = Object.entries(results).sort((a, b) => b[1] - a[1])

@@ -15,6 +15,7 @@ import { SetupLights } from "src/client/lights";
 import { SetupPortal } from "src/client/portal";
 import { SetupUI } from "src/client/ui";
 import { SpawnBirds } from "src/client/birds";
+import { NPCWinner } from "./npcWinner";
 
 
 export async function initClient() {
@@ -32,7 +33,8 @@ export async function initClient() {
 	ShopManager.init()
 
 	SetupColorPickers()
-	SetupGameHostNPC()
+	//SetupGameHostNPC()
+	NPCWinner.Init()
 	SetupLights()
 	SetupPortal()
 	SetupUI()

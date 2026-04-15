@@ -231,6 +231,22 @@ class GameManager {
 	// MARK: VotingEnd
 	triggerVotingEnd() {
 		console.log(`GameManager: triggerVotingEnd`)
+
+		// Find who won
+		const winnerId = this.store.getWinnerUserId()
+		if (!winnerId) {
+			console.log(`GameManager: triggerVotingEnd: No winner found, winner set to undefined`)
+			this.store.setLastWinner(undefined)
+		} else { 
+			const winnerOutfit = this.store.getState().outfits.get(winnerId)
+			const winnerDisplayName = this.store.getState().players.get(winnerId) ?? ""
+
+			this.store.setLastWinner(winnerOutfit ? {
+				userId     : winnerId,
+				displayName: winnerDisplayName,
+				outfit     : winnerOutfit,
+			} : undefined)
+		}
 		
 		this.store.setStatus(GameStatus.GAME_ENDED)
 		sendStateUpdate()

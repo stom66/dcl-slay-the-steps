@@ -38,6 +38,12 @@ export type ClientState = {
 	npcHairColor     : Color3
 	npcBodyShape     : string
 	npcWearables     : Wearable[]
+
+	lastWinner       : {
+		userId: string
+		displayName: string
+		outfit: Outfit
+	} | undefined
 }
 
 
@@ -50,14 +56,19 @@ export type ServerState = {
 	status           : GameStatus
 	votes            : Map<string, string> // voteFrom -> voteFor
 	currentTurnUserId: string | undefined
+	lastWinner       : {
+		userId     : string
+		displayName: string
+		outfit     : Outfit
+	} | undefined
 }
 
 
 // MARK: NotifyPlayerListPayload
 export type NotifyPlayerListPayload = {
-	sentAt: number
+	sentAt : number
 	players: {
-		userId: string
+		userId     : string
 		displayName: string
 	}[]
 }
@@ -73,16 +84,21 @@ export type NotifyStatePayload = {
 	voteResults  : {
 		userId    : string
 		voteFor   : string
-	}[]
+	}[],
+	lastWinner?: {
+		userId     : string
+		displayName: string
+		outfit     : Outfit
+	} | undefined
 }
 
 
 // MARK: NotifyTurnStartingPayload
 export type NotifyTurnStartingPayload = {
-	displayName: string,
-	outfit     : Outfit,
-	sentAt     : number,
-	userId     : string,
+	displayName: string
+	outfit     : Outfit
+	sentAt     : number
+	userId     : string
 }
 
 

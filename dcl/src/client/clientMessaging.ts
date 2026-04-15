@@ -22,7 +22,7 @@ export namespace ClientMessaging {
 			hairColor: clientStore.getNPCHairColor(),
 			skinColor: clientStore.getNPCSkinColor(),
 		}
-		room.send(MessageType.REQUEST_OUTFIT_UPDATE, outfit)
+		room.send(MessageType.REQUEST_OUTFIT_UPDATE, { outfit: outfit })
 	}
 
 
