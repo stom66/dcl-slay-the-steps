@@ -323,6 +323,13 @@ export namespace StageController {
 		// Spawn the Avatar
 		const npc = engine.addEntity()
 
+		// Position the Avatar
+		Transform.create(npc, {
+			position: NPC_SPAWN_POSITION,
+			rotation: NPC_SPAWN_ROTATION,
+			scale   : NPC_SPAWN_SCALE
+		})
+
 		// the avatars wearables are in the outfit array, so we need to get the wearables from the outfit
 		avatarManager.SpawnAvatar(npc, {
 			id       : "npc_" + outfit.userId + "    ",
@@ -334,13 +341,6 @@ export namespace StageController {
 			skinColor: outfit.skinColor,
 			hairColor: outfit.hairColor
 		}, 1000)
-
-		// Position the Avatar
-		Transform.create(npc, {
-			position: NPC_SPAWN_POSITION,
-			rotation: NPC_SPAWN_ROTATION,
-			scale   : NPC_SPAWN_SCALE
-		})
 
 		return npc
 	}

@@ -1,5 +1,5 @@
 import * as utils from "@dcl-sdk/utils"
-import { AvatarShape, Entity, PBAvatarShape } from "@dcl/sdk/ecs"
+import { AvatarShape, engine, Entity, PBAvatarShape, Transform } from "@dcl/sdk/ecs"
 import { Color3 } from "@dcl/sdk/math"
 
 
@@ -71,6 +71,13 @@ class AvatarManager {
 		const item: SpawnQueueItem | undefined = this.spawnQueue.shift()
 		if (!item) {
 			this.processQueue = false
+			return
+		}
+
+		// Ensure the entity still exists. If not then we ignore and move on to the next item
+		if (!Transform.getOrNull(item.parent)) {
+			console.log(`AvatarManager: ProcessQueue: Parent entity not found, skipping`)
+			this.ProcessQueue()
 			return
 		}
 
