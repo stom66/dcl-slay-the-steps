@@ -148,10 +148,10 @@ export function GameStatusUI() {
 			<UiEntity
 				key={`ui_GameStatus_btn_parent`}
 				uiTransform={{
-					width : "180",
-					height: "56",
+					width : "216",
+					height: "67",
 					display: shouldShowButton() ? 'flex' : 'none',
-					position: { top: -28}
+					position: { top: -32}
 				}}
 				uiBackground={{
 					texture: {
