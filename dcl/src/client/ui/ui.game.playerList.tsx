@@ -8,11 +8,16 @@ import { userProfileCache } from 'src/shared/utils/userProfileCache'
 import { GetBackgroundTexture } from 'src/client/utils'
 import { ClientStore } from 'src/client/clientStore'
 import { ClientEvents } from 'src/client/clientEvents'
+import { GameStatus } from 'src/shared/enums'
 
 
 // MARK: Event Binding
 eventBus.on(ClientEvents.NOTIFY_STATE, (data: ClientState) => {
 	UpdatePlayerList()
+
+	if (data.serverStatus === GameStatus.GAME_ENDED) {
+		SetCurrentPlayer(undefined)
+	}
 })
 
 eventBus.on(ClientEvents.PLAYERS_UPDATED, (players: Map<string, string>) => {
