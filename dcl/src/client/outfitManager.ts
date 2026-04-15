@@ -28,7 +28,10 @@ export namespace OutfitManager {
 	export function init() {
 		console.log("OutfitManager: init")
 
-		InitUserWearables()
+		// Add a small delay, to give the scene some time to finish loading. This helps ensure the NPC mannequin is visible on first load.
+		utils.timers.setTimeout(() => {
+			InitUserWearables()
+		}, 1000)
 		
 		// Re-trigger InitUserWearables every time the user equips a new wearable
 		AvatarEquippedData.onChange(engine.PlayerEntity, (equipped) => {
