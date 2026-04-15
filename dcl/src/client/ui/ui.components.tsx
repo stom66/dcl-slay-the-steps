@@ -40,19 +40,22 @@ export const ButtonAction = ({ textLabel, callback }: { textLabel: string; callb
 			uiTransform={{
 				width: "100%",
 				height: 40,
-				margin: 4
+				margin: 3,
+				borderRadius: 6,
+				borderColor: Color4.fromHexString("#508894"),
+				borderWidth: 2
 			}}
 			value={textLabel}
-			variant="primary"
 			fontSize={14}
 			onMouseDown={() => {
 				callback!()
 			}}
+			uiBackground={{ color: Color4.fromHexString("#44727b") }}
 		/>
 	)
 }
 
-export const InfoRow = ({ label, value }: { label: string; value: string }) => {
+export const InfoRow = ({ label, value, fontSize, firstColumnWidth }: { label: string; value: string, fontSize?: number, firstColumnWidth?: number }) => {
 	return (
 		<UiEntity
 		uiTransform={{
@@ -64,24 +67,24 @@ export const InfoRow = ({ label, value }: { label: string; value: string }) => {
 		>
 		<UiEntity
 		uiTransform={{
-			width: 250,
+			width: firstColumnWidth !== undefined ? `${firstColumnWidth}%` : "50%",
 			height: 'auto'
 		}}
 		uiText={{
 			value: label,
-			fontSize: 14,
-			color: Color4.create(0.7, 0.7, 0.7, 1),
+			fontSize: fontSize ?? 13,
+			color: Color4.fromHexString("#64abba"),
 			textAlign: 'middle-left'
 		}}
 		/>
 		<UiEntity
 		uiTransform={{
-			width: 300,
+			width: firstColumnWidth !== undefined ? `${100 - firstColumnWidth}%` : "50%",
 			height: 'auto'
 		}}
 		uiText={{
 			value: value,
-			fontSize: 14,
+			fontSize: fontSize ?? 13,
 			color: Color4.White(),
 			textAlign: 'middle-left'
 		}}
