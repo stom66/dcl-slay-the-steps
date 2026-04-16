@@ -1,6 +1,7 @@
 import { engine } from '@dcl/sdk/ecs'
 import ReactEcs, { UiEntity } from '@dcl/sdk/react-ecs'
 import { tweenValue } from './utils'
+import { Tutorial } from '../tutorial'
 
 
 // MARK: State
@@ -10,7 +11,7 @@ var currentInfo = "thisIsYourMannequin"
 
 // MARK: Panel positioning
 const PANEL_BOTTOM_HIDDEN = -150
-const PANEL_BOTTOM_VISIBLE = 50
+const PANEL_BOTTOM_VISIBLE = 64
 var panelBottom = PANEL_BOTTOM_HIDDEN
 
 // MARK: Arrow positioning
@@ -20,7 +21,8 @@ const ARROW_BOUNCE_RANGE = 20
 var arrowTop = ARROW_OFF_SCREEN
 var arrowElapsed = 0
 
-
+var btnVisible = true
+var btnHoverVisible = false
 
 
 function arrowBounce(dt: number) {
@@ -55,6 +57,10 @@ export function HideTutorial() {
 		(v) => panelBottom = v,
 		() => { panelVisible = false }
 	)
+}
+
+export function HideTutorialBtn() {
+	btnVisible = false
 }
 
 export function ShowArrow() {
@@ -118,6 +124,42 @@ export function TutorialUI() {
 					textureMode: 'stretch',
 				}}
 			/>
+
+
+			<UiEntity
+				key="ui_Tutorial_Btn"
+				uiTransform={{
+					width       : 180,
+					height      : 56,
+					flexShrink  : 0,
+					display     : btnVisible ? 'flex' : 'none',
+					positionType: 'absolute',
+					position    : { bottom: 4 },
+				}}
+				uiBackground={{
+					texture    : { src: 'assets/images/ui/btn-skip-tutorial.png' },
+					textureMode: 'stretch',
+				}}
+				onMouseEnter={() => { btnHoverVisible = true }}
+				onMouseLeave={() => { btnHoverVisible = false }}
+				onMouseDown={() => { 
+					Tutorial.QuitTutorial()
+				 }}
+			>
+				<UiEntity
+					key="ui_Tutorial_Btn"
+					uiTransform={{
+						width       : 180,
+						height      : 56,
+						flexShrink  : 0,
+						display     : btnHoverVisible ? 'flex' : 'none',
+					}}
+					uiBackground={{
+						texture    : { src: 'assets/images/ui/btn-skip-tutorial-hover.png' },
+						textureMode: 'stretch',
+					}}
+				/>
+			</UiEntity>
 		</UiEntity>
 	)
 }

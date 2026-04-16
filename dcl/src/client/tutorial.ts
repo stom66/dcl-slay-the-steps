@@ -1,7 +1,7 @@
 import { AvatarShape, engine, Entity, InputModifier, MainCamera, Transform, Tween, VirtualCamera } from "@dcl/sdk/ecs"
 import { getWorldPosition, getWorldRotation, timers } from '@dcl-sdk/utils'
 import { Quaternion, Vector3 } from "@dcl/sdk/math"
-import { HideTutorial as HideTutorialUI, ShowTutorial as ShowTutorialUI, SetTutorialInfo, ShowArrow, HideArrow } from "./ui/ui.tutorial"
+import { HideTutorial as HideTutorialUI, ShowTutorial as ShowTutorialUI, SetTutorialInfo, ShowArrow, HideArrow, HideTutorialBtn } from "./ui/ui.tutorial"
 import { SoundManager } from "./soundManager"
 import { sfx } from "./data/sfx"
 import { eventBus } from "src/shared/utils/eventBus"
@@ -112,7 +112,7 @@ export namespace Tutorial {
 			if (!showTutorial) return
 			Tween.setMove(camera!, getWorldPosition(camera!), positionViewShopsEnd, 3500)
 			Tween.setMove(cameraTarget!, getWorldPosition(cameraTarget!), targetViewShopsEnd, 2000)
-		}, 7500)
+		}, 6500)
 
 
 		// Look at salon
@@ -122,13 +122,13 @@ export namespace Tutorial {
 			Tween.setMove(cameraTarget!, getWorldPosition(cameraTarget!), targetViewSalonStart, 1000)
 			SetTutorialInfo("changeColor")
 			SoundManager.PlaySound(sfx.cameraMove)
-		}, 11000)
+		}, 10000)
 
 		// Pan across at salon
 		timers.setTimeout(() => {
 			if (!showTutorial) return
 			Tween.setMove(cameraTarget!, getWorldPosition(cameraTarget!), targetViewSalonEnd, 3000)
-		}, 12000)
+		}, 11000)
 
 
 		// Now back to the mannequin and its buttons
@@ -138,7 +138,7 @@ export namespace Tutorial {
 			Tween.setMove(cameraTarget!, getWorldPosition(cameraTarget!), targetViewMannequin, 600)
 			HideTutorialUI()
 			SoundManager.PlaySound(sfx.cameraMove)
-		}, 15000)
+		}, 14000)
 
 		// Btn: Reset
 		timers.setTimeout(() => {
@@ -148,7 +148,7 @@ export namespace Tutorial {
 			SetTutorialInfo("btnReset")
 			ShowTutorialUI()
 			SoundManager.PlaySound(sfx.colorPicker)
-		}, 16000)
+		}, 15000)
 
 		// Btn: Swap
 		timers.setTimeout(() => {
@@ -156,7 +156,7 @@ export namespace Tutorial {
 			Tween.setMove(cameraTarget!, getWorldPosition(cameraTarget!), targetViewButtonSwap, 300)
 			SetTutorialInfo("btnSwap")
 			SoundManager.PlaySound(sfx.colorPicker)
-		}, 18000)
+		}, 17000)
 
 		// Btn: Copy
 		timers.setTimeout(() => {
@@ -164,7 +164,7 @@ export namespace Tutorial {
 			Tween.setMove(cameraTarget!, getWorldPosition(cameraTarget!), targetViewButtonCopy, 300)
 			SetTutorialInfo("btnCopy")
 			SoundManager.PlaySound(sfx.colorPicker)
-		}, 20000)
+		}, 19000)
 
 		// Back out to view the mannequin as a whoile while we show the final info
 		timers.setTimeout(() => {
@@ -175,14 +175,14 @@ export namespace Tutorial {
 			ShowStatus()
 			SetTutorialInfo("startGame")
 			ShowArrow()
-		}, 22000)
+		}, 21000)
 
 
 		timers.setTimeout(() => {
 			if (!showTutorial) return
 			eventBus.emit(ClientEvents.SHOW_DRESS_ME_HINT, undefined)
 			QuitTutorial()
-		}, 25000)
+		}, 26000)
 
 	}
 
@@ -235,11 +235,11 @@ export namespace Tutorial {
 		// View mannequin position
 		positionViewMannequin = Vector3.add(
 			podiumPosition,
-			Vector3.create(forward.x * 3.5, 2.5, forward.z * 3.5)
+			Vector3.create(forward.x * 3.5, 2, forward.z * 3.5)
 		)
 		targetViewMannequin = Vector3.add(
 			podiumPosition, 
-			Vector3.create(0, 1.5, 0)
+			Vector3.create(0, 1.2, 0)
 		)
 
 		// View buttons position
@@ -296,7 +296,7 @@ export namespace Tutorial {
 	
 
 	// MARK: Quit Tutorial
-	function QuitTutorial() {
+	export function QuitTutorial() {
 		console.log("Tutorial: quit")
 		showTutorial = false
 
@@ -312,6 +312,8 @@ export namespace Tutorial {
 
 		// Hide the tutorial
 		HideTutorialUI()
+		HideTutorialBtn()
+
 		HideArrow()
 		ShowStatus()
 		ShowPlayerList()
