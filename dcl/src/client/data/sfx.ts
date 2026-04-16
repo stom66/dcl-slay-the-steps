@@ -51,6 +51,15 @@ export const sfx = {
 		"assets/sfx/whoosh_swish_small_06.mp3",
 	],
 
+	cameraMove: [
+		"assets/sfx/woosh-01.mp3",
+		"assets/sfx/woosh-02.mp3",
+		"assets/sfx/woosh-03.mp3",
+		"assets/sfx/woosh-04.mp3",
+		"assets/sfx/woosh-05.mp3",
+		"assets/sfx/woosh-06.mp3",
+	],
+
 	colorPicker: [
 		//"assets/sfx/confirm_style_4_003.mp3",
 		//"assets/sfx/confirm_style_4_001.mp3",
@@ -61,6 +70,11 @@ export const sfx = {
 		"assets/sfx/pop-1775419572607.mp3",
 		"assets/sfx/pop-1775419611179.mp3",
 		"assets/sfx/pop-1775419754938.mp3"
+	],
+
+	greeting: [
+		"assets/sfx/greeting-01.mp3",
+		"assets/sfx/greeting-02.mp3",
 	],
 }
 
