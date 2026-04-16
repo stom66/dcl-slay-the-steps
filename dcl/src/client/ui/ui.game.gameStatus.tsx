@@ -1,5 +1,6 @@
 import ReactEcs, { Button, UiEntity } from '@dcl/sdk/react-ecs'
 import { Color4 } from '@dcl/sdk/math'
+import * as utils from '@dcl-sdk/utils'
 
 import { GameStatus } from 'src/shared/enums'
 import { GameSettings } from 'src/shared/settings'
@@ -13,6 +14,7 @@ import { ShowHowToPlay } from './ui.game.howToPlay'
 import { ClientMessaging } from '../clientMessaging'
 import { SoundManager } from '../soundManager'
 import { sfx } from '../data/sfx'
+import { tweenValue } from './utils'
 
 
 // MARK: Event Bindings
@@ -28,6 +30,23 @@ const clientStore = ClientStore.getInstance()
 var playerName    : string = "Dave the Dapper"
 var roundStartTime: number = 0
 var isHovered     : boolean = false
+var isVisible     : boolean = false
+
+const PANEL_TOP_HIDDEN = -150
+const PANEL_TOP_VISIBLE = 35
+var panelTop      : number = PANEL_TOP_HIDDEN
+
+export function ShowStatus() {
+	isVisible = true
+	tweenValue(panelTop, PANEL_TOP_VISIBLE, 0.2, (v) => panelTop = v)
+}
+
+export function HideStatus() {
+	tweenValue(panelTop, PANEL_TOP_HIDDEN, 0.2, (v) => panelTop = v)
+	utils.timers.setTimeout(() => {
+		isVisible = false
+	}, 0.5 * 1000)
+}
 
 
 function getStatusBackground() {
@@ -87,120 +106,137 @@ export function GameStatusUI() {
 			}}
 		>
 			<UiEntity
-				key={`ui_GameStatus_body`}
+				key={`ui_GameStatus_root_root`}
 				uiTransform={{
 					width         : 400,
 					height        : 120,
 					flexShrink    : 0,
 					flexDirection : 'row',
 					alignItems    : 'center',
-					justifyContent: 'flex-end',
-					margin        : { top: '35px' },
-					display       : 'flex'
-				}}
-				uiBackground={{
-					texture: {
-						src: getStatusBackground()
-					},
-					textureMode: "stretch",
-
+					justifyContent: 'center',
+					positionType  : "absolute",
+					position      : { top: panelTop },
 				}}
 			>
 				<UiEntity
-					key={`ui_GameStatus_playerName`}
+					key={`ui_GameStatus_body`}
 					uiTransform={{
-						width : "50%",
-						height: "100%",
-						//display: 'flex',
-						margin: { bottom: '58px' },
-						display: clientStore.getServerStatus() == GameStatus.ROUND_ACTIVE ? 'flex' : 'none'
-					}}
-					uiText={{
-						value    : `${playerName}`,
-						fontSize : 24,
-						textAlign: "bottom-center",
-						color    : Color4.White(),
-					}}
-					uiBackground={{
-						//color: Color4.Green()
-					}}
-				/>
-				<UiEntity
-					key={`ui_GameStatus_timerValue`}
-					uiTransform={{
-						width    : "25%",
-						height   : "100%",
-						display: clientStore.getServerStatus() == GameStatus.STARTING || clientStore.getServerStatus() == GameStatus.ROUND_ACTIVE ? 'flex' : 'none'
-						//display  : 'flex',
-
-					}}
-					uiText={{
-						value    : clientStore.getServerStatus() == GameStatus.STARTING ? getTimeToGameStart().toString() : getRoundTimeRemaing().toString(),
-						fontSize : 64,
-						textAlign: "middle-center",
-						color    : Color4.White(),
-					}}
-					uiBackground={{
-						//color: Color4.Green()
-					}}
-				/>
-			</UiEntity>
-			<UiEntity
-				key={`ui_GameStatus_btn_parent`}
-				uiTransform={{
-					width : "216",
-					height: "67",
-					display: shouldShowButton() ? 'flex' : 'none',
-					position: { top: -32}
-				}}
-				uiBackground={{
-					texture: {
-						src: getButtonBackground()
-					},
-					textureMode: "stretch",
-				}}
-				onMouseDown={() => {
-					//ShowHowToPlay()
-					var status = clientStore.getServerStatus()
-					if (status == GameStatus.LOBBY || status == GameStatus.STARTING) {
-						console.log("npcGameHost: updateGameHostNPC: Requesting to join game")
-						ClientMessaging.RequestJoinGame()
-						SoundManager.PlaySound(sfx.startGame)
-
-					} else if (status == GameStatus.STARTED || status == GameStatus.ROUND_ACTIVE) {
-						console.log("npcGameHost: updateGameHostNPC: Requesting to spectate game")
-						SoundManager.PlaySound(sfx.startGame)
-						ClientMessaging.RequestJoinGameAsSpectator()
-
-					} else {
-						console.log("npcGameHost: updateGameHostNPC: Status not LOBBY/STARTING/STARTED/ROUND_ACTIVE")
-						eventBus.emit(ClientEvents.NOTIFY_WARNING, "Please wait for the next game to start")
-					}
-					
-				}}
-				onMouseEnter={() => {
-					isHovered = true
-				}}
-				onMouseLeave={() => {
-					isHovered = false
-				}}
-			>
-				<UiEntity
-					key={`ui_GameStatus_btn_parent`}
-					uiTransform={{
-						width : "100%",
-						height: "100%",
-						display: isHovered ? 'flex' : 'none',
+						width         : 400,
+						height        : 120,
+						flexShrink    : 0,
+						flexDirection : 'row',
+						alignItems    : 'center',
+						justifyContent: 'flex-end',
 					}}
 					uiBackground={{
 						texture: {
-							src: getButtonBackground(true)
+							src: getStatusBackground()
+						},
+						textureMode: "stretch",
+
+					}}
+				>
+					<UiEntity
+						key={`ui_GameStatus_playerName`}
+						uiTransform={{
+							width : "50%",
+							height: "100%",
+							//display: 'flex',
+							margin: { bottom: '58px' },
+							display: clientStore.getServerStatus() == GameStatus.ROUND_ACTIVE ? 'flex' : 'none'
+						}}
+						uiText={{
+							value    : `${playerName}`,
+							fontSize : 24,
+							textAlign: "bottom-center",
+							color    : Color4.White(),
+						}}
+						uiBackground={{
+							//color: Color4.Green()
+						}}
+					/>
+					<UiEntity
+						key={`ui_GameStatus_timerValue`}
+						uiTransform={{
+							width    : "25%",
+							height   : "100%",
+							display: clientStore.getServerStatus() == GameStatus.STARTING || clientStore.getServerStatus() == GameStatus.ROUND_ACTIVE ? 'flex' : 'none'
+							//display  : 'flex',
+
+						}}
+						uiText={{
+							value    : clientStore.getServerStatus() == GameStatus.STARTING ? getTimeToGameStart().toString() : getRoundTimeRemaing().toString(),
+							fontSize : 64,
+							textAlign: "middle-center",
+							color    : Color4.White(),
+						}}
+						uiBackground={{
+							//color: Color4.Green()
+						}}
+					/>	
+				</UiEntity>
+
+				<UiEntity
+					key={`ui_GameStatus_btn_parent`}
+					uiTransform={{
+						width : "216",
+						height: "67",
+						display: shouldShowButton() ? 'flex' : 'none',
+						positionType  : "absolute",
+						position: { bottom: -32},
+						alignSelf: "center",
+						
+					}}
+					uiBackground={{
+						texture: {
+							src: getButtonBackground()
 						},
 						textureMode: "stretch",
 					}}
-				/>
+					onMouseDown={() => {
+						//ShowHowToPlay()
+						var status = clientStore.getServerStatus()
+						if (status == GameStatus.LOBBY || status == GameStatus.STARTING) {
+							console.log("npcGameHost: updateGameHostNPC: Requesting to join game")
+							ClientMessaging.RequestJoinGame()
+							SoundManager.PlaySound(sfx.startGame)
 
+						} else if (status == GameStatus.STARTED || status == GameStatus.ROUND_ACTIVE) {
+							console.log("npcGameHost: updateGameHostNPC: Requesting to spectate game")
+							SoundManager.PlaySound(sfx.startGame)
+							ClientMessaging.RequestJoinGameAsSpectator()
+
+						} else {
+							console.log("npcGameHost: updateGameHostNPC: Status not LOBBY/STARTING/STARTED/ROUND_ACTIVE")
+							eventBus.emit(ClientEvents.NOTIFY_WARNING, "Please wait for the next game to start")
+						}
+						
+					}}
+					onMouseEnter={() => {
+						isHovered = true
+					}}
+					onMouseLeave={() => {
+						isHovered = false
+					}}
+				>
+					<UiEntity
+						key={`ui_GameStatus_btn_parent`}
+						uiTransform={{
+							width : "100%",
+							height: "100%",
+							display: isHovered ? 'flex' : 'none',
+						}}
+						uiBackground={{
+							texture: {
+								src: getButtonBackground(true)
+							},
+							textureMode: "stretch",
+						}}
+					/>
+
+				</UiEntity>
 			</UiEntity>
+
 		</UiEntity>
 	)
 }

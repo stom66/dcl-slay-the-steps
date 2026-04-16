@@ -9,6 +9,7 @@ import { GetBackgroundTexture } from 'src/client/utils'
 import { ClientStore } from 'src/client/clientStore'
 import { ClientEvents } from 'src/client/clientEvents'
 import { GameStatus } from 'src/shared/enums'
+import { tweenValue } from './utils'
 
 
 // MARK: Event Binding
@@ -37,6 +38,12 @@ let currentPlayer    : undefined | string = ""   // userId of the currently acti
 let playerList       : any[]              = []   // array of UIElements for each player
 
 
+// MARK: Panel positioning
+const PANEL_RIGHT_HIDDEN = -320
+const PANEL_RIGHT_VISIBLE = 64
+var panelRight = PANEL_RIGHT_HIDDEN
+
+
 // MARK: Utility functions
 export function SetCurrentPlayer(userId?: string) {
 	currentPlayer = userId
@@ -44,6 +51,9 @@ export function SetCurrentPlayer(userId?: string) {
 }
 
 
+export function ShowPlayerList() {
+	tweenValue(panelRight, PANEL_RIGHT_VISIBLE, 0.2, (v) => panelRight = v)
+}
 
 // MARK: BuildPlayerList
 function BuildPlayerList() {
@@ -170,6 +180,8 @@ function UpdatePlayerList() {
 UpdatePlayerList()
 
 
+
+
 // MARK: Main PlayerList UI
 export function PlayerListUI() {
 	// DISABLED: Constantly refresh the player list every frame
@@ -184,7 +196,7 @@ export function PlayerListUI() {
 			uiTransform={{
 				width         : 300,
 				positionType  : "absolute",
-				position      : { top: '100px', right: '64px' },
+				position      : { top: 100, right: panelRight },
 				flexGrow      : 1,
 				flexDirection : 'column',
 				alignItems    : 'flex-start',

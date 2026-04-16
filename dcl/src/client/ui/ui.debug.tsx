@@ -11,6 +11,7 @@ import { MannequinManager } from '../mannequinManager'
 import { StageController } from '../stageController'
 import { NPCWinner } from '../npcWinner'
 import { ShopManager } from '../shopManager'
+import { Tutorial } from '../tutorial'
 
 const clientStore = ClientStore.getInstance()
 
@@ -22,7 +23,7 @@ export function DebugUI() {
 			key="ui_debug_root"
 			uiTransform={{
 				width         : 250,
-				height        : 640,
+				height        : 720,
 				flexDirection : 'column',
 				alignItems    : 'flex-start',
 				justifyContent: 'space-between',
@@ -59,14 +60,17 @@ export function DebugUI() {
 						}
 					})
 					NPCWinner.SpawnNPCWinner();
-					}} />
-					<ButtonAction textLabel="SpawnWinner(undefined)" callback={() => {
-						clientStore.setLastWinner(undefined)
-						NPCWinner.SpawnNPCWinner();
-					}} />
-					<ButtonAction textLabel="RandomiseZones" callback={() => {
-						ShopManager.RandomiseZones();
-					}} />
+				}} />
+				<ButtonAction textLabel="SpawnWinner(undefined)" callback={() => {
+					clientStore.setLastWinner(undefined)
+					NPCWinner.SpawnNPCWinner();
+				}} />
+				<ButtonAction textLabel="RandomiseZones" callback={() => {
+					ShopManager.RandomiseZones();
+				}} />
+				<ButtonAction textLabel="Tutorial" callback={() => {
+					Tutorial.TriggerTutorial(true);
+				}} />
 			</UiEntity>
 
 			<Divider />

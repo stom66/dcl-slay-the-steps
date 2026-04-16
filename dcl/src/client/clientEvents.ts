@@ -8,4 +8,5 @@ export enum ClientEvents {
 	OUTFIT_CHANGED            = "outfitChanged",
 	PLAYERS_UPDATED           = "playersUpdated",
 	JOIN_AS_SPECTATOR         = "joinAsSpectator",
+	SHOW_DRESS_ME_HINT        = "showDressMeHint",
 }

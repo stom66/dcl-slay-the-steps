@@ -6,6 +6,7 @@ import { EmotesHintUI } from 'src/client/ui/ui.game.emotes'
 import { GameStatusUI } from 'src/client/ui/ui.game.gameStatus'
 import { HowToPlayUI } from 'src/client/ui/ui.game.howToPlay'
 import { PlayerListUI } from 'src/client/ui/ui.game.playerList'
+import { TutorialUI } from 'src/client/ui/ui.tutorial'
 import { VotingOptionsUI } from 'src/client/ui/ui.game.votingOptions'
 import { VotingResultsUI } from 'src/client/ui/ui.game.votingResults'
 import { WarningUI } from 'src/client/ui/ui.game.warning'
@@ -29,11 +30,12 @@ const uiComponent = () => [
 	HowToPlayUI(),
 	EmotesHintUI(),
 	PlayerListUI(),
+	TutorialUI(),
 	VotingOptionsUI(),
 	VotingResultsUI(),
 	WarningUI(),
 	VersionUI(),
-	SHOW_DEBUG ? DebugUI() : null
+	//SHOW_DEBUG ? DebugUI() : null
 ]
 
 export function SetupUI() {
