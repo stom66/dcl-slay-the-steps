@@ -19,7 +19,7 @@ import { NPCWinner } from "./npcWinner";
 import { Tutorial } from "./tutorial";
 import { engine, Transform } from "@dcl/sdk/ecs";
 import { onEnterScene } from "@dcl/sdk/players";
-//import * as utils from "@dcl-sdk/utils"
+import * as utils from "@dcl-sdk/utils"
 
 
 export async function initClient() {
@@ -42,7 +42,9 @@ export async function initClient() {
 		tutorialHasRun = true
 		engine.removeSystem(waitForLoad)
 
-		Tutorial.TriggerTutorial()
+		utils.timers.setTimeout(() => {
+			Tutorial.TriggerTutorial()
+		}, 300)
 	}
 
 
