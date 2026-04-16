@@ -20,11 +20,12 @@ import { Tutorial } from "./tutorial";
 import { engine, InputModifier, Transform } from "@dcl/sdk/ecs";
 import { getPlayer, onEnterScene } from "@dcl/sdk/players";
 import * as utils from "@dcl-sdk/utils"
+import { HideLoading } from "./ui/ui.loading";
 
 
 export async function initClient() {
 	// Freeze the Player input
-	InputModifier.create(engine.PlayerEntity, {
+	InputModifier.createOrReplace(engine.PlayerEntity, {
 		mode: InputModifier.Mode.Standard({
 			disableAll: true,
 		}),
@@ -43,7 +44,7 @@ export async function initClient() {
 
 		// Wait for userData to be available
 		let userData = getPlayer()
-		if(!userData) return
+		if(!userData)                                  {console.log("waitForLoad: userData");        return}
 
 		if (!hasEnteredScene)                          {console.log("waitForLoad: onEnterScene");    return}
 		if (!Transform.getOrNull(engine.PlayerEntity)) {console.log("waitForLoad: PlayerEntity");    return}
@@ -54,6 +55,7 @@ export async function initClient() {
 		engine.removeSystem(waitForLoad)
 
 		utils.timers.setTimeout(() => {
+			HideLoading()
 			Tutorial.TriggerTutorial()
 		}, 2000) // TODO: fix this. The hard-coded wait is only because teleporting to the world/loading directly into it makes the tutorial not work
 	}

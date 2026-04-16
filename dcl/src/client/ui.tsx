@@ -5,6 +5,7 @@ import { DebugUI } from 'src/client/ui/ui.debug'
 import { EmotesHintUI } from 'src/client/ui/ui.game.emotes'
 import { GameStatusUI } from 'src/client/ui/ui.game.gameStatus'
 import { HowToPlayUI } from 'src/client/ui/ui.game.howToPlay'
+import { LoadingUI } from 'src/client/ui/ui.loading'
 import { PlayerListUI } from 'src/client/ui/ui.game.playerList'
 import { TutorialUI } from 'src/client/ui/ui.tutorial'
 import { VotingOptionsUI } from 'src/client/ui/ui.game.votingOptions'
@@ -35,6 +36,7 @@ const uiComponent = () => [
 	VotingResultsUI(),
 	WarningUI(),
 	VersionUI(),
+	LoadingUI(),
 	//SHOW_DEBUG ? DebugUI() : null
 ]
 
