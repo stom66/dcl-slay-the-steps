@@ -8,6 +8,8 @@ import { sfx } from 'src/client/data/sfx'
 import { ClientEvents } from 'src/client/clientEvents'
 import { SoundManager } from 'src/client/soundManager'
 import { tweenValue } from './utils'
+import { NotifyTurnStartingPayload } from 'src/shared/types'
+import { ClientStore } from '../clientStore'
 
 
 // MARK: Event Binding
@@ -15,9 +17,15 @@ eventBus.on(ClientEvents.NOTIFY_TURN_STARTING_SOON, () => {
 	ShowYouAreNext()
 	SoundManager.PlaySound(sfx.turnStartsSoon)
 })
+eventBus.on(ClientEvents.NOTIFY_TURN_STARTING, (data: NotifyTurnStartingPayload) => {
+	if (clientStore.isMyTurn()) {
+		HideYouAreNext()
+	}
+})
 
 
 // MARK: Vars
+const clientStore = ClientStore.getInstance()
 var visibleYouAreNext: boolean = false
 
 const PANEL_BOTTOM_HIDDEN  = -200
