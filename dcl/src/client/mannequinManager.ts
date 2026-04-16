@@ -1,4 +1,4 @@
-import { Animator, AvatarShape, Billboard, BillboardMode, ColliderLayer, EasingFunction, engine, Entity, GltfContainer, InputAction, Material, MeshRenderer, PlayerIdentityData, pointerEventsSystem, RaycastQueryType, raycastSystem, Transform, Tween } from "@dcl/sdk/ecs"
+import { Animator, AvatarShape, Billboard, BillboardMode, ColliderLayer, EasingFunction, engine, Entity, GltfContainer, InputAction, Material, MeshRenderer, PlayerIdentityData, pointerEventsSystem, RaycastQueryType, raycastSystem, Tags, Transform, Tween } from "@dcl/sdk/ecs"
 import { Color4, Quaternion, Vector3 } from "@dcl/sdk/math"
 import * as utils from "@dcl-sdk/utils"
 
@@ -13,13 +13,14 @@ import { avatarManager } from "./avatarManager"
 import { GameStatus } from "src/shared/enums"
 import { ClientState } from "src/shared/types"
 import { userProfileCache } from "src/shared/utils/userProfileCache"
+import { Tutorial } from "./tutorial"
 
 
 export namespace MannequinManager {
 	// MARK: Event bindings
 	eventBus.on(ClientEvents.OUTFIT_CHANGED, () => {
 		console.log("MannequinManager: OUTFIT_CHANGED event received")
-		ShowNPCMannequin()
+		if (isNPCMannequinVisible) ShowNPCMannequin()
 	})
 
 	eventBus.on(ClientEvents.NOTIFY_STATE, (data: ClientState) => {
@@ -33,31 +34,36 @@ export namespace MannequinManager {
 		}
 	})
 
+	eventBus.on(ClientEvents.SHOW_DRESS_ME_HINT, () => {
+		ShowDressMeHint()
+	})
+
 	
 	// MARK: Vars
 	var npcRoot              : undefined | Entity = undefined
-	//var npcFront             : undefined | Entity = undefined // used for raycast detection of mannequin
-	//var npcBack              : undefined | Entity = undefined // used for raycast detection of mannequin
 	var npcBillboard         : undefined | Entity = undefined
 	var npcMannequin         : undefined | Entity = undefined
 	var npcPodium            : undefined | Entity = undefined
-	var npcHint		         : undefined | Entity = undefined
+	var npcHint              : undefined | Entity = undefined
 	var npcBtnReset          : undefined | Entity = undefined
 	var npcBtnCopy           : undefined | Entity = undefined
 	var npcBtnSwap           : undefined | Entity = undefined
 
-	var isNPCMannequinVisible: boolean            = true
-	var showHint			 : boolean            = true
+	var isNPCMannequinVisible: boolean            = false
+	var showHint             : boolean            = true
 
-	const showHintDelay: number = 2 * 1000
-	const showHintDuration: number = 10 * 1000
+	const showHintDelay      : number             = 2 * 1000
+	const showHintDuration   : number             = 10 * 1000
 
-	const clientStore: ClientStore = ClientStore.getInstance()
+	const clientStore        : ClientStore        = ClientStore.getInstance()
 
 
 	// MARK: Init
 	export function init() {
 		console.log("MannequinManager: init")
+		utils.timers.setTimeout(() => {
+			ShowNPCMannequin()
+		}, 1000)
 	}
 
 	// MARK: Show NPC Mannequin
@@ -71,6 +77,7 @@ export namespace MannequinManager {
 		if (!npcRoot || !Transform.getMutableOrNull(npcRoot)) {
 			console.log("MannequinManager: ShowNPCMannequin: creating missing npcRoot")
 			npcRoot = engine.addEntity()
+			Tags.add(npcRoot, "npcRoot")
 			Transform.createOrReplace(npcRoot, {
 				position: position,
 				rotation: Quaternion.fromEulerDegrees(0, 0, 0),
@@ -78,36 +85,12 @@ export namespace MannequinManager {
 				parent  : engine.PlayerEntity,
 			})
 		}
-/* 
-			// Create the front raycast entity
-			if (!npcFront || !Transform.getMutableOrNull(npcFront)) {
-				console.log("MannequinManager: ShowNPCMannequin: creating missing npcFront")
-				npcFront = engine.addEntity()
-				Transform.create(npcFront, {
-					parent: npcRoot,
-					scale: Vector3.create(0.25, 0.25, 0.25),
-					position: Vector3.create(0, 1.25, 1),
-				})
-				//MeshRenderer.setSphere(npcFront)
-			}
-
-			// Create the back raycast entity
-			if (!npcBack || !Transform.getMutableOrNull(npcBack)) {
-				console.log("MannequinManager: ShowNPCMannequin: creating missing npcBack")
-				npcBack = engine.addEntity()
-				Transform.create(npcBack, {
-					parent: npcRoot,
-					scale: Vector3.create(0.25, 0.25, 0.25),
-					position: Vector3.create(0, 1.25, -1),
-				})
-				//MeshRenderer.setSphere(npcBack)
-			} */
 
 		// Create the mannequin
 		if (!npcMannequin || !Transform.getMutableOrNull(npcMannequin)) {
 			console.log("MannequinManager: ShowNPCMannequin: creating missing npcMannequin")
 			npcMannequin = engine.addEntity()
-
+			Tags.add(npcMannequin, "npcMannequin")
 			Transform.create(npcMannequin, {
 				parent: npcRoot,
 				rotation: Quaternion.fromEulerDegrees(0, 0, 0),
@@ -119,10 +102,13 @@ export namespace MannequinManager {
 			name     : "",
 			bodyShape: clientStore.getNPCBodyShape(),
 			wearables: clientStore.getNPCWearables()?.map(w => w.urn) ?? [],
-			emotes   : [],
+			emotes   : ["urn:decentraland:off-chain:base-emotes:wave"],
 			hairColor: clientStore.getNPCHairColor(),
 			skinColor: clientStore.getNPCSkinColor(),
-		}, 1000)
+		}, 1000, () => {
+			// This is where we trigger the tutorial. It's not great to do it here, but it's the only way to ensure the mannequin is visible when the tutorial is triggered.
+			Tutorial.TriggerTutorial()
+		})
 
 		// Creat the billboard entity - anything which should always rotate to face the player gets parented to this
 		if (!npcBillboard || !Transform.getMutableOrNull(npcBillboard)) {
@@ -138,44 +124,13 @@ export namespace MannequinManager {
 		// Create the podium
 		if (!npcPodium || !Transform.getMutableOrNull(npcPodium)) {
 			npcPodium = engine.addEntity()
+			Tags.add(npcPodium, "npcPodium")
 			Transform.createOrReplace(npcPodium, {
 				parent  : npcBillboard,
 			})
 			GltfContainer.createOrReplace(npcPodium, {
 				src: "assets/models/podiumnocollider.gltf",
 			})
-		}
-
-		// Create the hint
-		if (showHint) {
-			if (!npcHint || !Transform.getMutableOrNull(npcHint)) {
-				npcHint = engine.addEntity()
-				Transform.create(npcHint, {
-					parent  : npcPodium,
-					rotation: Quaternion.fromEulerDegrees(0, 180, 0),
-					scale   : Vector3.create(0, 0, 0),
-				})
-				GltfContainer.create(npcHint, {
-					src: "assets/models/dressThis.gltf",
-				})
-				Animator.create(npcHint, {
-					states: [
-						{
-							clip: "Idle",
-							playing: true,
-							loop: true,
-						}
-					]
-				})
-				utils.timers.setTimeout(() => {
-					Tween.setScale(npcHint!, Vector3.create(0,0,0), Vector3.create(1,1,1), 500)
-				}, showHintDelay)
-
-				utils.timers.setTimeout(() => {
-					showHint = false
-					Tween.setScale(npcHint!, Vector3.create(1, 1, 1), Vector3.create(0, 0, 0), 600, EasingFunction.EF_EASEINQUAD)
-				}, showHintDuration + showHintDelay)
-			}
 		}
 
 
@@ -187,6 +142,7 @@ export namespace MannequinManager {
 				parent  : npcBillboard,
 				rotation: Quaternion.fromEulerDegrees(0, 180, 0),
 			})
+			Tags.add(npcBtnReset, "npcBtnReset")
 			GltfContainer.create(npcBtnReset, {
 				src: "assets/models/btnReset.gltf",
 			})
@@ -214,6 +170,7 @@ export namespace MannequinManager {
 				parent  : npcBillboard,
 				rotation: Quaternion.fromEulerDegrees(0, 180, 0),
 			})
+			Tags.add(npcBtnCopy, "npcBtnCopy")
 			GltfContainer.create(npcBtnCopy, {
 				src: "assets/models/btnCopy.gltf",
 			})
@@ -241,6 +198,7 @@ export namespace MannequinManager {
 				parent  : npcBillboard,
 				rotation: Quaternion.fromEulerDegrees(0, 180, 0),
 			})
+			Tags.add(npcBtnSwap, "npcBtnSwap")
 			GltfContainer.create(npcBtnSwap, {
 				src: "assets/models/btnGenderSwap.gltf",
 			})
@@ -261,6 +219,43 @@ export namespace MannequinManager {
 		}
 	}
 
+
+	// MARK: Show Dress Me Hint
+	export function ShowDressMeHint() {
+		// Create the hint
+		//if (showHint) {
+		if (!npcHint || !Transform.getMutableOrNull(npcHint)) {
+			npcHint = engine.addEntity()
+			Transform.create(npcHint, {
+				parent  : npcPodium,
+				rotation: Quaternion.fromEulerDegrees(0, 180, 0),
+				scale   : Vector3.create(0, 0, 0),
+			})
+			GltfContainer.create(npcHint, {
+				src: "assets/models/dressThis.gltf",
+			})
+			Animator.create(npcHint, {
+				states: [
+					{
+						clip: "Idle",
+						playing: true,
+						loop: true,
+					}
+				]
+			})
+			Tween.setScale(npcHint!, Vector3.create(0,0,0), Vector3.create(1,1,1), 500)
+
+			utils.timers.setTimeout(() => {
+				showHint = false
+				Tween.setScale(npcHint!, Vector3.create(1, 1, 1), Vector3.create(0, 0, 0), 600, EasingFunction.EF_EASEINQUAD)
+				utils.timers.setTimeout(() => {
+					engine.removeEntity(npcHint!)
+					npcHint = undefined
+				}, 650)
+			}, showHintDuration)
+		}
+		//}
+	}
 
 	// MARK: Show Winner Label
 	export function ShowWinnerLabel(playerEntity: Entity) {

@@ -21,7 +21,7 @@ export namespace OutfitManager {
 
 	var userData             : undefined | any = undefined
 	var isWearableDataLoaded : boolean         = false
-	var isNPCMannequinVisible: boolean         = true
+	//var isNPCMannequinVisible: boolean         = true
 
 
 	// MARK: Init
@@ -29,9 +29,9 @@ export namespace OutfitManager {
 		console.log("OutfitManager: init")
 
 		// Add a small delay, to give the scene some time to finish loading. This helps ensure the NPC mannequin is visible on first load.
-		utils.timers.setTimeout(() => {
+		//utils.timers.setTimeout(() => {
 			InitUserWearables()
-		}, 1000)
+		//}, 1000)
 		
 		// Re-trigger InitUserWearables every time the user equips a new wearable
 		AvatarEquippedData.onChange(engine.PlayerEntity, (equipped) => {
@@ -88,9 +88,9 @@ export namespace OutfitManager {
 
 			isWearableDataLoaded = true
 
-			if (isNPCMannequinVisible) {
+			//if (isNPCMannequinVisible) {
 				eventBus.emit(ClientEvents.OUTFIT_CHANGED, {})
-			}
+			//}
 
 			console.log("OutfitManager InitUserWearables: got", playerWearables.length, "wearables for the player")
 		} catch (err) {
