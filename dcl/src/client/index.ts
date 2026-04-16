@@ -17,12 +17,19 @@ import { SetupUI } from "src/client/ui";
 import { SpawnBirds } from "src/client/birds";
 import { NPCWinner } from "./npcWinner";
 import { Tutorial } from "./tutorial";
-import { engine, Transform } from "@dcl/sdk/ecs";
-import { onEnterScene } from "@dcl/sdk/players";
+import { engine, InputModifier, Transform } from "@dcl/sdk/ecs";
+import { getPlayer, onEnterScene } from "@dcl/sdk/players";
 import * as utils from "@dcl-sdk/utils"
 
 
 export async function initClient() {
+	// Freeze the Player input
+	InputModifier.create(engine.PlayerEntity, {
+		mode: InputModifier.Mode.Standard({
+			disableAll: true,
+		}),
+	})
+	
 	// Tutorial launch
 	var hasEnteredScene = false
 	var tutorialHasRun = false
@@ -33,6 +40,10 @@ export async function initClient() {
 
 	function waitForLoad() {
 		if (tutorialHasRun) return
+
+		// Wait for userData to be available
+		let userData = getPlayer()
+		if(!userData) return
 
 		if (!hasEnteredScene)                          {console.log("waitForLoad: onEnterScene");    return}
 		if (!Transform.getOrNull(engine.PlayerEntity)) {console.log("waitForLoad: PlayerEntity");    return}
