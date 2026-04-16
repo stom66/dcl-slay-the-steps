@@ -53,8 +53,8 @@ export function YouAreNextUI() {
 			<UiEntity
 				key={`ui_YouAreNext_body`}
 				uiTransform={{
-					width         : 374,
-					height        : 132,
+					width         : 512,
+					height        : 180,
 					flexShrink    : 0,
 					flexDirection : 'row',
 					alignItems    : 'center',
