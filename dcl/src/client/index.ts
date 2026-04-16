@@ -34,10 +34,10 @@ export async function initClient() {
 	function waitForLoad() {
 		if (tutorialHasRun) return
 
-		if (!hasEnteredScene)  {console.log("waitForLoad: 0"); return}
-		if (!Transform.getOrNull(engine.PlayerEntity)) {console.log("waitForLoad: 1"); return}
-		if (!Transform.getOrNull(engine.CameraEntity)) {console.log("waitForLoad: 2"); return}
-		if (!MannequinManager.avatarHasLoaded) {console.log("waitForLoad: 3"); return}
+		if (!hasEnteredScene)  {console.log("waitForLoad: onEnterScene"); return}
+		if (!Transform.getOrNull(engine.PlayerEntity)) {console.log("waitForLoad: PlayerEntity"); return}
+		if (!Transform.getOrNull(engine.CameraEntity)) {console.log("waitForLoad: CameraEntity"); return}
+		if (!MannequinManager.avatarHasLoaded) {console.log("waitForLoad: avatarHasLoaded"); return}
 
 		tutorialHasRun = true
 		engine.removeSystem(waitForLoad)
