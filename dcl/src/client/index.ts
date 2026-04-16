@@ -34,18 +34,19 @@ export async function initClient() {
 	function waitForLoad() {
 		if (tutorialHasRun) return
 
-		if (!hasEnteredScene)  {console.log("waitForLoad: onEnterScene"); return}
-		if (!Transform.getOrNull(engine.PlayerEntity)) {console.log("waitForLoad: PlayerEntity"); return}
-		if (!Transform.getOrNull(engine.CameraEntity)) {console.log("waitForLoad: CameraEntity"); return}
-		if (!MannequinManager.avatarHasLoaded) {console.log("waitForLoad: avatarHasLoaded"); return}
+		if (!hasEnteredScene)                          {console.log("waitForLoad: onEnterScene");    return}
+		if (!Transform.getOrNull(engine.PlayerEntity)) {console.log("waitForLoad: PlayerEntity");    return}
+		if (!Transform.getOrNull(engine.CameraEntity)) {console.log("waitForLoad: CameraEntity");    return}
+		if (!MannequinManager.avatarHasLoaded)         {console.log("waitForLoad: avatarHasLoaded"); return}
 
 		tutorialHasRun = true
 		engine.removeSystem(waitForLoad)
 
 		utils.timers.setTimeout(() => {
 			Tutorial.TriggerTutorial()
-		}, 300)
+		}, 2000) // TODO: fix this. The hard-coded wait is only because teleporting to the world/loading directly into it makes the tutorial not work
 	}
+	engine.addSystem(waitForLoad)
 
 
 	// Init systems
