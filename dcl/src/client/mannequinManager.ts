@@ -57,6 +57,8 @@ export namespace MannequinManager {
 
 	const clientStore        : ClientStore        = ClientStore.getInstance()
 
+	export var avatarHasLoaded  : boolean            = false
+
 
 	// MARK: Init
 	export function init() {
@@ -106,8 +108,10 @@ export namespace MannequinManager {
 			hairColor: clientStore.getNPCHairColor(),
 			skinColor: clientStore.getNPCSkinColor(),
 		}, 1000, () => {
+			avatarHasLoaded = true
+			
 			// This is where we trigger the tutorial. It's not great to do it here, but it's the only way to ensure the mannequin is visible when the tutorial is triggered.
-			Tutorial.TriggerTutorial()
+			//Tutorial.TriggerTutorial()
 		})
 
 		// Creat the billboard entity - anything which should always rotate to face the player gets parented to this

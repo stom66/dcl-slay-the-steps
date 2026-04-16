@@ -16,16 +16,44 @@ import { SetupPortal } from "src/client/portal";
 import { SetupUI } from "src/client/ui";
 import { SpawnBirds } from "src/client/birds";
 import { NPCWinner } from "./npcWinner";
+import { Tutorial } from "./tutorial";
+import { engine, Transform } from "@dcl/sdk/ecs";
+import { onEnterScene } from "@dcl/sdk/players";
+//import * as utils from "@dcl-sdk/utils"
 
 
 export async function initClient() {
+	// Tutorial launch
+	var hasEnteredScene = false
+	var tutorialHasRun = false
 
+	onEnterScene(() => {
+		hasEnteredScene = true
+	})
+
+	function waitForLoad() {
+		if (tutorialHasRun) return
+
+		if (!hasEnteredScene)  {console.log("waitForLoad: 0"); return}
+		if (!Transform.getOrNull(engine.PlayerEntity)) {console.log("waitForLoad: 1"); return}
+		if (!Transform.getOrNull(engine.CameraEntity)) {console.log("waitForLoad: 2"); return}
+		if (!MannequinManager.avatarHasLoaded) {console.log("waitForLoad: 3"); return}
+
+		tutorialHasRun = true
+		engine.removeSystem(waitForLoad)
+
+		Tutorial.TriggerTutorial()
+	}
+
+
+	// Init systems
 	const store = ClientStore.getInstance()
 	await store.init()
 	ClientHandler.init()
 	gameStateHandler.init()
 
 	CameraController.init()
+	NPCWinner.Init()
 	OutfitManager.init() // needs to come before MannequinManager
 	SoundManager.init()
 	StageController.init()
@@ -34,11 +62,13 @@ export async function initClient() {
 
 	SetupColorPickers()
 	//SetupGameHostNPC()
-	NPCWinner.Init()
 	SetupLights()
 	SetupPortal()
 	SetupUI()
 	SpawnBirds()
 	
 	MannequinManager.init() // needs to come after OutfitManager
+
+	// Wait for load, to trigger Tutorial
+	engine.addSystem(waitForLoad)
 }
