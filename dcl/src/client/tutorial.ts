@@ -1,5 +1,5 @@
 import { AvatarShape, engine, Entity, InputModifier, MainCamera, Transform, Tween, VirtualCamera } from "@dcl/sdk/ecs"
-import { getWorldPosition, getWorldRotation, timers } from '@dcl-sdk/utils'
+import { getWorldPosition, getWorldRotation, TimerId, timers } from '@dcl-sdk/utils'
 import { Quaternion, Vector3 } from "@dcl/sdk/math"
 import { HideTutorial as HideTutorialUI, ShowTutorial as ShowTutorialUI, SetTutorialInfo, ShowArrow, HideArrow, HideTutorialBtn } from "./ui/ui.tutorial"
 import { SoundManager } from "./soundManager"
@@ -18,11 +18,11 @@ export namespace Tutorial {
 	var npcMannequin          : Entity | undefined = undefined
 	var npcRoot               : Entity | undefined = undefined
 
-	var positionViewButtons   : Vector3 = Vector3.create(0, 0, 0)
-	var positionViewMannequin : Vector3 = Vector3.create(0, 0, 0)
+	var positionViewButtons   : Vector3 = Vector3.Zero()
+	var positionViewMannequin : Vector3 = Vector3.Zero()
 
-	var targetViewButtons     : Vector3 = Vector3.create(0, 0, 0)
-	var targetViewMannequin   : Vector3 = Vector3.create(0, 0, 0)
+	var targetViewButtons     : Vector3 = Vector3.Zero()
+	var targetViewMannequin   : Vector3 = Vector3.Zero()
 
 	var positionViewShopsStart: Vector3 = Vector3.create(20, 3, 20)
 	var targetViewShopsStart  : Vector3 = Vector3.create(25.91, 2, 25.87)
@@ -34,9 +34,11 @@ export namespace Tutorial {
 	var targetViewSalonStart  : Vector3 = Vector3.create(8.79, 2, 6.13)
 	var targetViewSalonEnd    : Vector3 = Vector3.create(1.62, 2, 8.87)
 
-	var targetViewButtonReset : Vector3 = Vector3.create(0, 0, 0)
-	var targetViewButtonCopy  : Vector3 = Vector3.create(0, 0, 0)
-	var targetViewButtonSwap  : Vector3 = Vector3.create(0, 0, 0)
+	var targetViewButtonReset : Vector3 = Vector3.Zero()
+	var targetViewButtonCopy  : Vector3 = Vector3.Zero()
+	var targetViewButtonSwap  : Vector3 = Vector3.Zero()
+
+	var interval: TimerId | undefined = undefined
 
 	export function TriggerTutorial(force: boolean = false) {
 		if (tutorialTriggered && !force) return
@@ -64,13 +66,16 @@ export namespace Tutorial {
 
 		console.log("Tutorial: camera starts at", getWorldPosition(camera!).toString())
 		console.log("Tutorial: camera target starts at", getWorldPosition(cameraTarget!).toString())
+
+		// Start runniong our camera checks
+		interval = timers.setInterval(EnsureCameraIsSet, 100)
 		
 		// Freeze the Player input
-		InputModifier.create(engine.PlayerEntity, {
+	/* 	InputModifier.createOrReplace(engine.PlayerEntity, {
 			mode: InputModifier.Mode.Standard({
 				disableAll: true,
 			}),
-		})
+		}) */
 
 		// Set the camera as the active camera
 		const mainCamera = MainCamera.getMutable(engine.CameraEntity)
@@ -291,6 +296,19 @@ export namespace Tutorial {
 				engine.removeEntity(camera!)
 				camera = undefined
 			}, 1000)
+		}
+	}
+
+	function EnsureCameraIsSet() {
+		if (!showTutorial) {
+			if (interval) timers.clearInterval(interval)
+			return
+		}
+
+		const mainCamera = MainCamera.getMutable(engine.CameraEntity)
+		if (mainCamera.virtualCameraEntity !== camera) {
+			console.log("Tutorial: ERROR! Virtual camera was not being used. Fixing it...")
+			mainCamera.virtualCameraEntity = camera
 		}
 	}
 	
