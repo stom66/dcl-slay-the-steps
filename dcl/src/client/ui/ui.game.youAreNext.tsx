@@ -24,8 +24,6 @@ const PANEL_BOTTOM_HIDDEN  = -200
 const PANEL_BOTTOM_VISIBLE = 80
 var panelBottom            : number = PANEL_BOTTOM_HIDDEN
 
-ShowYouAreNext()
-
 // MARK: Utility functions
 function ShowYouAreNext(ignoreInterval: boolean = false) {
 	console.log("ui.Game.YouAreNext: ShowYouAreNext()")
