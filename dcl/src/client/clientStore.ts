@@ -1,11 +1,10 @@
 import { Color3 } from '@dcl/sdk/math'
 
 import { GameStatus } from 'src/shared/enums'
-import { ClientState, Outfit, NotifyStatePayload } from 'src/shared/types'
+import { ClientState, Outfit, NotifyStatePayload, Wearable } from 'src/shared/types'
 import { eventBus } from 'src/shared/utils/eventBus'
 import { userProfileCache } from 'src/shared/utils/userProfileCache'
 
-import { Wearable } from 'src/client/data/shopSlotData'
 import { clockSync } from 'src/shared/utils/clockSync'
 import { ClientEvents } from 'src/client/clientEvents'
 import { ClientMessaging } from 'src/client/clientMessaging'

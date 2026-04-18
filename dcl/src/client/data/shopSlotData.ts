@@ -1,4 +1,6 @@
 import { Color3, Quaternion, Vector3 } from "@dcl/sdk/math";
+import { Wearable } from "src/shared/types";
+
 
 export type ShopSlot = {
 	position        : Vector3
@@ -11,17 +13,6 @@ export type ShopSlot = {
 	eyeColor?       : Color3,
 	skinColor?      : Color3,
 	hairColor?      : Color3
-}
-
-export type Wearable = {
-	urn            : string,
-	bodyShapes     : string[], // These are all "optional", as the built-in items don't have them
-	category       : string,   // 
-	contractAddress: string,   // 
-	name           : string,   // 
-	rarity         : string,   // 
-	creator?       : string,   // Optional, added later, not yet added to the default items
-	description?   : string,   // Optional, added later, not yet added to the default items
 }
 
 // Big list of the items to be shown in the shop
