@@ -23,14 +23,35 @@ export namespace MannequinManager {
 		if (isNPCMannequinVisible) ShowNPCMannequin()
 	})
 
+	
+	eventBus.on(ClientEvents.JOIN_AS_SPECTATOR, () => {
+		HideNPCMannequin()
+	})	
+
 	eventBus.on(ClientEvents.NOTIFY_STATE, (data: ClientState) => {
+		if (data.serverStatus == GameStatus.LOBBY) {
+			ShowNPCMannequin()
+		}
+
 		if (data.serverStatus == GameStatus.GAME_ENDED) {
+
+			ShowNPCMannequin()
+
 			const sortedResults = clientStore.getSortedVoteResults()
-			const winnerId = sortedResults[0][0]
-			const playerEntity = userProfileCache.getPlayerEntity(winnerId)
-			if (playerEntity) {
-				ShowWinnerLabel(playerEntity)
+			if (sortedResults.length > 0) {
+				const winnerId = sortedResults[0][0]
+				const playerEntity = userProfileCache.getPlayerEntity(winnerId)
+				if (playerEntity) {
+					ShowWinnerLabel(playerEntity)
+				}
 			}
+		}
+
+		if (
+			(data.serverStatus == GameStatus.ROUND_ACTIVE || data.serverStatus == GameStatus.STARTED) && 
+			(clientStore.isEnrolledInGame() || clientStore.isSpectatorInGame())
+		) {
+			HideNPCMannequin()
 		}
 	})
 
@@ -109,7 +130,7 @@ export namespace MannequinManager {
 			skinColor: clientStore.getNPCSkinColor(),
 		}, 1000, () => {
 			avatarHasLoaded = true
-			
+
 			// This is where we trigger the tutorial. It's not great to do it here, but it's the only way to ensure the mannequin is visible when the tutorial is triggered.
 			//Tutorial.TriggerTutorial()
 		})
@@ -285,6 +306,7 @@ export namespace MannequinManager {
 
 	// MARK: Hide NPC Mannequin
 	export function HideNPCMannequin() {
+		console.log("MannequinManager: HideNPCMannequin")
 		isNPCMannequinVisible = false
 
 		if (npcMannequin) {
