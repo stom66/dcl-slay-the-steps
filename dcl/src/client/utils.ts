@@ -2,8 +2,29 @@ import { Color3, Vector3 } from "@dcl/sdk/math"
 
 import { GameSettings } from "src/shared/settings"
 
-import { Wearable } from "src/client/data/shopSlotData"
+import { Wearable } from "src/shared/types"
 import { ShopZone } from "src/client/data/shopZoneData"
+import { engine, InputModifier } from "@dcl/sdk/ecs"
+
+
+// MARK: Freeze/UnFreeze Player
+export function FreezePlayer() {
+	// Freeze the Player input
+	InputModifier.createOrReplace(engine.PlayerEntity, {
+		mode: InputModifier.Mode.Standard({
+			disableAll: true,
+		}),
+	})
+}
+
+export function UnFreezePlayer() {
+	// Unfreeze the Player input
+	InputModifier.createOrReplace(engine.PlayerEntity, {
+		mode: InputModifier.Mode.Standard({
+			disableAll: false,
+		}),
+	})
+}
 
 
 // MARK: GetRandomPointInCircle

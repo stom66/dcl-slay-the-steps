@@ -4,7 +4,7 @@ import * as utils from '@dcl-sdk/utils'
 
 import { sfx } from "src/client/data/sfx"
 import { blockedCreatorAddresses, blockedItemURNs, blockedKeywords } from "src/client/data/shopBlockedItems"
-import { ShopSlot, Wearable } from "src/client/data/shopSlotData"
+import { ShopSlot } from "src/client/data/shopSlotData"
 import { ShopZone, shopZones } from "src/client/data/shopZoneData"
 
 import { OutfitManager } from "src/client/outfitManager"
@@ -13,7 +13,7 @@ import { FetchZoneItems } from "src/client/utils"
 import { avatarManager } from "./avatarManager"
 import { eventBus } from "src/shared/utils/eventBus"
 import { ClientEvents } from "./clientEvents"
-import { ClientState } from "src/shared/types"
+import { ClientState, Wearable } from "src/shared/types"
 import { GameStatus } from "src/shared/enums"
 import { GameSettings } from "src/shared/settings"
 import { ClientStore } from "./clientStore"

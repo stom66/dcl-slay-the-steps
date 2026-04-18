@@ -17,7 +17,7 @@ export namespace SeatManager {
 	//MARK: Event bindings
 
 	eventBus.on(ClientEvents.NOTIFY_STATE, (data: ClientState) => {
-		if (data.serverStatus == GameStatus.LOBBY) {
+		if (data.serverStatus == GameStatus.GAME_ENDED) {
 			MovePlayerToLobby()
 		}
 	})

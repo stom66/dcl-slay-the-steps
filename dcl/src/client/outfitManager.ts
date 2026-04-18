@@ -4,11 +4,10 @@ import { getPlayer } from "@dcl/sdk/players"
 import * as utils from '@dcl-sdk/utils'
 
 import { eventBus } from "src/shared/utils/eventBus"
+import { Wearable } from "src/shared/types"
 
 import { sfx } from "src/client/data/sfx"
-import { Wearable } from "src/client/data/shopSlotData"
 import { ClientEvents } from "src/client/clientEvents"
-import { ClientMessaging } from "src/client/clientMessaging"
 import { ClientStore } from "src/client/clientStore"
 import { SoundManager } from "src/client/soundManager"
 import { GetWearableData } from "src/client/utils"
@@ -21,25 +20,21 @@ export namespace OutfitManager {
 
 	var userData             : undefined | any = undefined
 	var isWearableDataLoaded : boolean         = false
-	//var isNPCMannequinVisible: boolean         = true
 
 
 	// MARK: Init
 	export function init() {
 		console.log("OutfitManager: init")
 
-		// Add a small delay, to give the scene some time to finish loading. This helps ensure the NPC mannequin is visible on first load.
-		//utils.timers.setTimeout(() => {
-			InitUserWearables()
-		//}, 1000)
+		InitUserWearables()
 		
-		// Re-trigger InitUserWearables every time the user equips a new wearable
+		// Re-fetch wearable data every time the user equips a new wearable
 		AvatarEquippedData.onChange(engine.PlayerEntity, (equipped) => {
 			if (!equipped) return
 			InitUserWearables(true)
 		})
-
 	
+		// Update character properties when changed
 		AvatarBase.onChange(engine.PlayerEntity, (body) => {
 			if (!body) return
 			clientStore.setPlayerBodyShape(body.bodyShapeUrn || "urn:decentraland:off-chain:base-avatars:BaseMale")
@@ -88,9 +83,7 @@ export namespace OutfitManager {
 
 			isWearableDataLoaded = true
 
-			//if (isNPCMannequinVisible) {
-				eventBus.emit(ClientEvents.OUTFIT_CHANGED, {})
-			//}
+			eventBus.emit(ClientEvents.OUTFIT_CHANGED, {})
 
 			console.log("OutfitManager InitUserWearables: got", playerWearables.length, "wearables for the player")
 		} catch (err) {
@@ -124,20 +117,13 @@ export namespace OutfitManager {
 	export function SetHairColor(color: Color3) {
 		console.log("OutfitManager: SetHairColor:", Color3.toHexString(color))
 		clientStore.setNPCHairColor(color)
-		
-		// Fire the outfit changed event, which in turn updates the mannequin
-		eventBus.emit(ClientEvents.OUTFIT_CHANGED, {})
 	}
 
 
 	// MARK: Set Skin Color
 	export function SetSkinColor(color: Color3) {
 		console.log("OutfitManager: SetSkinColor:", Color3.toHexString(color))
-
 		clientStore.setNPCSkinColor(color)
-
-		// Update the client store with the new outfit ands end it to the server
-		ClientMessaging.RequestOutfitChange()
 	}
 
 

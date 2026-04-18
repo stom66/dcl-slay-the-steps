@@ -2,8 +2,17 @@ import { Color3 } from "@dcl/sdk/math"
 
 import { GameStatus } from "src/shared/enums"
 
-import { Wearable } from "src/client/data/shopSlotData"
-
+// MARK: Wearable
+export type Wearable = {
+	urn            : string,
+	bodyShapes     : string[], // These are all "optional", as the built-in items don't have them
+	category       : string,   // 
+	contractAddress: string,   // 
+	name           : string,   // 
+	rarity         : string,   // 
+	creator?       : string,   // Optional, added later, not yet added to the default items
+	description?   : string,   // Optional, added later, not yet added to the default items
+}
 
 // MARK: Outfit
 export type Outfit = {
@@ -17,32 +26,34 @@ export type Outfit = {
 
 // MARK: ClientState
 export type ClientState = {
-	userId           : string
-	displayName      : string
-	enrolledInGame   : boolean
-	spectatorInGame  : boolean
-	currentTurnUserId: string | undefined
-	voteResults      : Map<string, string>
+	userId                : string
+	displayName           : string
+	enrolledInGame        : boolean
+	spectatorInGame       : boolean
+	currentTurnUserId     : string | undefined
+	voteResults           : Map<string, string>
+	gamesPlayedThisSession: number
+	gamesWonThisSession   : number
 
-	gameStartTime    : number
-	serverStatus     : GameStatus
-	playersInGame    : Map<string, string>
-	spectatorsInGame : Map<string, string>
+	gameStartTime         : number
+	serverStatus          : GameStatus
+	playersInGame         : Map<string, string>
+	spectatorsInGame      : Map<string, string>
 
-	playerBodyShape  : string
-	playerSkinColor  : Color3
-	playerHairColor  : Color3
-	playerWearables  : Wearable[]
+	playerBodyShape       : string
+	playerSkinColor       : Color3
+	playerHairColor       : Color3
+	playerWearables       : Wearable[]
 
-	npcSkinColor     : Color3
-	npcHairColor     : Color3
-	npcBodyShape     : string
-	npcWearables     : Wearable[]
+	npcSkinColor          : Color3
+	npcHairColor          : Color3
+	npcBodyShape          : string
+	npcWearables          : Wearable[]
 
-	lastWinner       : {
-		userId: string
-		displayName: string
-		outfit: Outfit
+	lastWinner            : {
+		userId               : string
+		displayName          : string
+		outfit               : Outfit
 	} | undefined
 }
 
