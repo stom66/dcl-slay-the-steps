@@ -84,7 +84,6 @@ export namespace gameStateHandler {
 		if (playerIndex !== -1) {
 			console.log('gameStateHandler: onStateStarting: moving player to seat', playerIndex)
 			SeatManager.MovePlayerToSeat(playerIndex)
-			MannequinManager.HideNPCMannequin()
 		} else {
 			console.error('gameStateHandler: onStateStarting: player not found')
 		}
@@ -113,8 +112,6 @@ export namespace gameStateHandler {
 	// MARK: Game Ended
 	function onStateGameEnded(state: ClientState) {
 		console.log('gameStateHandler: onStateGameEnded: state', state)
-		SeatManager.MovePlayerToLobby()
-		MannequinManager.ShowNPCMannequin()
 	}
 
 }
