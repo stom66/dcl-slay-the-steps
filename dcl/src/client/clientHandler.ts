@@ -26,7 +26,7 @@ export namespace ClientHandler {
 
 	// MARK: State
 	function handleNotifyState(data: NotifyStatePayload) {
-		console.log('ClientHandler: handleNotifyState: state', data)
+		console.log('ClientHandler: handleNotifyState: state', data.status)
 
 		clockSync.updateOffset(data.sentAt)
 		clientStore.setClientState(data)
