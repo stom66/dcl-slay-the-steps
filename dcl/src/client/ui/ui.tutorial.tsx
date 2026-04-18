@@ -1,4 +1,4 @@
-import { engine } from '@dcl/sdk/ecs'
+import { EasingFunction, engine } from '@dcl/sdk/ecs'
 import ReactEcs, { UiEntity } from '@dcl/sdk/react-ecs'
 import { tweenValue } from './utils'
 import { Tutorial } from '../tutorial'
@@ -39,7 +39,7 @@ export function SetTutorialInfo(info: string) {
 			(v) => panelBottom = v,
 			() => {
 				currentInfo = info
-				tweenValue(PANEL_BOTTOM_HIDDEN, PANEL_BOTTOM_VISIBLE, 0.2, (v) => panelBottom = v)
+				tweenValue(PANEL_BOTTOM_HIDDEN, PANEL_BOTTOM_VISIBLE, undefined, (v) => panelBottom = v)
 			}
 		)
 	} else {
@@ -49,7 +49,7 @@ export function SetTutorialInfo(info: string) {
 
 export function ShowTutorial() {
 	panelVisible = true
-	tweenValue(panelBottom, PANEL_BOTTOM_VISIBLE, 0.2, (v) => panelBottom = v)
+	tweenValue(panelBottom, PANEL_BOTTOM_VISIBLE, undefined, (v) => panelBottom = v)
 }
 
 export function HideTutorial() {
@@ -66,9 +66,10 @@ export function HideTutorialBtn() {
 export function ShowArrow() {
 	arrowVisible = true
 	arrowElapsed = 0
-	tweenValue(ARROW_OFF_SCREEN, ARROW_TARGET_TOP, 0.4,
+	tweenValue(ARROW_OFF_SCREEN, ARROW_TARGET_TOP, 1,
 		(v) => arrowTop = v,
-		() => engine.addSystem(arrowBounce)
+		() => engine.addSystem(arrowBounce),
+		EasingFunction.EF_EASEOUTBOUNCE
 	)
 }
 
