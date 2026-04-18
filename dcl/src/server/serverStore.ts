@@ -181,6 +181,9 @@ export class ServerStore {
 	setGameStartTime(gameStartTime: number): void {
 		this.serverState.gameStartTime = gameStartTime
 	}
+		getGameStartTime(): number {
+			return this.serverState.gameStartTime
+		}
 
 
 	// MARK: Current Turn User ID
