@@ -1,3 +1,7 @@
+import { engine, Transform } from "@dcl/sdk/ecs";
+import { getPlayer, onEnterScene } from "@dcl/sdk/players";
+import * as utils from "@dcl-sdk/utils"
+
 import { ClientStore } from "src/client/clientStore";
 import { ClientHandler } from "src/client/clientHandler";
 import { gameStateHandler } from "src/client/gameStateHandler";
@@ -9,35 +13,35 @@ import { ShopManager } from "src/client/shopManager";
 import { SoundManager } from "src/client/soundManager";
 import { StageController } from "src/client/stageController";
 
+import { SpawnBirds } from "src/client/birds";
 import { SetupColorPickers } from "src/client/colorPickers";
-import { SetupGameHostNPC } from "src/client/npcGameHost";
 import { SetupLights } from "src/client/lights";
 import { SetupPortal } from "src/client/portal";
+import { NPCWinner } from "src/client/npcWinner";
+import { Tutorial } from "src/client/tutorial";
+import { FreezePlayer } from "src/client/utils";
+
 import { SetupUI } from "src/client/ui";
-import { SpawnBirds } from "src/client/birds";
-import { NPCWinner } from "./npcWinner";
-import { Tutorial } from "./tutorial";
-import { engine, InputModifier, Transform } from "@dcl/sdk/ecs";
-import { getPlayer, onEnterScene } from "@dcl/sdk/players";
-import * as utils from "@dcl-sdk/utils"
-import { HideLoading } from "./ui/ui.loading";
+import { HideLoading } from "src/client/ui/ui.loading";
 
 
 export async function initClient() {
-	// Freeze the Player input
-	InputModifier.createOrReplace(engine.PlayerEntity, {
-		mode: InputModifier.Mode.Standard({
-			disableAll: true,
-		}),
-	})
+	FreezePlayer()
+
+	function onGameLoaded() {
+		utils.timers.setTimeout(() => {
+			HideLoading()
+			Tutorial.TriggerTutorial()
+		}, 2000) 
+		// TODO: fix this. The hard-coded wait is only because teleporting to the world/loading directly into it makes the tutorial not work
+	}
+
 	
-	// Tutorial launch
+	// Wait for scene to load and then 
 	var hasEnteredScene = false
 	var tutorialHasRun = false
 
-	onEnterScene(() => {
-		hasEnteredScene = true
-	})
+	onEnterScene(() => hasEnteredScene = true)
 
 	function waitForLoad() {
 		if (tutorialHasRun) return
@@ -54,15 +58,10 @@ export async function initClient() {
 		tutorialHasRun = true
 		engine.removeSystem(waitForLoad)
 
-		utils.timers.setTimeout(() => {
-			HideLoading()
-			Tutorial.TriggerTutorial()
-		}, 2000) // TODO: fix this. The hard-coded wait is only because teleporting to the world/loading directly into it makes the tutorial not work
+		onGameLoaded()
 	}
-	engine.addSystem(waitForLoad)
 
-
-	// Init systems
+	// MARK: Init systems
 	const store = ClientStore.getInstance()
 	await store.init()
 	ClientHandler.init()
@@ -70,20 +69,19 @@ export async function initClient() {
 
 	CameraController.init()
 	NPCWinner.Init()
-	OutfitManager.init() // needs to come before MannequinManager
+	OutfitManager.init()
+	ShopManager.init()
 	SoundManager.init()
 	StageController.init()
 	
-	ShopManager.init()
 
 	SetupColorPickers()
-	//SetupGameHostNPC()
 	SetupLights()
 	SetupPortal()
 	SetupUI()
 	SpawnBirds()
 	
-	MannequinManager.init() // needs to come after OutfitManager
+	MannequinManager.init() // Comes after OutfitManager.init()
 
 	// Wait for load, to trigger Tutorial
 	engine.addSystem(waitForLoad)
