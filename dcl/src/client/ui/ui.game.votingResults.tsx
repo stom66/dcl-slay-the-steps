@@ -14,6 +14,8 @@ import { ClientStore } from 'src/client/clientStore';
 import { GameSettings } from 'src/shared/settings';
 import { SoundManager } from '../soundManager';
 import { sfx } from '../data/sfx';
+import { tweenValue } from './ui-utils';
+import { EasingFunction } from '@dcl/sdk/ecs';
 
 
 // MARK: Event Binding
@@ -32,20 +34,28 @@ eventBus.on(ClientEvents.NOTIFY_STATE, (data: ClientState) => {
 
 
 // MARK: Vars
-const clientStore = ClientStore.getInstance()
-var visibleVotingResults : boolean = false
-let votingResults: ReactEcs.JSX.Element[] = []
+const clientStore        = ClientStore.getInstance()
+var isVisible            : boolean = false
+let votingResults        : ReactEcs.JSX.Element[] = []
+
+const MARGIN_TOP_HIDDEN  = 1080
+const MARGIN_TOP_VISIBLE = 0
+var marginTop            = MARGIN_TOP_HIDDEN
 
 
 // MARK: Utility functions
-function ShowVotingResults() {
-	visibleVotingResults = true
+export function ShowVotingResults() {
 	UpdateVotingResults()
-}
-function HideVotingResults() {
-	visibleVotingResults = false
+	
+	isVisible = true
+	tweenValue(marginTop, MARGIN_TOP_VISIBLE, 0.3, (v) => marginTop = v)
 }
 
+export function HideVotingResults() {
+	tweenValue(marginTop, MARGIN_TOP_HIDDEN, 0.3, (v) => marginTop = v, () => {
+		isVisible = false
+	}, EasingFunction.EF_EASEINBACK)
+}
 
 // MARK: BuildVotingResults
 function GetVotingResults() {
@@ -53,6 +63,8 @@ function GetVotingResults() {
 	const elements: ReactEcs.JSX.Element[] = [] // array of UIElements for each player
 	
 	const sortedResults = clientStore.getSortedVoteResults()
+
+
 
 	// If there are no votes, show a message
 	if (sortedResults.length === 0) {
@@ -233,8 +245,8 @@ export function VotingResultsUI() {
 					justifyContent: 'space-evenly',
 					alignSelf     : 'center',
 					flexShrink    : 1,
-					margin        : { bottom: '35px' },
-					display       : visibleVotingResults ? 'flex': 'none',
+					margin        : { top: marginTop },
+					display       : isVisible ? 'flex': 'none',
 					padding       : { top: 16, bottom: 32, left: 16, right: 16 },
 				}}
 				uiBackground={{

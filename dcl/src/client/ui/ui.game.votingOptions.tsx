@@ -11,7 +11,9 @@ import { ClientEvents } from 'src/client/clientEvents'
 import { ClientMessaging } from 'src/client/clientMessaging'
 import { ClientStore } from 'src/client/clientStore'
 import { GameSettings } from 'src/shared/settings'
-
+import { tweenValue } from './ui-utils'
+import * as utils from '@dcl-sdk/utils'
+import { EasingFunction } from '@dcl/sdk/ecs'
 
 
 // MARK: Event Binding
@@ -30,23 +32,29 @@ eventBus.on(ClientEvents.NOTIFY_STATE, (data: ClientState) => {
 	}
 })
 
-
 // MARK: Vars
-const clientStore = ClientStore.getInstance()
-var visibleVoting: boolean = false // toggles root element visibility
-let votedFor     : string  = ""    // userId of the currently active player to show the star icon during a round
-let votingOptions: ReactEcs.JSX.Element[] = []
+const clientStore        = ClientStore.getInstance()
+var isVisible            : boolean = false // toggles root element visibility
+let votedFor             : string  = ""    // userId of the currently active player to show the star icon during a round
+let votingOptions        : ReactEcs.JSX.Element[] = []
 
+const MARGIN_TOP_HIDDEN  = 1080
+const MARGIN_TOP_VISIBLE = 0
+var marginTop            = MARGIN_TOP_HIDDEN
 
 // MARK: Utility functions
-function ShowVotingOptions() {
-	visibleVoting = true
+export function ShowVotingOptions() {
 	UpdateVotingOptions()
+	
+	isVisible = true
+	tweenValue(marginTop, MARGIN_TOP_VISIBLE, 0.3, (v) => marginTop = v)
 }
 
-function HideVotingOptions() {
-	visibleVoting = false
-	votedFor      = ""
+export function HideVotingOptions() {
+	tweenValue(marginTop, MARGIN_TOP_HIDDEN, 0.3, (v) => marginTop = v, () => {
+		isVisible = false
+		votedFor      = ""
+	}, EasingFunction.EF_EASEINBACK)
 }
 
 // Button function which triggers the actual vote
@@ -201,8 +209,8 @@ export function VotingOptionsUI() {
 					justifyContent: 'space-evenly',
 					alignSelf     : 'center',
 					flexShrink    : 1,
-					margin        : { bottom              : '35px', top: '-64px' },
-					display       : visibleVoting ? 'flex': 'none',
+					margin        : { top: marginTop },
+					display       : isVisible ? 'flex': 'none',
 					padding       : { top: 32, bottom: 32, left: 16, right: 16 },
 				}}
 				uiBackground={{
