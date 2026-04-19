@@ -99,6 +99,8 @@ function GetVotingResults() {
 		return elements
 	}
 
+	const winnerId = clientStore.getLastWinner()?.userId
+
 	// Build the "row" elements
 	sortedResults.forEach(([userId, score]: [string, number]) => {
 		const playerData = getPlayer({ userId: userId })
@@ -114,6 +116,8 @@ function GetVotingResults() {
 		if (!avatarTexture) {
 			userProfileCache.whenAvatarUrlAvailable(userId, UpdateVotingResults)
 		}
+
+		const isWinner = userId === winnerId
 
 		elements.push(
 			<UiEntity
@@ -172,7 +176,7 @@ function GetVotingResults() {
 						width  : 36,
 						height : 36,
 						margin : { right: 10 },
-						display: elements.length === 0 ? 'flex' : 'none',
+						display: isWinner ? 'flex' : 'none',
 					}}
 					uiBackground={{
 						texture    : { src: "assets/images/ui/icon-star.png" },

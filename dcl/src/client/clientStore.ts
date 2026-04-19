@@ -206,8 +206,15 @@ export class ClientStore {
 			}
 			console.log("clientStore: getSortedVoteResults(), results.length:", results.length)
 		
-			// To sort voting results, we need an array, not an object. Let's get an array of [userId, count] and sort it.
-			const sortedResults = Object.entries(results).sort((a, b) => b[1] - a[1])
+			const winnerId = this.clientState.lastWinner?.userId
+
+			const sortedResults = Object.entries(results).sort((a, b) => {
+				if (b[1] !== a[1]) return b[1] - a[1]
+				// Tie-break: declared winner always sorts first
+				if (a[0] === winnerId) return -1
+				if (b[0] === winnerId) return 1
+				return 0
+			})
 		
 			return sortedResults
 		}
