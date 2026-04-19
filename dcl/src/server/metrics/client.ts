@@ -220,11 +220,15 @@ export namespace Metrics {
 		Posthog.capture(gameDistinctId(gameStartTime), MetricEvents.GAME_ENDED, {
 			playerCount : playerIds.length,
 			playerIds   : playerIds,
-			winnerUserId: winnerUserId
+			winnerUserId: winnerUserId,
+			durationMs: Date.now() - gameStartTime
 		})
 	}
 
 	export function trackGameAborted(gameStartTime: number) {
-		Posthog.capture(gameDistinctId(gameStartTime), MetricEvents.GAME_ABORTED)
+		Posthog.capture(gameDistinctId(gameStartTime), MetricEvents.GAME_ABORTED, {
+			gameStartTime: gameStartTime,
+			durationMs: Date.now() - gameStartTime
+		})
 	}
 }
