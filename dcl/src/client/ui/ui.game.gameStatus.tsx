@@ -14,7 +14,7 @@ import { ShowHowToPlay } from './ui.game.howToPlay'
 import { ClientMessaging } from '../clientMessaging'
 import { SoundManager } from '../soundManager'
 import { sfx } from '../data/sfx'
-import { tweenValue } from './utils'
+import { tweenValue } from './ui-utils'
 
 
 // MARK: Event Bindings
@@ -116,6 +116,7 @@ export function GameStatusUI() {
 					justifyContent: 'center',
 					positionType  : "absolute",
 					position      : { top: panelTop },
+					display       : isVisible ? 'flex' : 'none',
 				}}
 			>
 				<UiEntity

@@ -7,7 +7,7 @@ import { eventBus } from 'src/shared/utils/eventBus'
 import { sfx } from 'src/client/data/sfx'
 import { ClientEvents } from 'src/client/clientEvents'
 import { SoundManager } from 'src/client/soundManager'
-import { tweenValue } from './utils'
+import { tweenValue } from './ui-utils'
 import { NotifyTurnStartingPayload } from 'src/shared/types'
 import { ClientStore } from '../clientStore'
 

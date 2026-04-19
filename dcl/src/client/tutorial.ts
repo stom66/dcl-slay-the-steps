@@ -39,16 +39,25 @@ export namespace Tutorial {
 	var targetViewButtonSwap  : Vector3 = Vector3.Zero()
 
 	var interval: TimerId | undefined = undefined
+	var tutorialTimeouts: TimerId[] = []
+
+	function AddTimeout(callback: () => void, delay: number) {
+		tutorialTimeouts.push(timers.setTimeout(callback, delay))
+	}
+	function ClearTimeouts() {
+		tutorialTimeouts.forEach((timeout) => {
+			timers.clearTimeout(timeout)
+		})
+		tutorialTimeouts = []
+	}
 
 	export function TriggerTutorial(force: boolean = false) {
 		if (tutorialTriggered && !force) return
 		tutorialTriggered = true
 		showTutorial = true
 
-		timers.setTimeout(() => {
-
-			ShowTutorial()
-		}, 0)
+		ShowTutorial()
+		eventBus.emit(ClientEvents.TUTORIAL_STARTED, undefined)
 	}
 
 	// MARK: Show Tutorial
@@ -90,20 +99,20 @@ export namespace Tutorial {
 
 		// Wave to the camera
 		// Look at mannequin
-		timers.setTimeout(() => {
+		AddTimeout(() => {
 			if (!showTutorial) return
 			SetTutorialInfo("thisIsYourMannequin")
 			ShowTutorialUI()
 			SoundManager.PlaySound(sfx.greeting)
 		}, 500)
 		
-		timers.setTimeout(() => {
+		AddTimeout(() => {
 			if (!showTutorial) return
 			Wave()
 		}, 1200)
 		
 		// Look at stores
-		timers.setTimeout(() => {
+		AddTimeout(() => {
 			if (!showTutorial) return
 			Tween.setMove(camera!, getWorldPosition(camera!), positionViewShopsStart, 1500)
 			Tween.setMove(cameraTarget!, getWorldPosition(cameraTarget!), targetViewShopsStart, 1000)
@@ -113,7 +122,7 @@ export namespace Tutorial {
 		}, 5000)
 
 		// Pan across at stores
-		timers.setTimeout(() => {
+		AddTimeout(() => {
 			if (!showTutorial) return
 			Tween.setMove(camera!, getWorldPosition(camera!), positionViewShopsEnd, 3500)
 			Tween.setMove(cameraTarget!, getWorldPosition(cameraTarget!), targetViewShopsEnd, 2000)
@@ -121,7 +130,7 @@ export namespace Tutorial {
 
 
 		// Look at salon
-		timers.setTimeout(() => {
+		AddTimeout(() => {
 			if (!showTutorial) return
 			Tween.setMove(camera!, getWorldPosition(camera!), positionViewSalon, 1000)
 			Tween.setMove(cameraTarget!, getWorldPosition(cameraTarget!), targetViewSalonStart, 1000)
@@ -130,14 +139,14 @@ export namespace Tutorial {
 		}, 10000)
 
 		// Pan across at salon
-		timers.setTimeout(() => {
+		AddTimeout(() => {
 			if (!showTutorial) return
 			Tween.setMove(cameraTarget!, getWorldPosition(cameraTarget!), targetViewSalonEnd, 3000)
 		}, 11000)
 
 
 		// Now back to the mannequin and its buttons
-		timers.setTimeout(() => {
+		AddTimeout(() => {
 			if (!showTutorial) return
 			Tween.setMove(camera!, getWorldPosition(camera!), positionViewMannequin, 1000)
 			Tween.setMove(cameraTarget!, getWorldPosition(cameraTarget!), targetViewMannequin, 600)
@@ -146,7 +155,7 @@ export namespace Tutorial {
 		}, 14000)
 
 		// Btn: Reset
-		timers.setTimeout(() => {
+		AddTimeout(() => {
 			if (!showTutorial) return
 			Tween.setMove(camera!, getWorldPosition(camera!), positionViewButtons, 600)
 			Tween.setMove(cameraTarget!, getWorldPosition(cameraTarget!), targetViewButtonReset, 300)
@@ -156,7 +165,7 @@ export namespace Tutorial {
 		}, 15000)
 
 		// Btn: Swap
-		timers.setTimeout(() => {
+		AddTimeout(() => {
 			if (!showTutorial) return
 			Tween.setMove(cameraTarget!, getWorldPosition(cameraTarget!), targetViewButtonSwap, 300)
 			SetTutorialInfo("btnSwap")
@@ -164,7 +173,7 @@ export namespace Tutorial {
 		}, 17000)
 
 		// Btn: Copy
-		timers.setTimeout(() => {
+		AddTimeout(() => {
 			if (!showTutorial) return
 			Tween.setMove(cameraTarget!, getWorldPosition(cameraTarget!), targetViewButtonCopy, 300)
 			SetTutorialInfo("btnCopy")
@@ -172,7 +181,7 @@ export namespace Tutorial {
 		}, 19000)
 
 		// Back out to view the mannequin as a whoile while we show the final info
-		timers.setTimeout(() => {
+		AddTimeout(() => {
 			if (!showTutorial) return
 			Tween.setMove(camera!, getWorldPosition(camera!), positionViewMannequin, 600)
 			Tween.setMove(cameraTarget!, getWorldPosition(cameraTarget!), targetViewMannequin, 300)
@@ -183,10 +192,11 @@ export namespace Tutorial {
 		}, 21000)
 
 
-		timers.setTimeout(() => {
+		AddTimeout(() => {
 			if (!showTutorial) return
 			eventBus.emit(ClientEvents.SHOW_DRESS_ME_HINT, undefined)
-			QuitTutorial()
+			eventBus.emit(ClientEvents.TUTORIAL_COMPLETED, undefined)
+			EndTutorial()
 		}, 26000)
 
 	}
@@ -313,10 +323,18 @@ export namespace Tutorial {
 	}
 	
 
+	// MARK: Abort Tutorial
+	export function AbortTutorial() {
+		console.log("Tutorial: abort")
+		eventBus.emit(ClientEvents.TUTORIAL_ABORT, undefined)
+		EndTutorial()
+	}
+
 	// MARK: Quit Tutorial
-	export function QuitTutorial() {
+	export function EndTutorial() {
 		console.log("Tutorial: quit")
 		showTutorial = false
+		ClearTimeouts()
 
 		// Unfreeze the Player input
 		InputModifier.createOrReplace(engine.PlayerEntity, {
@@ -335,6 +353,7 @@ export namespace Tutorial {
 		HideArrow()
 		ShowStatus()
 		ShowPlayerList()
+
 
 		if (npcMannequin) {
 			const t = Transform.getMutableOrNull(npcMannequin)

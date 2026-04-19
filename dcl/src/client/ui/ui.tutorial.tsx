@@ -1,6 +1,6 @@
 import { EasingFunction, engine } from '@dcl/sdk/ecs'
 import ReactEcs, { UiEntity } from '@dcl/sdk/react-ecs'
-import { tweenValue } from './utils'
+import { tweenValue } from './ui-utils'
 import { Tutorial } from '../tutorial'
 
 
@@ -144,7 +144,7 @@ export function TutorialUI() {
 				onMouseEnter={() => { btnHoverVisible = true }}
 				onMouseLeave={() => { btnHoverVisible = false }}
 				onMouseDown={() => { 
-					Tutorial.QuitTutorial()
+					Tutorial.EndTutorial()
 				 }}
 			>
 				<UiEntity

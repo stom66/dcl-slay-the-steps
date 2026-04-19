@@ -1,13 +1,14 @@
 import ReactEcs, { Button, UiEntity } from '@dcl/sdk/react-ecs'
 import { Color4 } from '@dcl/sdk/math'
+import * as utils from '@dcl-sdk/utils'
 
 import { ClientState, NotifyTurnStartingPayload } from 'src/shared/types'
 import { eventBus } from 'src/shared/utils/eventBus'
 
 import { ClientEvents } from 'src/client/clientEvents'
 import { ClientStore } from 'src/client/clientStore'
-import { tweenValue } from './utils'
-import * as utils from '@dcl-sdk/utils'
+import { tweenValue } from './ui-utils'
+
 
 // MARK: Event Bindings
 eventBus.on(ClientEvents.NOTIFY_TURN_STARTING, (data: NotifyTurnStartingPayload) => {
@@ -26,25 +27,22 @@ eventBus.on(ClientEvents.NOTIFY_STATE, (data: ClientState) => {
 // MARK: Vars
 
 const clientStore = ClientStore.getInstance()
-export var visibleEmotesHint: boolean = false
+
+var visibleEmotesHint      : boolean = false
 
 const PANEL_BOTTOM_HIDDEN  = -250
 const PANEL_BOTTOM_VISIBLE = 50
-var panelBottom            : number = PANEL_BOTTOM_HIDDEN
+var panelBottom            : number  = PANEL_BOTTOM_HIDDEN
 
 
 export function ShowEmotesHint() {
 	console.log("ui.Game.Emotes: ShowEmotesHint()")
 	visibleEmotesHint = true
-	tweenValue(panelBottom, PANEL_BOTTOM_VISIBLE, 0.2, (v) => panelBottom = v)
-	// Not needed - states will trigger it to close
-	//utils.timers.setTimeout(() => {
-	//	HideEmotesHint()
-	//}, GameSettings.ROUND_DURATION_PER_PLAYER)
+	tweenValue(panelBottom, PANEL_BOTTOM_VISIBLE, 0.3, (v) => panelBottom = v)
 }
 
 export function HideEmotesHint() {
-	tweenValue(panelBottom, PANEL_BOTTOM_HIDDEN, 0.2, (v) => panelBottom = v)
+	tweenValue(panelBottom, PANEL_BOTTOM_HIDDEN, 0.3, (v) => panelBottom = v)
 	utils.timers.setTimeout(() => {
 		visibleEmotesHint = false
 	}, 0.5 * 1000)

@@ -9,7 +9,7 @@ import { GetBackgroundTexture } from 'src/client/utils'
 import { ClientStore } from 'src/client/clientStore'
 import { ClientEvents } from 'src/client/clientEvents'
 import { GameStatus } from 'src/shared/enums'
-import { tweenValue } from './utils'
+import { tweenValue } from './ui-utils'
 
 
 // MARK: Event Binding

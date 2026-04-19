@@ -37,7 +37,8 @@ const uiComponent = () => [
 	WarningUI(),
 	VersionUI(),
 	LoadingUI(),
-	//SHOW_DEBUG ? DebugUI() : null
+	
+	SHOW_DEBUG ? DebugUI() : null
 ]
 
 export function SetupUI() {

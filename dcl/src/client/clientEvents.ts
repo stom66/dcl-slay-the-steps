@@ -9,4 +9,8 @@ export enum ClientEvents {
 	PLAYERS_UPDATED           = "playersUpdated",
 	JOIN_AS_SPECTATOR         = "joinAsSpectator",
 	SHOW_DRESS_ME_HINT        = "showDressMeHint",
+
+	TUTORIAL_STARTED          = "tutorialStarted",
+	TUTORIAL_COMPLETED        = "tutorialCompleted",
+	TUTORIAL_ABORT            = "tutorialQuit",
 }
