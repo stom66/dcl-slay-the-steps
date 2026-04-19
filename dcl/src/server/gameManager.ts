@@ -147,13 +147,13 @@ class GameManager {
 		const playerIds = this.store.getPlayerIDs()
 		playerIds.forEach(playerId => {
 			// Work out the delay before we send this player the "you are next" message
-			var StartingSoonDelay = GameSettings.ROUND_START_DELAY
+			var StartingSoonDelay = GameSettings.GAME_START_DELAY
 			StartingSoonDelay += GameSettings.ROUND_INTERVAL * playerIds.indexOf(playerId)
 			StartingSoonDelay += GameSettings.ROUND_DURATION_PER_PLAYER * playerIds.indexOf(playerId)
 			StartingSoonDelay -= GameSettings.YOU_ARE_NEXT_PREEMPT_TIME
 			
 			// Work out the delay before we trigger the round start for this player
-			var RoundStartDelay = GameSettings.ROUND_START_DELAY
+			var RoundStartDelay = GameSettings.GAME_START_DELAY
 			RoundStartDelay += GameSettings.ROUND_INTERVAL * playerIds.indexOf(playerId)
 			RoundStartDelay += GameSettings.ROUND_DURATION_PER_PLAYER * playerIds.indexOf(playerId)
 
@@ -186,7 +186,7 @@ class GameManager {
 		// After the game duration, trigger the voting start
 		const playerCount = playerIds.length		
 		var gameDuration = 0
-		gameDuration += GameSettings.ROUND_START_DELAY
+		gameDuration += GameSettings.GAME_START_DELAY
 		gameDuration += GameSettings.ROUND_INTERVAL * (playerCount - 1)
 		gameDuration += GameSettings.ROUND_DURATION_PER_PLAYER * playerCount
 

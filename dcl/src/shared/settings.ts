@@ -29,12 +29,12 @@ export class GameSettings {
 	static SERVER_TIME_UPDATE_INTERVAL = (IS_DEBUG ? 15: 30) * 1000
 
 	static COUNTDOWN_DURATION          = (IS_DEBUG ? 8 : 60) * 1000
-	static ROUND_DURATION_PER_PLAYER   = (IS_DEBUG ? 15: 30) * 1000
-	static ROUND_START_DELAY           = (IS_DEBUG ? 5 : 6) * 1000 // Delay before the round starts
+	static ROUND_DURATION_PER_PLAYER   = (IS_DEBUG ? 30: 30) * 1000
+	static GAME_START_DELAY            = (IS_DEBUG ? 5 : 6) * 1000 // Delay before the round starts
 	static ROUND_INTERVAL              = (IS_DEBUG ? 2 : 2) * 1000 // Interval between players, MUST be longer than the ROUND_START_DELAY
 	static VOTING_DURATION             = 10 * 1000
 	static GAME_ENDED_DURATION         = 4 * 1000
-	static YOU_ARE_NEXT_PREEMPT_TIME   = (IS_DEBUG ? 3 : 4) * 1000 // How far in advance of the players turn shoud we show the message letting them know they are next
+	static YOU_ARE_NEXT_PREEMPT_TIME   = (IS_DEBUG ? 3 : 4) * 1000 // Should be longer than the GAME_START_DELAY
 
 
 	static LOBBY_SPAWN_POSITION        = Vector3.create(16, 0, 20)
