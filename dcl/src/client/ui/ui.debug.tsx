@@ -1,5 +1,6 @@
 import ReactEcs, { Button, UiEntity} from '@dcl/sdk/react-ecs'
-import { Color3, Color4 } from '@dcl/sdk/math'
+import { Color3, Color4, Vector3 } from '@dcl/sdk/math'
+import { getSceneInformation } from '~system/Runtime'
 
 import { ClientStore } from 'src/client/clientStore'
 import { SeatManager } from 'src/client/seatManager'
@@ -12,6 +13,9 @@ import { StageController } from '../stageController'
 import { NPCWinner } from '../npcWinner'
 import { ShopManager } from '../shopManager'
 import { Tutorial } from '../tutorial'
+import { executeTask } from '@dcl/sdk/ecs'
+import { movePlayerTo } from '~system/RestrictedActions'
+import { GetRandomPointInSquare } from '../utils'
 
 const clientStore = ClientStore.getInstance()
 
@@ -71,6 +75,29 @@ export function DebugUI() {
 				<ButtonAction textLabel="Tutorial" callback={() => {
 					Tutorial.TriggerTutorial(true);
 				}} />
+
+				<ButtonAction textLabel="GetSceneInformation" callback={() => {
+					executeTask(async () => {
+						const sceneInfo = await getSceneInformation({})
+					
+						if (!sceneInfo) return
+					
+						const sceneJson   = JSON.parse(sceneInfo.metadataJson)
+						const spawnPoints = sceneJson.spawnPoints
+						const spawnPos    = spawnPoints[0].position
+						const corner1     = Vector3.create(spawnPos.x[0], spawnPos.y[0], spawnPos.z[0])
+						const corner2     = Vector3.create(spawnPos.x[1], spawnPos.y[1], spawnPos.z[1])
+
+						const cameraTarget = Vector3.create(spawnPoints[0].cameraTarget.x, spawnPoints[0].cameraTarget.y, spawnPoints[0].cameraTarget.z)
+
+						//console.log("randomPoint", randomPoint.x, randomPoint.y, randomPoint.z)
+						movePlayerTo({
+							newRelativePosition: GetRandomPointInSquare(corner1, corner2),
+							cameraTarget: cameraTarget
+						})
+					});
+				}} />
+				
 			</UiEntity>
 
 			<Divider />

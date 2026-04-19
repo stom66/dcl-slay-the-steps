@@ -41,6 +41,14 @@ export function GetRandomPointInCircle(
 }
 
 
+// MARK: GetRandomPointInSquare
+export function GetRandomPointInSquare(corner1: Vector3, corner2: Vector3) {
+	const x = Math.random() * (corner2.x - corner1.x) + corner1.x
+	const z = Math.random() * (corner2.z - corner1.z) + corner1.z
+	return Vector3.create(x, corner1.y, z)
+}
+
+
 // MARK: GetBackgroundTexture
 export function GetBackgroundTexture(isEven: boolean) {
 	return isEven
