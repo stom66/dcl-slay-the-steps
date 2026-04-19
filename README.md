@@ -41,6 +41,10 @@ This repository is split in the following folders:
     - `/dcl/assets/models` - exported glTF files, and textures
     - `/dcl/assets/scene` - Creator Hub files
     - `/dcl/assets/sfx` - mp3 files, both music and sfx
+  - `/dcl/src` - All TypesScript code
+    - `/dcl/src/client` - client-only code
+    - `/dcl/src/server` - server-only code
+    - `/dcl/src/shared` - client and server code, eg shared types, utilities
 - `/docs` - extra info on relevant topics, eg asset creation
 - `/reference` - screenshots, previs, reference pictures used during asset creation
 - `/scripts` - various bash/blender/bat utility scripts
