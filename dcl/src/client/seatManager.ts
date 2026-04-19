@@ -20,6 +20,9 @@ export namespace SeatManager {
 		if (data.serverStatus == GameStatus.GAME_ENDED) {
 			MovePlayerToLobby()
 		}
+		if (data.serverStatus == GameStatus.LOBBY) {
+			MovePlayerToLobby()
+		}
 	})
 
 	eventBus.on(ClientEvents.JOIN_AS_SPECTATOR, (data) => {
