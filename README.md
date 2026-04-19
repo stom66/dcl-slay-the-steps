@@ -25,7 +25,7 @@ This repo contains the "Slay The Steps" experience, including all source assets 
 
 This repository is split in the following folders:
 
-- `/assets` - contains all assets and textures before being exported to `glTF`. This includes all `blend` and `FBX` files, as well as full-size source textures.
+- `/assets`- asset sources
   - `/assets/blends` - source files for each model in the scene, including full res textures
   - `/assets/fbx` - exported fbx models for Substance Painter
   - `/assets/fonts` - any fonts used in the scene and accompanying media
