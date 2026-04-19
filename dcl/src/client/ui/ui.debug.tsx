@@ -17,6 +17,8 @@ import { executeTask } from '@dcl/sdk/ecs'
 import { movePlayerTo } from '~system/RestrictedActions'
 import { GetRandomPointInSquare } from '../utils'
 import { tweenValue } from './ui-utils'
+import { HideVotingOptions, ShowVotingOptions, VotingOptionsUI } from './ui.game.votingOptions'
+import { HideVotingResults, ShowVotingResults } from './ui.game.votingResults'
 
 const clientStore = ClientStore.getInstance()
 
@@ -46,33 +48,33 @@ export function DebugUI() {
 				borderRadius  : { topLeft: 8, topRight: 24, bottomLeft: 8, bottomRight: 24 },
 				borderColor   : Color4.fromHexString("#4C9581FF"),
 				borderWidth   : 3
-		}}
-		uiBackground={{ color: Color4.fromHexString("#4C958166") }}
+			}}
+			uiBackground={{ color: Color4.fromHexString("#4C958166") }}
 		>
 
 			<UiEntity 
-			uiTransform={{ 
-				width: '48', 
-				height: '32',
-				borderRadius: 16,
-				borderWidth: 3,
-				borderColor: Color4.fromHexString("#4C9581FF"),
-				positionType: 'absolute',
-				position: { top: -32, right: btnRight },
+				uiTransform={{ 
+					width: '48', 
+					height: '32',
+					borderRadius: 16,
+					borderWidth: 3,
+					borderColor: Color4.fromHexString("#4C9581FF"),
+					positionType: 'absolute',
+					position: { top: -32, right: btnRight },
+					}}
+				uiText={{
+					value: "<-->",
+					fontSize: 14,
 				}}
-			uiText={{
-				value: "<-->",
-				fontSize: 14,
-			}}
-			onMouseDown={() => {
-				if (panelLeft > PANEL_HIDDEN) {
-					tweenValue(btnRight, BTN_HIDDEN, 0.2, (v) => btnRight = v)
-					tweenValue(panelLeft, PANEL_HIDDEN, 0.2, (v) => panelLeft = v)
-				} else {
-					tweenValue(panelLeft, PANEL_VISIBLE, 0.2, (v) => panelLeft = v)
-					tweenValue(btnRight, BTN_VISIBLE, 0.2, (v) => btnRight = v)
-				}
-			}}
+				onMouseDown={() => {
+					if (panelLeft > PANEL_HIDDEN) {
+						tweenValue(btnRight, BTN_HIDDEN, 0.2, (v) => btnRight = v)
+						tweenValue(panelLeft, PANEL_HIDDEN, 0.2, (v) => panelLeft = v)
+					} else {
+						tweenValue(panelLeft, PANEL_VISIBLE, 0.2, (v) => panelLeft = v)
+						tweenValue(btnRight, BTN_VISIBLE, 0.2, (v) => btnRight = v)
+					}
+				}}
 			/>
 
 			<UiEntity uiTransform={{ width: '100%', flexDirection: 'column' }}>
@@ -109,7 +111,7 @@ export function DebugUI() {
 					Tutorial.TriggerTutorial(true);
 				}} />
 
-				<ButtonAction textLabel="GetSceneInformation" callback={() => {
+				<ButtonAction textLabel="movePlayerTo(spawn)" callback={() => {
 					executeTask(async () => {
 						const sceneInfo = await getSceneInformation({})
 					
@@ -129,6 +131,20 @@ export function DebugUI() {
 							cameraTarget: cameraTarget
 						})
 					});
+				}} />
+
+				<ButtonAction textLabel="ShowVotingOptions" callback={() => {
+					ShowVotingOptions();
+				}} />
+				<ButtonAction textLabel="HideVotingOptions" callback={() => {
+					HideVotingOptions()
+				}} />
+
+				<ButtonAction textLabel="ShowVotingResults" callback={() => {
+					ShowVotingResults();
+				}} />
+				<ButtonAction textLabel="HideVotingResults" callback={() => {
+					HideVotingResults()
 				}} />
 				
 			</UiEntity>
