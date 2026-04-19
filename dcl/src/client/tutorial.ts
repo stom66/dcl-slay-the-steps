@@ -2,12 +2,12 @@ import { AvatarShape, engine, Entity, InputModifier, MainCamera, Transform, Twee
 import { getWorldPosition, getWorldRotation, TimerId, timers } from '@dcl-sdk/utils'
 import { Quaternion, Vector3 } from "@dcl/sdk/math"
 import { HideTutorial as HideTutorialUI, ShowTutorial as ShowTutorialUI, SetTutorialInfo, ShowArrow, HideArrow, HideTutorialBtn } from "./ui/ui.tutorial"
-import { SoundManager } from "./soundManager"
-import { sfx } from "./data/sfx"
+import { SoundManager } from "src/client/soundManager"
+import { sfx } from "src/client/data/sfx"
 import { eventBus } from "src/shared/utils/eventBus"
-import { ClientEvents } from "./clientEvents"
-import { ShowStatus } from "./ui/ui.game.gameStatus"
-import { ShowPlayerList } from "./ui/ui.game.playerList"
+import { ClientEvents } from "src/client/clientEvents"
+import { ClientMessaging } from "src/client/clientMessaging"
+import { ShowStatus } from "src/client/ui/ui.game.gameStatus"
 
 export namespace Tutorial {
 
@@ -59,6 +59,11 @@ export namespace Tutorial {
 		ShowTutorial()
 		eventBus.emit(ClientEvents.TUTORIAL_STARTED, undefined)
 	}
+
+	// MARK: Event Listeners
+	eventBus.on(ClientEvents.TUTORIAL_ABORT, () => ClientMessaging.NotifyTutorialAborted())
+	eventBus.on(ClientEvents.TUTORIAL_COMPLETED, () => ClientMessaging.NotifyTutorialCompleted())
+
 
 	// MARK: Show Tutorial
 	function ShowTutorial() {
@@ -325,14 +330,14 @@ export namespace Tutorial {
 
 	// MARK: Abort Tutorial
 	export function AbortTutorial() {
-		console.log("Tutorial: abort")
+		console.log("Tutorial: AbortTutorial")
 		eventBus.emit(ClientEvents.TUTORIAL_ABORT, undefined)
 		EndTutorial()
 	}
 
 	// MARK: Quit Tutorial
 	export function EndTutorial() {
-		console.log("Tutorial: quit")
+		console.log("Tutorial: EndTutorial")
 		showTutorial = false
 		ClearTimeouts()
 
@@ -351,9 +356,6 @@ export namespace Tutorial {
 		HideTutorialBtn()
 
 		HideArrow()
-		ShowStatus()
-		ShowPlayerList()
-
 
 		if (npcMannequin) {
 			const t = Transform.getMutableOrNull(npcMannequin)

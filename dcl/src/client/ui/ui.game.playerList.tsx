@@ -29,6 +29,10 @@ eventBus.on(ClientEvents.NOTIFY_TURN_STARTING, (data: NotifyTurnStartingPayload)
 	SetCurrentPlayer(data.outfit.userId)
 })
 
+eventBus.on(ClientEvents.TUTORIAL_STARTED, HidePlayerList)
+eventBus.on(ClientEvents.TUTORIAL_COMPLETED, ShowPlayerList)
+eventBus.on(ClientEvents.TUTORIAL_ABORT, ShowPlayerList)
+
 
 // MARK: Vars
 const clientStore = ClientStore.getInstance()
@@ -52,7 +56,10 @@ export function SetCurrentPlayer(userId?: string) {
 
 
 export function ShowPlayerList() {
-	tweenValue(panelRight, PANEL_RIGHT_VISIBLE, 0.2, (v) => panelRight = v)
+	tweenValue(panelRight, PANEL_RIGHT_VISIBLE, undefined, (v) => panelRight = v)
+}
+export function HidePlayerList() {
+	tweenValue(panelRight, PANEL_RIGHT_HIDDEN, undefined, (v) => panelRight = v)
 }
 
 // MARK: BuildPlayerList

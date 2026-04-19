@@ -23,6 +23,10 @@ eventBus.on(ClientEvents.NOTIFY_TURN_STARTING, (data: NotifyTurnStartingPayload)
 	roundStartTime = clockSync.toLocalTime(data.sentAt)
 })
 
+eventBus.on(ClientEvents.TUTORIAL_STARTED, HideStatus)
+eventBus.on(ClientEvents.TUTORIAL_COMPLETED, ShowStatus)
+eventBus.on(ClientEvents.TUTORIAL_ABORT, ShowStatus)
+
 
 // MARK: Vars
 const clientStore = ClientStore.getInstance()
@@ -41,7 +45,7 @@ export function ShowStatus() {
 	tweenValue(panelTop, PANEL_TOP_VISIBLE, 0.2, (v) => panelTop = v)
 }
 
-export function HideStatus() {
+function HideStatus() {
 	tweenValue(panelTop, PANEL_TOP_HIDDEN, 0.2, (v) => panelTop = v)
 	utils.timers.setTimeout(() => {
 		isVisible = false
