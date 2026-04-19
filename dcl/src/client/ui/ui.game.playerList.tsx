@@ -44,7 +44,7 @@ let playerList       : any[]              = []   // array of UIElements for each
 
 // MARK: Panel positioning
 const PANEL_RIGHT_HIDDEN = -320
-const PANEL_RIGHT_VISIBLE = 64
+const PANEL_RIGHT_VISIBLE = 48
 var panelRight = PANEL_RIGHT_HIDDEN
 
 
