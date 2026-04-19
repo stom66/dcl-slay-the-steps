@@ -7,13 +7,11 @@ import { Outfit } from "src/shared/types"
 
 import { sendStateUpdate } from "src/server/serverMessaging"
 import { ServerStore } from "src/server/serverStore"
-import { onLeaveScene } from "@dcl/sdk/players"
 
 import { Metrics } from "src/server/metrics/client"
 
 
 class GameManager {
-	static instance: GameManager
 	private readonly store: ServerStore
 
 	constructor() {
