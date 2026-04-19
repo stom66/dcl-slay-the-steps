@@ -87,14 +87,15 @@ export namespace Metrics {
 		})
 
 		Posthog.capture(userDistinctId(userId), MetricEvents.PLAYER_SCENE_JOINED, {
-			version: VERSION,
+			version              : VERSION,
 			sessionStartTimestamp: sessions.get(userId)
 		})
 	}
 
 	export function trackSceneLeft(userId: string, durationMs: number, playerStats?: PlayerStatsRecord) {
 		Posthog.capture(userDistinctId(userId), MetricEvents.PLAYER_SCENE_LEFT, {
-			durationMs: durationMs,
+			version              : VERSION,
+			durationMs           : durationMs,
 			sessionStartTimestamp: sessions.get(userId),
 			...playerStats,
 		})
@@ -104,6 +105,7 @@ export namespace Metrics {
 	// MARK: Player: Tutorial
 	export function trackTutorialAborted(userId: string) {
 		Posthog.capture(userDistinctId(userId), MetricEvents.PLAYER_TUTORIAL_ABORTED, {
+			version              : VERSION,
 			sessionStartTimestamp: sessions.get(userId),
 			tutorialElapsedTimeMs: Date.now() - (sessions.get(userId) ?? 0) - GameSettings.LOADING_SCREEN_DELAY
 		})
@@ -111,6 +113,7 @@ export namespace Metrics {
 	
 	export function trackTutorialCompleted(userId: string) {
 		Posthog.capture(userDistinctId(userId), MetricEvents.PLAYER_TUTORIAL_COMPLETED, {
+			version              : VERSION,
 			sessionStartTimestamp: sessions.get(userId)
 		})
 	}
@@ -121,7 +124,8 @@ export namespace Metrics {
 		incrementPlayerStat(userId, PlayerStats.GAMES_PLAYED)
 
 		Posthog.capture(userDistinctId(userId), MetricEvents.PLAYER_GAME_JOINED, {
-			gameId: gameDistinctId(gameStartTime),
+			version              : VERSION,
+			gameId               : gameDistinctId(gameStartTime),
 			sessionStartTimestamp: sessions.get(userId)
 		})
 	}
@@ -130,7 +134,8 @@ export namespace Metrics {
 		incrementPlayerStat(userId, PlayerStats.GAMES_SPECTATED)
 
 		Posthog.capture(userDistinctId(userId), MetricEvents.PLAYER_GAME_SPECTATED, {
-			gameId: gameDistinctId(gameStartTime),
+			version              : VERSION,
+			gameId               : gameDistinctId(gameStartTime),
 			sessionStartTimestamp: sessions.get(userId)
 		})
 	}
@@ -139,22 +144,25 @@ export namespace Metrics {
 		incrementPlayerStat(userId, PlayerStats.GAMES_WON)
 
 		Posthog.capture(userDistinctId(userId), MetricEvents.PLAYER_GAME_WON, {
-			gameId: gameDistinctId(gameStartTime),
+			version              : VERSION,
+			gameId               : gameDistinctId(gameStartTime),
 			sessionStartTimestamp: sessions.get(userId)
 		})
 	}
 
 	export function trackGameNotWon(userId: string, gameStartTime: number) {
 		Posthog.capture(userDistinctId(userId), MetricEvents.PLAYER_GAME_NOT_WON, {
-			gameId: gameDistinctId(gameStartTime),
+			version              : VERSION,
+			gameId               : gameDistinctId(gameStartTime),
 			sessionStartTimestamp: sessions.get(userId)
 		})
 	}
 
 	export function trackVoteCast(userId: string, votedForUserId: string, gameStartTime: number) {
 		Posthog.capture(userDistinctId(userId), MetricEvents.PLAYER_VOTE_CAST, {
-			gameId        : gameDistinctId(gameStartTime),
-			votedForUserId: votedForUserId,
+			version              : VERSION,
+			gameId               : gameDistinctId(gameStartTime),
+			votedForUserId       : votedForUserId,
 			sessionStartTimestamp: sessions.get(userId)
 		})
 	}
@@ -163,8 +171,9 @@ export namespace Metrics {
 	// MARK: Player: Emote
 	export function trackPlayerEmote(gameStartTime: number, userId: string, emote: string) {
 		Posthog.capture(userDistinctId(userId), MetricEvents.PLAYER_EMOTED, {
-			gameId: gameDistinctId(gameStartTime),
-			emote: emote,
+			version              : VERSION,
+			gameId               : gameDistinctId(gameStartTime),
+			emote                : emote,
 			sessionStartTimestamp: sessions.get(userId)
 		})
 	}
@@ -174,21 +183,24 @@ export namespace Metrics {
 	export function trackEquippedWearable(userId: string, wearableUrn: string) {
 		incrementPlayerStat(userId, PlayerStats.WEARABLES_EQUIPPED)
 		Posthog.capture(userDistinctId(userId), MetricEvents.PLAYER_EQUIPPED_WEARABLE, {
-			wearableUrn: wearableUrn,
+			version              : VERSION,
+			wearableUrn          : wearableUrn,
 			sessionStartTimestamp: sessions.get(userId)
 		})
 	}
 
 	export function trackEquippedSkinColor(userId: string, color: string) {
 		Posthog.capture(userDistinctId(userId), MetricEvents.PLAYER_EQUIPPED_COLOR_SKIN, {
-			color: color,
+			version              : VERSION,
+			color                : color,
 			sessionStartTimestamp: sessions.get(userId)
 		})
 	}
 
 	export function trackEquippedHairColor(userId: string, color: string) {
 		Posthog.capture(userDistinctId(userId), MetricEvents.PLAYER_EQUIPPED_COLOR_HAIR, {
-			color: color,
+			version              : VERSION,
+			color                : color,
 			sessionStartTimestamp: sessions.get(userId)
 		})
 	}
@@ -198,37 +210,41 @@ export namespace Metrics {
 	export function trackGameCreated(userId: string, gameStartTime: number) {
 		incrementPlayerStat(userId, PlayerStats.GAMES_CREATED)
 		Posthog.capture(gameDistinctId(gameStartTime), MetricEvents.GAME_CREATED, {
+			version        : VERSION,
 			gameStartTime  : gameStartTime,
 			createdByUserId: userId,
-			version        : VERSION
 		})
 
 		Posthog.capture(userDistinctId(userId), MetricEvents.PLAYER_GAME_CREATED, {
-			gameId: gameDistinctId(gameStartTime),
+			version              : VERSION,
+			gameId               : gameDistinctId(gameStartTime),
 			sessionStartTimestamp: sessions.get(userId)
 		})
 	}
 
 	export function trackGameStarted(gameStartTime: number, playerIds: string[]) {
 		Posthog.capture(gameDistinctId(gameStartTime), MetricEvents.GAME_STARTED, {
+			version    : VERSION,
 			playerCount: playerIds.length,
-			playerIds: playerIds
+			playerIds  : playerIds
 		})
 	}
 
 	export function trackGameEnded(gameStartTime: number, playerIds: string[], winnerUserId: string | undefined) {
 		Posthog.capture(gameDistinctId(gameStartTime), MetricEvents.GAME_ENDED, {
+			version     : VERSION,
 			playerCount : playerIds.length,
 			playerIds   : playerIds,
 			winnerUserId: winnerUserId,
-			durationMs: Date.now() - gameStartTime
+			durationMs  : Date.now() - gameStartTime
 		})
 	}
 
 	export function trackGameAborted(gameStartTime: number) {
 		Posthog.capture(gameDistinctId(gameStartTime), MetricEvents.GAME_ABORTED, {
+			version      : VERSION,
 			gameStartTime: gameStartTime,
-			durationMs: Date.now() - gameStartTime
+			durationMs   : Date.now() - gameStartTime
 		})
 	}
 }
