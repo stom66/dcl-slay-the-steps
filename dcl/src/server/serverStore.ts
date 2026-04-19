@@ -71,10 +71,12 @@ export class ServerStore {
 	// MARK: Outfits
 	setPlayerOutfit(userId: string, outfit: Outfit): void {
 		// Check if the userId is present in the players array and the outfits map; fail gracefully if not
-		if (!this.serverState.players.has(userId)) {
-			console.log(`serverStore: setPlayerOutfit: userId ${userId} is not present in players array.`)
-			return
-		}
+
+		// ALWAYS set the outfit, for metrics.
+		//if (!this.serverState.players.has(userId)) {
+		//	console.log(`serverStore: setPlayerOutfit: userId ${userId} is not present in players array.`)
+		//	return
+		//}
 
 		// Metrics: log the changes from the last outfit
 		const prevOutfit = this.serverState.outfits.get(userId)
@@ -90,12 +92,20 @@ export class ServerStore {
 			}
 
 			// Compare hair color
-			if (prevOutfit.hairColor !== undefined && newOutfit.hairColor !== undefined && prevOutfit.hairColor !== newOutfit.hairColor) {
+			if (
+				prevOutfit.hairColor !== undefined && 
+				newOutfit.hairColor !== undefined && 
+				Color3.toHexString(prevOutfit.hairColor) !== Color3.toHexString(newOutfit.hairColor)
+			) {
 				Metrics.trackEquippedHairColor(userId, Color3.toHexString(newOutfit.hairColor))
 			}
 
 			// Compare skin color
-			if (prevOutfit.skinColor !== undefined && newOutfit.skinColor !== undefined && prevOutfit.skinColor !== newOutfit.skinColor) {
+			if (
+				prevOutfit.skinColor !== undefined && 
+				newOutfit.skinColor !== undefined && 
+				Color3.toHexString(prevOutfit.skinColor) !== Color3.toHexString(newOutfit.skinColor)
+			) {
 				Metrics.trackEquippedSkinColor(userId, Color3.toHexString(newOutfit.skinColor))
 			}
 		}

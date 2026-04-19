@@ -256,8 +256,10 @@ export class ClientStore {
 	// MARK: NPC Set/Getters
 	setNPCSkinColor(color: Color3, muteEvent: boolean = false): void {
 		this.clientState.npcSkinColor = color
-		if (!muteEvent) eventBus.emit(ClientEvents.OUTFIT_CHANGED, {})
-		ClientMessaging.RequestOutfitChange()
+		if (!muteEvent) {
+			eventBus.emit(ClientEvents.OUTFIT_CHANGED, {})
+			ClientMessaging.RequestOutfitChange()
+		}
 	}
 		getNPCSkinColor(): Color3 {
 			return this.clientState.npcSkinColor
@@ -265,8 +267,10 @@ export class ClientStore {
 
 	setNPCHairColor(color: Color3, muteEvent: boolean = false): void {
 		this.clientState.npcHairColor = color
-		if (!muteEvent) eventBus.emit(ClientEvents.OUTFIT_CHANGED, {})
-		ClientMessaging.RequestOutfitChange()
+		if (!muteEvent) {
+			eventBus.emit(ClientEvents.OUTFIT_CHANGED, {})
+			ClientMessaging.RequestOutfitChange()
+		}
 	}
 		getNPCHairColor(): Color3 {
 			return this.clientState.npcHairColor
@@ -274,8 +278,10 @@ export class ClientStore {
 
 	setNPCBodyShape(shape: string, muteEvent: boolean = false): void {
 		this.clientState.npcBodyShape = shape
-		if (!muteEvent) eventBus.emit(ClientEvents.OUTFIT_CHANGED, {})
-		ClientMessaging.RequestOutfitChange()
+		if (!muteEvent) {
+			eventBus.emit(ClientEvents.OUTFIT_CHANGED, {})
+			ClientMessaging.RequestOutfitChange()
+		}
 	}
 		getNPCBodyShape(): string {
 			return this.clientState.npcBodyShape
@@ -283,8 +289,10 @@ export class ClientStore {
 
 	setNPCWearables(wearables: Wearable[], muteEvent: boolean = false): void {
 		this.clientState.npcWearables = wearables
-		if (!muteEvent) eventBus.emit(ClientEvents.OUTFIT_CHANGED, {})
-		ClientMessaging.RequestOutfitChange()
+		if (!muteEvent) {
+			eventBus.emit(ClientEvents.OUTFIT_CHANGED, {})
+			ClientMessaging.RequestOutfitChange()
+		}
 	}
 		getNPCWearables(): Wearable[] {
 			return this.clientState.npcWearables

@@ -11,6 +11,7 @@ import { ClientEvents } from "src/client/clientEvents"
 import { ClientStore } from "src/client/clientStore"
 import { SoundManager } from "src/client/soundManager"
 import { GetWearableData } from "src/client/utils"
+import { ClientMessaging } from "./clientMessaging"
 
 
 export namespace OutfitManager {
@@ -79,11 +80,11 @@ export namespace OutfitManager {
 			clientStore.setNPCBodyShape(clientStore.getPlayerBodyShape(), true)
 			clientStore.setNPCSkinColor(clientStore.getPlayerSkinColor(), true)
 			clientStore.setNPCHairColor(clientStore.getPlayerHairColor(), true)
-			clientStore.setNPCWearables([], true)
+			clientStore.setNPCWearables([])
 
 			isWearableDataLoaded = true
 
-			eventBus.emit(ClientEvents.OUTFIT_CHANGED, {})
+			//eventBus.emit(ClientEvents.OUTFIT_CHANGED, {}) // Trigered by setNPCWearables above
 
 			console.log("OutfitManager InitUserWearables: got", playerWearables.length, "wearables for the player")
 		} catch (err) {
@@ -96,8 +97,15 @@ export namespace OutfitManager {
 	export async function EquipWearable(wearable: Wearable) {
 		console.log("OutfitManager: EquipWearable: equipping wearable", wearable.name, wearable.category)
 
-		// Remove any existing wearables in the same category
 		var currentWearables = [...clientStore.getNPCWearables()]
+
+		// Ensure the wearable wasn't already equipped
+		if (currentWearables.some(w => w.urn === wearable.urn)) {
+			console.log("OutfitManager: EquipWearable: wearable already equipped", wearable.name)
+			return
+		}
+
+		// Remove any existing wearables in the same category
 		for (const currentWearable of currentWearables) {
 			if (currentWearable.category === wearable.category) {
 				currentWearables.splice(currentWearables.indexOf(currentWearable), 1)

@@ -50,9 +50,6 @@ const Messages = {
 	[MessageType.REQUEST_REMOVE_VOTE]: Schemas.String,
 	[MessageType.REQUEST_EMOTE]      : Schemas.String,
 
-	[MessageType.NOTIFY_TUTORIAL_ABORTED]  : Schemas.Map({}),
-	[MessageType.NOTIFY_TUTORIAL_COMPLETED]: Schemas.Map({}),
-
 
 	// Sent by server
 	[MessageType.NOTIFY_STATE]: Schemas.Map({
@@ -111,6 +108,12 @@ const Messages = {
 	}),
 	[MessageType.NOTIFY_WARNING]: Schemas.String,
 	[MessageType.NOTIFY_SERVER_TIME]: Schemas.Int64,
+
+
+	// Metric data
+	[MessageType.NOTIFY_TUTORIAL_ABORTED]  : Schemas.Map({}),
+	[MessageType.NOTIFY_TUTORIAL_COMPLETED]: Schemas.Map({})
+
 }
 
 // Export room

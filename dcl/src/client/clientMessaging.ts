@@ -12,7 +12,7 @@ export namespace ClientMessaging {
 		const clientStore = ClientStore.getInstance()
 
 		// Ignore if we're not enrolled in the game
-		if (!clientStore.isEnrolledInGame()) return
+		//if (!clientStore.isEnrolledInGame()) return // ALWAYS send this, for metrics.
 
 		// Let the server know about the new outfit
 		const outfit: Outfit = {
@@ -82,7 +82,10 @@ export namespace ClientMessaging {
 
 		room.send(MessageType.REQUEST_REMOVE_VOTE, userId)
 	}
+	
 
+	// MARK: Client Notify
+	// MARK: Tutorial
 	export function NotifyTutorialAborted() {
 		room.send(MessageType.NOTIFY_TUTORIAL_ABORTED, {})
 	}
@@ -90,5 +93,4 @@ export namespace ClientMessaging {
 	export function NotifyTutorialCompleted() {
 		room.send(MessageType.NOTIFY_TUTORIAL_COMPLETED, {})
 	}
-	
 }
