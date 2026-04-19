@@ -82,4 +82,13 @@ export namespace ClientMessaging {
 
 		room.send(MessageType.REQUEST_REMOVE_VOTE, userId)
 	}
+
+	export function NotifyTutorialAborted() {
+		room.send(MessageType.NOTIFY_TUTORIAL_ABORTED, {})
+	}
+
+	export function NotifyTutorialCompleted() {
+		room.send(MessageType.NOTIFY_TUTORIAL_COMPLETED, {})
+	}
+	
 }

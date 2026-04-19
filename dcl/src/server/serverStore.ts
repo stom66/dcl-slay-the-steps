@@ -4,7 +4,8 @@ import { Outfit, ServerState } from "src/shared/types"
 
 import { gameManager } from "src/server/gameManager"
 import { sendStateUpdate } from "src/server/serverMessaging"
-import { onLeaveScene } from "@dcl/sdk/players"
+import { Metrics } from "src/server/metrics/client"
+import { Color3 } from "@dcl/sdk/math"
 
 
 // MARK: ServerStore
@@ -24,11 +25,6 @@ export class ServerStore {
 
 	private constructor() {
 		console.log('ServerStore: constructor')
-
-		
-		onLeaveScene((userId) => {
-			this.removePlayer(userId)
-		})
 	}
 
 	
@@ -79,6 +75,31 @@ export class ServerStore {
 			console.log(`serverStore: setPlayerOutfit: userId ${userId} is not present in players array.`)
 			return
 		}
+
+		// Metrics: log the changes from the last outfit
+		const prevOutfit = this.serverState.outfits.get(userId)
+		const newOutfit = outfit
+
+		if (prevOutfit) {
+			const prevWearables = prevOutfit.wearables || []
+			const newWearables = newOutfit.wearables || []
+			for (const newWear of newWearables) {
+				if (!prevWearables.includes(newWear)) {
+					Metrics.trackEquippedWearable(userId, newWear)
+				}
+			}
+
+			// Compare hair color
+			if (prevOutfit.hairColor !== undefined && newOutfit.hairColor !== undefined && prevOutfit.hairColor !== newOutfit.hairColor) {
+				Metrics.trackEquippedHairColor(userId, Color3.toHexString(newOutfit.hairColor))
+			}
+
+			// Compare skin color
+			if (prevOutfit.skinColor !== undefined && newOutfit.skinColor !== undefined && prevOutfit.skinColor !== newOutfit.skinColor) {
+				Metrics.trackEquippedSkinColor(userId, Color3.toHexString(newOutfit.skinColor))
+			}
+		}
+
 		this.serverState.outfits.set(userId, { ...outfit })
 	}
 
@@ -118,13 +139,9 @@ export class ServerStore {
 		this.serverState.outfits.delete(userId)
 
 		if (this.getPlayerCount() < 1) {
-			// If we're in the Lobby, or the countdown, then we just go back to the lobby
-			if (this.getStatus() == GameStatus.STARTING || this.getStatus() == GameStatus.LOBBY) {
-				this.setStatus(GameStatus.LOBBY)
+			if (this.getStatus() == GameStatus.LOBBY) {
 				sendStateUpdate()
-
-			// If we're in an actual game, then run the abort
-			} else  {
+			} else if (this.getStatus() !== GameStatus.LOBBY) {
 				gameManager.abortGame()
 			}
 		}

@@ -7,13 +7,16 @@ import { gameManager } from "src/server/gameManager"
 import { serverHandler } from "src/server/serverHandler"
 import { sendServerTime, sendStateUpdate } from "src/server/serverMessaging"
 import { ServerStore } from "src/server/serverStore"
+import { Metrics } from "src/server/metrics/client"
 
 
 export async function initServer(): Promise<void> {
 	console.log("Server: initServer()")
 
 	const serverStore = ServerStore.getInstance() // Initialize the store
-	
+
+	Metrics.init()
+
 	serverHandler.init()
 	gameManager.init()
 
@@ -27,8 +30,10 @@ export async function initServer(): Promise<void> {
 	// MARK: Event bindings
 	onEnterScene((player) => {
 		sendStateUpdate([player.userId])
+		Metrics.startSession(player.userId, player.name)
 	})
 	onLeaveScene((userId) => {
+		Metrics.endSession(userId)
 		serverStore.removePlayer(userId)
 	})
 }

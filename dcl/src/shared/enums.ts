@@ -11,3 +11,11 @@ export enum TAGS {
 	NPC_LIGHT = "npc_light",
 	PAPARAZZI = "paparazzi",
 }
+
+export enum PlayerStats {
+	GAMES_PLAYED       = "gamesPlayed",
+	GAMES_WON          = "gamesWon",
+	GAMES_SPECTATED    = "gamesSpectated",
+	GAMES_CREATED      = "gamesCreated",
+	WEARABLES_EQUIPPED = "wearablesEquipped",
+}

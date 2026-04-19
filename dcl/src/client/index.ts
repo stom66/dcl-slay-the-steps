@@ -24,6 +24,8 @@ import { FreezePlayer } from "src/client/utils";
 import { SetupUI } from "src/client/ui";
 import { HideLoading } from "src/client/ui/ui.loading";
 
+import { GameSettings } from "src/shared/settings";
+
 
 export async function initClient() {
 	FreezePlayer()
@@ -32,7 +34,7 @@ export async function initClient() {
 		utils.timers.setTimeout(() => {
 			HideLoading()
 			Tutorial.TriggerTutorial()
-		}, 2000) 
+		}, GameSettings.LOADING_SCREEN_DELAY) 
 		// TODO: fix this. The hard-coded wait is only because teleporting to the world/loading directly into it makes the tutorial not work
 	}
 

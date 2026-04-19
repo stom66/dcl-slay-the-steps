@@ -49,6 +49,8 @@ export function SetTutorialInfo(info: string) {
 
 export function ShowTutorial() {
 	panelVisible = true
+	btnVisible = true
+	btnHoverVisible = false
 	tweenValue(panelBottom, PANEL_BOTTOM_VISIBLE, undefined, (v) => panelBottom = v)
 }
 
@@ -144,7 +146,7 @@ export function TutorialUI() {
 				onMouseEnter={() => { btnHoverVisible = true }}
 				onMouseLeave={() => { btnHoverVisible = false }}
 				onMouseDown={() => { 
-					Tutorial.EndTutorial()
+					Tutorial.AbortTutorial()
 				 }}
 			>
 				<UiEntity

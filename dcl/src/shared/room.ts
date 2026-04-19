@@ -11,6 +11,9 @@ export enum MessageType {
 	REQUEST_REMOVE_VOTE       = 'requestRemoveVote',      // Used by the clients, to notify the server of a vote
 	REQUEST_EMOTE             = 'requestEmote',           // Used by the clients, to notify the server of an emote
 
+	NOTIFY_TUTORIAL_ABORTED  = "notifyTutorialAborted",  // Sent by client, to notify the server that the tutorial has been aborted
+	NOTIFY_TUTORIAL_COMPLETED = "notifyTutorialCompleted", // Sent by client, to notify the server that the tutorial has been completed
+
 	NOTIFY_STATE              = "notifyState",            // Sent by server, to notify the clients of the game state
 	NOTIFY_TURN_STARTING      = "notifyTurnStarting",     // Sent by the server to notify all players that a turn is starting
 	NOTIFY_TURN_STARTING_SOON = "notifyTurnStartingSoon", // Sent by the server to specific players to let them know their turn is about to start
@@ -46,6 +49,9 @@ const Messages = {
 	[MessageType.REQUEST_ADD_VOTE]   : Schemas.String,
 	[MessageType.REQUEST_REMOVE_VOTE]: Schemas.String,
 	[MessageType.REQUEST_EMOTE]      : Schemas.String,
+
+	[MessageType.NOTIFY_TUTORIAL_ABORTED]  : Schemas.Map({}),
+	[MessageType.NOTIFY_TUTORIAL_COMPLETED]: Schemas.Map({}),
 
 
 	// Sent by server

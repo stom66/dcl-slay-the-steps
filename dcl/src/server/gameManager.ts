@@ -9,6 +9,8 @@ import { sendStateUpdate } from "src/server/serverMessaging"
 import { ServerStore } from "src/server/serverStore"
 import { onLeaveScene } from "@dcl/sdk/players"
 
+import { Metrics } from "src/server/metrics/client"
+
 
 class GameManager {
 	static instance: GameManager
@@ -55,6 +57,8 @@ class GameManager {
 		// If the game needs to start, then start it
 		if (state.status === GameStatus.LOBBY) {
 			this.startGameCountdown()
+
+			Metrics.trackGameCreated(userId, this.store.getGameStartTime())
 		} else {
 			room.send(MessageType.NOTIFY_PLAYER_LIST, {
 				sentAt: Date.now(),
@@ -63,6 +67,8 @@ class GameManager {
 					displayName: displayName,
 				}))
 			})
+
+			Metrics.trackGameJoined(userId, this.store.getGameStartTime())
 		}
 	}
 
@@ -95,6 +101,8 @@ class GameManager {
 				displayName: displayName,
 			})),
 		})
+
+		Metrics.trackGameSpectated(userId, this.store.getGameStartTime())
 	}
 
 	// MARK: startGameCountdown
@@ -121,6 +129,13 @@ class GameManager {
 	// MARK: startGame
 	startGame() {
 		console.log(`GameManager: startGame`)
+
+		if (this.store.getState().status !== GameStatus.STARTING) {
+			console.log(`GameManager: startGame: Game is not in the STARTING state, ignoring`)
+			return
+		}
+		
+		Metrics.trackGameStarted(this.store.getGameStartTime(), this.store.getPlayerIDs())
 		
 		// Let all the clients know the game has started
 		this.store.setStatus(GameStatus.STARTED)
@@ -129,7 +144,7 @@ class GameManager {
 		// Work out the timings of the turns for each player
 		var playerTimings: { userId: string, startingSoonDelay: number, roundStartDelay: number }[] = []
 
-		const playerIds = [...this.store.getState().players.keys()]
+		const playerIds = this.store.getPlayerIDs()
 		playerIds.forEach(playerId => {
 			// Work out the delay before we send this player the "you are next" message
 			var StartingSoonDelay = GameSettings.ROUND_START_DELAY
@@ -211,6 +226,8 @@ class GameManager {
 				userId: userId,
 				emote : emote,
 			})
+
+			Metrics.trackPlayerEmote(this.store.getGameStartTime(), userId, emote)
 		}
 	}
 
@@ -254,6 +271,17 @@ class GameManager {
 		utils.timers.setTimeout(() => {
 			this.triggerLobby()
 		}, GameSettings.GAME_ENDED_DURATION)
+
+		// Metrics
+		Metrics.trackGameEnded(this.store.getGameStartTime(), this.store.getPlayerIDs(), winnerId)
+
+		for (const playerId of this.store.getPlayerIDs()) {
+			if (playerId === winnerId) {
+				Metrics.trackGameWon(playerId, this.store.getGameStartTime())
+			} else {
+				Metrics.trackGameNotWon(playerId, this.store.getGameStartTime())
+			}
+		}
 	}
 
 
@@ -269,9 +297,12 @@ class GameManager {
 	abortGame() {
 		console.log(`GameManager: abortGame`)
 		
+		Metrics.trackGameAborted(this.store.getGameStartTime())
+
 		room.send(MessageType.NOTIFY_WARNING, `The game has been aborted!`, { to: [...this.store.getPlayerIDs(), ...this.store.getSpectatorIDs()] })
 		this.store.resetState()
 		sendStateUpdate()
+
 	}
 }
 

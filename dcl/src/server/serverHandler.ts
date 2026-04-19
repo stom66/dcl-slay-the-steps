@@ -4,6 +4,7 @@ import { Outfit } from 'src/shared/types'
 import { ServerStore } from 'src/server/serverStore'
 import { sendStateUpdate } from 'src/server/serverMessaging'
 import { gameManager } from 'src/server/gameManager'
+import { Metrics } from 'src/server/metrics/client'
 
 
 export namespace serverHandler {
@@ -26,6 +27,9 @@ export namespace serverHandler {
 		room.onMessage(MessageType.REQUEST_ADD_VOTE, (data, context)      => handleRequestAddVote(data, context))
 		room.onMessage(MessageType.REQUEST_REMOVE_VOTE, (data, context)   => handleRequestRemoveVote(data, context))
 		room.onMessage(MessageType.REQUEST_EMOTE, (data, context)         => handleRequestEmote(data, context))
+
+		room.onMessage(MessageType.NOTIFY_TUTORIAL_ABORTED, (data, context) => handleNotifyTutorialAborted(data, context))
+		room.onMessage(MessageType.NOTIFY_TUTORIAL_COMPLETED, (data, context) => handleNotifyTutorialCompleted(data, context))
 	}
 
 	
@@ -69,6 +73,7 @@ export namespace serverHandler {
 		console.log('handleRequestVote: userId requested vote', userId, "for user", forUser)
 		
 		store.addVote(userId, forUser)
+		Metrics.trackVoteCast(userId, forUser, store.getGameStartTime())
 	}
 
 
@@ -87,5 +92,22 @@ export namespace serverHandler {
 		console.log('handleRequestEmote: userId requested emote', userId, "for emote", emote)
 
 		gameManager.onPlayerRequestEmote(userId, emote)
+	}
+
+
+	// MARK: NotifyTutorialAborted
+	export function handleNotifyTutorialAborted(data: any, context: any) {
+		const userId = getUserId(context)
+		console.log('handleNotifyTutorialAborted: userId notified tutorial aborted', userId)
+
+		Metrics.trackTutorialAborted(userId)
+	}
+
+	// MARK: NotifyTutorialCompleted
+	export function handleNotifyTutorialCompleted(data: any, context: any) {
+		const userId = getUserId(context)
+		console.log('handleNotifyTutorialCompleted: userId notified tutorial completed', userId)
+
+		Metrics.trackTutorialCompleted(userId)
 	}
 }

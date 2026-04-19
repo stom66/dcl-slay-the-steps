@@ -1,6 +1,6 @@
 import { Color3 } from "@dcl/sdk/math"
 
-import { GameStatus } from "src/shared/enums"
+import { GameStatus, PlayerStats } from "src/shared/enums"
 
 // MARK: Wearable
 export type Wearable = {
@@ -23,6 +23,9 @@ export type Outfit = {
 	skinColor: Color3
 }
 
+// MARK: PlayerStatsRecord
+export type PlayerStatsRecord = Record<PlayerStats, number>
+
 
 // MARK: ClientState
 export type ClientState = {
@@ -32,8 +35,6 @@ export type ClientState = {
 	spectatorInGame       : boolean
 	currentTurnUserId     : string | undefined
 	voteResults           : Map<string, string>
-	gamesPlayedThisSession: number
-	gamesWonThisSession   : number
 
 	gameStartTime         : number
 	serverStatus          : GameStatus

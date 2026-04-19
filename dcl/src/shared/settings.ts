@@ -47,4 +47,6 @@ export class GameSettings {
 	static SHOW_RESULTS_TO_UNINVOLVED = false
 
 	static STORE_MAX_PAGES = 80
+
+	static LOADING_SCREEN_DELAY = 2000
 }
