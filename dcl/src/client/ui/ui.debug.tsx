@@ -16,8 +16,16 @@ import { Tutorial } from '../tutorial'
 import { executeTask } from '@dcl/sdk/ecs'
 import { movePlayerTo } from '~system/RestrictedActions'
 import { GetRandomPointInSquare } from '../utils'
+import { tweenValue } from './ui-utils'
 
 const clientStore = ClientStore.getInstance()
+
+const PANEL_HIDDEN = -230
+const PANEL_VISIBLE = 40
+const BTN_HIDDEN = -64
+const BTN_VISIBLE = 202
+var btnRight      : number = BTN_VISIBLE
+var panelLeft     : number = PANEL_VISIBLE
 
 var seatIndex: number = 1
 
@@ -33,14 +41,39 @@ export function DebugUI() {
 				justifyContent: 'space-between',
 				margin        : { top: '-220px', right: '50px' },
 				padding       : '10px',
-				position      : { left: 50, top: 350 },
+				position      : { left: panelLeft, top: 350 },
 				positionType: "absolute",
 				borderRadius  : { topLeft: 8, topRight: 24, bottomLeft: 8, bottomRight: 24 },
 				borderColor   : Color4.fromHexString("#4C9581FF"),
-			borderWidth   : 3
+				borderWidth   : 3
 		}}
 		uiBackground={{ color: Color4.fromHexString("#4C958166") }}
 		>
+
+			<UiEntity 
+			uiTransform={{ 
+				width: '48', 
+				height: '32',
+				borderRadius: 16,
+				borderWidth: 3,
+				borderColor: Color4.fromHexString("#4C9581FF"),
+				positionType: 'absolute',
+				position: { top: -32, right: btnRight },
+				}}
+			uiText={{
+				value: "<-->",
+				fontSize: 14,
+			}}
+			onMouseDown={() => {
+				if (panelLeft > PANEL_HIDDEN) {
+					tweenValue(btnRight, BTN_HIDDEN, 0.2, (v) => btnRight = v)
+					tweenValue(panelLeft, PANEL_HIDDEN, 0.2, (v) => panelLeft = v)
+				} else {
+					tweenValue(panelLeft, PANEL_VISIBLE, 0.2, (v) => panelLeft = v)
+					tweenValue(btnRight, BTN_VISIBLE, 0.2, (v) => btnRight = v)
+				}
+			}}
+			/>
 
 			<UiEntity uiTransform={{ width: '100%', flexDirection: 'column' }}>
 				<SectionHeader title="Debug Menu" />
