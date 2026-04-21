@@ -7,8 +7,13 @@ export enum ClientEvents {
 	NOTIFY_WARNING            = "notifyWarning",
 	OUTFIT_CHANGED            = "outfitChanged",
 	PLAYERS_UPDATED           = "playersUpdated",
-	JOIN_AS_SPECTATOR         = "joinAsSpectator",
 	SHOW_DRESS_ME_HINT        = "showDressMeHint",
+
+	GAME_STARTED              = "gameStarted",
+	GAME_ENDED                = "gameEnded",
+	
+	JOIN_AS_SPECTATOR         = "joinAsSpectator",
+	JOIN_AS_PLAYER            = "joinAsPlayer",
 
 	TUTORIAL_STARTED          = "tutorialStarted",
 	TUTORIAL_COMPLETED        = "tutorialCompleted",

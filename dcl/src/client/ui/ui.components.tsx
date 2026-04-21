@@ -1,5 +1,6 @@
-import ReactEcs, { Button, UiEntity} from '@dcl/sdk/react-ecs'
+import ReactEcs, { Button, PositionUnit, UiEntity} from '@dcl/sdk/react-ecs'
 import { Color4 } from "@dcl/sdk/math"
+import { GameStatus } from 'src/shared/enums'
 
 export const SectionHeader = ({ title }: { title: string }) => {
 	return (
@@ -52,6 +53,62 @@ export const ButtonAction = ({ textLabel, callback }: { textLabel: string; callb
 			}}
 			uiBackground={{ color: Color4.fromHexString("#44727b") }}
 		/>
+	)
+}
+
+const hoverStates: Map<string, boolean> = new Map()
+
+export const ButtonImage = (
+	{ 
+		width,
+		height,
+		imageSrc,
+		callback,
+	}: { 
+		width   : string;
+		height  : string;
+		imageSrc: string; 
+		callback: () => void | undefined 
+	}
+) => {
+	return (
+		<UiEntity
+			uiTransform={{
+				width       : `${width as PositionUnit}`,
+				height      : `${height as PositionUnit}`,
+				display     : "flex",
+				margin      : { left: 3, right: 3 },
+			}}
+			uiBackground={{
+				texture: {
+					src: `assets/images/ui/${imageSrc}.png`
+				},
+				textureMode: "stretch",
+			}}
+			onMouseDown={() => {
+				callback!()
+			}}
+			onMouseEnter={() => {
+				hoverStates.set(imageSrc, true)
+			}}
+			onMouseLeave={() => {
+				hoverStates.set(imageSrc, false)
+			}}
+		>
+			<UiEntity
+				uiTransform={{
+					width : "100%",
+					height: "100%",
+					display: hoverStates.get(imageSrc) ? 'flex' : 'none',
+				}}
+				uiBackground={{
+					texture: {
+						src: `assets/images/ui/${imageSrc}-hover.png`
+					},
+					textureMode: "stretch",
+				}}
+			/>
+		</UiEntity>
 	)
 }
 

@@ -13,6 +13,7 @@ import { VotingResultsUI } from 'src/client/ui/ui.game.votingResults'
 import { WarningUI } from 'src/client/ui/ui.game.warning'
 import { YouAreNextUI } from 'src/client/ui/ui.game.youAreNext'
 import { VersionUI } from 'src/client/ui/ui.version'
+import { OutfitControlsUI } from './ui/ui.game.outfitControls'
 
 // MARK: Vars
 declare var process: {
@@ -37,6 +38,7 @@ const uiComponent = () => [
 	WarningUI(),
 	VersionUI(),
 	LoadingUI(),
+	OutfitControlsUI(),
 	
 	SHOW_DEBUG ? DebugUI() : null
 ]

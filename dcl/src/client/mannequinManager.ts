@@ -66,9 +66,9 @@ export namespace MannequinManager {
 	var npcMannequin         : undefined | Entity = undefined
 	var npcPodium            : undefined | Entity = undefined
 	var npcHint              : undefined | Entity = undefined
-	var npcBtnReset          : undefined | Entity = undefined
-	var npcBtnCopy           : undefined | Entity = undefined
-	var npcBtnSwap           : undefined | Entity = undefined
+	//var npcBtnReset          : undefined | Entity = undefined
+	//var npcBtnCopy           : undefined | Entity = undefined
+	//var npcBtnSwap           : undefined | Entity = undefined
 
 	var isNPCMannequinVisible: boolean            = false
 	var showHint             : boolean            = true
@@ -151,7 +151,8 @@ export namespace MannequinManager {
 			npcPodium = engine.addEntity()
 			Tags.add(npcPodium, "npcPodium")
 			Transform.createOrReplace(npcPodium, {
-				parent  : npcBillboard,
+				parent  : npcRoot
+				//parent  : npcBillboard
 			})
 			GltfContainer.createOrReplace(npcPodium, {
 				src: "assets/models/podiumnocollider.gltf",
@@ -161,7 +162,7 @@ export namespace MannequinManager {
 
 		// MARK: Btn: Reset Outfit
 		// Create the reset button
-		if (!npcBtnReset || !Transform.getMutableOrNull(npcBtnReset)) {
+/* 		if (!npcBtnReset || !Transform.getMutableOrNull(npcBtnReset)) {
 			npcBtnReset = engine.addEntity()
 			Transform.create(npcBtnReset, {
 				parent  : npcBillboard,
@@ -185,11 +186,11 @@ export namespace MannequinManager {
 					SoundManager.PlaySound(sfx.buttons)
 				}
 			)
-		}
+		} */
 
 		// MARK: Btn: Copy Outfit
 		// Create the copy outfit button
-		if (!npcBtnCopy || !Transform.getMutableOrNull(npcBtnCopy)) {
+/* 		if (!npcBtnCopy || !Transform.getMutableOrNull(npcBtnCopy)) {
 			npcBtnCopy = engine.addEntity()
 			Transform.create(npcBtnCopy, {
 				parent  : npcBillboard,
@@ -213,11 +214,11 @@ export namespace MannequinManager {
 					SoundManager.PlaySound(sfx.buttons)
 				}
 			)
-		}
+		} */
 
 		// MARK: Btn: Swap Gender
 		// Create the swap gender
-		if (!npcBtnSwap || !Transform.getMutableOrNull(npcBtnSwap)) {
+/* 		if (!npcBtnSwap || !Transform.getMutableOrNull(npcBtnSwap)) {
 			npcBtnSwap = engine.addEntity()
 			Transform.create(npcBtnSwap, {
 				parent  : npcBillboard,
@@ -241,7 +242,7 @@ export namespace MannequinManager {
 					SoundManager.PlaySound(sfx.buttons)
 				}
 			)
-		}
+		} */
 	}
 
 
@@ -252,7 +253,7 @@ export namespace MannequinManager {
 		if (!npcHint || !Transform.getMutableOrNull(npcHint)) {
 			npcHint = engine.addEntity()
 			Transform.create(npcHint, {
-				parent  : npcPodium,
+				parent  : npcBillboard,
 				rotation: Quaternion.fromEulerDegrees(0, 180, 0),
 				scale   : Vector3.create(0, 0, 0),
 			})
@@ -288,7 +289,7 @@ export namespace MannequinManager {
 
 		const entity = engine.addEntity()
 		Transform.create(entity, {
-			parent: playerEntity,
+			parent: npcBillboard,
 			rotation: Quaternion.fromEulerDegrees(0, 180, 0),
 		})
 		GltfContainer.create(entity, {
@@ -313,6 +314,12 @@ export namespace MannequinManager {
 			engine.removeEntity(npcMannequin)
 			npcMannequin = undefined
 		}
+		if (npcPodium) {
+			engine.removeEntity(npcPodium)
+			npcPodium = undefined
+		}
+
+		/* 
 		if (npcBtnReset) {
 			engine.removeEntity(npcBtnReset)
 			npcBtnReset = undefined
@@ -325,9 +332,6 @@ export namespace MannequinManager {
 			engine.removeEntity(npcBtnSwap)
 			npcBtnSwap = undefined
 		}
-		if (npcPodium) {
-			engine.removeEntity(npcPodium)
-			npcPodium = undefined
-		}
+		 */
 	}
 }

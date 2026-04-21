@@ -1,13 +1,14 @@
-import { AvatarShape, engine, Entity, InputModifier, MainCamera, Transform, Tween, VirtualCamera } from "@dcl/sdk/ecs"
+import { AvatarShape, EasingFunction, engine, Entity, InputModifier, MainCamera, Transform, Tween, VirtualCamera } from "@dcl/sdk/ecs"
 import { getWorldPosition, getWorldRotation, TimerId, timers } from '@dcl-sdk/utils'
 import { Quaternion, Vector3 } from "@dcl/sdk/math"
-import { HideTutorial as HideTutorialUI, ShowTutorial as ShowTutorialUI, SetTutorialInfo, ShowArrow, HideArrow, HideTutorialBtn } from "./ui/ui.tutorial"
+import { HideTutorial as HideTutorialUI, ShowTutorial as ShowTutorialUI, SetTutorialInfo, ShowUpArrow, HideTutorialBtn, ShowDownArrow, BounceDownArrow, HideDownArrow, HideUpArrow } from "./ui/ui.tutorial"
 import { SoundManager } from "src/client/soundManager"
 import { sfx } from "src/client/data/sfx"
 import { eventBus } from "src/shared/utils/eventBus"
 import { ClientEvents } from "src/client/clientEvents"
 import { ClientMessaging } from "src/client/clientMessaging"
 import { ShowStatus } from "src/client/ui/ui.game.gameStatus"
+import { OutfitControlsUI, ShowOutfitControls } from "./ui/ui.game.outfitControls"
 
 export namespace Tutorial {
 
@@ -17,6 +18,8 @@ export namespace Tutorial {
 	var cameraTarget          : Entity | undefined = undefined
 	var npcMannequin          : Entity | undefined = undefined
 	var npcRoot               : Entity | undefined = undefined
+
+	var targetViewSlayTheStepsText : Vector3 = Vector3.create(6.5, 4, 25.5)
 
 	var positionViewButtons   : Vector3 = Vector3.Zero()
 	var positionViewMannequin : Vector3 = Vector3.Zero()
@@ -42,7 +45,10 @@ export namespace Tutorial {
 	var tutorialTimeouts: TimerId[] = []
 
 	function AddTimeout(callback: () => void, delay: number) {
-		tutorialTimeouts.push(timers.setTimeout(callback, delay))
+		tutorialTimeouts.push(timers.setTimeout(() =>{
+			if (!showTutorial) return
+			callback()
+		}, delay))
 	}
 	function ClearTimeouts() {
 		tutorialTimeouts.forEach((timeout) => {
@@ -105,20 +111,17 @@ export namespace Tutorial {
 		// Wave to the camera
 		// Look at mannequin
 		AddTimeout(() => {
-			if (!showTutorial) return
 			SetTutorialInfo("thisIsYourMannequin")
 			ShowTutorialUI()
 			SoundManager.PlaySound(sfx.greeting)
 		}, 500)
 		
 		AddTimeout(() => {
-			if (!showTutorial) return
 			Wave()
 		}, 1200)
 		
 		// Look at stores
 		AddTimeout(() => {
-			if (!showTutorial) return
 			Tween.setMove(camera!, getWorldPosition(camera!), positionViewShopsStart, 1500)
 			Tween.setMove(cameraTarget!, getWorldPosition(cameraTarget!), targetViewShopsStart, 1000)
 			SetTutorialInfo("equipClothes")
@@ -128,7 +131,6 @@ export namespace Tutorial {
 
 		// Pan across at stores
 		AddTimeout(() => {
-			if (!showTutorial) return
 			Tween.setMove(camera!, getWorldPosition(camera!), positionViewShopsEnd, 3500)
 			Tween.setMove(cameraTarget!, getWorldPosition(cameraTarget!), targetViewShopsEnd, 2000)
 		}, 6500)
@@ -136,7 +138,6 @@ export namespace Tutorial {
 
 		// Look at salon
 		AddTimeout(() => {
-			if (!showTutorial) return
 			Tween.setMove(camera!, getWorldPosition(camera!), positionViewSalon, 1000)
 			Tween.setMove(cameraTarget!, getWorldPosition(cameraTarget!), targetViewSalonStart, 1000)
 			SetTutorialInfo("changeColor")
@@ -145,64 +146,86 @@ export namespace Tutorial {
 
 		// Pan across at salon
 		AddTimeout(() => {
-			if (!showTutorial) return
 			Tween.setMove(cameraTarget!, getWorldPosition(cameraTarget!), targetViewSalonEnd, 3000)
 		}, 11000)
 
 
 		// Now back to the mannequin and its buttons
 		AddTimeout(() => {
-			if (!showTutorial) return
 			Tween.setMove(camera!, getWorldPosition(camera!), positionViewMannequin, 1000)
 			Tween.setMove(cameraTarget!, getWorldPosition(cameraTarget!), targetViewMannequin, 600)
 			HideTutorialUI()
 			SoundManager.PlaySound(sfx.cameraMove)
 		}, 14000)
 
+		AddTimeout(() => {
+			ShowOutfitControls()
+		}, 14500)
+
+
 		// Btn: Reset
 		AddTimeout(() => {
-			if (!showTutorial) return
-			Tween.setMove(camera!, getWorldPosition(camera!), positionViewButtons, 600)
-			Tween.setMove(cameraTarget!, getWorldPosition(cameraTarget!), targetViewButtonReset, 300)
-			SetTutorialInfo("btnReset")
-			ShowTutorialUI()
+			//Tween.setMove(camera!, getWorldPosition(camera!), positionViewButtons, 600)
+			//Tween.setMove(cameraTarget!, getWorldPosition(cameraTarget!), targetViewButtonReset, 300)
+
+			ShowDownArrow(-180)
+
 			SoundManager.PlaySound(sfx.colorPicker)
 		}, 15000)
+		AddTimeout(() => {
+			SetTutorialInfo("btnReset", true)
+		}, 15500)
+
 
 		// Btn: Swap
 		AddTimeout(() => {
-			if (!showTutorial) return
-			Tween.setMove(cameraTarget!, getWorldPosition(cameraTarget!), targetViewButtonSwap, 300)
-			SetTutorialInfo("btnSwap")
+			//Tween.setMove(cameraTarget!, getWorldPosition(cameraTarget!), targetViewButtonSwap, 300)
+			HideTutorialUI()			
+			BounceDownArrow(0)
 			SoundManager.PlaySound(sfx.colorPicker)
-		}, 17000)
+		}, 18000)
+		AddTimeout(() => {
+			SetTutorialInfo("btnSwap", true)
+		}, 18500)
+
 
 		// Btn: Copy
 		AddTimeout(() => {
-			if (!showTutorial) return
-			Tween.setMove(cameraTarget!, getWorldPosition(cameraTarget!), targetViewButtonCopy, 300)
-			SetTutorialInfo("btnCopy")
+			//Tween.setMove(cameraTarget!, getWorldPosition(cameraTarget!), targetViewButtonCopy, 300)
+			HideTutorialUI()
+			BounceDownArrow(180)
 			SoundManager.PlaySound(sfx.colorPicker)
-		}, 19000)
+		}, 21000)
+		AddTimeout(() => {
+			SetTutorialInfo("btnCopy", true)
+		}, 21500)
+
+
+		AddTimeout(() => {
+			HideDownArrow()
+			HideTutorialUI()
+			Tween.setMove(cameraTarget!, getWorldPosition(cameraTarget!), targetViewSlayTheStepsText, 4000, EasingFunction.EF_EASEQUAD)
+		}, 23500)
+
 
 		// Back out to view the mannequin as a whoile while we show the final info
 		AddTimeout(() => {
-			if (!showTutorial) return
-			Tween.setMove(camera!, getWorldPosition(camera!), positionViewMannequin, 600)
-			Tween.setMove(cameraTarget!, getWorldPosition(cameraTarget!), targetViewMannequin, 300)
+			//Tween.setMove(camera!, getWorldPosition(camera!), positionViewMannequin, 600)
 			SoundManager.PlaySound(sfx.cameraMove)
 			ShowStatus()
-			SetTutorialInfo("startGame")
-			ShowArrow()
-		}, 21000)
+		}, 24000)
+		AddTimeout(() => {
+			ShowUpArrow()
+			SetTutorialInfo("startGame", true)
+		}, 24500)
 
 
 		AddTimeout(() => {
-			if (!showTutorial) return
 			eventBus.emit(ClientEvents.SHOW_DRESS_ME_HINT, undefined)
 			eventBus.emit(ClientEvents.TUTORIAL_COMPLETED, undefined)
 			EndTutorial()
-		}, 26000)
+		}, 29000)
+
 
 	}
 
@@ -331,6 +354,7 @@ export namespace Tutorial {
 	// MARK: Abort Tutorial
 	export function AbortTutorial() {
 		console.log("Tutorial: AbortTutorial")
+		eventBus.emit(ClientEvents.SHOW_DRESS_ME_HINT, undefined)
 		eventBus.emit(ClientEvents.TUTORIAL_ABORT, undefined)
 		EndTutorial()
 	}
@@ -355,7 +379,8 @@ export namespace Tutorial {
 		HideTutorialUI()
 		HideTutorialBtn()
 
-		HideArrow()
+		HideDownArrow()
+		HideUpArrow()
 
 		if (npcMannequin) {
 			const t = Transform.getMutableOrNull(npcMannequin)

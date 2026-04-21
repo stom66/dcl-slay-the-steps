@@ -78,6 +78,7 @@ export namespace gameStateHandler {
 		
 		if (!clientStore.isEnrolledInGame()) return
 		console.log('gameStateHandler: onStateStarting: client isEnrolled')
+
 		
 		const playerIds = [...clientStore.getPlayers().keys()]
 		const playerIndex = playerIds.indexOf(clientStore.getUserId())
@@ -87,7 +88,8 @@ export namespace gameStateHandler {
 		} else {
 			console.error('gameStateHandler: onStateStarting: player not found')
 		}
-
+		
+		eventBus.emit(ClientEvents.GAME_STARTED, {})
 	}
 
 
@@ -112,6 +114,7 @@ export namespace gameStateHandler {
 	// MARK: Game Ended
 	function onStateGameEnded(state: ClientState) {
 		console.log('gameStateHandler: onStateGameEnded: state', state)
+		eventBus.emit(ClientEvents.GAME_ENDED, {})
 	}
 
 }

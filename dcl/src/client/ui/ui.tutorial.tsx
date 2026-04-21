@@ -5,58 +5,76 @@ import { Tutorial } from '../tutorial'
 
 
 // MARK: State
-var panelVisible = false
-var arrowVisible = false
-var currentInfo = "thisIsYourMannequin"
+var currentInfo             = "thisIsYourMannequin"
+var panelVisible            = false
+var upArrowVisible          = false
+var downArrowVisible        = false
+var downArrowXOffset        = 0
+var arrowElapsed            = 0
 
-// MARK: Panel positioning
-const PANEL_BOTTOM_HIDDEN = -150
-const PANEL_BOTTOM_VISIBLE = 64
-var panelBottom = PANEL_BOTTOM_HIDDEN
+// MARK                     : Panel positioning
+const PANEL_BOTTOM_HIDDEN   = -150
+const PANEL_BOTTOM_VISIBLE  = 92
+const PANEL_BOTTOM_RAISED   = 320
+var infoPanelBottom         = PANEL_BOTTOM_HIDDEN
 
-// MARK: Arrow positioning
-const ARROW_OFF_SCREEN = 1440
-const ARROW_TARGET_TOP = 180
-const ARROW_BOUNCE_RANGE = 20
-var arrowTop = ARROW_OFF_SCREEN
-var arrowElapsed = 0
+// MARK                     : Arrow positioning
+const ARROW_BOUNCE_RANGE    = 20
 
-var btnVisible = true
-var btnHoverVisible = false
+const DOWN_ARROW_OFF_SCREEN = 1440
+const DOWN_ARROW_ON_SCREEN  = 86
+var downArrowPosBottom      = DOWN_ARROW_OFF_SCREEN
+
+const UP_ARROW_OFF_SCREEN   = 1440
+const UP_ARROW_ON_SCREEN    = 196
+var upArrowPosTop           = UP_ARROW_OFF_SCREEN
 
 
-function arrowBounce(dt: number) {
+var btnVisible              = true
+var btnHoverVisible         = false
+
+
+function upArrowBounce(dt: number) {
 	arrowElapsed += dt
-	arrowTop = ARROW_TARGET_TOP + Math.sin(arrowElapsed * 4) * ARROW_BOUNCE_RANGE
+	upArrowPosTop = UP_ARROW_ON_SCREEN + Math.sin(arrowElapsed * 4) * ARROW_BOUNCE_RANGE
+}
+
+function downArrowBounce(dt: number) {
+	arrowElapsed += dt
+	downArrowPosBottom = DOWN_ARROW_ON_SCREEN + Math.sin(arrowElapsed * 4) * ARROW_BOUNCE_RANGE /2
 }
 
 
 // MARK: Public API
 
-export function SetTutorialInfo(info: string) {
+export function SetTutorialInfo(info: string, showHigher: boolean = false) {
 	if (panelVisible) {
-		tweenValue(panelBottom, PANEL_BOTTOM_HIDDEN, 0.2,
-			(v) => panelBottom = v,
+		tweenValue(infoPanelBottom, PANEL_BOTTOM_HIDDEN, 0.2,
+			(v) => infoPanelBottom = v,
 			() => {
 				currentInfo = info
-				tweenValue(PANEL_BOTTOM_HIDDEN, PANEL_BOTTOM_VISIBLE, undefined, (v) => panelBottom = v)
+				tweenValue(PANEL_BOTTOM_HIDDEN, showHigher ? PANEL_BOTTOM_RAISED : PANEL_BOTTOM_VISIBLE, undefined, (v) => infoPanelBottom = v)
 			}
 		)
 	} else {
+		panelVisible = true
 		currentInfo = info
+		tweenValue(PANEL_BOTTOM_HIDDEN, showHigher ? PANEL_BOTTOM_RAISED : PANEL_BOTTOM_VISIBLE, undefined, (v) => infoPanelBottom = v)
 	}
 }
 
+
+// MARK: Show/Hide
 export function ShowTutorial() {
 	panelVisible = true
 	btnVisible = true
 	btnHoverVisible = false
-	tweenValue(panelBottom, PANEL_BOTTOM_VISIBLE, undefined, (v) => panelBottom = v)
+	tweenValue(infoPanelBottom, PANEL_BOTTOM_VISIBLE, undefined, (v) => infoPanelBottom = v)
 }
 
 export function HideTutorial() {
-	tweenValue(panelBottom, PANEL_BOTTOM_HIDDEN, 0.2,
-		(v) => panelBottom = v,
+	tweenValue(infoPanelBottom, PANEL_BOTTOM_HIDDEN, 0.2,
+		(v) => infoPanelBottom = v,
 		() => { panelVisible = false }
 	)
 }
@@ -65,23 +83,84 @@ export function HideTutorialBtn() {
 	btnVisible = false
 }
 
-export function ShowArrow() {
-	arrowVisible = true
+
+// MARK: Up Arrow
+export function ShowUpArrow() {
+	upArrowVisible = true
 	arrowElapsed = 0
-	tweenValue(ARROW_OFF_SCREEN, ARROW_TARGET_TOP, 1,
-		(v) => arrowTop = v,
-		() => engine.addSystem(arrowBounce),
+	tweenValue(UP_ARROW_OFF_SCREEN, UP_ARROW_ON_SCREEN, 1,
+		(v) => upArrowPosTop = v,
+		() => engine.addSystem(upArrowBounce),
 		EasingFunction.EF_EASEOUTBOUNCE
 	)
 }
 
-export function HideArrow() {
-	engine.removeSystem(arrowBounce)
-	tweenValue(arrowTop, ARROW_OFF_SCREEN, 0.4,
-		(v) => arrowTop = v,
-		() => { arrowVisible = false }
+export function HideUpArrow() {
+	engine.removeSystem(upArrowBounce)
+	tweenValue(upArrowPosTop, UP_ARROW_OFF_SCREEN, 0.4,
+		(v) => upArrowPosTop = v,
+		() => { upArrowVisible = false }
 	)
 }
+
+
+
+// MARK: Down Arrow
+export function ShowDownArrow(xOffset: number = 0) {
+	downArrowVisible = true
+	downArrowXOffset = xOffset
+	arrowElapsed = 0
+	tweenValue(DOWN_ARROW_OFF_SCREEN, DOWN_ARROW_ON_SCREEN, 1,
+		(v) => downArrowPosBottom = v,
+		() => {
+			arrowElapsed = 0
+			engine.addSystem(downArrowBounce)
+		},
+		EasingFunction.EF_EASEOUTBOUNCE
+	)
+}
+
+export function HideDownArrow() {
+	engine.removeSystem(downArrowBounce)
+	tweenValue(downArrowPosBottom, DOWN_ARROW_OFF_SCREEN, 0.4,
+		(v) => downArrowPosBottom = v,
+		() => { 
+			downArrowVisible = false; 
+		}
+	)
+}
+
+export function BounceDownArrow(xOffset: number) {
+	const startX = downArrowXOffset
+	const dx = xOffset - startX
+	const hdx = dx / 2
+
+	engine.removeSystem(downArrowBounce)
+
+	// Tween the X
+	tweenValue(startX, xOffset, 0.6,
+		(v) => downArrowXOffset = v,
+		() => {},
+		EasingFunction.EF_EASESINE
+	)
+
+	// Tween the Y
+	tweenValue(DOWN_ARROW_ON_SCREEN, DOWN_ARROW_ON_SCREEN+48, 0.3,
+		(v) => downArrowPosBottom = v,
+		() => {
+			tweenValue(DOWN_ARROW_ON_SCREEN+48, DOWN_ARROW_ON_SCREEN, 0.3,
+				(v) => downArrowPosBottom = v,
+				() => {
+					arrowElapsed = 0
+					engine.addSystem(downArrowBounce)
+				},
+				EasingFunction.EF_EASEINCIRC
+			)
+		},
+		EasingFunction.EF_EASEOUTCIRC
+	)
+}
+
 
 
 // MARK: Component
@@ -94,7 +173,7 @@ export function TutorialUI() {
 				height        : '100%',
 				flexDirection : 'column',
 				alignItems    : 'center',
-				justifyContent: 'flex-start',
+				justifyContent: 'flex-end',
 				positionType  : 'absolute',
 			}}
 		>
@@ -106,24 +185,40 @@ export function TutorialUI() {
 					flexShrink  : 0,
 					display     : panelVisible ? 'flex' : 'none',
 					positionType: 'absolute',
-					position    : { bottom: panelBottom },
+					position    : { bottom: infoPanelBottom },
 				}}
 				uiBackground={{
 					texture: { src: `assets/images/ui/tutorial-${currentInfo}.png` },
 				}}
 			/>
 			<UiEntity
-				key="ui_Tutorial_Arrow"
+				key="ui_Tutorial_Arrow_Up"
 				uiTransform={{
 					width       : 192,
 					height      : 384,
 					flexShrink  : 0,
-					display     : arrowVisible ? 'flex' : 'none',
+					display     : upArrowVisible ? 'flex' : 'none',
 					positionType: 'absolute',
-					position    : { top: arrowTop },
+					position    : { top: upArrowPosTop },
 				}}
 				uiBackground={{
-					texture    : { src: 'assets/images/ui/big-arrow.png' },
+					texture    : { src: 'assets/images/ui/big-arrow-up.png' },
+					textureMode: 'stretch',
+				}}
+			/>
+
+			<UiEntity
+				key="ui_Tutorial_Arrow_Down"
+				uiTransform={{
+					width       : 110,
+					height      : 220,
+					flexShrink  : 0,
+					display     : downArrowVisible ? 'flex' : 'none',
+					positionType: 'relative',
+					position    : { bottom: downArrowPosBottom, left: downArrowXOffset },
+				}}
+				uiBackground={{
+					texture    : { src: 'assets/images/ui/big-arrow-down.png' },
 					textureMode: 'stretch',
 				}}
 			/>
@@ -137,7 +232,8 @@ export function TutorialUI() {
 					flexShrink  : 0,
 					display     : btnVisible ? 'flex' : 'none',
 					positionType: 'absolute',
-					position    : { bottom: 4 },
+					position    : { bottom: 4, right: 384 },
+					margin      : { left: 320, right: 0 },
 				}}
 				uiBackground={{
 					texture    : { src: 'assets/images/ui/btn-skip-tutorial.png' },
