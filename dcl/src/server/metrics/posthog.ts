@@ -1,4 +1,5 @@
 import { EnvVar } from '@dcl/sdk/server'
+import { signedFetch } from '~system/SignedFetch'
 
 export namespace Posthog {
 	
@@ -29,10 +30,13 @@ export namespace Posthog {
 			timestamp    : new Date().toISOString()
 		})
 
-		fetch(`${POSTHOG_HOST}/capture/`, {
-			method : 'POST',
-			headers: { 'Content-Type': 'application/json' },
-			body   : body
+		signedFetch({
+			url: `${POSTHOG_HOST}/capture/`,
+			init: {
+				method : 'POST',
+				headers: { 'Content-Type': 'application/json' },
+				body   : body
+			}
 		}).catch((err) => {
 			console.error(`Metrics: capture failed for event "${event}"`, err)
 		})
@@ -50,10 +54,13 @@ export namespace Posthog {
 			timestamp  : new Date().toISOString()
 		})
 	
-		fetch(`${POSTHOG_HOST}/capture/`, {
-			method : 'POST',
-			headers: { 'Content-Type': 'application/json' },
-			body
+		signedFetch({
+			url: `${POSTHOG_HOST}/capture/`,
+			init: {
+				method : 'POST',
+				headers: { 'Content-Type': 'application/json' },
+				body
+			}
 		}).catch((err) => {
 			console.error('Metrics: identify failed', err)
 		})
