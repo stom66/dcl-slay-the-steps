@@ -89,19 +89,19 @@ export function OutfitControlsUI() {
 					width    = '180'
 					height   = '56'
 					imageSrc = "btn-reset"
-					callback = {() => { OutfitManager.RemoveOutfit(); SoundManager.PlaySound(sfx.buttons) }}
+					callback = {() => { OutfitManager.RemoveOutfit(); SoundManager.playSound(sfx.buttons) }}
 				/>
 				<ButtonImage
 					width    = '180'
 					height   = '56'
 					imageSrc = "btn-swap"
-					callback = {() => { OutfitManager.SwapGender(); SoundManager.PlaySound(sfx.buttons) }}
+					callback = {() => { OutfitManager.SwapGender(); SoundManager.playSound(sfx.buttons) }}
 				/>
 				<ButtonImage
 					width    = '180'
 					height   = '56'
 					imageSrc = "btn-copy"
-					callback = {() => { OutfitManager.CopyMyOutfit(); SoundManager.PlaySound(sfx.buttons) }}
+					callback = {() => { OutfitManager.CopyMyOutfit(); SoundManager.playSound(sfx.buttons) }}
 				/>
 			</UiEntity>
 		</UiEntity>

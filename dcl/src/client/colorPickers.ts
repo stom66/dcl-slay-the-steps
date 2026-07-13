@@ -207,7 +207,7 @@ class ColorPicker {
 		console.log("ColorPicker: SampleColorWheel(): local: ", local.toString())		
 
 		// Trigger a soundeffect
-		SoundManager.PlaySound(sfx.colorPicker)
+		SoundManager.playSound(sfx.colorPicker)
 		
 		// Hue is based on the angle of the mouse position
 		const angle = Math.atan2(-local.x, local.y)
@@ -275,7 +275,7 @@ class ColorPicker {
 		console.log("ColorPicker: SampleValueSlider(): value: ", value, local.x)
 
 		// Trigger a soundeffect
-		SoundManager.PlaySound(sfx.colorPicker)
+		SoundManager.playSound(sfx.colorPicker)
 
 		this.SetValueSlider(value)
 	}
